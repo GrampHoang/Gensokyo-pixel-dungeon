@@ -96,7 +96,10 @@ public class Food extends Item {
 			|| Dungeon.hero.hasTalent(Talent.MYSTICAL_MEAL)
 			|| Dungeon.hero.hasTalent(Talent.INVIGORATING_MEAL)){
 			return TIME_TO_EAT - 2;
-		} else {
+		} else if(Dungeon.hero.hasTalent(Talent.TIME_MEAL)){
+			return TIME_TO_EAT - 3;
+		}
+		else {
 			return TIME_TO_EAT;
 		}
 	}

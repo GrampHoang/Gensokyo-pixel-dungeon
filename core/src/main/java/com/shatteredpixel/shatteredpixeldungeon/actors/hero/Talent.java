@@ -49,6 +49,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -143,6 +145,29 @@ public enum Talent {
 	GROWING_POWER(116, 4), NATURES_WRATH(117, 4), WILD_MOMENTUM(118, 4),
 	//Spirit Hawk T4
 	EAGLE_EYE(119, 4), GO_FOR_THE_EYES(120, 4), SWIFT_SPIRIT(121, 4),
+
+
+	//Sakuya T1
+	PREPARED_PIE(128), MAID_INTUITION(129), MUDA_STRIKE(130), TIME_PROTECTION(131),
+	//Sakuya T2
+	TIME_MEAL(132), RESTORED_TIME(133), MAID_STEPS(134), MAID_SENSES(135), SUPRISE_PROJECTILES(136),
+	//Sakuya T3
+	TIME_STOP_LETHALITY(137, 3), NATURAL_POWER(138, 3),
+	//Hunter T3
+	KILLING_MOMENTUM(139, 3), MAID_INSTINCT(140, 3), BACKTRACK(141, 3),
+	//Maid T3
+	HEALING_ACCEL(142, 3), AGELESS(143, 3), SUPERSPEED(144, 3),
+	//Spectral Blades T4
+	FEEDBACK_LOOP(113, 4), WEAKPOINT(114, 4), PROLONG(115, 4),
+	//Natures Power T4
+	MOMENTUM(116, 4), KNIFE_PARTY(117, 4), FURTHER(118, 4),
+	//Spirit Hawk T4
+	CHAOS_KNIFE(119, 4), STORM_KNIFE(120, 4), RISING_WORLD(121, 4),
+	
+	//Marisa
+
+
+
 
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
@@ -263,8 +288,13 @@ public enum Talent {
 			}
 		}
 
-		if (talent == HEIGHTENED_SENSES || talent == FARSIGHT){
+		if (talent == HEIGHTENED_SENSES || talent == FARSIGHT || talent == MAID_INSTINCT || talent == MAID_SENSES){
 			Dungeon.observe();
+		}
+
+		if (talent == PREPARED_PIE){
+			MeatPie pie = new MeatPie();
+			pie.quantity(1).collect();
 		}
 	}
 
@@ -306,6 +336,20 @@ public enum Talent {
 			}
 			ScrollOfRecharging.charge( hero );
 		}
+		if (hero.hasTalent(TIME_MEAL)){
+			//3/5 turns of recharging
+			ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
+			if (buff.left() < 1 + 2*(hero.pointsInTalent(TIME_MEAL))){
+				Buff.affect( hero, ArtifactRecharge.class).set(1+(hero.pointsInTalent(TIME_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
+				Buff.prolong( hero, Recharging.class, 2*(hero.pointsInTalent(TIME_MEAL)) );
+			}
+			if(hero.pointsInTalent(TIME_MEAL) == 2){
+				Buff.prolong( hero, Haste.class, 1);
+			}
+			ScrollOfRecharging.charge( hero );
+
+		}
+
 		if (hero.hasTalent(INVIGORATING_MEAL)){
 			//effectively 1/2 turns of haste
 			Buff.prolong( hero, Haste.class, 0.67f+hero.pointsInTalent(INVIGORATING_MEAL));
@@ -319,7 +363,7 @@ public enum Talent {
 	public static float itemIDSpeedFactor( Hero hero, Item item ){
 		// 1.75x/2.5x speed with huntress talent
 		float factor = 1f + hero.pointsInTalent(SURVIVALISTS_INTUITION)*0.75f;
-
+		factor *= 1f + hero.pointsInTalent(MAID_INTUITION)*0.75f;
 		// 2x/instant for Warrior (see onItemEquipped)
 		if (item instanceof MeleeWeapon || item instanceof Armor){
 			factor *= 1f + hero.pointsInTalent(ARMSMASTERS_INTUITION);
@@ -375,6 +419,12 @@ public enum Talent {
 					Level.set(cell, Terrain.HIGH_GRASS);
 					GameScene.updateMap(cell);
 				}
+			}
+
+			if (hero.pointsInTalent(RESTORED_TIME) == 1){
+				grassCells.remove(0);
+				grassCells.remove(0);
+				grassCells.remove(0);
 			}
 			Dungeon.observe();
 		}
@@ -498,6 +548,11 @@ public enum Talent {
 			case HUNTRESS:
 				Collections.addAll(tierTalents, NATURES_BOUNTY, SURVIVALISTS_INTUITION, FOLLOWUP_STRIKE, NATURES_AID);
 				break;
+			case SAKUYA:
+				Collections.addAll(tierTalents, PREPARED_PIE, MAID_INTUITION, MUDA_STRIKE, TIME_PROTECTION);
+			case MARISA:
+				Collections.addAll(tierTalents, EMPOWERING_MEAL, SCHOLARS_INTUITION, TESTED_HYPOTHESIS, BACKUP_BARRIER);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -521,6 +576,12 @@ public enum Talent {
 			case HUNTRESS:
 				Collections.addAll(tierTalents, INVIGORATING_MEAL, RESTORED_NATURE, REJUVENATING_STEPS, HEIGHTENED_SENSES, DURABLE_PROJECTILES);
 				break;
+			case SAKUYA:
+				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SUPRISE_PROJECTILES);
+				break;
+			case MARISA:
+				Collections.addAll(tierTalents, ENERGIZING_MEAL, ENERGIZING_UPGRADE, WAND_PRESERVATION, ARCANE_VISION, SHIELD_BATTERY);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -543,6 +604,12 @@ public enum Talent {
 				break;
 			case HUNTRESS:
 				Collections.addAll(tierTalents, POINT_BLANK, SEER_SHOT);
+				break;
+			case SAKUYA:
+				Collections.addAll(tierTalents, TIME_STOP_LETHALITY, NATURAL_POWER);
+				break;
+			case MARISA:
+				Collections.addAll(tierTalents, EMPOWERING_SCROLLS, ALLY_WARP);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -595,6 +662,18 @@ public enum Talent {
 				break;
 			case WARDEN:
 				Collections.addAll(tierTalents, DURABLE_TIPS, BARKSKIN, SHIELDING_DEW);
+				break;
+			case HUNTER:
+				Collections.addAll(tierTalents, KILLING_MOMENTUM, MAID_INSTINCT, BACKTRACK);
+				break;
+			case MAID:
+				Collections.addAll(tierTalents, HEALING_ACCEL, AGELESS, SUPERSPEED);
+				break;
+			case MAGICIAN:
+				Collections.addAll(tierTalents, EMPOWERED_STRIKE, MYSTICAL_CHARGE, EXCESS_CHARGE);
+				break;
+			case THIEF:
+				Collections.addAll(tierTalents, SOUL_EATER, SOUL_SIPHON, NECROMANCERS_MINIONS);
 				break;
 		}
 		for (Talent talent : tierTalents){

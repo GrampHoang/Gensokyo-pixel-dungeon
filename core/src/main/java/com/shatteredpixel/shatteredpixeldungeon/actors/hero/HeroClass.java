@@ -44,16 +44,22 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHaste;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
+import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfDivination;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
@@ -72,7 +78,9 @@ public enum HeroClass {
 	WARRIOR( HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR ),
 	MAGE( HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK ),
 	ROGUE( HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
-	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN );
+	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
+	SAKUYA( HeroSubClass.HUNTER, HeroSubClass.MAID ),
+	MARISA( HeroSubClass.MAGICIAN, HeroSubClass.THIEF );
 
 	private HeroSubClass[] subClasses;
 
@@ -115,6 +123,14 @@ public enum HeroClass {
 			case HUNTRESS:
 				initHuntress( hero );
 				break;
+
+			case SAKUYA:
+				initSakuya( hero);
+				break;
+
+			case MARISA:
+				initMarisa( hero );
+				break;
 		}
 
 		for (int s = 0; s < QuickSlot.SIZE; s++){
@@ -136,6 +152,7 @@ public enum HeroClass {
 				return Badges.Badge.MASTERY_ROGUE;
 			case HUNTRESS:
 				return Badges.Badge.MASTERY_HUNTRESS;
+			default:
 		}
 		return null;
 	}
@@ -197,6 +214,49 @@ public enum HeroClass {
 		new ScrollOfLullaby().identify();
 	}
 
+	private static void initSakuya( Hero hero ) {
+		(hero.belongings.weapon = new Dagger()).identify();
+
+		TimekeepersHourglass hourglass = new TimekeepersHourglass();
+		(hero.belongings.artifact = hourglass).identify();
+		hero.belongings.artifact.activate( hero );
+
+		ThrowingKnife knives = new ThrowingKnife();
+		knives.quantity(3).collect();
+
+		PotionOfExperience poe = new PotionOfExperience();
+		poe.quantity(30).collect();
+		TengusMask tengu = new TengusMask();
+		tengu.quantity(2).collect();
+		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+		podi.quantity(6).collect();
+
+		Dungeon.quickslot.setSlot(0, hourglass);
+		Dungeon.quickslot.setSlot(1, knives);
+
+		new ScrollOfTeleportation().identify();
+		new PotionOfHaste().identify();
+	}
+
+	private static void initMarisa( Hero hero ) {
+
+		PotionOfExperience poe = new PotionOfExperience();
+		poe.quantity(30).collect();
+		TengusMask tengu = new TengusMask();
+		tengu.quantity(2).collect();
+		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+		podi.quantity(6).collect();
+
+		MagesStaff staff;
+		staff = new MagesStaff(new WandOfMagicMissile());
+		(hero.belongings.weapon = staff).identify();
+		hero.belongings.weapon.activate(hero);
+		Dungeon.quickslot.setSlot(0, staff);
+
+		new ScrollOfUpgrade().identify();
+		new PotionOfLiquidFlame().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -219,6 +279,10 @@ public enum HeroClass {
 				return new ArmorAbility[]{new SmokeBomb(), new DeathMark(), new ShadowClone()};
 			case HUNTRESS:
 				return new ArmorAbility[]{new SpectralBlades(), new NaturesPower(), new SpiritHawk()};
+			case SAKUYA:
+				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
+			case MARISA:
+				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
 		}
 	}
 
@@ -232,6 +296,10 @@ public enum HeroClass {
 				return Assets.Sprites.ROGUE;
 			case HUNTRESS:
 				return Assets.Sprites.HUNTRESS;
+			case SAKUYA:
+				return Assets.Sprites.SAKUYA;
+			case MARISA:
+				return Assets.Sprites.MARISA;
 		}
 	}
 
@@ -245,6 +313,10 @@ public enum HeroClass {
 				return Assets.Splashes.ROGUE;
 			case HUNTRESS:
 				return Assets.Splashes.HUNTRESS;
+			case SAKUYA:
+				return Assets.Splashes.SAKUYA;
+			case MARISA:
+				return Assets.Splashes.MARISA;
 		}
 	}
 	
@@ -281,6 +353,22 @@ public enum HeroClass {
 						Messages.get(HeroClass.class, "huntress_perk3"),
 						Messages.get(HeroClass.class, "huntress_perk4"),
 						Messages.get(HeroClass.class, "huntress_perk5"),
+				};
+			case SAKUYA:
+				return new String[]{
+						Messages.get(HeroClass.class, "sakuya_perk1"),
+						Messages.get(HeroClass.class, "sakuya_perk2"),
+						Messages.get(HeroClass.class, "sakuya_perk3"),
+						Messages.get(HeroClass.class, "sakuya_perk4"),
+						Messages.get(HeroClass.class, "sakuya_perk5"),
+				};
+			case MARISA:
+				return new String[]{
+						Messages.get(HeroClass.class, "marisa_perk1"),
+						Messages.get(HeroClass.class, "marisa_perk2"),
+						Messages.get(HeroClass.class, "marisa_perk3"),
+						Messages.get(HeroClass.class, "marisa_perk4"),
+						Messages.get(HeroClass.class, "marisa_perk5"),
 				};
 		}
 	}

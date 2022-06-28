@@ -474,6 +474,9 @@ public class Hero extends Char {
 			return INFINITE_EVASION;
 		}
 		
+		if (Random.Int(0, 99) < 11*pointsInTalent(Talent.BACKTRACK)){
+			return INFINITE_EVASION;
+		}
 		float evasion = defenseSkill;
 		
 		evasion *= RingOfEvasion.evasionMultiplier( this );
@@ -541,7 +544,6 @@ public class Hero extends Char {
 			dmg = RingOfForce.damageRoll(this);
 		}
 		if (dmg < 0) dmg = 0;
-		
 		return dmg;
 	}
 	
@@ -551,7 +553,12 @@ public class Hero extends Char {
 		float speed = super.speed();
 
 		speed *= RingOfHaste.speedMultiplier(this);
-		
+		switch (subClass) {
+			case MAID:
+				speed = speed * 1.25f;
+				break;
+			default:
+		}
 		if (belongings.armor() != null) {
 			speed = belongings.armor().speedFactor(this, speed);
 		}
@@ -1172,7 +1179,12 @@ public class Hero extends Char {
 				});
 			}
 			break;
+		case HUNTER:
+			damage *= 1.25f;
+			break;
 		default:
+
+
 		}
 		
 		return damage;
@@ -1997,11 +2009,22 @@ public class Hero extends Char {
 							
 						//unintentional trap detection scales from 40% at floor 0 to 30% at floor 25
 						} else if (Dungeon.level.map[curr] == Terrain.SECRET_TRAP) {
-							chance = 0.4f - (Dungeon.depth / 250f);
-							
+							if(Dungeon.hero.hasTalent(Talent.MAID_SENSES)){
+								chance = 0.4f - (Dungeon.depth / 250f);
+								chance *= (1 + Dungeon.hero.pointsInTalent(Talent.MAID_SENSES) );
+							}
+							else{
+								chance = 0.4f - (Dungeon.depth / 250f);
+							}
 						//unintentional door detection scales from 20% at floor 0 to 0% at floor 20
 						} else {
+							if(Dungeon.hero.hasTalent(Talent.MAID_SENSES)){
+								chance = 0.2f - (Dungeon.depth / 100f);
+								chance *= (1 + Dungeon.hero.pointsInTalent(Talent.MAID_SENSES) );
+							}
+							else {
 							chance = 0.2f - (Dungeon.depth / 100f);
+							}
 						}
 						
 						if (Random.Float() < chance) {

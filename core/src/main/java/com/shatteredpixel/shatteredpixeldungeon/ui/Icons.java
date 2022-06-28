@@ -45,6 +45,10 @@ public enum Icons {
 	MAGE,
 	ROGUE,
 	HUNTRESS,
+	SAKUYA,
+	MARISA,
+	REIMU,
+	REISEN,
 
 	//grey icons, mainly used for buttons, spacing for 16x16
 	EXIT,
@@ -158,6 +162,18 @@ public enum Icons {
 				icon.frame( icon.texture.uvRectBySize( 48, 16, 9, 15 ) );
 				break;
 			case HUNTRESS:
+				icon.frame( icon.texture.uvRectBySize( 64, 16, 16, 16 ) );
+				break;
+			case SAKUYA:
+				icon.frame( icon.texture.uvRectBySize( 48, 16, 9, 15 ) );
+				break;
+			case MARISA:
+				icon.frame( icon.texture.uvRectBySize( 32, 16, 15, 14 ) );
+				break;
+			case REIMU:
+				icon.frame( icon.texture.uvRectBySize( 16, 16, 9, 15 ) );
+				break;
+			case REISEN:
 				icon.frame( icon.texture.uvRectBySize( 64, 16, 16, 16 ) );
 				break;
 
@@ -363,6 +379,14 @@ public enum Icons {
 			return get( ROGUE );
 		case HUNTRESS:
 			return get( HUNTRESS );
+		case SAKUYA:
+			return get( SAKUYA );
+		case MARISA:
+			return get( MARISA );
+		// case REIMU:
+		// 	return get( REIMU );
+		// case REISEN:
+		// 	return get( REISEN );
 		default:
 			return null;
 		}

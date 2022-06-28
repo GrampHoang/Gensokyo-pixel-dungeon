@@ -1192,6 +1192,17 @@ public abstract class Level implements Bundlable {
 						}
 					}
 				}
+			} else if (((Hero) c).hasTalent(Talent.MAID_INSTINCT)) {
+				Hero h = (Hero) c;
+				int range = 1+h.pointsInTalent(Talent.MAID_INSTINCT);
+				for (Mob mob : mobs) {
+					int p = mob.pos;
+					if (!fieldOfView[p] && distance(c.pos, p) <= range) {
+						for (int i : PathFinder.NEIGHBOURS9) {
+							heroMindFov[mob.pos + i] = true;
+						}
+					}
+				}
 			}
 			
 			if (c.buff( Awareness.class ) != null) {

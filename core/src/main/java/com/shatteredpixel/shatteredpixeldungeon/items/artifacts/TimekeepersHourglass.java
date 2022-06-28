@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
@@ -32,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -70,7 +72,7 @@ public class TimekeepersHourglass extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && !cursed && (charge > 0 || activeBuff != null)) {
+		if (isEquipped( hero ) && !cursed && (charge > 0 || activeBuff != null) || hero.hasTalent(Talent.NATURAL_POWER)) {
 			actions.add(AC_ACTIVATE);
 		}
 		return actions;
@@ -83,7 +85,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		if (action.equals(AC_ACTIVATE)){
 
-			if (!isEquipped( hero ))        GLog.i( Messages.get(Artifact.class, "need_to_equip") );
+			if (!isEquipped( hero )&& !hero.hasTalent(Talent.NATURAL_POWER)) GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (activeBuff != null) {
 				if (activeBuff instanceof timeStasis) { //do nothing
 				} else {
@@ -127,6 +129,7 @@ public class TimekeepersHourglass extends Artifact {
 	@Override
 	public void activate(Char ch) {
 		super.activate(ch);
+
 		if (activeBuff != null)
 			activeBuff.attachTo(ch);
 	}
@@ -134,13 +137,32 @@ public class TimekeepersHourglass extends Artifact {
 	@Override
 	public boolean doUnequip(Hero hero, boolean collect, boolean single) {
 		if (super.doUnequip(hero, collect, single)){
-			if (activeBuff != null){
-				activeBuff.detach();
-				activeBuff = null;
+			if (!collect || !hero.hasTalent(Talent.NATURAL_POWER)){
+				if (activeBuff != null){
+					activeBuff.detach();
+					activeBuff = null;
+				}
+			} else {
+				activate(hero);
 			}
+
 			return true;
 		} else
 			return false;
+	}
+
+	@Override
+	public boolean collect( Bag container ) {
+		if (super.collect(container)){
+			if (container.owner instanceof Hero
+					&& passiveBuff == null
+					&& ((Hero) container.owner).hasTalent(Talent.NATURAL_POWER)){
+				activate((Hero) container.owner);
+			}
+			return true;
+		} else{
+			return false;
+		}
 	}
 
 	@Override
@@ -151,6 +173,7 @@ public class TimekeepersHourglass extends Artifact {
 	@Override
 	public void charge(Hero target, float amount) {
 		if (charge < chargeCap){
+			if (!isEquipped(target)) amount *= 0.75f*target.pointsInTalent(Talent.NATURAL_POWER)/3f;
 			partialCharge += 0.25f*amount;
 			if (partialCharge >= 1){
 				partialCharge--;
@@ -226,8 +249,10 @@ public class TimekeepersHourglass extends Artifact {
 				//90 turns to charge at full, 60 turns to charge at 0/10
 				float chargeGain = 1 / (90f - (chargeCap - charge)*3f);
 				chargeGain *= RingOfEnergy.artifactChargeMultiplier(target);
+				if (!isEquipped(Dungeon.hero)){
+					chargeGain *= 0.75f*Dungeon.hero.pointsInTalent(Talent.NATURAL_POWER)/3f;
+				}
 				partialCharge += chargeGain;
-
 				if (partialCharge >= 1) {
 					partialCharge --;
 					charge ++;
@@ -261,6 +286,12 @@ public class TimekeepersHourglass extends Artifact {
 
 				Invisibility.dispel();
 
+				if (Dungeon.hero.hasTalent(Talent.TIME_PROTECTION)){
+					Barrier barrier = Buff.affect(target, Barrier.class);
+					barrier.incShield(charge * (Dungeon.hero.pointsInTalent(Talent.TIME_PROTECTION)/2));
+				}
+
+				
 				int usedCharge = Math.min(charge, 2);
 				//buffs always act last, so the stasis buff should end a turn early.
 				spend(5*usedCharge);
@@ -291,6 +322,10 @@ public class TimekeepersHourglass extends Artifact {
 
 		@Override
 		public boolean act() {
+			if (Dungeon.hero.hasTalent(Talent.TIME_PROTECTION)){
+				Barrier barrier = Buff.affect(target, Barrier.class);
+				barrier.incShield(charge * (Dungeon.hero.pointsInTalent(Talent.TIME_PROTECTION)/2));
+			}
 			detach();
 			return true;
 		}

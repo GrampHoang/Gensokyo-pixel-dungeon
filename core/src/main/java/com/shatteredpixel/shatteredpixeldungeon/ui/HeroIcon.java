@@ -45,7 +45,10 @@ public class HeroIcon extends Image {
 	public static final int FREERUNNER  = 5;
 	public static final int SNIPER      = 6;
 	public static final int WARDEN      = 7;
-
+	public static final int HUNTER 		= 4;
+	public static final int MAID		= 5;
+	public static final int MAGICIAN 	= 2;
+	public static final int THIEF		= 5;
 	//abilities
 	public static final int HEROIC_LEAP     = 8;
 	public static final int SHOCKWAVE       = 9;
@@ -60,6 +63,9 @@ public class HeroIcon extends Image {
 	public static final int NATURES_POWER   = 18;
 	public static final int SPIRIT_HAWK     = 19;
 	public static final int RATMOGRIFY      = 20;
+	public static final int THE_WORLD   	= 18;
+	public static final int KNIFE_RAIN  	= 18;
+	public static final int BLINK  			= 18;
 
 	public HeroIcon(HeroSubClass subCls){
 		super( Assets.Interfaces.HERO_ICONS );

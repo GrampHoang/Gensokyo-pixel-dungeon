@@ -706,6 +706,11 @@ public abstract class Mob extends Char {
 					&& Random.Float() < 0.34f + 0.33f* Dungeon.hero.pointsInTalent(Talent.LETHAL_MOMENTUM)){
 				Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
 			}
+			if (cause == Dungeon.hero
+					&& Dungeon.hero.hasTalent(Talent.KILLING_MOMENTUM)
+					&& Random.Float() < 0.01f + 0.33f* Dungeon.hero.pointsInTalent(Talent.KILLING_MOMENTUM)){
+				Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
+			}
 		}
 
 		if (Dungeon.hero.isAlive() && !Dungeon.level.heroFOV[pos]) {
@@ -879,6 +884,12 @@ public abstract class Mob extends Char {
 
 				if (enemy instanceof Hero && ((Hero) enemy).hasTalent(Talent.SILENT_STEPS)){
 					if (Dungeon.level.distance(pos, enemy.pos) >= 4 - ((Hero) enemy).pointsInTalent(Talent.SILENT_STEPS)) {
+						enemyStealth = Float.POSITIVE_INFINITY;
+					}
+				}
+
+				if (enemy instanceof Hero && ((Hero) enemy).hasTalent(Talent.MAID_STEPS)){
+					if (Dungeon.level.distance(pos, enemy.pos) >= 4 - ((Hero) enemy).pointsInTalent(Talent.MAID_STEPS)) {
 						enemyStealth = Float.POSITIVE_INFINITY;
 					}
 				}

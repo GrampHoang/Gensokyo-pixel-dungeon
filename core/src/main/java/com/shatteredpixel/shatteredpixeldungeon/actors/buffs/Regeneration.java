@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 
@@ -52,7 +53,7 @@ public class Regeneration extends Buff {
 
 			ChaliceOfBlood.chaliceRegen regenBuff = Dungeon.hero.buff( ChaliceOfBlood.chaliceRegen.class);
 
-			float delay = REGENERATION_DELAY;
+			float delay = REGENERATION_DELAY - Dungeon.hero.pointsInTalent(Talent.HEALING_ACCEL)*1.5f;
 			if (regenBuff != null) {
 				if (regenBuff.isCursed()) {
 					delay *= 1.5f;

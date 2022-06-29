@@ -62,11 +62,13 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfDivination;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
@@ -247,11 +249,13 @@ public enum HeroClass {
 		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
 		podi.quantity(6).collect();
 
-		MagesStaff staff;
-		staff = new MagesStaff(new WandOfMagicMissile());
-		(hero.belongings.weapon = staff).identify();
-		hero.belongings.weapon.activate(hero);
-		Dungeon.quickslot.setSlot(0, staff);
+		Hakkero h = new Hakkero();
+		h.identify().collect();
+		MarisaStaff ms = new MarisaStaff();
+		ms.collect();
+		(hero.belongings.weapon = ms).identify();
+		Dungeon.quickslot.setSlot(0, h);
+		Dungeon.quickslot.setSlot(1, ms);
 
 		new ScrollOfUpgrade().identify();
 		new PotionOfLiquidFlame().identify();

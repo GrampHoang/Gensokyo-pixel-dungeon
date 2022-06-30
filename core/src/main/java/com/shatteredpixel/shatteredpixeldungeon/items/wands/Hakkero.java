@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSpark;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -87,7 +88,8 @@ public class Hakkero extends DamageWand {
 	public void onZap(Ballistica beam) {
         boolean noticed = false;
 		boolean terrainAffected = false;
-		
+		Buff.prolong( curUser, Light.class, 0f);
+
 		int level = buffedLvl();
 		
 		int maxDistance = Math.min(distance(), beam.dist);
@@ -149,10 +151,6 @@ public class Hakkero extends DamageWand {
 			
 			CellEmitter.center( c ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 		}
-		
-        //light up the place, copy from PrimasticLight
-        //affectMap(beam);
-        //Light up
 		if (terrainAffected) {
 			Dungeon.observe();
 		}
@@ -186,7 +184,7 @@ public class Hakkero extends DamageWand {
 	public void fx(Ballistica beam, Callback callback) {
 		
 		int cell = beam.path.get(Math.min(beam.dist, distance()));
-		curUser.sprite.parent.add(new Beam.LightRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell )));
+		curUser.sprite.parent.add(new MasterSpark.MiniMasterSpark(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell ), 2f));
 		callback.call();
 	}
 
@@ -198,37 +196,5 @@ public class Hakkero extends DamageWand {
 		particle.acc.set(10, -10);
 		particle.setSize( 0.5f, 3f);
 		particle.shuffleXY(1f);
-	}
-
-    private void affectMap(Ballistica beam){
-		boolean noticed = false;
-		for (int c : beam.subPath(1, beam.dist)){
-			if (!Dungeon.level.insideMap(c)){
-				continue;
-			}
-			for (int n : PathFinder.NEIGHBOURS9){
-				int cell = c+n;
-
-				if (Dungeon.level.discoverable[cell])
-					Dungeon.level.mapped[cell] = true;
-
-				int terr = Dungeon.level.map[cell];
-				if ((Terrain.flags[terr] & Terrain.SECRET) != 0) {
-
-					Dungeon.level.discover( cell );
-
-					GameScene.discoverTile( cell, terr );
-					ScrollOfMagicMapping.discover(cell);
-
-					noticed = true;
-				}
-			}
-
-			CellEmitter.center(c).burst( RainbowParticle.BURST, Random.IntRange( 1, 2 ) );
-		}
-		if (noticed)
-			Sample.INSTANCE.play( Assets.Sounds.SECRET );
-
-		GameScene.updateFog();
 	}
 }

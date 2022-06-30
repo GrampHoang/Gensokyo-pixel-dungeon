@@ -44,11 +44,11 @@ public enum HeroSubClass {
 	SNIPER(HeroIcon.SNIPER),
 	WARDEN(HeroIcon.WARDEN),
 
-	HUNTER(HeroIcon.BERSERKER),
-	MAID(HeroIcon.FREERUNNER),
+	HUNTER(HeroIcon.HUNTER),
+	MAID(HeroIcon.MAID),
 	
-	MAGICIAN(HeroIcon.BATTLEMAGE),
-	THIEF(HeroIcon.FREERUNNER);
+	MAGICIAN(HeroIcon.MAGICIAN),
+	THIEF(HeroIcon.THIEF);
 
 	int icon;
 

@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMappi
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfDivination;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
@@ -251,13 +252,15 @@ public enum HeroClass {
 
 		Hakkero h = new Hakkero();
 		h.identify().collect();
-		MarisaStaff ms = new MarisaStaff();
-		ms.collect();
-		(hero.belongings.weapon = ms).identify();
-		Dungeon.quickslot.setSlot(0, h);
-		Dungeon.quickslot.setSlot(1, ms);
+		Dungeon.quickslot.setSlot(1, h);
 
-		new ScrollOfUpgrade().identify();
+		MarisaStaff staff;
+		staff = new MarisaStaff(new WandOfMagicMissile());
+		(hero.belongings.weapon = staff).identify();
+		hero.belongings.weapon.activate(hero);
+		Dungeon.quickslot.setSlot(0, staff);
+
+		new ScrollOfRetribution().identify();
 		new PotionOfLiquidFlame().identify();
 	}
 

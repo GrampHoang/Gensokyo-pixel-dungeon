@@ -168,6 +168,8 @@ public enum Talent {
 
 
 
+	//Default for new template character:
+	DEFAULT_STR_UP(30), DEFAULT_HP_UP(31), DEFAULT_MORE_HP_UP(31,3),
 
 	//universal T4
 	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
@@ -536,7 +538,7 @@ public enum Talent {
 
 		//tier 1
 		switch (cls){
-			case WARRIOR: default:
+			case WARRIOR:
 				Collections.addAll(tierTalents, HEARTY_MEAL, ARMSMASTERS_INTUITION, TEST_SUBJECT, IRON_WILL);
 				break;
 			case MAGE:
@@ -550,8 +552,12 @@ public enum Talent {
 				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, PREPARED_PIE, MAID_INTUITION, MUDA_STRIKE, TIME_PROTECTION);
+				break;
 			case MARISA:
 				Collections.addAll(tierTalents, EMPOWERING_MEAL, SCHOLARS_INTUITION, TESTED_HYPOTHESIS, BACKUP_BARRIER);
+				break;
+			default:
+				Collections.addAll(tierTalents, DEFAULT_STR_UP, DEFAULT_STR_UP, DEFAULT_HP_UP, DEFAULT_HP_UP);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -564,7 +570,7 @@ public enum Talent {
 
 		//tier 2
 		switch (cls){
-			case WARRIOR: default:
+			case WARRIOR:
 				Collections.addAll(tierTalents, IRON_STOMACH, RESTORED_WILLPOWER, RUNIC_TRANSFERENCE, LETHAL_MOMENTUM, IMPROVISED_PROJECTILES);
 				break;
 			case MAGE:
@@ -582,6 +588,9 @@ public enum Talent {
 			case MARISA:
 				Collections.addAll(tierTalents, ENERGIZING_MEAL, ENERGIZING_UPGRADE, WAND_PRESERVATION, ARCANE_VISION, SHIELD_BATTERY);
 				break;
+			default:
+				Collections.addAll(tierTalents, DEFAULT_HP_UP, DEFAULT_HP_UP, DEFAULT_HP_UP, DEFAULT_HP_UP, DEFAULT_HP_UP);
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -593,7 +602,7 @@ public enum Talent {
 
 		//tier 3
 		switch (cls){
-			case WARRIOR: default:
+			case WARRIOR:
 				Collections.addAll(tierTalents, HOLD_FAST, STRONGMAN);
 				break;
 			case MAGE:
@@ -610,6 +619,9 @@ public enum Talent {
 				break;
 			case MARISA:
 				Collections.addAll(tierTalents, EMPOWERING_SCROLLS, ALLY_WARP);
+				break;
+			default:
+				Collections.addAll(tierTalents, DEFAULT_MORE_HP_UP, DEFAULT_MORE_HP_UP);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -639,7 +651,7 @@ public enum Talent {
 
 		//tier 3
 		switch (cls){
-			case BERSERKER: default:
+			case BERSERKER:
 				Collections.addAll(tierTalents, ENDLESS_RAGE, BERSERKING_STAMINA, ENRAGED_CATALYST);
 				break;
 			case GLADIATOR:
@@ -674,6 +686,9 @@ public enum Talent {
 				break;
 			case THIEF:
 				Collections.addAll(tierTalents, SOUL_EATER, SOUL_SIPHON, NECROMANCERS_MINIONS);
+				break;
+			default:
+				Collections.addAll(tierTalents, DEFAULT_MORE_HP_UP, DEFAULT_MORE_HP_UP, DEFAULT_MORE_HP_UP);
 				break;
 		}
 		for (Talent talent : tierTalents){

@@ -86,8 +86,21 @@ public class MarisaStaff extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(4f*(tier+1)) +   //8 base damage
-				lvl*(tier);               //scaling lower
+		return  Math.round(2f*(tier+1)) +   //5 base damage
+				lvl*(tier+2);               //scaling slightly better
+	}
+
+	public MarisaStaff() {
+		wand = null;
+	}
+
+	public MarisaStaff(Wand wand){
+		this();
+		wand.maxCharges = 2;
+		wand.cursed = false;
+		this.wand = wand;
+		updateWand(false);
+		wand.curCharges = wand.maxCharges;
 	}
 
 	@Override

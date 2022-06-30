@@ -349,6 +349,14 @@ public abstract class Wand extends Item {
 
 	public void updateLevel() {
 		maxCharges = Math.min( initialCharges() + level(), 10 );
+		//For Marisa's Hakkero
+		if (this.unique = true){
+			int eval = 3;
+			if (Dungeon.hero.hasTalent(Talent.TIME_MEAL)){
+				eval += Dungeon.hero.pointsInTalent(Talent.TIME_MEAL);
+			}
+			maxCharges = Math.min( initialCharges() + level(), eval);
+		}
 		curCharges = Math.min( curCharges, maxCharges );
 	}
 	

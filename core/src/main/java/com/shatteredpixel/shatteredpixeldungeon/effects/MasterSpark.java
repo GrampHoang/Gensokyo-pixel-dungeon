@@ -28,15 +28,15 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PointF;
 
-public class Beam extends Image {
-	
+
+public class MasterSpark extends Image {
+
 	private static final double A = 180 / Math.PI;
 	
 	private  float duration;
 	
 	private float timeLeft;
-
-	private Beam(PointF s, PointF e, Effects.Type asset, float duration) {
+	private MasterSpark(PointF s, PointF e, Effects.Type asset, float duration) {
 		super( Effects.get( asset ) );
 		
 		origin.set( 0, height / 2 );
@@ -54,35 +54,19 @@ public class Beam extends Image {
 		timeLeft = this.duration = duration;
 	}
 
-	public static class DeathRay extends Beam{
-		public DeathRay(PointF s, PointF e){
-			super(s, e, Effects.Type.DEATH_RAY, 0.5f);
-		}
-	}
-
-	public static class LightRay extends Beam{
-		public LightRay(PointF s, PointF e){
-			super(s, e, Effects.Type.LIGHT_RAY, 1f);
-		}
-	}
-
-	public static class MasterSpark extends Beam{
-		public MasterSpark(PointF s, PointF e, float dur){
+	public static class MiniMasterSpark extends MasterSpark{
+		public MiniMasterSpark(PointF s, PointF e, float dur){
 			super(s, e, Effects.Type.LIGHT_RAY, dur);
 		}
 	}
 
-	public static class HealthRay extends Beam{
-		public HealthRay(PointF s, PointF e){
-			super(s, e, Effects.Type.HEALTH_RAY, 0.75f);
-		}
-	}
-	
+
+    
 	@Override
 	public void update() {
 		super.update();
-		
-		float p = timeLeft / duration;
+		//float p = 1/((float)pow(8,3*sqrt(x)))
+		float p = (float)Math.tanh(timeLeft);
 		alpha( p );
 		scale.set( scale.x, p );
 		

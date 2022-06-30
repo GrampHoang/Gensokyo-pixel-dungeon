@@ -18,3 +18,7 @@ local.properties
 #intellij project files
 *.iml
 *.idea
+
+
+#Temp assets:
+/core/src/main/assets/LocalTemp

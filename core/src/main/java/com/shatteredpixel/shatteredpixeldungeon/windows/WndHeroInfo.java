@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -195,8 +196,8 @@ public class WndHeroInfo extends WndTabbed {
 						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case MARISA:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.MAGES_STAFF),
-						new ItemSprite(ItemSpriteSheet.WAND_MAGIC_MISSILE),
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.HAKKERO),
+						new ItemSprite(ItemSpriteSheet.MARISASTAFF),
 						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 			}

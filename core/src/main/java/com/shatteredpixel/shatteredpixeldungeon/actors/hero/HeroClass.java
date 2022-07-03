@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfDivination;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfHakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
@@ -242,20 +243,27 @@ public enum HeroClass {
 	}
 
 	private static void initMarisa( Hero hero ) {
+		
+		//debug test itesm
+			PotionOfExperience poe = new PotionOfExperience();
+			poe.quantity(30).collect();
 
-		PotionOfExperience poe = new PotionOfExperience();
-		poe.quantity(30).collect();
-		TengusMask tengu = new TengusMask();
-		tengu.quantity(2).collect();
-		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-		podi.quantity(6).collect();
+			TengusMask tengu = new TengusMask();
+			tengu.quantity(2).collect();
+			
+			PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+			podi.quantity(6).collect();
+
+			ScrollOfUpgrade sou = new ScrollOfUpgrade();
+			sou.quantity(15).collect();
+		//end of test items
 
 		Hakkero h = new Hakkero();
 		h.identify().collect();
 		Dungeon.quickslot.setSlot(1, h);
 
 		MarisaStaff staff;
-		staff = new MarisaStaff(new WandOfMagicMissile());
+		staff = new MarisaStaff(new WandOfHakkero());
 		(hero.belongings.weapon = staff).identify();
 		hero.belongings.weapon.activate(hero);
 		Dungeon.quickslot.setSlot(0, staff);

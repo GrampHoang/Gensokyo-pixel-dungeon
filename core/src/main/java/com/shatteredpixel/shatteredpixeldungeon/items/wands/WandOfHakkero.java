@@ -26,13 +26,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSpark;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -41,24 +37,13 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.PathFinder;
-import com.watabou.utils.PointF;
+
 import java.util.ArrayList;
 
-public class Hakkero extends DamageWand {
+public class WandOfHakkero extends DamageWand {
 
 	{
-		image = ItemSpriteSheet.HAKKERO;
+		image = ItemSpriteSheet.MARISASTAFF;
 
 		collisionProperties = Ballistica.MASTERSPARK;
 
@@ -68,14 +53,14 @@ public class Hakkero extends DamageWand {
 
 
 	public int min(int lvl){
-		return 2 + Dungeon.depth;
+		return 1+lvl;
 	}
 
 	public int max(int lvl){
-		return 8 + 3*lvl + Dungeon.depth;
+		return 6+3*lvl;
 	}
 	
-    protected int initialCharges() {
+	protected int initialCharges() {
 		return 2;
 	}
 
@@ -86,10 +71,9 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
-        boolean noticed = false;
+		
 		boolean terrainAffected = false;
-		Buff.prolong( curUser, Light.class, 1f);
-
+		
 		int level = buffedLvl();
 		
 		int maxDistance = Math.min(distance(), beam.dist);
@@ -100,32 +84,7 @@ public class Hakkero extends DamageWand {
 
 		int terrainPassed = 2, terrainBonus = 0;
 		for (int c : beam.subPath(1, maxDistance)) {
-            //Light
-            if (!Dungeon.level.insideMap(c)){
-				continue;
-			}
-			for (int n : PathFinder.NEIGHBOURS9){
-				int cell = c+n;
-
-				if (Dungeon.level.discoverable[cell])
-					Dungeon.level.mapped[cell] = true;
-
-				int terr = Dungeon.level.map[cell];
-				if ((Terrain.flags[terr] & Terrain.SECRET) != 0) {
-
-					Dungeon.level.discover( cell );
-
-					GameScene.discoverTile( cell, terr );
-					ScrollOfMagicMapping.discover(cell);
-
-					noticed = true;
-				}    
-			}
-            if (noticed){
-			    Sample.INSTANCE.play( Assets.Sounds.SECRET );
-            }
-			CellEmitter.center(c).burst( RainbowParticle.BURST, Random.IntRange( 1, 2 ) );
-            //End Light
+			
 			Char ch;
 			if ((ch = Actor.findChar( c )) != null) {
 
@@ -136,7 +95,7 @@ public class Hakkero extends DamageWand {
 
 				chars.add( ch );
 			}
-            
+
 			if (Dungeon.level.solid[c]) {
 				terrainPassed++;
 			}
@@ -151,23 +110,17 @@ public class Hakkero extends DamageWand {
 			
 			CellEmitter.center( c ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 		}
+		
 		if (terrainAffected) {
 			Dungeon.observe();
 		}
 		
-		int lvl = level + (chars.size()-1) - terrainBonus;
+		int lvl = level + (chars.size()-1) + 0;
 		for (Char ch : chars) {
 			wandProc(ch, chargesPerCast());
 			ch.damage( damageRoll(lvl), this );
 			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 			ch.sprite.flash();
-
-
-            //
-            //  Talent add here
-            //
-            //
-            //
 		}
 	}
 
@@ -184,7 +137,7 @@ public class Hakkero extends DamageWand {
 	public void fx(Ballistica beam, Callback callback) {
 		
 		int cell = beam.path.get(Math.min(beam.dist, distance()));
-		curUser.sprite.parent.add(new MasterSpark.MiniMasterSpark(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell ), 1.5f));
+		curUser.sprite.parent.add(new Beam.DeathRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell )));
 		callback.call();
 	}
 
@@ -197,4 +150,5 @@ public class Hakkero extends DamageWand {
 		particle.setSize( 0.5f, 3f);
 		particle.shuffleXY(1f);
 	}
+
 }

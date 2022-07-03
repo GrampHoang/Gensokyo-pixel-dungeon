@@ -246,10 +246,9 @@ public class MarisaStaff extends MeleeWeapon {
 	@Override
 	public String info() {
 		String info = super.info();
-
 		if (wand != null){
-			info += "\n\n" + Messages.get(this, "desc");
-			info += " " + Messages.get(this, "cursed");
+			if (!cursed || !cursedKnown)    info += "\n" + wand.statsDesc();
+			else                            info += "\n" + Messages.get(this, "cursed");
 		}
 		return info;
 	}
@@ -263,18 +262,18 @@ public class MarisaStaff extends MeleeWeapon {
 		return emitter;
 	}
 
-	private static final String WAND = "wand";
+	private static final String MARISTAFF = "marisastaff";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put(WAND, wand);
+		bundle.put(MARISTAFF, wand);
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		wand = (Wand) bundle.get(WAND);
+		wand = (Wand) bundle.get(MARISTAFF);
 		if (wand != null) {
 			wand.maxCharges = Math.min(wand.maxCharges + 1, 10);
 		}

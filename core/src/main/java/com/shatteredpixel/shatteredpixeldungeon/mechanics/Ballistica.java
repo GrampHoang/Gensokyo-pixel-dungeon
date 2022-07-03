@@ -50,6 +50,7 @@ public class Ballistica {
 
 	public static final int WONT_STOP =     0;
 
+	public static final int MASTERSPARK = STOP_SOLID | IGNORE_SOFT_SOLID;
 
 	public Ballistica( int from, int to, int params ){
 		sourcePos = from;

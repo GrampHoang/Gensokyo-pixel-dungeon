@@ -65,8 +65,8 @@ public class MasterSpark extends Image {
 	@Override
 	public void update() {
 		super.update();
-		//float p = 1/((float)pow(8,3*sqrt(x)))
-		float p = (float)Math.tanh(timeLeft);
+		//float size = 2f;
+		float p = 2f - 2f/((float)Math.pow(5,Math.sqrt(timeLeft)));
 		alpha( p );
 		scale.set( scale.x, p );
 		
@@ -77,7 +77,7 @@ public class MasterSpark extends Image {
 	
 	@Override
 	public void draw() {
-		Blending.setLightMode();
+		Blending.setLightMode(); 
 		super.draw();
 		Blending.setNormalMode();
 	}

@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
+import com.shatteredpixel.shatteredpixeldungeon.items.YinYang;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Annoying;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Displacing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Exhausting;
@@ -93,6 +94,8 @@ abstract public class Weapon extends KindOfWeapon {
 	
 	public Augment augment = Augment.NONE;
 	
+	private YinYang yinyang;
+
 	private static final int USES_TO_ID = 20;
 	private float usesLeftToID = USES_TO_ID;
 	private float availableUsesToID = USES_TO_ID/2f;
@@ -136,6 +139,7 @@ abstract public class Weapon extends KindOfWeapon {
 	private static final String CURSE_INFUSION_BONUS = "curse_infusion_bonus";
 	private static final String MASTERY_POTION_BONUS = "mastery_potion_bonus";
 	private static final String AUGMENT	        = "augment";
+	private static final String YINYANG	        = "yinyang";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -146,6 +150,7 @@ abstract public class Weapon extends KindOfWeapon {
 		bundle.put( CURSE_INFUSION_BONUS, curseInfusionBonus );
 		bundle.put( MASTERY_POTION_BONUS, masteryPotionBonus );
 		bundle.put( AUGMENT, augment );
+		bundle.put( YINYANG, yinyang );
 	}
 	
 	@Override
@@ -156,7 +161,7 @@ abstract public class Weapon extends KindOfWeapon {
 		enchantment = (Enchantment)bundle.get( ENCHANTMENT );
 		curseInfusionBonus = bundle.getBoolean( CURSE_INFUSION_BONUS );
 		masteryPotionBonus = bundle.getBoolean( MASTERY_POTION_BONUS );
-
+		yinyang = (YinYang)bundle.get(YINYANG);
 		augment = bundle.getEnum(AUGMENT, Augment.class);
 	}
 	
@@ -165,6 +170,7 @@ abstract public class Weapon extends KindOfWeapon {
 		super.reset();
 		usesLeftToID = USES_TO_ID;
 		availableUsesToID = USES_TO_ID/2f;
+		yinyang = null;
 	}
 	
 	@Override
@@ -326,6 +332,69 @@ abstract public class Weapon extends KindOfWeapon {
 
 	public boolean hasCurseEnchant(){
 		return enchantment != null && enchantment.curse();
+	}
+
+	protected static final String AC_DETACH       = "DETACH";
+
+	@Override
+	public void execute(Hero hero, String action) {
+
+		super.execute(hero, action);
+
+		if (action.equals(AC_DETACH) && enchantment != null){
+
+			YinYang detaching = yinyang;
+			yinyang = null;
+
+			if (detaching.level() > 0){
+				degrade();
+			}
+			if (detaching.getEnchantment() != null){
+				if (hero.hasTalent(Talent.ENCHANT_TRANSFER)
+						&& (Arrays.asList(Enchantment.common).contains(detaching.getEnchantment().getClass())
+							|| Arrays.asList(Enchantment.uncommon).contains(detaching.getEnchantment().getClass()))){
+					inscribe(null);
+				} else if (hero.pointsInTalent(Talent.ENCHANT_TRANSFER) == 2){
+					inscribe(null);
+				} else {
+					detaching.setEnchantment(null);
+				}
+			}
+			GLog.i( Messages.get(Weapon.class, "detach_orb") );
+			hero.sprite.operate(hero.pos);
+			if (!detaching.collect()){
+				Dungeon.level.drop(detaching, hero.pos);
+			}
+		}
+	}
+
+	public void affixYinYang(YinYang yinyang){
+		this.yinyang = yinyang;
+		if (yinyang.level() > 0){
+			//doesn't trigger upgrading logic such as affecting curses/glyphs
+			int newLevel = trueLevel()+1;
+			level(newLevel);
+			Badges.validateItemLevelAquired(this);
+		}
+		if (yinyang.getEnchantment() != null){
+			inscribe(yinyang.getEnchantment());
+		}
+	}
+
+	public Weapon inscribe( Enchantment enchantment ) {
+		if (enchantment == null || !enchantment.curse()) curseInfusionBonus = false;
+		this.enchantment = enchantment;
+		updateQuickslot();
+		//the hero needs runic transference to actually transfer, but we still attach the glyph here
+		// in case they take that talent in the future
+		if (yinyang != null){
+			yinyang.setEnchantment(enchantment);
+		}
+		return this;
+	}
+
+	public YinYang checkYinYang(){
+		return yinyang;
 	}
 
 	@Override

@@ -44,6 +44,9 @@ public enum HeroSubClass {
 	SNIPER(HeroIcon.SNIPER),
 	WARDEN(HeroIcon.WARDEN),
 
+	EXTERMINATOR(HeroIcon.EXTERMINATOR),
+	MAIDEN(HeroIcon.MAIDEN),
+
 	HUNTER(HeroIcon.HUNTER),
 	MAID(HeroIcon.MAID),
 	

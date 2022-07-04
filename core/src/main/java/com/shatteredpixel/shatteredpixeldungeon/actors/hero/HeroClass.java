@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.He
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Shockwave;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Endure;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
+import com.shatteredpixel.shatteredpixeldungeon.items.YinYang;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
@@ -52,6 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
@@ -83,6 +85,7 @@ public enum HeroClass {
 	MAGE( HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK ),
 	ROGUE( HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
 	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
+	REIMU(HeroSubClass.EXTERMINATOR, HeroSubClass.MAIDEN),
 	SAKUYA( HeroSubClass.HUNTER, HeroSubClass.MAID ),
 	MARISA( HeroSubClass.MAGICIAN, HeroSubClass.THIEF );
 
@@ -126,6 +129,10 @@ public enum HeroClass {
 
 			case HUNTRESS:
 				initHuntress( hero );
+				break;
+			
+			case REIMU:
+				initReimu( hero);
 				break;
 
 			case SAKUYA:
@@ -218,28 +225,35 @@ public enum HeroClass {
 		new ScrollOfLullaby().identify();
 	}
 
-	private static void initSakuya( Hero hero ) {
-		(hero.belongings.weapon = new Dagger()).identify();
+	private static void initReimu( Hero hero ) {
+		
+		//debug test itesm
+			PotionOfExperience poe = new PotionOfExperience();
+			poe.quantity(30).collect();
 
-		TimekeepersHourglass hourglass = new TimekeepersHourglass();
-		(hero.belongings.artifact = hourglass).identify();
-		hero.belongings.artifact.activate( hero );
+			TengusMask tengu = new TengusMask();
+			tengu.quantity(2).collect();
+			
+			PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+			podi.quantity(6).collect();
 
-		ThrowingKnife knives = new ThrowingKnife();
-		knives.quantity(3).collect();
+			ScrollOfUpgrade sou = new ScrollOfUpgrade();
+			sou.quantity(15).collect();
+		//end of test items
+		
+		WornShortsword wss = new WornShortsword();
+		wss.identify();
+		hero.belongings.weapon = wss;
 
-		PotionOfExperience poe = new PotionOfExperience();
-		poe.quantity(30).collect();
-		TengusMask tengu = new TengusMask();
-		tengu.quantity(2).collect();
-		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-		podi.quantity(6).collect();
+		YinYang yy = new YinYang();
+		yy.quantity(30).collect();
 
-		Dungeon.quickslot.setSlot(0, hourglass);
-		Dungeon.quickslot.setSlot(1, knives);
+		ThrowingStone stones = new ThrowingStone();
+		stones.quantity(3).collect();
+		Dungeon.quickslot.setSlot(0, stones);
 
-		new ScrollOfTeleportation().identify();
-		new PotionOfHaste().identify();
+		new PotionOfStrength().identify();
+		new ScrollOfUpgrade().identify();
 	}
 
 	private static void initMarisa( Hero hero ) {
@@ -272,6 +286,30 @@ public enum HeroClass {
 		new PotionOfLiquidFlame().identify();
 	}
 
+	private static void initSakuya( Hero hero ) {
+		(hero.belongings.weapon = new Dagger()).identify();
+
+		TimekeepersHourglass hourglass = new TimekeepersHourglass();
+		(hero.belongings.artifact = hourglass).identify();
+		hero.belongings.artifact.activate( hero );
+
+		ThrowingKnife knives = new ThrowingKnife();
+		knives.quantity(3).collect();
+
+		PotionOfExperience poe = new PotionOfExperience();
+		poe.quantity(30).collect();
+		TengusMask tengu = new TengusMask();
+		tengu.quantity(2).collect();
+		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+		podi.quantity(6).collect();
+
+		Dungeon.quickslot.setSlot(0, hourglass);
+		Dungeon.quickslot.setSlot(1, knives);
+
+		new ScrollOfTeleportation().identify();
+		new PotionOfHaste().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -286,7 +324,7 @@ public enum HeroClass {
 
 	public ArmorAbility[] armorAbilities(){
 		switch (this) {
-			case WARRIOR: default:
+			case WARRIOR:
 				return new ArmorAbility[]{new HeroicLeap(), new Shockwave(), new Endure()};
 			case MAGE:
 				return new ArmorAbility[]{new ElementalBlast(), new WildMagic(), new WarpBeacon()};
@@ -297,6 +335,8 @@ public enum HeroClass {
 			case SAKUYA:
 				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
 			case MARISA:
+				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
+			default:
 				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
 		}
 	}
@@ -311,6 +351,8 @@ public enum HeroClass {
 				return Assets.Sprites.ROGUE;
 			case HUNTRESS:
 				return Assets.Sprites.HUNTRESS;
+			case REIMU:
+				return Assets.Sprites.REIMU;
 			case SAKUYA:
 				return Assets.Sprites.SAKUYA;
 			case MARISA:
@@ -328,6 +370,8 @@ public enum HeroClass {
 				return Assets.Splashes.ROGUE;
 			case HUNTRESS:
 				return Assets.Splashes.HUNTRESS;
+			case REIMU:
+				return Assets.Splashes.REIMU;
 			case SAKUYA:
 				return Assets.Splashes.SAKUYA;
 			case MARISA:
@@ -360,6 +404,14 @@ public enum HeroClass {
 						Messages.get(HeroClass.class, "rogue_perk3"),
 						Messages.get(HeroClass.class, "rogue_perk4"),
 						Messages.get(HeroClass.class, "rogue_perk5"),
+				};
+			case REIMU:
+				return new String[]{
+						Messages.get(HeroClass.class, "reimu_perk1"),
+						Messages.get(HeroClass.class, "reimu_perk2"),
+						Messages.get(HeroClass.class, "reimu_perk3"),
+						Messages.get(HeroClass.class, "reimu_perk4"),
+						Messages.get(HeroClass.class, "reimu_perk5"),
 				};
 			case HUNTRESS:
 				return new String[]{

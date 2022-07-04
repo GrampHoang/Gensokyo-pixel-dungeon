@@ -383,8 +383,8 @@ public enum Icons {
 			return get( SAKUYA );
 		case MARISA:
 			return get( MARISA );
-		// case REIMU:
-		// 	return get( REIMU );
+		case REIMU:
+			return get( REIMU );
 		// case REISEN:
 		// 	return get( REISEN );
 		default:

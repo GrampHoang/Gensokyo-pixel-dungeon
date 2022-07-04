@@ -71,6 +71,9 @@ public class WndHeroInfo extends WndTabbed {
 			case HUNTRESS:
 				tabIcon = new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null);
 				break;
+			case REIMU:
+				tabIcon = new ItemSprite(ItemSpriteSheet.SEAL, null);
+				break;
 			case SAKUYA:
 				tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_HOURGLASS, null);
 				break;
@@ -188,6 +191,11 @@ public class WndHeroInfo extends WndTabbed {
 					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
 							new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16),
 							new ItemSprite(ItemSpriteSheet.GLOVES),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					break;
+				case REIMU:
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SEAL),
+							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case SAKUYA:

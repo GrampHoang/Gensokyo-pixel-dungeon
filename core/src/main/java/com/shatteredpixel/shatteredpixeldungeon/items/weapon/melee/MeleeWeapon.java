@@ -21,16 +21,25 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.items.YinYang;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon.Enchantment;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.watabou.utils.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MeleeWeapon extends Weapon {
 	
 	public int tier;
+	private YinYang yinyang;
 
 	@Override
 	public int min(int lvl) {
@@ -114,6 +123,65 @@ public class MeleeWeapon extends Weapon {
 		return Messages.get(this, "stats_desc");
 	}
 	
+	@Override
+	public void execute(Hero hero, String action) {
+
+		super.execute(hero, action);
+
+		if (action.equals(AC_DETACH) && enchantment != null){
+
+			YinYang detaching = yinyang;
+			yinyang = null;
+
+			if (detaching.level() > 0){
+				degrade();
+			}
+			// if (detaching.getEnchantment() != null){
+			// 	if (hero.hasTalent(Talent.ENCHANT_TRANSFER)
+			// 			&& (Arrays.asList(Enchantment.common).contains(detaching.getEnchantment().getClass())
+			// 				|| Arrays.asList(Enchantment.uncommon).contains(detaching.getEnchantment().getClass()))){
+			// 		inscribe(null);
+			// 	} else if (hero.pointsInTalent(Talent.ENCHANT_TRANSFER) == 2){
+			// 		inscribe(null);
+			// 	} else {
+			// 		detaching.setEnchantment(null);
+			// 	}
+			// }
+			GLog.i( Messages.get(Weapon.class, "detach_orb") );
+			hero.sprite.operate(hero.pos);
+			if (!detaching.collect()){
+				Dungeon.level.drop(detaching, hero.pos);
+			}
+		}
+	}
+
+	@Override
+	public void affixYinYang(YinYang yinyang){
+		this.yinyang = yinyang;
+		if (yinyang.level() > 0){
+			//doesn't trigger upgrading logic such as affecting curses/glyphs
+			int newLevel = trueLevel()+1;
+			level(newLevel);
+			Badges.validateItemLevelAquired(this);
+		}
+		if (yinyang.getEnchantment() != null){
+			inscribe(yinyang.getEnchantment());
+		}
+	}
+
+	@Override
+	public Weapon inscribe( Enchantment enchantment ) {
+		if (enchantment == null || !enchantment.curse()) curseInfusionBonus = false;
+		this.enchantment = enchantment;
+		updateQuickslot();
+		//the hero needs runic transference to actually transfer, but we still attach the glyph here
+		// in case they take that talent in the future
+		if (yinyang != null){
+			yinyang.setEnchantment(enchantment);
+		}
+		return this;
+	}
+
 	@Override
 	public int value() {
 		int price = 20 * tier;

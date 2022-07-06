@@ -470,7 +470,7 @@ abstract public class Weapon extends KindOfWeapon {
 		public void restoreFromBundle( Bundle bundle ) {
 		}
 
-		@Override
+		@Override	
 		public void storeInBundle( Bundle bundle ) {
 		}
 		

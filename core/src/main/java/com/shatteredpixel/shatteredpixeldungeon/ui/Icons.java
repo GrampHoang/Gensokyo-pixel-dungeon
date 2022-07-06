@@ -385,8 +385,8 @@ public enum Icons {
 			return get( MARISA );
 		case REIMU:
 			return get( REIMU );
-		// case REISEN:
-		// 	return get( REISEN );
+		case REISEN:
+			return get( REISEN );
 		default:
 			return null;
 		}

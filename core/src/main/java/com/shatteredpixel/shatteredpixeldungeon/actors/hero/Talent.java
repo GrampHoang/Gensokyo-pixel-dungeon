@@ -146,16 +146,36 @@ public enum Talent {
 	//Spirit Hawk T4
 	EAGLE_EYE(119, 4), GO_FOR_THE_EYES(120, 4), SWIFT_SPIRIT(121, 4),
 
+	//Sakuya T1
+	PREPARED_PIE(128), MAID_INTUITION(129), MUDA_STRIKE(130), TIME_PROTECTION(131),
+	//Sakuya T2
+	TIME_MEAL(132), RESTORED_TIME(133), MAID_STEPS(134), MAID_SENSES(135), SUPRISE_PROJECTILES(136),
+	//Sakuya T3
+	TIME_STOP_LETHALITY(137, 3), NATURAL_POWER(138, 3),
+	//Hunter T3
+	KILLING_MOMENTUM(139, 3), MAID_INSTINCT(140, 3), BACKTRACK(141, 3),
+	//Maid T3
+	HEALING_ACCEL(142, 3), AGELESS(143, 3), SUPERSPEED(144, 3),
+	//Spectral Blades T4
+	// FEEDBACK_LOOP(113, 4), WEAKPOINT(114, 4), PROLONG(115, 4),
+	//Natures Power T4
+	// MOMENTUM(116, 4), KNIFE_PARTY(117, 4), FURTHER(118, 4),
+	//Spirit Hawk T4
+	// CHAOS_KNIFE(119, 4), STORM_KNIFE(120, 4), RISING_WORLD(121, 4),
+	
 	//Reimu T1
-	SHRINE_MEAL(32), TALISMAN_INTUITION(33), FANTASY_NATURE(34), DUPLEX_BARRIER(35),
+	SHRINE_MEAL(160), TALISMAN_INTUITION(33), FANTASY_NATURE(34), DUPLEX_BARRIER(35),
 	//Reimu T2
 	POOR_MEAL(36), BATTLECRY_UPGRADE(37), ENCHANT_TRANSFER(38), GOD_BLESSING(39), HIDDEN_NEEDLE(40),
 	//Reimu T3
-	RUTHLESS(41, 3), SSTANCE(42, 3),
+	RUTHLESS(41, 3), STANCE(42, 3),
 	//Exterminator T3
 	EXTENDED_EXTER(43, 3), NO_MERCY(44, 3), DANMAKU_BAR(45, 3),
 	//Shrine Maiden T3
 	ACC_SHOT(46, 3), CLOSE_COMBAT(47, 3), SEALCRIP(48, 3),
+	//Fantasy Seal -Marred- (root + debuff)
+	//Fantasy Seal -SSpread- (push + buff)
+	//Fantasy Seal -Orbs- (explode + damage)
 
 	//Marisa
 	MAGIC_SHROOM(32), POT_INTUITION(33), MAGIC_STRIKE(34), SPARK_SHIELD(35),
@@ -167,28 +187,24 @@ public enum Talent {
 	BURN_MS(43, 3), CRIPPLE_MS(44, 3), PARA_MS(45, 3),
 	//Thief T3
 	MAGICAL_FLIGHT(46, 3), EXTENDED_FLIGHT(47, 3), MAGUS_NIGHT(48, 3),
-
-	//Sakuya T1
-	PREPARED_PIE(128), MAID_INTUITION(129), MUDA_STRIKE(130), TIME_PROTECTION(131),
-	//Sakuya T2
-	TIME_MEAL(132), RESTORED_TIME(133), MAID_STEPS(134), MAID_SENSES(135), SUPRISE_PROJECTILES(136),
-	//Sakuya T3
-	TIME_STOP_LETHALITY(137, 3), NATURAL_POWER(138, 3),
-	//Hunter T3
-	KILLING_MOMENTUM(139, 3), MAID_INSTINCT(140, 3), BACKTRACK(141, 3),
-	//Maid T3
-	HEALING_ACCEL(142, 3), AGELESS(143, 3), SUPERSPEED(144, 3),
-
-	//Reisen T1
-
-	
-	//Spectral Blades T4
-	// FEEDBACK_LOOP(113, 4), WEAKPOINT(114, 4), PROLONG(115, 4),
-	//Natures Power T4
-	// MOMENTUM(116, 4), KNIFE_PARTY(117, 4), FURTHER(118, 4),
-	//Spirit Hawk T4
-	// CHAOS_KNIFE(119, 4), STORM_KNIFE(120, 4), RISING_WORLD(121, 4),
+	//Final Master Spark (big MS)
+	//Earthligh ray (shoot ceiling)
+	//Blazing Star (dash)
 		
+	// Reisen T1
+	EINTEI_MEAL(128), EIRIN_BOOK(129), HEADSHOT(130), BULLEYES(131),
+	// Reisen T2
+	MED_MEAL(132), QUICK_BITTER_HEAL(133), WAVE_DETECT(134), SCOUT_SHOT(135), QUICKDRAW(136),
+	// Reisen T3
+	INSANITY_INDUCE(137, 3), CHARM_GAZE(138, 3),
+	// MoonRabbit T3
+	LEG_SHOT(139, 3), HEART_PIERCE(140, 3), ILLUSION_SEEKER(141, 3),
+	// Refugee T3
+	POT_RESERVE(142, 3), FAKE_THROW(143, 3), INSANITY_GAZE(144, 3),
+	// Full Moon (shoot circle)
+	//Mind Stopper (sentries)
+	//Lunatic Red eye (amok)
+
 
 	//Default for new template character:
 	DEFAULT_STR_UP(30), DEFAULT_HP_UP(31), DEFAULT_MORE_HP_UP(31,3),
@@ -572,14 +588,20 @@ public enum Talent {
 			case HUNTRESS:
 				Collections.addAll(tierTalents, NATURES_BOUNTY, SURVIVALISTS_INTUITION, FOLLOWUP_STRIKE, NATURES_AID);
 				break;
+			case REIMU:
+				Collections.addAll(tierTalents, SHRINE_MEAL, TALISMAN_INTUITION, FANTASY_NATURE, DUPLEX_BARRIER);
+				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, PREPARED_PIE, MAID_INTUITION, MUDA_STRIKE, TIME_PROTECTION);
 				break;
 			case MARISA:
 				Collections.addAll(tierTalents, EMPOWERING_MEAL, SCHOLARS_INTUITION, TESTED_HYPOTHESIS, BACKUP_BARRIER);
 				break;
+			case REISEN:
+				Collections.addAll(tierTalents, EINTEI_MEAL, EIRIN_BOOK, HEADSHOT, BULLEYES);
+				break;
 			default:
-				Collections.addAll(tierTalents, DEFAULT_STR_UP, DEFAULT_STR_UP, DEFAULT_HP_UP, DEFAULT_HP_UP);
+				Collections.addAll(tierTalents, DEFAULT_STR_UP, ARMSMASTERS_INTUITION, DEFAULT_HP_UP, DEFAULT_MORE_HP_UP);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -604,15 +626,23 @@ public enum Talent {
 			case HUNTRESS:
 				Collections.addAll(tierTalents, INVIGORATING_MEAL, RESTORED_NATURE, REJUVENATING_STEPS, HEIGHTENED_SENSES, DURABLE_PROJECTILES);
 				break;
-			case SAKUYA:
-				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SUPRISE_PROJECTILES);
+
+			case REIMU:
+				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, ENCHANT_TRANSFER, GOD_BLESSING, HIDDEN_NEEDLE);
 				break;
 			case MARISA:
 				Collections.addAll(tierTalents, ENERGIZING_MEAL, ENERGIZING_UPGRADE, WAND_PRESERVATION, ARCANE_VISION, SHIELD_BATTERY);
 				break;
-			default:
-				Collections.addAll(tierTalents, DEFAULT_HP_UP, DEFAULT_HP_UP, DEFAULT_HP_UP, DEFAULT_HP_UP, DEFAULT_HP_UP);
+			case SAKUYA:
+				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SUPRISE_PROJECTILES);
 				break;
+			case REISEN:
+				Collections.addAll(tierTalents, MED_MEAL, QUICK_BITTER_HEAL, WAVE_DETECT, SCOUT_SHOT, QUICKDRAW);
+				break;
+			default:
+				Collections.addAll(tierTalents, LETHAL_MOMENTUM, HEIGHTENED_SENSES, WIDE_SEARCH, SILENT_STEPS, REJUVENATING_STEPS);
+				break;
+				
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -636,14 +666,20 @@ public enum Talent {
 			case HUNTRESS:
 				Collections.addAll(tierTalents, POINT_BLANK, SEER_SHOT);
 				break;
+			case REIMU:
+				Collections.addAll(tierTalents, RUTHLESS, STANCE);
+				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, TIME_STOP_LETHALITY, NATURAL_POWER);
 				break;
 			case MARISA:
 				Collections.addAll(tierTalents, EMPOWERING_SCROLLS, ALLY_WARP);
 				break;
+			case REISEN:
+				Collections.addAll(tierTalents, INSANITY_INDUCE, CHARM_GAZE);
+				break;
 			default:
-				Collections.addAll(tierTalents, DEFAULT_MORE_HP_UP, DEFAULT_MORE_HP_UP);
+				Collections.addAll(tierTalents, STRONGMAN, AGELESS);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -697,6 +733,12 @@ public enum Talent {
 			case WARDEN:
 				Collections.addAll(tierTalents, DURABLE_TIPS, BARKSKIN, SHIELDING_DEW);
 				break;
+			case EXTERMINATOR:
+				Collections.addAll(tierTalents, EXTENDED_EXTER, NO_MERCY, DANMAKU_BAR);
+				break;
+			case MAIDEN:
+				Collections.addAll(tierTalents, ACC_SHOT, CLOSE_COMBAT, SEALCRIP);
+				break;
 			case HUNTER:
 				Collections.addAll(tierTalents, KILLING_MOMENTUM, MAID_INSTINCT, BACKTRACK);
 				break;
@@ -709,8 +751,14 @@ public enum Talent {
 			case THIEF:
 				Collections.addAll(tierTalents, SOUL_EATER, SOUL_SIPHON, NECROMANCERS_MINIONS);
 				break;
+			case MOONRABBIT:
+				Collections.addAll(tierTalents, LEG_SHOT, HEART_PIERCE, ILLUSION_SEEKER);
+				break;
+			case REFUGEE:
+				Collections.addAll(tierTalents, POT_RESERVE, FAKE_THROW, INSANITY_GAZE);
+				break;
 			default:
-				Collections.addAll(tierTalents, DEFAULT_MORE_HP_UP, DEFAULT_MORE_HP_UP, DEFAULT_MORE_HP_UP);
+				Collections.addAll(tierTalents, MAID_INSTINCT, HEALING_ACCEL, BACKTRACK);
 				break;
 		}
 		for (Talent talent : tierTalents){

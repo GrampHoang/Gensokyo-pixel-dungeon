@@ -68,6 +68,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfDiv
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfHakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -86,8 +87,9 @@ public enum HeroClass {
 	ROGUE( HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
 	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
 	REIMU(HeroSubClass.EXTERMINATOR, HeroSubClass.MAIDEN),
+	MARISA( HeroSubClass.MAGICIAN, HeroSubClass.THIEF ),
 	SAKUYA( HeroSubClass.HUNTER, HeroSubClass.MAID ),
-	MARISA( HeroSubClass.MAGICIAN, HeroSubClass.THIEF );
+	REISEN( HeroSubClass.MOONRABBIT, HeroSubClass.REFUGEE );
 
 	private HeroSubClass[] subClasses;
 
@@ -135,12 +137,16 @@ public enum HeroClass {
 				initReimu( hero);
 				break;
 
+			case MARISA:
+				initMarisa( hero );
+				break;
+
 			case SAKUYA:
 				initSakuya( hero);
 				break;
 
-			case MARISA:
-				initMarisa( hero );
+			case REISEN:
+				initReisen( hero);
 				break;
 		}
 
@@ -248,10 +254,6 @@ public enum HeroClass {
 		YinYang yy = new YinYang();
 		yy.quantity(30).collect();
 
-		ThrowingStone stones = new ThrowingStone();
-		stones.quantity(3).collect();
-		Dungeon.quickslot.setSlot(0, stones);
-
 		new PotionOfStrength().identify();
 		new ScrollOfUpgrade().identify();
 	}
@@ -310,6 +312,32 @@ public enum HeroClass {
 		new PotionOfHaste().identify();
 	}
 
+	private static void initReisen( Hero hero ) {
+		
+		//debug test itesm
+			PotionOfExperience poe = new PotionOfExperience();
+			poe.quantity(30).collect();
+
+			TengusMask tengu = new TengusMask();
+			tengu.quantity(2).collect();
+			
+			PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+			podi.quantity(6).collect();
+
+			ScrollOfUpgrade sou = new ScrollOfUpgrade();
+			sou.quantity(15).collect();
+		//end of test items
+
+		(hero.belongings.weapon = new Gloves()).identify();
+		ReisenGun gun = new ReisenGun();
+		gun.identify().collect();
+
+		Dungeon.quickslot.setSlot(0, gun);
+
+		new PotionOfMindVision().identify();
+		new ScrollOfLullaby().identify();
+	}
+
 	public String title() {
 		return Messages.get(HeroClass.class, name());
 	}
@@ -357,6 +385,8 @@ public enum HeroClass {
 				return Assets.Sprites.SAKUYA;
 			case MARISA:
 				return Assets.Sprites.MARISA;
+			case REISEN:
+				return Assets.Sprites.REISEN;
 		}
 	}
 
@@ -376,6 +406,8 @@ public enum HeroClass {
 				return Assets.Splashes.SAKUYA;
 			case MARISA:
 				return Assets.Splashes.MARISA;
+			case REISEN:
+				return Assets.Splashes.REISEN;
 		}
 	}
 	
@@ -436,6 +468,14 @@ public enum HeroClass {
 						Messages.get(HeroClass.class, "marisa_perk3"),
 						Messages.get(HeroClass.class, "marisa_perk4"),
 						Messages.get(HeroClass.class, "marisa_perk5"),
+				};
+			case REISEN:
+				return new String[]{
+						Messages.get(HeroClass.class, "reisen_perk1"),
+						Messages.get(HeroClass.class, "reisen_perk2"),
+						Messages.get(HeroClass.class, "reisen_perk3"),
+						Messages.get(HeroClass.class, "reisen_perk4"),
+						Messages.get(HeroClass.class, "reisen_perk5"),
 				};
 		}
 	}

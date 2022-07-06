@@ -1050,9 +1050,17 @@ public abstract class Level implements Bundlable {
 				if (Dungeon.hero.pos == cell) {
 					Dungeon.hero.interrupt();
 				}
-
-				trap.trigger();
-
+				if (Dungeon.hero.hasTalent(Talent.NIMBLE)){
+					if (Random.Int(0, 1) < Dungeon.hero.pointsInTalent(Talent.NIMBLE)){
+						//nothing
+					}
+					else{
+						trap.trigger();
+					}
+				}
+				else{
+					trap.trigger();
+				}
 			}
 		}
 		

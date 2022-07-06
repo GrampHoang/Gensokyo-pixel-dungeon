@@ -51,8 +51,11 @@ public enum HeroSubClass {
 	MAID(HeroIcon.MAID),
 	
 	MAGICIAN(HeroIcon.MAGICIAN),
-	THIEF(HeroIcon.THIEF);
+	THIEF(HeroIcon.THIEF),
 
+	MOONRABBIT(HeroIcon.MOONRABBIT),
+	REFUGEE(HeroIcon.REFUGEE);
+	
 	int icon;
 
 	HeroSubClass(int icon){

@@ -208,6 +208,11 @@ public class WndHeroInfo extends WndTabbed {
 						new ItemSprite(ItemSpriteSheet.MARISASTAFF),
 						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
+				case REISEN:
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
+						new ItemSprite(ItemSpriteSheet.GLOVES),
+						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					break;
 			}
 			for (Image im : icons) {
 				add(im);

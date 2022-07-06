@@ -52,6 +52,8 @@ public class HeroIcon extends Image {
 	public static final int MAID		= 5;
 	public static final int MAGICIAN 	= 2;
 	public static final int THIEF		= 5;
+	public static final int MOONRABBIT  = 6;
+	public static final int REFUGEE     = 7;
 	//abilities
 	public static final int HEROIC_LEAP     = 8;
 	public static final int SHOCKWAVE       = 9;

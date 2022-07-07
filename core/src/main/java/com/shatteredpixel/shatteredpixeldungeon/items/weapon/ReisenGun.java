@@ -25,7 +25,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char.Property;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
@@ -36,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
@@ -139,6 +139,13 @@ public class ReisenGun extends Weapon {
 		// 	});
 
 		// }
+		
+		if (Dungeon.hero.hasTalent(Talent.HEADSHOT)){
+			if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.HEADSHOT)){
+				Buff.prolong(defender, Paralysis.class, 1f);
+			}
+		}
+
 
 		if (Dungeon.hero.hasTalent(Talent.INSANITY_INDUCE)){
 			if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.INSANITY_INDUCE)){
@@ -161,7 +168,7 @@ public class ReisenGun extends Weapon {
 					Buff.affect(defender, Bleeding.class).set(5f);
 				}
 				else{
-					defender.HP = 0;
+					defender.HP = 1;
 				}
 			}
 		}

@@ -34,6 +34,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
@@ -51,6 +54,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -164,35 +172,35 @@ public enum Talent {
 	// CHAOS_KNIFE(119, 4), STORM_KNIFE(120, 4), RISING_WORLD(121, 4),
 	
 	//Reimu T1
-	SHRINE_MEAL(160), TALISMAN_INTUITION(33), FANTASY_NATURE(34), DUPLEX_BARRIER(35),
+	SHRINE_MEAL(160), TALISMAN_INTUITION(161), FANTASY_NATURE(162), DUPLEX_BARRIER(163),
 	//Reimu T2
-	POOR_MEAL(36), BATTLECRY_UPGRADE(37), ENCHANT_TRANSFER(38), GOD_BLESSING(39), HIDDEN_NEEDLE(40),
+	POOR_MEAL(164), BATTLECRY_UPGRADE(165), ENCHANT_TRANSFER(166), GOD_BLESSING(167), HIDDEN_NEEDLE(168),
 	//Reimu T3
-	RUTHLESS(41, 3), STANCE(42, 3),
+	RUTHLESS(169, 3), STANCE(170, 3),
 	//Exterminator T3
-	EXTENDED_EXTER(43, 3), NO_MERCY(44, 3), DANMAKU_BAR(45, 3),
+	EXTENDED_EXTER(171, 3), NO_MERCY(172, 3), DANMAKU_BAR(173, 3),
 	//Shrine Maiden T3
-	ACC_SHOT(46, 3), CLOSE_COMBAT(47, 3), SEALCRIP(48, 3),
+	ACC_SHOT(174, 3), CLOSE_COMBAT(175, 3), SEALCRIP(176, 3),
 	//Fantasy Seal -Marred- (root + debuff)
-	//Fantasy Seal -SSpread- (push + buff)
+	//Fantasy Seal -Spread- (push + buff)
 	//Fantasy Seal -Orbs- (explode + damage)
 
 	//Marisa
-	MAGIC_SHROOM(32), POT_INTUITION(33), MAGIC_STRIKE(34), SPARK_SHIELD(35),
+	MAGIC_SHROOM(192), POT_INTUITION(193), MAGIC_STRIKE(194), SPARK_SHIELD(195),
 	//Marisa T2
-	MAGICIAN_MEAL(36), MAGICAL_RETREAT(37), SHININGG_STAR(38), NIMBLE(39), BLINDING_MS(40),
+	MAGICIAN_MEAL(196), MAGICAL_RETREAT(197), SHININGG_STAR(198), NIMBLE(199), BLINDING_MS(200),
 	//Marisa T3
-	LOVE_MS(41, 3), MAGUS_BALL(42, 3),
+	LOVE_MS(201, 3), MAGUS_BALL(202, 3),
 	//Magician T3
-	BURN_MS(43, 3), CRIPPLE_MS(44, 3), PARA_MS(45, 3),
+	BURN_MS(203, 3), CRIPPLE_MS(204, 3), PARA_MS(205, 3),
 	//Thief T3
-	MAGICAL_FLIGHT(46, 3), EXTENDED_FLIGHT(47, 3), MAGUS_NIGHT(48, 3),
+	MAGICAL_FLIGHT(206, 3), EXTENDED_FLIGHT(207, 3), MAGUS_NIGHT(208, 3),
 	//Final Master Spark (big MS)
 	//Earthligh ray (shoot ceiling)
 	//Blazing Star (dash)
 		
 	// Reisen T1
-	EINTEI_MEAL(128), EIRIN_BOOK(129), HEADSHOT(130), BULLEYES(131),
+	EINTEI_MEAL(224), EIRIN_BOOK(225), HEADSHOT(226), BULLEYES(227),
 	// Reisen T2
 	MED_MEAL(132), QUICK_BITTER_HEAL(133), WAVE_DETECT(134), SCOUT_SHOT(135), QUICKDRAW(136),
 	// Reisen T3
@@ -336,6 +344,21 @@ public enum Talent {
 			MeatPie pie = new MeatPie();
 			pie.quantity(1).collect();
 		}
+
+		if(talent == EIRIN_BOOK){
+			if(Dungeon.hero.pointsInTalent(Talent.EIRIN_BOOK) == 1){
+				PotionOfExperience poe = new PotionOfExperience();
+				PotionOfLiquidFlame polf = new PotionOfLiquidFlame();
+				polf.identify();
+				poe.identify();
+			}
+			if(Dungeon.hero.pointsInTalent(Talent.EIRIN_BOOK) == 2){
+				PotionOfInvisibility poi = new PotionOfInvisibility();
+				PotionOfHealing poh = new PotionOfHealing();
+				poi.identify();
+				poh.identify();
+			}
+		}
 	}
 
 	public static class CachedRationsDropped extends CounterBuff{{revivePersists = true;}};
@@ -388,6 +411,13 @@ public enum Talent {
 			}
 			ScrollOfRecharging.charge( hero );
 
+		}
+
+		if (hero.hasTalent(EINTEI_MEAL)){
+			Buff.affect( hero, Vertigo.class, 10f);
+			Buff.affect( hero, Hex.class, 10f);
+			Buff.affect( hero, Vulnerable.class, 10f);
+			hero.HP = Math.min(hero.HP + 2 + 3 * hero.pointsInTalent(EINTEI_MEAL), hero.HT);
 		}
 
 		if (hero.hasTalent(INVIGORATING_MEAL)){

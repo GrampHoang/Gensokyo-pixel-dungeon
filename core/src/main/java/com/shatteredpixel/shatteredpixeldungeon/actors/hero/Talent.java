@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.EnhancedRings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -36,9 +37,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
@@ -53,13 +57,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.FrozenCarpaccio;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfCleansing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -70,6 +77,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle.TimeBubble;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.HeroSelectScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -174,7 +182,7 @@ public enum Talent {
 	//Reimu T1
 	SHRINE_MEAL(160), TALISMAN_INTUITION(161), FANTASY_NATURE(162), DUPLEX_BARRIER(163),
 	//Reimu T2
-	POOR_MEAL(164), BATTLECRY_UPGRADE(165), ENCHANT_TRANSFER(166), GOD_BLESSING(167), HIDDEN_NEEDLE(168),
+	POOR_MEAL(164), BATTLECRY_UPGRADE(165), GAP_GIFT(166), GOD_BLESSING(167), HIDDEN_NEEDLE(168),
 	//Reimu T3
 	RUTHLESS(169, 3), STANCE(170, 3),
 	//Exterminator T3
@@ -208,7 +216,7 @@ public enum Talent {
 	// MoonRabbit T3
 	LEG_SHOT(139, 3), HEART_PIERCE(140, 3), ILLUSION_SEEKER(141, 3),
 	// Refugee T3
-	POT_RESERVE(142, 3), FAKE_THROW(143, 3), INSANITY_GAZE(144, 3),
+	POT_RESERVE(142, 3), FAKE_THROW(143, 3), POTION_WARFARE(144, 3),
 	// Full Moon (shoot circle)
 	//Mind Stopper (sentries)
 	//Lunatic Red eye (amok)
@@ -243,6 +251,13 @@ public enum Talent {
 	};
 	public static class RejuvenatingStepsFurrow extends CounterBuff{{revivePersists = true;}};
 	public static class SeerShotCooldown extends FlavourBuff{
+		public int icon() { return target.buff(RevealedArea.class) != null ? BuffIndicator.NONE : BuffIndicator.TIME; }
+		public void tintIcon(Image icon) { icon.hardlight(0.7f, 0.4f, 0.7f); }
+		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
+		public String toString() { return Messages.get(this, "name"); }
+		public String desc() { return Messages.get(this, "desc", dispTurns(visualcooldown())); }
+	};
+	public static class ScoutingShotCooldown extends FlavourBuff{
 		public int icon() { return target.buff(RevealedArea.class) != null ? BuffIndicator.NONE : BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0.7f, 0.4f, 0.7f); }
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
@@ -336,7 +351,7 @@ public enum Talent {
 			}
 		}
 
-		if (talent == HEIGHTENED_SENSES || talent == FARSIGHT || talent == MAID_INSTINCT || talent == MAID_SENSES){
+		if (talent == HEIGHTENED_SENSES || talent == FARSIGHT || talent == MAID_INSTINCT || talent == MAID_SENSES || talent == WAVE_DETECT){
 			Dungeon.observe();
 		}
 
@@ -346,17 +361,29 @@ public enum Talent {
 		}
 
 		if(talent == EIRIN_BOOK){
-			if(Dungeon.hero.pointsInTalent(Talent.EIRIN_BOOK) == 1){
+			if(Dungeon.hero.pointsInTalent(EIRIN_BOOK) == 1){
 				PotionOfExperience poe = new PotionOfExperience();
 				PotionOfLiquidFlame polf = new PotionOfLiquidFlame();
 				polf.identify();
 				poe.identify();
 			}
-			if(Dungeon.hero.pointsInTalent(Talent.EIRIN_BOOK) == 2){
+			if(Dungeon.hero.pointsInTalent(EIRIN_BOOK) == 2){
 				PotionOfInvisibility poi = new PotionOfInvisibility();
 				PotionOfHealing poh = new PotionOfHealing();
 				poi.identify();
 				poh.identify();
+			}
+		}
+
+		if (talent == GAP_GIFT){
+			if (Dungeon.hero.pointsInTalent(GAP_GIFT) == 1){
+				PotionOfCleansing poc = new PotionOfCleansing();
+				poc.quantity(1).collect();
+			}
+
+			if (Dungeon.hero.pointsInTalent(GAP_GIFT) == 2){
+				PotionOfHealing poh = new PotionOfHealing();
+				poh.quantity(1).collect();
 			}
 		}
 	}
@@ -376,11 +403,13 @@ public enum Talent {
 				hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), hero.pointsInTalent(HEARTY_MEAL));
 			}
 		}
+
 		if (hero.hasTalent(IRON_STOMACH)){
 			if (hero.cooldown() > 0) {
 				Buff.affect(hero, WarriorFoodImmunity.class, hero.cooldown());
 			}
 		}
+
 		if (hero.hasTalent(EMPOWERING_MEAL)){
 			//2/3 bonus wand damage for next 3 zaps
 			Buff.affect( hero, WandEmpower.class).set(1 + hero.pointsInTalent(EMPOWERING_MEAL), 3);
@@ -391,6 +420,7 @@ public enum Talent {
 			Buff.prolong( hero, Recharging.class, 2 + 3*(hero.pointsInTalent(ENERGIZING_MEAL)) );
 			ScrollOfRecharging.charge( hero );
 		}
+
 		if (hero.hasTalent(MYSTICAL_MEAL)){
 			//3/5 turns of recharging
 			ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
@@ -399,6 +429,31 @@ public enum Talent {
 			}
 			ScrollOfRecharging.charge( hero );
 		}
+		
+		if(hero.hasTalent(MAGIC_SHROOM)){
+				Buff.affect( hero, Vertigo.class, 4f);
+				Buff.affect( hero, WandEmpower.class).set(1 + hero.pointsInTalent(EMPOWERING_MEAL), 3);
+				ScrollOfRecharging.charge( hero );
+				FrozenCarpaccio.effect(hero);
+		}	
+
+
+		if(hero.hasTalent(MAGICIAN_MEAL)){
+			if(Dungeon.hero.pointsInTalent(Talent.MAGICIAN_MEAL) == 1){
+				Buff.affect( hero, Recharging.class, 4f);
+				Buff.affect( hero, Light.class, 10f);
+				ScrollOfRecharging.charge( hero );
+				hero.sprite.emitter().burst(Speck.factory(Speck.LIGHT), hero.pointsInTalent(MAGICIAN_MEAL));
+				hero.sprite.emitter().burst(Speck.factory(Speck.STAR), hero.pointsInTalent(MAGICIAN_MEAL));
+			}
+			if(Dungeon.hero.pointsInTalent(Talent.MAGICIAN_MEAL) == 2){
+				Buff.affect( hero, Recharging.class, 6f);
+				Buff.affect( hero, Light.class, 25f);
+				ScrollOfRecharging.charge( hero );
+				hero.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 1 + hero.pointsInTalent(MAGICIAN_MEAL));
+				hero.sprite.emitter().burst(Speck.factory(Speck.STAR), 1 + hero.pointsInTalent(MAGICIAN_MEAL));
+			}
+		}	
 		if (hero.hasTalent(TIME_MEAL)){
 			//3/5 turns of recharging
 			ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
@@ -418,6 +473,8 @@ public enum Talent {
 			Buff.affect( hero, Hex.class, 10f);
 			Buff.affect( hero, Vulnerable.class, 10f);
 			hero.HP = Math.min(hero.HP + 2 + 3 * hero.pointsInTalent(EINTEI_MEAL), hero.HT);
+			hero.sprite.emitter().burst(Speck.factory(Speck.HEALING), 2*hero.pointsInTalent(EINTEI_MEAL));
+			hero.sprite.emitter().burst(Speck.factory(Speck.TOXIC), hero.pointsInTalent(EINTEI_MEAL));
 		}
 
 		if (hero.hasTalent(INVIGORATING_MEAL)){
@@ -491,11 +548,27 @@ public enum Talent {
 				}
 			}
 
-			if (hero.pointsInTalent(RESTORED_TIME) == 1){
-				grassCells.remove(0);
-				grassCells.remove(0);
-				grassCells.remove(0);
+			if (hero.hasTalent(RESTORED_TIME)){
+				Buff.affect(hero, TimeBubble.class).sakuya( 1+hero.pointsInTalent(RESTORED_NATURE));
 			}
+
+			if (hero.hasTalent(QUICK_BITTER_HEAL)){
+				if (hero.pointsInTalent(QUICK_BITTER_HEAL) == 1){
+					Buff.affect(hero, Bless.class, 5f);
+					Buff.affect(hero, Vulnerable.class, 5f);
+				}
+				if (hero.pointsInTalent(QUICK_BITTER_HEAL) == 2){
+					Buff.affect(hero, Bless.class, 8f);
+					Buff.affect(hero, Vulnerable.class, 3f);
+				}
+			}
+
+			if (hero.hasTalent(MAGICAL_RETREAT)){
+				Buff.affect(hero, Haste.class, hero.pointsInTalent(MAGICAL_RETREAT));
+				Buff.affect(hero, Invisibility.class, hero.pointsInTalent(MAGICAL_RETREAT));
+				
+			}
+
 			Dungeon.observe();
 		}
 	}
@@ -516,6 +589,17 @@ public enum Talent {
 				ScrollOfRecharging.charge( Dungeon.hero );
 				SpellSprite.show( hero, SpellSprite.CHARGE );
 			}
+		}
+
+		if (hero.hasTalent(BATTLECRY_UPGRADE)){
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				mob.beckon( hero.pos );
+				if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
+					Buff.affect(mob, Slow.class, 1 + 2*hero.pointsInTalent(BATTLECRY_UPGRADE));
+				}
+			}
+			hero.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+			Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
 		}
 	}
 
@@ -541,6 +625,14 @@ public enum Talent {
 	public static void onItemCollected( Hero hero, Item item ){
 		if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (item instanceof Ring) ((Ring) item).setKnown();
+		}
+
+		if (hero.pointsInTalent(TALISMAN_INTUITION) == 2){
+			if (item instanceof Scroll) ((Scroll) item).setKnown();
+		}
+
+		if (hero.pointsInTalent(POT_INTUITION) == 2){
+			if (item instanceof Potion) ((Potion) item).setKnown();
 		}
 	}
 
@@ -579,6 +671,16 @@ public enum Talent {
 				}
 				enemy.buff(FollowupStrikeTracker.class).detach();
 			}
+		}
+
+		if (hero.hasTalent(Talent.HIDDEN_NEEDLE)) {
+			if (hero.belongings.weapon() instanceof MissileWeapon)
+				dmg += 2 + 2 * hero.pointsInTalent(Talent.HIDDEN_NEEDLE);
+		}
+
+		if (hero.hasTalent(Talent.RUTHLESS)) {
+			if (hero.belongings.weapon() instanceof MeleeWeapon)
+				dmg += -1 + 2 * hero.pointsInTalent(Talent.RUTHLESS);
 		}
 
 		return dmg;
@@ -658,7 +760,7 @@ public enum Talent {
 				break;
 
 			case REIMU:
-				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, ENCHANT_TRANSFER, GOD_BLESSING, HIDDEN_NEEDLE);
+				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, GAP_GIFT, GOD_BLESSING, HIDDEN_NEEDLE);
 				break;
 			case MARISA:
 				Collections.addAll(tierTalents, ENERGIZING_MEAL, ENERGIZING_UPGRADE, WAND_PRESERVATION, ARCANE_VISION, SHIELD_BATTERY);
@@ -785,7 +887,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, LEG_SHOT, HEART_PIERCE, ILLUSION_SEEKER);
 				break;
 			case REFUGEE:
-				Collections.addAll(tierTalents, POT_RESERVE, FAKE_THROW, INSANITY_GAZE);
+				Collections.addAll(tierTalents, POT_RESERVE, FAKE_THROW, POTION_WARFARE);
 				break;
 			default:
 				Collections.addAll(tierTalents, MAID_INSTINCT, HEALING_ACCEL, BACKTRACK);

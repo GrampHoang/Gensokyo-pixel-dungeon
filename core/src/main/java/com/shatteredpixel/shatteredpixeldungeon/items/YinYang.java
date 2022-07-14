@@ -2,8 +2,11 @@
  * Pixel Dungeon
  * Copyright (C) 2012-2015 Oleg Dolya
  *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ *  Shattered Pixel Dungeon
+ *  Copyright (C) 2014-2022 Evan Debenham
+ *
+ * Summoning Pixel Dungeon
+ * Copyright (C) 2019-2022 TrashboxBobylev
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,19 +28,16 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 
@@ -56,25 +56,6 @@ public class YinYang extends Item {
 		bones = false;
 
 		defaultAction = AC_INFO;
-	}
-
-	private Weapon.Enchantment enchantment;
-
-	public Weapon.Enchantment getEnchantment(){
-		return enchantment;
-	}
-
-	public void setEnchantment( Weapon.Enchantment enchantment ){
-		this.enchantment = enchantment;
-	}
-
-	public int maxShield( int armTier, int armLvl ){
-		return armTier + armLvl + Dungeon.hero.pointsInTalent(Talent.IRON_WILL);
-	}
-
-	@Override
-	public ItemSprite.Glowing glowing() {
-		return enchantment != null ? enchantment.glowing() : null;
 	}
 
 	@Override
@@ -98,7 +79,7 @@ public class YinYang extends Item {
 	}
 
 	@Override
-	//scroll of upgrade can be used directly once, same as upgrading weapon the orb is affixed to then removing it.
+	//scroll of upgrade can be used directly once, same as upgrading weapon the seal is affixed to then removing it.
 	public boolean isUpgradable() {
 		return level() == 0;
 	}
@@ -117,63 +98,26 @@ public class YinYang extends Item {
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			return item instanceof Weapon;
+			return item instanceof MeleeWeapon;
 		}
 
 		@Override
 		public void onSelect( Item item ) {
-			YinYang seal = (YinYang) curItem;
-			if (item != null && item instanceof Weapon) {
-				Weapon armor = (Weapon)item;
-				if (!armor.levelKnown){
+			if (item instanceof Weapon) {
+				Weapon wep = (Weapon) item;
+				if (!wep.levelKnown){
 					GLog.w(Messages.get(YinYang.class, "unknown_weapon"));
-
-				} else if ((armor.cursed || armor.level() < 0)
-						&& (seal.getEnchantment() == null || !seal.getEnchantment().curse())){
+				} else if (wep.cursed || wep.level() < 0){
 					GLog.w(Messages.get(YinYang.class, "degraded_weapon"));
-
-				} else if (armor.enchantment != null && seal.getEnchantment() != null
-						&& armor.enchantment.getClass() != seal.getEnchantment().getClass()) {
-					GameScene.show(new WndOptions(new ItemSprite(seal),
-							Messages.get(YinYang.class, "choose_title"),
-							Messages.get(YinYang.class, "choose_desc"),
-							armor.enchantment.name(),
-							seal.getEnchantment().name()){
-						@Override
-						protected void onSelect(int index) {
-							if (index == 0) seal.setEnchantment(null);
-							//if index is 1, then the enchantment transfer happens in affixSeal
-
-							GLog.p(Messages.get(YinYang.class, "affix"));
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
-							Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-							armor.affixYinYang(seal);
-							seal.detach(Dungeon.hero.belongings.backpack);
-						}
-					});
-
 				} else {
 					GLog.p(Messages.get(YinYang.class, "affix"));
 					Dungeon.hero.sprite.operate(Dungeon.hero.pos);
 					Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-					armor.affixYinYang((YinYang)curItem);
+					wep.affixSeal((YinYang)curItem);
 					curItem.detach(Dungeon.hero.belongings.backpack);
 				}
 			}
 		}
 	};
 
-	private static final String GLYPH = "enchantment";
-
-	@Override
-	public void storeInBundle(Bundle bundle) {
-		super.storeInBundle(bundle);
-		bundle.put(GLYPH, enchantment);
-	}
-
-	@Override
-	public void restoreFromBundle(Bundle bundle) {
-		super.restoreFromBundle(bundle);
-		enchantment = (Weapon.Enchantment)bundle.get(GLYPH);
-	}
 }

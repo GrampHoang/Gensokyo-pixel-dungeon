@@ -48,13 +48,18 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHaste;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfParalyticGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
@@ -245,6 +250,11 @@ public enum HeroClass {
 
 			ScrollOfUpgrade sou = new ScrollOfUpgrade();
 			sou.quantity(15).collect();
+
+			Dungeon.energy = 69;
+
+			PotionOfMindVision pom = new PotionOfMindVision();
+			pom.quantity(30).collect();
 		//end of test items
 		
 		WornShortsword wss = new WornShortsword();
@@ -252,7 +262,7 @@ public enum HeroClass {
 		hero.belongings.weapon = wss;
 
 		YinYang yy = new YinYang();
-		yy.quantity(30).collect();
+		yy.quantity(1).collect();
 
 		new PotionOfStrength().identify();
 		new ScrollOfUpgrade().identify();
@@ -315,6 +325,18 @@ public enum HeroClass {
 	private static void initReisen( Hero hero ) {
 		
 		//debug test itesm
+			Potion pot = new PotionOfLiquidFlame();
+			pot.quantity(30).collect();
+			pot = new PotionOfToxicGas();
+			pot.quantity(30).collect();
+			pot = new PotionOfParalyticGas();
+			pot.quantity(30).collect();
+			pot = new PotionOfFrost();
+			pot.quantity(30).collect();
+			pot = new PotionOfLevitation();
+			pot.quantity(30).collect();
+
+
 			PotionOfExperience poe = new PotionOfExperience();
 			poe.quantity(30).collect();
 

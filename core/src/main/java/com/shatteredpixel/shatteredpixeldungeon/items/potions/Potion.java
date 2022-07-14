@@ -31,8 +31,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -137,7 +140,8 @@ public class Potion extends Item {
 	protected static ItemStatusHandler<Potion> handler;
 	
 	protected String color;
-	
+	public boolean save = true;
+
 	{
 		stackable = true;
 		defaultAction = AC_DRINK;
@@ -285,9 +289,15 @@ public class Potion extends Item {
 	}
 	
 	protected void drink( Hero hero ) {
-		
+		//Have be be refugee, next one is chance to proc, last one is save-able potions: not PoH and PoT
+		if( (hero.subClass == HeroSubClass.REFUGEE) && (hero.pointsInTalent(Talent.POT_RESERVE) + 1 > Random.Int(0,9)) && (this.save == true)){
+			GLog.i("Potion reserved!");
+	 	} else{
 		detach( hero.belongings.backpack );
-		
+		}
+		if (hero.hasTalent(Talent.MED_MEAL)){
+			Buff.affect(curUser, Hunger.class).affectHunger(hero.pointsInTalent(Talent.MED_MEAL)*25);
+		}
 		hero.spend( TIME_TO_DRINK );
 		hero.busy();
 		apply( hero );
@@ -299,6 +309,23 @@ public class Potion extends Item {
 	
 	@Override
 	protected void onThrow( int cell ) {
+		if((Dungeon.hero.subClass == HeroSubClass.REFUGEE)){
+			if(Dungeon.hero.hasTalent(Talent.FAKE_THROW)){
+				if (Dungeon.hero.pointsInTalent(Talent.FAKE_THROW)*2 > Random.Int(0,9)){
+					this.collect();
+				}
+			}else if (1 > Random.Int(0,9)){
+				this.collect();
+			}
+
+			if(Dungeon.hero.hasTalent(Talent.POTION_WARFARE)){
+				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE)*2 > Random.Int(0,9)){
+					if (ExoticPotion.regToExo.get(getClass()) != null) {
+						Reflection.newInstance(ExoticPotion.regToExo.get(getClass())).shatter(cell);
+					}
+				}
+			}
+		}
 		if (Dungeon.level.map[cell] == Terrain.WELL || Dungeon.level.pit[cell]) {
 			
 			super.onThrow( cell );
@@ -463,10 +490,9 @@ public class Potion extends Item {
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			if (ingredients.size() != 3) {
+			if ((ingredients.size() == 1) || ((ingredients.size() == 2) && (Dungeon.hero.subClass != HeroSubClass.REFUGEE)) ) {
 				return false;
 			}
-			
 			for (Item ingredient : ingredients){
 				if (!(ingredient instanceof Plant.Seed
 						&& ingredient.quantity() >= 1
@@ -474,6 +500,7 @@ public class Potion extends Item {
 					return false;
 				}
 			}
+
 			return true;
 		}
 		

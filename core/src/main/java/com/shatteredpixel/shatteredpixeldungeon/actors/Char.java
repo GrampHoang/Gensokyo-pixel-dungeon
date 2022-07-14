@@ -255,6 +255,10 @@ public abstract class Char extends Actor {
 		return false;
 	}
 	
+	public String getName() {
+        return name();
+    }
+
 	protected static final String POS       = "pos";
 	protected static final String TAG_HP    = "HP";
 	protected static final String TAG_HT    = "HT";

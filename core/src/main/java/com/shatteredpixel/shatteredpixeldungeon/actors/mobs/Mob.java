@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
@@ -42,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -711,6 +713,14 @@ public abstract class Mob extends Char {
 					&& Random.Float() < 0.01f + 0.33f* Dungeon.hero.pointsInTalent(Talent.KILLING_MOMENTUM)){
 				Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
 			}
+			if(Dungeon.hero.hasTalent(Talent.DUPLEX_BARRIER)){
+				if(Random.Int(0,1) > Dungeon.hero.pointsInTalent(Talent.DUPLEX_BARRIER)){
+					Buff.affect(Dungeon.hero, Barrier.class).setShield(2);
+				}
+			}
+			if(Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
+				
+			}
 		}
 
 		if (Dungeon.hero.isAlive() && !Dungeon.level.heroFOV[pos]) {
@@ -739,7 +749,7 @@ public abstract class Mob extends Char {
 		float lootChance = this.lootChance;
 
 		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
-
+		lootChance *= (1f+0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
 		return lootChance;
 	}
 	

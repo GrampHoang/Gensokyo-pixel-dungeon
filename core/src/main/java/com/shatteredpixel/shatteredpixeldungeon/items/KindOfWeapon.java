@@ -49,7 +49,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 	
 	@Override
 	public boolean doEquip( Hero hero ) {
-
+		
 		detachAll( hero.belongings.backpack );
 		
 		if (hero.belongings.weapon == null || hero.belongings.weapon.doUnequip( hero, true )) {
@@ -90,25 +90,6 @@ abstract public class KindOfWeapon extends EquipableItem {
 		}
 	}
 
-	@Override
-	public void execute( Hero hero, String action ) {
-
-		super.execute( hero, action );
-
-		if (action.equals( AC_EQUIP )) {
-			//In addition to equipping itself, item reassigns itself to the quickslot
-			//This is a special case as the item is being removed from inventory, but is staying with the hero.
-			int slot = Dungeon.quickslot.getSlot( this );
-			doEquip(hero);
-			if (slot != -1) {
-				Dungeon.quickslot.setSlot( slot, this );
-				updateQuickslot();
-			}
-		} else if (action.equals( AC_UNEQUIP )) {
-			doUnequip( hero, true );
-		}
-	}
-	
 	public int min(){
 		return min(buffedLvl());
 	}

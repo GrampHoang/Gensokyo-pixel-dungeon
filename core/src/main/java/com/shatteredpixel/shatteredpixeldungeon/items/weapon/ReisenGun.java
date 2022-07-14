@@ -34,23 +34,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -60,7 +52,6 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
-import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
@@ -69,7 +60,7 @@ public class ReisenGun extends Weapon {
 	public static final String AC_SHOOT		= "SHOOT";
 	
 	{
-		image = ItemSpriteSheet.SPIRIT_BOW;
+		image = ItemSpriteSheet.REISENGUN;
 		
 		defaultAction = AC_SHOOT;
 		usesTargeting = true;
@@ -102,10 +93,6 @@ public class ReisenGun extends Weapon {
 			
 		}
 	}
-
-	private static Class[] harmfulPlants = new Class[]{
-			Blindweed.class, Firebloom.class, Icecap.class, Sorrowmoss.class,  Stormvine.class
-	};
 
 	@Override
 	public int proc(Char attacker, Char defender, int damage) {
@@ -336,29 +323,21 @@ public class ReisenGun extends Weapon {
 		return false;
 	}
 	
-	public SpiritArrow knockArrow(){
-		return new SpiritArrow();
+	public Bullet knockArrow(){
+		return new Bullet();
 	}
 	
-	public class SpiritArrow extends MissileWeapon {
+	public class Bullet extends MissileWeapon {
 		
 		{
-			image = ItemSpriteSheet.SPIRIT_ARROW;
+			image = ItemSpriteSheet.BULLET;
 
-			hitSound = Assets.Sounds.HIT_ARROW;
+			hitSound = Assets.Sounds.ZAP;
 		}
 
 		@Override
 		public Emitter emitter() {
-			if (Dungeon.hero.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
-				Emitter e = new Emitter();
-				e.pos(5, 5);
-				e.fillTarget = false;
-				e.pour(LeafParticle.GENERAL, 0.01f);
-				return e;
-			} else {
-				return super.emitter();
-			}
+			return super.emitter();
 		}
 
 		@Override
@@ -378,6 +357,9 @@ public class ReisenGun extends Weapon {
 		
 		@Override
 		public float delayFactor(Char user) {
+			if (Dungeon.hero.pointsInTalent(Talent.QUICKDRAW) > Random.Int(0,9)){
+				return 0;
+			}
 			return ReisenGun.this.delayFactor(user);
 		}
 		
@@ -472,13 +454,13 @@ public class ReisenGun extends Weapon {
 			} else {
 
 				if (user.hasTalent(Talent.SCOUT_SHOT)
-						&& user.buff(Talent.SeerShotCooldown.class) == null){
+						&& user.buff(Talent.ScoutingShotCooldown.class) == null){
 					int shotPos = throwPos(user, dst);
 					if (Actor.findChar(shotPos) == null) {
 						RevealedArea a = Buff.affect(user, RevealedArea.class, 5 * user.pointsInTalent(Talent.SCOUT_SHOT));
 						a.depth = Dungeon.depth;
 						a.pos = shotPos;
-						Buff.affect(user, Talent.SeerShotCooldown.class, 20f);
+						Buff.affect(user, Talent.ScoutingShotCooldown.class, 20f);
 					}
 				}
 

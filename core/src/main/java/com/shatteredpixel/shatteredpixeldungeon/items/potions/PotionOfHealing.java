@@ -45,7 +45,7 @@ public class PotionOfHealing extends Potion {
 
 	{
 		icon = ItemSpriteSheet.Icons.POTION_HEALING;
-
+		save = false;
 		bones = true;
 	}
 	

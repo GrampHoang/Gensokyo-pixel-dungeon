@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -110,8 +111,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMappi
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow.SpiritArrow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -450,6 +453,8 @@ public class Hero extends Char {
 		accuracy *= RingOfAccuracy.accuracyMultiplier( this );
 		
 		if (wep instanceof MissileWeapon){
+			accuracy *= (1f + 0.15f*pointsInTalent(Talent.BULLEYES));
+
 			if (Dungeon.level.adjacent( pos, target.pos )) {
 				accuracy *= (0.5f + 0.2f*pointsInTalent(Talent.POINT_BLANK));
 			} else {
@@ -475,6 +480,9 @@ public class Hero extends Char {
 		}
 		
 		if (Random.Int(0, 99) < 11*pointsInTalent(Talent.BACKTRACK)){
+			return INFINITE_EVASION;
+		}
+		if (Random.Int(0, 99) < 15*pointsInTalent(Talent.FANTASY_NATURE)){
 			return INFINITE_EVASION;
 		}
 		float evasion = defenseSkill;
@@ -544,6 +552,7 @@ public class Hero extends Char {
 			dmg = RingOfForce.damageRoll(this);
 		}
 		if (dmg < 0) dmg = 0;
+
 		return dmg;
 	}
 	
@@ -608,11 +617,12 @@ public class Hero extends Char {
 	}
 	
 	public float attackDelay() {
+		
 		if (buff(Talent.LethalMomentumTracker.class) != null){
 			buff(Talent.LethalMomentumTracker.class).detach();
 			return 0;
 		}
-
+			
 		if (belongings.weapon() != null) {
 			
 			return belongings.weapon().delayFactor( this );
@@ -744,7 +754,7 @@ public class Hero extends Char {
 		ready = false;
 	}
 	
-	private void ready() {
+	public void ready() {
 		if (sprite.looping()) sprite.idle();
 		curAction = null;
 		damageInterrupt = true;
@@ -1138,6 +1148,10 @@ public class Hero extends Char {
 				sprite.showStatus(CharSprite.DEFAULT, Messages.get(this, "wait"));
 			}
 		}
+
+		if (hasTalent(Talent.STANCE)){
+			Buff.affect(this, Haste.class, Dungeon.hero.pointsInTalent(Talent.STANCE));
+		}
 		resting = fullRest;
 	}
 	
@@ -1181,6 +1195,11 @@ public class Hero extends Char {
 			break;
 		case HUNTER:
 			damage *= 1.25f;
+			break;
+		case MOONRABBIT:
+			if (wep instanceof MissileWeapon || wep instanceof ReisenGun.Bullet) {
+			damage *= 1.25f;
+			}
 			break;
 		default:
 

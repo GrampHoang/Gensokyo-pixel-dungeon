@@ -45,7 +45,7 @@ public class Food extends Item {
 	
 	public static final String AC_EAT	= "EAT";
 	
-	public float energy = Hunger.HUNGRY;
+	public float energy = Hunger.HUNGRY*(1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.POOR_MEAL));
 	
 	{
 		stackable = true;
@@ -94,6 +94,9 @@ public class Food extends Item {
 		if (Dungeon.hero.hasTalent(Talent.IRON_STOMACH)
 			|| Dungeon.hero.hasTalent(Talent.ENERGIZING_MEAL)
 			|| Dungeon.hero.hasTalent(Talent.MYSTICAL_MEAL)
+			|| Dungeon.hero.hasTalent(Talent.POOR_MEAL)
+			|| Dungeon.hero.hasTalent(Talent.MAGICIAN_MEAL)
+			|| Dungeon.hero.hasTalent(Talent.MED_MEAL)
 			|| Dungeon.hero.hasTalent(Talent.INVIGORATING_MEAL)){
 			return TIME_TO_EAT - 2;
 		} else if(Dungeon.hero.hasTalent(Talent.TIME_MEAL)){

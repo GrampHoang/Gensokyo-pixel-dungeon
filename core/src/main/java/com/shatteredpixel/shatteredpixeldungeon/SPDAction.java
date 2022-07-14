@@ -77,6 +77,7 @@ public class SPDAction extends GameAction {
 	public static final GameAction TAG_ACTION   = new SPDAction("tag_action");
 	public static final GameAction TAG_LOOT     = new SPDAction("tag_loot");
 	public static final GameAction TAG_RESUME   = new SPDAction("tag_resume");
+	public static final GameAction TAG_REIMU	= new SPDAction("tag_reimu");
 
 	public static final GameAction HERO_INFO    = new SPDAction("hero_info");
 	public static final GameAction JOURNAL      = new SPDAction("journal");
@@ -148,6 +149,7 @@ public class SPDAction extends GameAction {
 		defaultBindings.put( Input.Keys.C,              SPDAction.TAG_LOOT );
 		defaultBindings.put( Input.Keys.ENTER,          SPDAction.TAG_LOOT );
 		defaultBindings.put( Input.Keys.R,              SPDAction.TAG_RESUME );
+		defaultBindings.put( Input.Keys.U,           	SPDAction.TAG_REIMU);
 
 		defaultBindings.put( Input.Keys.H,              SPDAction.HERO_INFO );
 		defaultBindings.put( Input.Keys.J,              SPDAction.JOURNAL );

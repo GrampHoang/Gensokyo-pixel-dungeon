@@ -19,41 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.potions;
+package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
-public class PotionOfStrength extends Potion {
-
+public class Exterminating extends FlavourBuff {
+	
 	{
-		icon = ItemSpriteSheet.Icons.POTION_STRENGTH;
-		save = false;
-		unique = true;
+		type = buffType.NEUTRAL;
+		
+		announced = true;
+	}
+	
+	public static final float DURATION	= 10f;
+	
+	@Override
+	public int icon() {
+		return BuffIndicator.AMOK;
+	}
+
+	@Override
+	public float iconFadePercent() {
+		return Math.max(0, (DURATION - visualcooldown()) / DURATION);
 	}
 	
 	@Override
-	public void apply( Hero hero ) {
-		identify();
-		
-		hero.STR++;
-		hero.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "msg_1") );
-		GLog.p( Messages.get(this, "msg_2") );
-		
-		Badges.validateStrengthAttained();
+	public String toString() {
+		return Messages.get(this, "name");
 	}
-
+	
 	@Override
-	public int value() {
-		return isKnown() ? 50 * quantity : super.value();
+	public String desc() {
+		return Messages.get(this, "desc", dispTurns());
 	}
-
-	@Override
-	public int energyVal() {
-		return isKnown() ? 8 * quantity : super.energyVal();
-	}
+	
 }

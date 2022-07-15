@@ -42,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Exterminating;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FrostImbue;
@@ -505,6 +506,9 @@ public abstract class Char extends Actor {
 			damage *= buff.meleeDamageFactor();
 			buff.onAttackProc( enemy );
 		}
+		if ( buff(Exterminating.class) != null ){
+			damage *= 1.2f;
+		}
 		return damage;
 	}
 	
@@ -518,6 +522,7 @@ public abstract class Char extends Actor {
 		if ( buff( Stamina.class ) != null) speed *= 1.5f;
 		if ( buff( Adrenaline.class ) != null) speed *= 2f;
 		if ( buff( Haste.class ) != null) speed *= 3f;
+		if ( buff( Exterminating.class ) != null) speed *= 1.2f;
 		if ( buff( Dread.class ) != null) speed *= 2f;
 		return speed;
 	}

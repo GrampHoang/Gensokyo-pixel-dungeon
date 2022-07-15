@@ -593,11 +593,11 @@ public enum Talent {
 
 		if (hero.hasTalent(BATTLECRY_UPGRADE)){
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-				mob.beckon( hero.pos );
-				if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
-					Buff.affect(mob, Slow.class, 1 + 2*hero.pointsInTalent(BATTLECRY_UPGRADE));
+				if (Dungeon.level.heroFOV[mob.pos]) {
+					Buff.affect( mob, Slow.class, 1f + 2f*Dungeon.hero.pointsInTalent(Talent.BATTLECRY_UPGRADE) );
 				}
 			}
+			
 			hero.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 			Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
 		}

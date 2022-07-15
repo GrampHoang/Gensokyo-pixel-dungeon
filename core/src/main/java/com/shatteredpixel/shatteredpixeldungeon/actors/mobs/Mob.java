@@ -36,8 +36,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Exterminating;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
@@ -713,13 +716,19 @@ public abstract class Mob extends Char {
 					&& Random.Float() < 0.01f + 0.33f* Dungeon.hero.pointsInTalent(Talent.KILLING_MOMENTUM)){
 				Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
 			}
-			if(Dungeon.hero.hasTalent(Talent.DUPLEX_BARRIER)){
+			if(cause == Dungeon.hero && Dungeon.hero.hasTalent(Talent.DUPLEX_BARRIER)){
 				if(Random.Int(0,1) > Dungeon.hero.pointsInTalent(Talent.DUPLEX_BARRIER)){
 					Buff.affect(Dungeon.hero, Barrier.class).setShield(2);
 				}
 			}
-			if(Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
-				
+			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
+				if(Dungeon.hero.buff(Exterminating.class) == null){
+					Buff.affect(Dungeon.hero, Exterminating.class, 10f);
+					// Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-10);
+				} else {
+					Buff.affect(Dungeon.hero, Exterminating.class, Dungeon.hero.pointsInTalent(Talent.EXTENDED_EXTER)*2);
+				}
+
 			}
 		}
 

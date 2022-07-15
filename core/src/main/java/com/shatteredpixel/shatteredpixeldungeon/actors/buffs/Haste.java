@@ -29,10 +29,16 @@ public class Haste extends FlavourBuff {
 	
 	{
 		type = buffType.POSITIVE;
+		private float left;
 	}
 	
 	public static final float DURATION	= 20f;
 	
+	public Haste set( float amount ){
+		if (left < amount) left = amount;
+		return this;
+	}
+
 	@Override
 	public int icon() {
 		return BuffIndicator.HASTE;

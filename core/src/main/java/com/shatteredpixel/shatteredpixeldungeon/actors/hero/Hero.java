@@ -42,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Exterminating;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
@@ -624,14 +625,20 @@ public class Hero extends Char {
 		}
 			
 		if (belongings.weapon() != null) {
-			
-			return belongings.weapon().delayFactor( this );
-			
+			if (buff(Exterminating.class) != null){
+				return belongings.weapon().delayFactor( this ) * 0.8f;
+			} else{
+				return belongings.weapon().delayFactor( this );
+			}
 		} else {
 			//Normally putting furor speed on unarmed attacks would be unnecessary
 			//But there's going to be that one guy who gets a furor+force ring combo
 			//This is for that one guy, you shall get your fists of fury!
-			return 1f/RingOfFuror.attackSpeedMultiplier(this);
+			if (buff(Exterminating.class) != null){
+				return 0.8f/RingOfFuror.attackSpeedMultiplier(this);
+			} else{
+				return 1f/RingOfFuror.attackSpeedMultiplier(this);
+			}
 		}
 	}
 

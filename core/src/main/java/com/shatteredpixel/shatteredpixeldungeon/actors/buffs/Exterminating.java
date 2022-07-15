@@ -25,13 +25,9 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Exterminating extends FlavourBuff {
-	
 	{
-		type = buffType.NEUTRAL;
-		
-		announced = true;
+		type = buffType.POSITIVE;
 	}
-	
 	public static final float DURATION	= 10f;
 	
 	@Override

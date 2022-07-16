@@ -24,27 +24,35 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon.Augment;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class Amulet extends MissileWeapon {
+public class Ofuda extends MissileWeapon {
 
 	{
-		image = ItemSpriteSheet.TOMAHAWK;
-		hitSound = Assets.Sounds.HIT_SLASH;
+		image = ItemSpriteSheet.OFUDA;
+		hitSound = Assets.Sounds.CHARGEUP;
 		hitSoundPitch = 0.9f;
+		
+		bones = false;
+		
 		tier = 1;
 		baseUses = 1;
+		sticky = false;
 	}
 
-    Weapon wep = (Weapon)Dungeon.hero.belongings.weapon;
+	Weapon wep = (Weapon)Dungeon.hero.belongings.weapon;
+	
 	@Override
 	public int min(int lvl) {
 		if (wep.augment == Augment.SPEED){
@@ -97,12 +105,29 @@ public class Amulet extends MissileWeapon {
 
 	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
-        if(Random.Int(0,4) > 0){
-            Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
-        }
+			if (Dungeon.hero.hasTalent(Talent.LUCKY_SHOT)){
+				if(Random.Int(0,99) < 15 + 5 * Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
+					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
+				}
+			} else {
+				if(Random.Int(0,9) < 1){
+					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
+				}
+			}
+
+			if (Dungeon.hero.hasTalent(Talent.SEALCRIP)){
+				if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
+					Buff.prolong( defender, Cripple.class, 4f);
+				}
+				if(Random.Int(0,19) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
+					Buff.prolong( defender, Slow.class, 4f);
+				}
+			}
+
 		return super.proc( attacker, defender, damage );
 	}
-    @Override
+
+ @Override
 	protected void onThrow( int cell ) {
 		Char enemy = Actor.findChar( cell );
 		if (enemy == null || enemy == curUser) {
@@ -110,35 +135,13 @@ public class Amulet extends MissileWeapon {
 				super.onThrow( cell );
 		} else {
 			if (!curUser.shoot( enemy, this )) {
+				decrementDurability();
 				rangedMiss( cell );
 			} else {
-				
+				decrementDurability();
 				rangedHit( enemy, cell );
 
 			}
 		}
-	}
-
-    @Override
-    protected void rangedHit( Char enemy, int cell ){
-		decrementDurability();
-		if (durability > 0){
-			//attempt to stick the missile weapon to the enemy, just drop it if we can't.
-			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Char.Alignment.ALLY){
-				PinCushion p = Buff.affect(enemy, PinCushion.class);
-				if (p.target == enemy){
-					p.stick(this);
-					return;
-				}
-			}
-			Dungeon.level.drop( this, cell ).sprite.drop();
-		}
-	}
-
-    @Override
-	protected void rangedMiss( int cell ) {
-        decrementDurability();
-		parent = null;
-		super.onThrow(cell);
 	}
 }

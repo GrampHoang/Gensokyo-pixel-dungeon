@@ -188,7 +188,7 @@ public enum Talent {
 	//Exterminator T3
 	EXTENDED_EXTER(171, 3), NO_MERCY(172, 3), DANMAKU_BAR(173, 3),
 	//Shrine Maiden T3
-	ACC_SHOT(174, 3), CLOSE_COMBAT(175, 3), SEALCRIP(176, 3),
+	LUCKY_SHOT(174, 3), DANMAKU_COMBAT(175, 3), SEALCRIP(176, 3),
 	//Fantasy Seal -Marred- (root + debuff)
 	//Fantasy Seal -Spread- (push + buff)
 	//Fantasy Seal -Orbs- (explode + damage)
@@ -196,7 +196,7 @@ public enum Talent {
 	//Marisa
 	MAGIC_SHROOM(192), POT_INTUITION(193), MAGIC_STRIKE(194), SPARK_SHIELD(195),
 	//Marisa T2
-	MAGICIAN_MEAL(196), MAGICAL_RETREAT(197), SHININGG_STAR(198), NIMBLE(199), BLINDING_MS(200),
+	MAGICIAN_MEAL(196), MAGICAL_RETREAT(197), SHINING_STAR(198), NIMBLE(199), BLINDING_MS(200),
 	//Marisa T3
 	LOVE_MS(201, 3), MAGUS_BALL(202, 3),
 	//Magician T3
@@ -431,10 +431,12 @@ public enum Talent {
 		}
 		
 		if(hero.hasTalent(MAGIC_SHROOM)){
-				Buff.affect( hero, Vertigo.class, 4f);
-				Buff.affect( hero, WandEmpower.class).set(1 + hero.pointsInTalent(EMPOWERING_MEAL), 3);
-				ScrollOfRecharging.charge( hero );
+			Buff.affect( hero, Vertigo.class, 4f);
+			Buff.affect( hero, WandEmpower.class).set(2 + 2*hero.pointsInTalent(MAGIC_SHROOM), 1);
+			ScrollOfRecharging.charge( hero );
+			if (Random.Int(0,9) < 2*Dungeon.hero.pointsInTalent(Talent.MAGIC_SHROOM)){
 				FrozenCarpaccio.effect(hero);
+			}
 		}	
 
 
@@ -673,6 +675,7 @@ public enum Talent {
 			}
 		}
 
+
 		if (hero.hasTalent(Talent.HIDDEN_NEEDLE)) {
 			if (hero.belongings.weapon() instanceof MissileWeapon)
 				dmg += 2 + 2 * hero.pointsInTalent(Talent.HIDDEN_NEEDLE);
@@ -727,7 +730,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, PREPARED_PIE, MAID_INTUITION, MUDA_STRIKE, TIME_PROTECTION);
 				break;
 			case MARISA:
-				Collections.addAll(tierTalents, EMPOWERING_MEAL, SCHOLARS_INTUITION, TESTED_HYPOTHESIS, BACKUP_BARRIER);
+				Collections.addAll(tierTalents, MAGIC_SHROOM, POT_INTUITION, MAGIC_STRIKE, SPARK_SHIELD);
 				break;
 			case REISEN:
 				Collections.addAll(tierTalents, EINTEI_MEAL, EIRIN_BOOK, HEADSHOT, BULLEYES);
@@ -763,7 +766,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, GAP_GIFT, GOD_BLESSING, HIDDEN_NEEDLE);
 				break;
 			case MARISA:
-				Collections.addAll(tierTalents, ENERGIZING_MEAL, ENERGIZING_UPGRADE, WAND_PRESERVATION, ARCANE_VISION, SHIELD_BATTERY);
+				Collections.addAll(tierTalents, MAGICIAN_MEAL, MAGICAL_RETREAT, SHINING_STAR, NIMBLE, BLINDING_MS);
 				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SUPRISE_PROJECTILES);
@@ -805,7 +808,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, TIME_STOP_LETHALITY, NATURAL_POWER);
 				break;
 			case MARISA:
-				Collections.addAll(tierTalents, EMPOWERING_SCROLLS, ALLY_WARP);
+				Collections.addAll(tierTalents, LOVE_MS, MAGUS_BALL);
 				break;
 			case REISEN:
 				Collections.addAll(tierTalents, INSANITY_INDUCE, CHARM_GAZE);
@@ -869,7 +872,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, EXTENDED_EXTER, NO_MERCY, DANMAKU_BAR);
 				break;
 			case MAIDEN:
-				Collections.addAll(tierTalents, ACC_SHOT, CLOSE_COMBAT, SEALCRIP);
+				Collections.addAll(tierTalents, LUCKY_SHOT, DANMAKU_COMBAT, SEALCRIP);
 				break;
 			case HUNTER:
 				Collections.addAll(tierTalents, KILLING_MOMENTUM, MAID_INSTINCT, BACKTRACK);
@@ -878,10 +881,10 @@ public enum Talent {
 				Collections.addAll(tierTalents, HEALING_ACCEL, AGELESS, SUPERSPEED);
 				break;
 			case MAGICIAN:
-				Collections.addAll(tierTalents, EMPOWERED_STRIKE, MYSTICAL_CHARGE, EXCESS_CHARGE);
+				Collections.addAll(tierTalents, BURN_MS, CRIPPLE_MS, PARA_MS);
 				break;
 			case THIEF:
-				Collections.addAll(tierTalents, SOUL_EATER, SOUL_SIPHON, NECROMANCERS_MINIONS);
+				Collections.addAll(tierTalents, MAGICAL_FLIGHT, EXTENDED_FLIGHT, MAGUS_NIGHT);
 				break;
 			case MOONRABBIT:
 				Collections.addAll(tierTalents, LEG_SHOT, HEART_PIERCE, ILLUSION_SEEKER);

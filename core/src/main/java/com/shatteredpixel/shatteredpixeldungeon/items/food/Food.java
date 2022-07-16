@@ -45,7 +45,7 @@ public class Food extends Item {
 	
 	public static final String AC_EAT	= "EAT";
 	
-	public float energy = Hunger.HUNGRY*(1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.POOR_MEAL));
+	public float energy = Hunger.HUNGRY;
 	
 	{
 		stackable = true;
@@ -108,6 +108,9 @@ public class Food extends Item {
 	}
 	
 	protected void satisfy( Hero hero ){
+		if(Dungeon.hero.hasTalent(Talent.POOR_MEAL)){
+			energy *= (1f + 0.2f * Dungeon.hero.pointsInTalent(Talent.POOR_MEAL));
+		}
 		if (Dungeon.isChallenged(Challenges.NO_FOOD)){
 			Buff.affect(hero, Hunger.class).satisfy(energy/3f);
 		} else {

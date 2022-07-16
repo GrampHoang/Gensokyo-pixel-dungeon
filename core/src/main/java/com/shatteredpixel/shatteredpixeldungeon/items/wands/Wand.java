@@ -351,7 +351,7 @@ public abstract class Wand extends Item {
 		maxCharges = Math.min( initialCharges() + level(), 10 );
 		//For Marisa's Hakkero
 		if (this.unique = true){
-			maxCharges = Math.min( initialCharges() + level(), 3);
+			maxCharges = Math.min( initialCharges() + level(), 8);
 		}
 		curCharges = Math.min( curCharges, maxCharges );
 	}
@@ -671,9 +671,13 @@ public abstract class Wand extends Item {
 			float turnsToCharge = (float) (BASE_CHARGE_DELAY
 					+ (SCALING_CHARGE_ADDITION * Math.pow(scalingFactor, missingCharges)));
 
+			float magician = 1f;
+			if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
+				magician = 1.3f;
+			}
 			LockedFloor lock = target.buff(LockedFloor.class);
 			if (lock == null || lock.regenOn())
-				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target);
+				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target)*magician;
 
 			for (Recharging bonus : target.buffs(Recharging.class)){
 				if (bonus != null && bonus.remainder() > 0f) {

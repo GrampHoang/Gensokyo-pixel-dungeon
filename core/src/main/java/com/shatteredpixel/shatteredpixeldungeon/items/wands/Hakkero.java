@@ -29,12 +29,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSpark;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -45,6 +48,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -86,6 +95,12 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
+		if (Dungeon.hero.hasTalent(Talent.SPARK_SHIELD)){
+			Buff.affect(Dungeon.hero, Barrier.class).setShield(Dungeon.hero.pointsInTalent(Talent.SPARK_SHIELD));
+		}
+		if (Dungeon.hero.hasTalent(Talent.MAGIC_STRIKE)){
+			Buff.affect(Dungeon.hero, Kinetic.ConservedDamage.class).setBonus(2*Dungeon.hero.pointsInTalent(Talent.MAGIC_STRIKE));
+		}
         boolean noticed = false;
 		boolean terrainAffected = false;
 		Buff.prolong( curUser, Light.class, 1f);
@@ -158,6 +173,7 @@ public class Hakkero extends DamageWand {
 		int lvl = level + (chars.size()-1) - terrainBonus;
 		for (Char ch : chars) {
 			wandProc(ch, chargesPerCast());
+			affectTarget(ch);
 			ch.damage( damageRoll(lvl), this );
 			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 			ch.sprite.flash();
@@ -171,9 +187,35 @@ public class Hakkero extends DamageWand {
 		}
 	}
 
+	private void affectTarget(Char ch){
+		if (Dungeon.hero.hasTalent(Talent.BLINDING_MS)){
+			if(Random.Int(0,1) < Dungeon.hero.pointsInTalent(Talent.BLINDING_MS)){
+				Buff.affect(ch, Blindness.class, 3f);
+			}
+		}
+		if (Dungeon.hero.hasTalent(Talent.LOVE_MS)){
+			if(Random.Int(0,99) < 15*Dungeon.hero.pointsInTalent(Talent.LOVE_MS)){
+				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+					if (Dungeon.level.heroFOV[mob.pos]) {
+						Buff.affect(ch, Charm.class, 3f);
+					}
+				}
+			}
+		}
+
+		if (Dungeon.hero.hasTalent(Talent.BURN_MS)){
+			Buff.affect(ch, Burning.class).reignite(ch, -1 + 2*Dungeon.hero.pointsInTalent(Talent.BURN_MS));;
+		}
+		if (Dungeon.hero.hasTalent(Talent.CRIPPLE_MS)){
+			Buff.affect(ch, Cripple.class, -1 + 2*Dungeon.hero.pointsInTalent(Talent.CRIPPLE_MS));
+		}
+		if (Dungeon.hero.hasTalent(Talent.PARA_MS)){
+			Buff.affect(ch, Paralysis.class, Dungeon.hero.pointsInTalent(Talent.PARA_MS));
+		}
+	}
+
 	@Override
 	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
-		//no direct effect, see magesStaff.reachfactor
 	}
 
 	private int distance() {

@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
@@ -118,6 +119,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow.SpiritArrow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -1157,7 +1159,7 @@ public class Hero extends Char {
 		}
 
 		if (hasTalent(Talent.STANCE)){
-			Buff.affect(this, Haste.class, Dungeon.hero.pointsInTalent(Talent.STANCE));
+			Buff.prolong(this, Haste.class, 0.5f + 0.5f * Dungeon.hero.pointsInTalent(Talent.STANCE));
 		}
 		resting = fullRest;
 	}
@@ -1169,7 +1171,11 @@ public class Hero extends Char {
 		KindOfWeapon wep = belongings.weapon();
 
 		if (wep != null) damage = wep.proc( this, enemy, damage );
-
+		if (wep instanceof MarisaStaff && Dungeon.hero.hasTalent(Talent.SHINING_STAR)){
+			if (Random.Int(0,99) < Dungeon.hero.pointsInTalent(Talent.SHINING_STAR) * 15){
+				Buff.affect(Dungeon.hero, Light.class, 8f);
+			}
+		}
 		if (buff(Talent.SpiritBladesTracker.class) != null
 				&& Random.Int(10) < 3*pointsInTalent(Talent.SPIRIT_BLADES)){
 			SpiritBow bow = belongings.getItem(SpiritBow.class);

@@ -723,7 +723,7 @@ public abstract class Mob extends Char {
 			}
 			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
 				if(Dungeon.hero.buff(Exterminating.class) == null){
-					Buff.affect(Dungeon.hero, Exterminating.class, 10f);
+					Buff.affect(Dungeon.hero, Exterminating.class, 15f);
 					// Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-10);
 				} else {
 					Buff.affect(Dungeon.hero, Exterminating.class, Dungeon.hero.pointsInTalent(Talent.EXTENDED_EXTER)*2);

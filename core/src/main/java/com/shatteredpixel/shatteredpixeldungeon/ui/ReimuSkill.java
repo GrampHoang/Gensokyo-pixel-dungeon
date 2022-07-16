@@ -24,53 +24,25 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
-import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun.Bullet;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Amulet;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Ofuda;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon.Augment;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.input.GameAction;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
-import com.watabou.noosa.particles.Emitter;
 
 public class ReimuSkill extends Tag {
 
@@ -210,10 +182,19 @@ public class ReimuSkill extends Tag {
     public static void doAttack(final Char enemy, int cell){
         AttackIndicator.target(enemy);
 
-        Dungeon.energy -= 2;
+        int energy_cost = 2;
+        if(Dungeon.hero.hasTalent(Talent.DANMAKU_COMBAT)){
+            if (Random.Int(0,9) > Dungeon.hero.pointsInTalent(Talent.DANMAKU_COMBAT)){
+                energy_cost = 1;
+                if (Random.Int(0,9) > 5){
+                    energy_cost = 0;
+                }
+            }
+        }
+        Dungeon.energy -= energy_cost;
 
-        MissileWeapon amulet = new Amulet();
-        amulet.cast(Dungeon.hero, cell);
+        MissileWeapon ofuda = new Ofuda();
+        ofuda.cast(Dungeon.hero, cell);
 
         if (Dungeon.hero.buff(FireImbue.class) != null)
             Dungeon.hero.buff(FireImbue.class).proc(enemy);
@@ -227,108 +208,4 @@ public class ReimuSkill extends Tag {
         // enemy.sprite.bloodBurstA( Dungeon.hero.sprite.center(), dmg );
         // enemy.sprite.flash();
     }
-
-    // public class Amulet extends MissileWeapon {
-		
-	// 	{
-	// 		image = ItemSpriteSheet.BULLET;
-	// 		hitSound = Assets.Sounds.ZAP;
-	// 	}
-
-	// 	@Override
-	// 	public Emitter emitter() {
-	// 		return super.emitter();
-	// 	}
-
-	// 	@Override
-	// 	protected void onThrow( int cell ) {
-	// 		Char enemy = Actor.findChar( cell );
-	// 		if (enemy == null || enemy == curUser) {
-	// 			parent = null;
-	// 			Splash.at( cell, 0xCC99FFFF, 1 );
-	// 		} else {
-	// 			if (!curUser.shoot( enemy, this )) {
-	// 				Splash.at(cell, 0xCC99FFFF, 1);
-	// 			}
-	// 		}
-	// 	}
-
-    //     public Amulet knockArrow(){
-    //         return new Amulet();
-    //     }
-
-    //     public int targetingPos(Hero user, int dst) {
-    //         return knockArrow().targetingPos(user, dst);
-    //     }
-
-	// 	@Override
-	// 	public void cast(final Hero user, final int dst) {
-	// 		final int cell = throwPos( user, dst );
-	// 		ReisenGun.this.targetPos = cell;
-	// 		if (sniperSpecial && ReisenGun.this.augment == Augment.SPEED){
-	// 			if (flurryCount == -1) flurryCount = 3;
-				
-	// 			final Char enemy = Actor.findChar( cell );
-				
-	// 			if (enemy == null){
-	// 				user.spendAndNext(castDelay(user, dst));
-	// 				sniperSpecial = false;
-	// 				flurryCount = -1;
-	// 				return;
-	// 			}
-	// 			QuickSlotButton.target(enemy);
-				
-	// 			final boolean last = flurryCount == 1;
-				
-	// 			user.busy();
-				
-	// 			throwSound();
-				
-	// 			((MissileSprite) user.sprite.parent.recycle(MissileSprite.class)).
-	// 					reset(user.sprite,
-	// 							cell,
-	// 							this,
-	// 							new Callback() {
-	// 								@Override
-	// 								public void call() {
-	// 									if (enemy.isAlive()) {
-	// 										curUser = user;
-	// 										onThrow(cell);
-	// 									}
-										
-	// 									if (last) {
-	// 										user.spendAndNext(castDelay(user, dst));
-	// 										sniperSpecial = false;
-	// 										flurryCount = -1;
-	// 									}
-	// 								}
-	// 							});
-				
-	// 			user.sprite.zap(cell, new Callback() {
-	// 				@Override
-	// 				public void call() {
-	// 					flurryCount--;
-	// 					if (flurryCount > 0){
-	// 						cast(user, dst);
-	// 					}
-	// 				}
-	// 			});
-				
-	// 		} else {
-
-	// 			if (user.hasTalent(Talent.SCOUT_SHOT)
-	// 					&& user.buff(Talent.ScoutingShotCooldown.class) == null){
-	// 				int shotPos = throwPos(user, dst);
-	// 				if (Actor.findChar(shotPos) == null) {
-	// 					RevealedArea a = Buff.affect(user, RevealedArea.class, 5 * user.pointsInTalent(Talent.SCOUT_SHOT));
-	// 					a.depth = Dungeon.depth;
-	// 					a.pos = shotPos;
-	// 					Buff.affect(user, Talent.ScoutingShotCooldown.class, 20f);
-	// 				}
-	// 			}
-
-	// 			super.cast(user, dst);
-	// 		}
-	// 	}
-	// }
 }

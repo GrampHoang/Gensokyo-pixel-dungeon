@@ -77,6 +77,11 @@ public class YinYang extends Item {
 			GameScene.show(new WndUseItem(null, this));
 		}
 	}
+	
+	@Override
+	public String desc() {
+		return Messages.get(this, "desc");
+	}
 
 	@Override
 	//scroll of upgrade can be used directly once, same as upgrading weapon the seal is affixed to then removing it.

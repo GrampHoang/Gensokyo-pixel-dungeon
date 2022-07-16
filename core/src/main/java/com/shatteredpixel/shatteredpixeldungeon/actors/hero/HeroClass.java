@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
+import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
@@ -112,6 +113,8 @@ public enum HeroClass {
 
 		i = new Food();
 		if (!Challenges.isItemBlocked(i)) i.collect();
+		i = new StoneOfFlock();
+		i.quantity(30).collect();
 
 		new VelvetPouch().collect();
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
@@ -256,7 +259,7 @@ public enum HeroClass {
 			PotionOfMindVision pom = new PotionOfMindVision();
 			pom.quantity(30).collect();
 		//end of test items
-		
+		 
 		WornShortsword wss = new WornShortsword();
 		wss.identify();
 		hero.belongings.weapon = wss;

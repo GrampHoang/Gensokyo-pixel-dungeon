@@ -1209,14 +1209,7 @@ public class Hero extends Char {
 		case HUNTER:
 			damage *= 1.25f;
 			break;
-		case MOONRABBIT:
-			if (wep instanceof MissileWeapon || wep instanceof ReisenGun.Bullet) {
-			damage *= 1.25f;
-			}
-			break;
 		default:
-
-
 		}
 		
 		return damage;

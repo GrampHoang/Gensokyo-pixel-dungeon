@@ -54,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Madden;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
@@ -101,6 +102,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
@@ -466,6 +468,9 @@ public abstract class Char extends Actor {
 		}
 		
 		float defRoll = Random.Float( defStat );
+		if (defender == hero && hero.hasTalent(Talent.SMALL_HITBOX)){
+			defRoll *= (1f + hero.pointsInTalent(Talent.SMALL_HITBOX) * 0.33f);
+		}
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
 		if (defender.buff(  Hex.class) != null) defRoll *= 0.8f;
 		for (ChampionEnemy buff : defender.buffs(ChampionEnemy.class)){
@@ -598,6 +603,11 @@ public abstract class Char extends Actor {
 		if (this.buff(Doom.class) != null && !isImmune(Doom.class)){
 			dmg *= 2;
 		}
+
+		if (this.buff(Madden.class) != null && !isImmune(Doom.class)){
+			dmg *= 2;
+		}
+
 		if (alignment != Alignment.ALLY && this.buff(DeathMark.DeathMarkTracker.class) != null){
 			dmg *= 1.25f;
 		}

@@ -76,15 +76,11 @@ public class RingOfElements extends Ring {
 	}
 	
 	public static float resist( Char target, Class effect ){
-		float bar = 1f;
-		if (Dungeon.hero.hasTalent(Talent.DANMAKU_BAR)){
-			bar = 1f - (0.15f * Dungeon.hero.pointsInTalent(Talent.DANMAKU_BAR));
-		}
-		if (getBuffedBonus(target, Resistance.class) == 0) return bar;
+		if (getBuffedBonus(target, Resistance.class) == 0) return 1f;
 		
 		for (Class c : RESISTS){
 			if (c.isAssignableFrom(effect)){
-				return (float)Math.pow(0.825, getBuffedBonus(target, Resistance.class))*bar;
+				return (float)Math.pow(0.825, getBuffedBonus(target, Resistance.class));
 			}
 		}
 		

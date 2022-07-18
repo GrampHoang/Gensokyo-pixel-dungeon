@@ -186,7 +186,7 @@ public enum Talent {
 	//Reimu T3
 	RUTHLESS(169, 3), STANCE(170, 3),
 	//Exterminator T3
-	EXTENDED_EXTER(171, 3), NO_MERCY(172, 3), DANMAKU_BAR(173, 3),
+	EXTENDED_EXTER(171, 3), NO_MERCY(172, 3), SMALL_HITBOX(173, 3),
 	//Shrine Maiden T3
 	LUCKY_SHOT(174, 3), DANMAKU_COMBAT(175, 3), SEALCRIP(176, 3),
 	//Fantasy Seal -Marred- (root + debuff)
@@ -869,7 +869,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, DURABLE_TIPS, BARKSKIN, SHIELDING_DEW);
 				break;
 			case EXTERMINATOR:
-				Collections.addAll(tierTalents, EXTENDED_EXTER, NO_MERCY, DANMAKU_BAR);
+				Collections.addAll(tierTalents, EXTENDED_EXTER, NO_MERCY, SMALL_HITBOX);
 				break;
 			case MAIDEN:
 				Collections.addAll(tierTalents, LUCKY_SHOT, DANMAKU_COMBAT, SEALCRIP);

@@ -190,6 +190,11 @@ public abstract class Wand extends Item {
 			Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
 		}
 
+		if (Dungeon.hero.hasTalent(Talent.MAGUS_BALL)) {
+			int dur = 5 + 5*Dungeon.hero.pointsInTalent(Talent.MAGUS_BALL);
+			Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
+		}
+
 		if (target != Dungeon.hero &&
 				Dungeon.hero.subClass == HeroSubClass.WARLOCK &&
 				//standard 1 - 0.92^x chance, plus 7%. Starts at 15%

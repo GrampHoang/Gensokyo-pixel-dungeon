@@ -180,7 +180,7 @@ public enum Talent {
 	// CHAOS_KNIFE(119, 4), STORM_KNIFE(120, 4), RISING_WORLD(121, 4),
 	
 	//Reimu T1
-	SHRINE_MEAL(160), TALISMAN_INTUITION(161), FANTASY_NATURE(162), DUPLEX_BARRIER(163),
+	SHRINE_MEAL(160), WEAPON_INTUITION(161), FANTASY_NATURE(162), DUPLEX_BARRIER(163),
 	//Reimu T2
 	POOR_MEAL(164), BATTLECRY_UPGRADE(165), GAP_GIFT(166), GOD_BLESSING(167), HIDDEN_NEEDLE(168),
 	//Reimu T3
@@ -210,13 +210,13 @@ public enum Talent {
 	// Reisen T1
 	EINTEI_MEAL(224), EIRIN_BOOK(225), HEADSHOT(226), BULLEYES(227),
 	// Reisen T2
-	MED_MEAL(132), QUICK_BITTER_HEAL(133), WAVE_DETECT(134), SCOUT_SHOT(135), QUICKDRAW(136),
+	MED_MEAL(228), QUICK_BITTER_HEAL(229), WAVE_DETECT(230), SCOUT_SHOT(231), QUICKDRAW(232),
 	// Reisen T3
-	INSANITY_INDUCE(137, 3), CHARM_GAZE(138, 3),
+	INSANITY_INDUCE(233, 3), CHARM_GAZE(234, 3),
 	// MoonRabbit T3
-	LEG_SHOT(139, 3), HEART_PIERCE(140, 3), ILLUSION_SEEKER(141, 3),
+	LEG_SHOT(235, 3), HEART_PIERCE(236, 3), ILLUSION_SEEKER(237, 3),
 	// Refugee T3
-	POT_RESERVE(142, 3), FAKE_THROW(143, 3), POTION_WARFARE(144, 3),
+	POT_RESERVE(238, 3), FAKE_THROW(239, 3), POTION_WARFARE(240, 3),
 	// Full Moon (shoot circle)
 	//Mind Stopper (sentries)
 	//Lunatic Red eye (amok)
@@ -379,11 +379,13 @@ public enum Talent {
 			if (Dungeon.hero.pointsInTalent(GAP_GIFT) == 1){
 				PotionOfCleansing poc = new PotionOfCleansing();
 				poc.quantity(1).collect();
+				poc.identify();
 			}
 
 			if (Dungeon.hero.pointsInTalent(GAP_GIFT) == 2){
 				PotionOfHealing poh = new PotionOfHealing();
 				poh.quantity(1).collect();
+				poh.identify();
 			}
 		}
 	}
@@ -629,7 +631,7 @@ public enum Talent {
 			if (item instanceof Ring) ((Ring) item).setKnown();
 		}
 
-		if (hero.pointsInTalent(TALISMAN_INTUITION) == 2){
+		if (hero.pointsInTalent(WEAPON_INTUITION) == 2){
 			if (item instanceof Scroll) ((Scroll) item).setKnown();
 		}
 
@@ -724,7 +726,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, NATURES_BOUNTY, SURVIVALISTS_INTUITION, FOLLOWUP_STRIKE, NATURES_AID);
 				break;
 			case REIMU:
-				Collections.addAll(tierTalents, SHRINE_MEAL, TALISMAN_INTUITION, FANTASY_NATURE, DUPLEX_BARRIER);
+				Collections.addAll(tierTalents, SHRINE_MEAL, WEAPON_INTUITION, FANTASY_NATURE, DUPLEX_BARRIER);
 				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, PREPARED_PIE, MAID_INTUITION, MUDA_STRIKE, TIME_PROTECTION);

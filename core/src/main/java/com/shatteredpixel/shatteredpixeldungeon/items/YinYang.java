@@ -49,7 +49,7 @@ public class YinYang extends Item {
 	public static final String AC_INFO = "INFO_WINDOW";
 
 	{
-		image = ItemSpriteSheet.SEAL;
+		image = ItemSpriteSheet.YINYANG;
 
 		cursedKnown = levelKnown = true;
 		unique = true;

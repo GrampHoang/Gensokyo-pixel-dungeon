@@ -78,9 +78,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gohei;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Knife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Ofuda_handheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -104,6 +107,20 @@ public enum HeroClass {
 	}
 
 	public void initHero( Hero hero ) {
+
+		//debug test itesm
+		PotionOfExperience poe = new PotionOfExperience();
+		poe.quantity(30).collect();
+
+		TengusMask tengu = new TengusMask();
+		tengu.quantity(2).collect();
+		
+		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+		podi.quantity(6).collect();
+
+		ScrollOfUpgrade sou = new ScrollOfUpgrade();
+		sou.quantity(15).collect();
+	//end of test items
 
 		hero.heroClass = this;
 		Talent.initClassTalents(hero);
@@ -241,29 +258,13 @@ public enum HeroClass {
 
 	private static void initReimu( Hero hero ) {
 		
-		//debug test itesm
-			PotionOfExperience poe = new PotionOfExperience();
-			poe.quantity(30).collect();
-
-			TengusMask tengu = new TengusMask();
-			tengu.quantity(2).collect();
-			
-			PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-			podi.quantity(6).collect();
-
-			ScrollOfUpgrade sou = new ScrollOfUpgrade();
-			sou.quantity(15).collect();
-
-			Dungeon.energy = 69;
-
-			PotionOfMindVision pom = new PotionOfMindVision();
-			pom.quantity(30).collect();
-		//end of test items
-		 
-		WornShortsword wss = new WornShortsword();
+		Gohei wss = new Gohei();
 		wss.identify();
 		hero.belongings.weapon = wss;
 
+		Ofuda_handheld o = new Ofuda_handheld();
+		o.quantity(10).collect();
+		
 		YinYang yy = new YinYang();
 		yy.quantity(1).collect();
 
@@ -302,7 +303,7 @@ public enum HeroClass {
 	}
 
 	private static void initSakuya( Hero hero ) {
-		(hero.belongings.weapon = new Dagger()).identify();
+		(hero.belongings.weapon = new Knife()).identify();
 
 		TimekeepersHourglass hourglass = new TimekeepersHourglass();
 		(hero.belongings.artifact = hourglass).identify();
@@ -310,13 +311,6 @@ public enum HeroClass {
 
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect();
-
-		PotionOfExperience poe = new PotionOfExperience();
-		poe.quantity(30).collect();
-		TengusMask tengu = new TengusMask();
-		tengu.quantity(2).collect();
-		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-		podi.quantity(6).collect();
 
 		Dungeon.quickslot.setSlot(0, hourglass);
 		Dungeon.quickslot.setSlot(1, knives);
@@ -326,33 +320,6 @@ public enum HeroClass {
 	}
 
 	private static void initReisen( Hero hero ) {
-		
-		//debug test itesm
-			Potion pot = new PotionOfLiquidFlame();
-			pot.quantity(30).collect();
-			pot = new PotionOfToxicGas();
-			pot.quantity(30).collect();
-			pot = new PotionOfParalyticGas();
-			pot.quantity(30).collect();
-			pot = new PotionOfFrost();
-			pot.quantity(30).collect();
-			pot = new PotionOfLevitation();
-			pot.quantity(30).collect();
-
-
-			PotionOfExperience poe = new PotionOfExperience();
-			poe.quantity(30).collect();
-
-			TengusMask tengu = new TengusMask();
-			tengu.quantity(2).collect();
-			
-			PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-			podi.quantity(6).collect();
-
-			ScrollOfUpgrade sou = new ScrollOfUpgrade();
-			sou.quantity(15).collect();
-		//end of test items
-
 		(hero.belongings.weapon = new Gloves()).identify();
 		ReisenGun gun = new ReisenGun();
 		gun.identify().collect();

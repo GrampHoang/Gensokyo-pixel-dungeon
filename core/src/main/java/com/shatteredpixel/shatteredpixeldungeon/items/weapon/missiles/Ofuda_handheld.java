@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class Ofuda extends MissileWeapon {
+public class Ofuda_handheld extends MissileWeapon {
 
 	{
 		image = ItemSpriteSheet.OFUDA;
@@ -47,84 +47,33 @@ public class Ofuda extends MissileWeapon {
 		baseUses = 1;
 		sticky = false;
 	}
-
-	Weapon wep = (Weapon)Dungeon.hero.belongings.weapon;
 	
 	@Override
 	public int min(int lvl) {
-		if (wep.augment == Augment.SPEED){
-            return wep.min()/2;
-        }
-        else {
-            return wep.min();
-        }
+		return 4;
     }
 	
 	@Override
 	public int max(int lvl) {
-		if (wep.augment == Augment.SPEED){
-            return wep.max()/2;
-        }
-        else {
-            return wep.max();
-        }
+		return 6;
 	}
 	
     @Override
 	public int min() {
-		if (wep.augment == Augment.SPEED){
-            return wep.min()/2;
-        }
-        else {
-            return wep.min();
-        }
+		return 4;
     }
 	
 	@Override
 	public int max() {
-		if (wep.augment == Augment.SPEED){
-            return wep.max()/2;
-        }
-        else {
-            return wep.max();
-        }
+		return 6;
 	}
 
     @Override
-	public float castDelay(Char user, int dst) {
-		if (wep.augment == Augment.SPEED){
-            return 0.5f;
-        }
-        else {
-            return 1f;
-        }
+	public int value() {
+		return 0;
 	}
 
-	@Override
-	public int proc( Char attacker, Char defender, int damage ) {
-			if (Dungeon.hero.hasTalent(Talent.LUCKY_SHOT)){
-				if(Random.Int(0,99) < 15 + 5 * Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
-					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
-				}
-			} else {
-				if(Random.Int(0,9) < 1){
-					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
-				}
-			}
-
-			if (Dungeon.hero.hasTalent(Talent.SEALCRIP)){
-				if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
-					Buff.prolong( defender, Cripple.class, 4f);
-				}
-				if(Random.Int(0,19) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
-					Buff.prolong( defender, Slow.class, 4f);
-				}
-			}
-			
-		return super.proc( attacker, defender, damage );
-	}
-
- @Override
+    @Override
 	protected void onThrow( int cell ) {
 		Char enemy = Actor.findChar( cell );
 		if (enemy == null || enemy == curUser) {

@@ -12,7 +12,7 @@ allprojects {
 
     ext {
         appName = 'Gensokyo Pixel Dungeon'
-        appPackageName = 'com.shatteredpixel.shatteredpixeldungeon'
+        appPackageName = 'com.garryms.gensokyopd'
 
         appVersionCode = 628
         appVersionName = '1.2.3'

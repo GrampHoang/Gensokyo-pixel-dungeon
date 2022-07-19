@@ -717,7 +717,7 @@ public abstract class Mob extends Char {
 				Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
 			}
 			if(cause == Dungeon.hero && Dungeon.hero.hasTalent(Talent.DUPLEX_BARRIER)){
-				if(Random.Int(0,1) > Dungeon.hero.pointsInTalent(Talent.DUPLEX_BARRIER)){
+				if(Random.Int(0,1) < Dungeon.hero.pointsInTalent(Talent.DUPLEX_BARRIER)){
 					Buff.affect(Dungeon.hero, Barrier.class).setShield(2);
 				}
 			}

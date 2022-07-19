@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Ofuda;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -38,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.input.GameAction;
 import com.watabou.utils.Callback;
@@ -76,12 +78,13 @@ public class ReimuSkill extends Tag {
         super.layout();
 
         if (sprite != null){
-            sprite.x = x + (width - sprite.width()) / 2 + 2;
-            sprite.y = y + (height - sprite.height()) / 2;
+            sprite.x = x + (width - sprite.width()) / 2f + 2;
+            sprite.y = y + (height - sprite.height()) / 2f;
             PixelScene.align(sprite);
             if (!members.contains(sprite))
                 add(sprite);
         }
+        
     }
 
     private boolean enabled = true;
@@ -111,10 +114,8 @@ public class ReimuSkill extends Tag {
         } else {
             if (sprite != null) sprite.alpha(1f);
         }
-        Hunger hunger = Dungeon.hero.buff(Hunger.class);
-        if (hunger == null) return;
 
-        if (Dungeon.hero.heroClass == HeroClass.REIMU) {
+        if (Dungeon.hero.subClass == HeroSubClass.MAIDEN) {
             if (Dungeon.hero.belongings.weapon != null && ((Weapon)Dungeon.hero.belongings.weapon).yy != null) {
                 visible(true);
                 enable(true);
@@ -125,7 +126,7 @@ public class ReimuSkill extends Tag {
                             instance.sprite = null;
                         }
                         if (Dungeon.hero.belongings.weapon != null && ((Weapon)Dungeon.hero.belongings.weapon).yy != null) {
-                            instance.sprite = new ItemSprite(Dungeon.hero.belongings.weapon.image, null);
+                            instance.sprite = new ItemSprite(ItemSpriteSheet.YINYANG);
                         }
                         instance.needsLayout = true;
                     }

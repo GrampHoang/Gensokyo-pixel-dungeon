@@ -198,9 +198,6 @@ public class ItemSpriteSheet {
 
 	private static final int TOUHOU      =                               xy(1, 6);   //16 slots
 	public static final int YINYANG 	 = TOUHOU + 0;
-	static{
-		assignItemRect(YINYANG,            16, 16);
-	}
 
 	private static final int WEP_TIER1      =                               xy(1, 7);   //8 slots
 	public static final int WORN_SHORTSWORD = WEP_TIER1+0;
@@ -391,6 +388,7 @@ public class ItemSpriteSheet {
 	static {
 		for (int i = WANDS; i < WANDS+16; i++)
 			assignItemRect(i, 14, 14);
+		assignItemRect(HAKKERO,  14, 16);
 	}
 
 	private static final int RINGS          =                               xy(1, 15);  //16 slots
@@ -570,7 +568,7 @@ public class ItemSpriteSheet {
 	public static final int SEED_ICECAP         = SEEDS+4;
 	public static final int SEED_STORMVINE      = SEEDS+5;
 	public static final int SEED_SORROWMOSS     = SEEDS+6;
-	public static final int SEED_DREAMFOIL      = SEEDS+7;
+	public static final int SEED_MAGEROYAL 	    = SEEDS+7;
 	public static final int SEED_EARTHROOT      = SEEDS+8;
 	public static final int SEED_STARFLOWER     = SEEDS+9;
 	public static final int SEED_FADELEAF       = SEEDS+10;

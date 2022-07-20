@@ -99,9 +99,10 @@ public class Swiftthistle extends Plant {
 			left = 7f;
 		}
 
-		public void sakuya(float duration){
-			left = duration;
+		public void sakuya(float time){
+			left = time;
 		}
+
 		
 		@Override
 		public String toString() {

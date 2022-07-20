@@ -27,7 +27,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -72,13 +71,16 @@ public class WndHeroInfo extends WndTabbed {
 				tabIcon = new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null);
 				break;
 			case REIMU:
-				tabIcon = new ItemSprite(ItemSpriteSheet.SEAL, null);
-				break;
-			case SAKUYA:
-				tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_HOURGLASS, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.YINYANG, null);
 				break;
 			case MARISA:
-				tabIcon = new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.HAKKERO, null);
+				break;
+			case SAKUYA:
+				tabIcon = new ItemSprite(ItemSpriteSheet.KNIFE, null);
+				break;
+			case REISEN:
+				tabIcon = new ItemSprite(ItemSpriteSheet.REISENGUN, null);
 				break;
 		}
 
@@ -194,24 +196,24 @@ public class WndHeroInfo extends WndTabbed {
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case REIMU:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SEAL),
-							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD),
-							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
-					break;
-				case SAKUYA:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_HOURGLASS),
-						new ItemSprite(ItemSpriteSheet.DAGGER),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.YINYANG),
+					new ItemSprite(ItemSpriteSheet.GOHEI),
+					new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 				case MARISA:
 					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.HAKKERO),
 						new ItemSprite(ItemSpriteSheet.MARISASTAFF),
 						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
+				case SAKUYA:
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_HOURGLASS),
+					new ItemSprite(ItemSpriteSheet.KNIFE),
+					new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					break;
 				case REISEN:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
-						new ItemSprite(ItemSpriteSheet.GLOVES),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.REISENGUN),
+					new ItemSprite(ItemSpriteSheet.GLOVES),
+					new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 			}
 			for (Image im : icons) {

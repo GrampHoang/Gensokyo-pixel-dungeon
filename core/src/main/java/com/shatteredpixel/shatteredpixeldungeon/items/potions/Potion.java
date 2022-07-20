@@ -53,7 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Dreamfoil;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Mageroyal;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Fadeleaf;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
@@ -319,7 +319,7 @@ public class Potion extends Item {
 			}
 
 			if(Dungeon.hero.hasTalent(Talent.POTION_WARFARE)){
-				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE)*2 > Random.Int(0,9)){
+				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE) > Random.Int(0,2)){
 					if (ExoticPotion.regToExo.get(getClass()) != null) {
 						Reflection.newInstance(ExoticPotion.regToExo.get(getClass())).shatter(cell);
 					}
@@ -475,7 +475,7 @@ public class Potion extends Item {
 		public static HashMap<Class<?extends Plant.Seed>, Class<?extends Potion>> types = new HashMap<>();
 		static {
 			types.put(Blindweed.Seed.class,     PotionOfInvisibility.class);
-			types.put(Dreamfoil.Seed.class,     PotionOfPurity.class);
+			types.put(Mageroyal.Seed.class,     PotionOfPurity.class);
 			types.put(Earthroot.Seed.class,     PotionOfParalyticGas.class);
 			types.put(Fadeleaf.Seed.class,      PotionOfMindVision.class);
 			types.put(Firebloom.Seed.class,     PotionOfLiquidFlame.class);
@@ -490,7 +490,12 @@ public class Potion extends Item {
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			if ((ingredients.size() == 1) || ((ingredients.size() == 2) && (Dungeon.hero.subClass != HeroSubClass.REFUGEE)) ) {
+			//size = 1 -> All fail
+			//size = 2 -> All fail, but refugee can craft
+			//size = 3 -> Refugee fail, other can craft
+			if ((ingredients.size() == 1) 
+			|| ((ingredients.size() == 2) && (Dungeon.hero.subClass != HeroSubClass.REFUGEE))
+			|| ((ingredients.size() == 3) && (Dungeon.hero.subClass == HeroSubClass.REFUGEE)) ) {
 				return false;
 			}
 			for (Item ingredient : ingredients){

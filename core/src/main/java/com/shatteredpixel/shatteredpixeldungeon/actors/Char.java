@@ -21,6 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
@@ -317,7 +322,7 @@ public abstract class Char extends Actor {
 
 		} else if (hit( this, enemy, accMulti )) {
 			
-			int dr = enemy.drRoll();
+			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
 
 			Barkskin bark = enemy.buff(Barkskin.class);
 			if (bark != null)   dr += Random.NormalIntRange( 0 , bark.level() );
@@ -334,7 +339,10 @@ public abstract class Char extends Actor {
 				}
 			}
 			
-			int dmg;
+			//we use a float here briefly so that we don't have to constantly round while
+			// potentially applying various multiplier effects
+			float dmg;
+
 			Preparation prep = buff(Preparation.class);
 			if (prep != null){
 				dmg = prep.damageRoll(this);
@@ -353,7 +361,14 @@ public abstract class Char extends Actor {
 			if (buff( Fury.class ) != null) {
 				dmg *= 1.5f;
 			}
+			
+			for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
+				dmg *= buff.meleeDamageFactor();
+			}
 
+			dmg *= AscensionChallenge.statModifier(this);
+
+			//flat damage bonus is applied after positive multipliers, but before negative ones
 			dmg += dmgBonus;
 
 			//friendly endure
@@ -370,9 +385,14 @@ public abstract class Char extends Actor {
 				dmg *= 0.67f;
 			}
 			
-			int effectiveDamage = enemy.defenseProc( this, dmg );
+			if ( buff(Weakness.class) != null ){
+				dmg *= 0.67f;
+			}
+			
+			int effectiveDamage = enemy.defenseProc( this, Math.round(dmg) );
 			effectiveDamage = Math.max( effectiveDamage - dr, 0 );
 			
+			//vulnerable specifically applies after armor reductions
 			if ( enemy.buff( Vulnerable.class ) != null){
 				effectiveDamage *= 1.33f;
 			}
@@ -417,7 +437,10 @@ public abstract class Char extends Actor {
 					if (this == Dungeon.hero) {
 						return true;
 					}
-
+					if (this instanceof WandOfLivingEarth.EarthGuardian
+							|| this instanceof MirrorImage || this instanceof PrismaticImage){
+						Badges.validateDeathFromFriendlyMagic();
+					}
 					Dungeon.fail( getClass() );
 					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
 					
@@ -466,7 +489,8 @@ public abstract class Char extends Actor {
 		for (ChampionEnemy buff : attacker.buffs(ChampionEnemy.class)){
 			acuRoll *= buff.evasionAndAccuracyFactor();
 		}
-		
+		acuRoll *= AscensionChallenge.statModifier(attacker);
+
 		float defRoll = Random.Float( defStat );
 		if (defender == hero && hero.hasTalent(Talent.SMALL_HITBOX)){
 			defRoll *= (1f + hero.pointsInTalent(Talent.SMALL_HITBOX) * 0.33f);
@@ -476,7 +500,8 @@ public abstract class Char extends Actor {
 		for (ChampionEnemy buff : defender.buffs(ChampionEnemy.class)){
 			defRoll *= buff.evasionAndAccuracyFactor();
 		}
-		
+		defRoll *= AscensionChallenge.statModifier(defender);
+
 		return (acuRoll * accMulti) >= defRoll;
 	}
 	
@@ -504,11 +529,7 @@ public abstract class Char extends Actor {
 	// atm attack is always post-armor and defence is already pre-armor
 	
 	public int attackProc( Char enemy, int damage ) {
-		if ( buff(Weakness.class) != null ){
-			damage *= 0.67f;
-		}
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
-			damage *= buff.meleeDamageFactor();
 			buff.onAttackProc( enemy );
 		}
 		if ( buff(Exterminating.class) != null ){
@@ -564,6 +585,8 @@ public abstract class Char extends Actor {
 			dmg = (int) Math.ceil(dmg * buff.damageTakenFactor());
 		}
 
+		dmg = (int)Math.ceil(dmg / AscensionChallenge.statModifier(this));
+		
 		if (!(src instanceof LifeLink) && buff(LifeLink.class) != null){
 			HashSet<LifeLink> links = buffs(LifeLink.class);
 			for (LifeLink link : links.toArray(new LifeLink[0])){
@@ -601,10 +624,6 @@ public abstract class Char extends Actor {
 			Buff.detach(this, MagicalSleep.class);
 		}
 		if (this.buff(Doom.class) != null && !isImmune(Doom.class)){
-			dmg *= 2;
-		}
-
-		if (this.buff(Madden.class) != null && !isImmune(Doom.class)){
 			dmg *= 2;
 		}
 

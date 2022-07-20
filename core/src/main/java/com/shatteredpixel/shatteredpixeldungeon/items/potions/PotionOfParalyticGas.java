@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle.TimeBubble;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -49,6 +52,12 @@ public class PotionOfParalyticGas extends Potion {
 		GameScene.add( Blob.seed( cell, 1000, ParalyticGas.class ) );
 	}
 	
+	@Override
+	protected void drink( Hero hero ) {
+		Buff.affect(hero, TimeBubble.class).sakuya(3f);
+		super.drink(hero);
+	}
+
 	@Override
 	public int value() {
 		return isKnown() ? 40 * quantity : super.value();

@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -161,7 +162,7 @@ public class ReisenGun extends Weapon {
 				Buff.affect(defender, Poison.class).set(5);
 			}
 			if(Random.Int(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 2){
-				Buff.affect(defender, Ooze.class).set(10f);
+				Buff.affect(defender, Corrosion.class).set(5f,5);
 			}
 		}
 

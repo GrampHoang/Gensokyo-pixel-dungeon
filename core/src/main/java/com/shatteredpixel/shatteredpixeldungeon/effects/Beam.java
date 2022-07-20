@@ -66,12 +66,6 @@ public class Beam extends Image {
 		}
 	}
 
-	public static class MasterSpark extends Beam{
-		public MasterSpark(PointF s, PointF e, float dur){
-			super(s, e, Effects.Type.LIGHT_RAY, dur);
-		}
-	}
-
 	public static class HealthRay extends Beam{
 		public HealthRay(PointF s, PointF e){
 			super(s, e, Effects.Type.HEALTH_RAY, 0.75f);

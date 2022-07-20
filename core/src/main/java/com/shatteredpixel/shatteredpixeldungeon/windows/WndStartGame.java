@@ -94,6 +94,7 @@ public class WndStartGame extends Window {
 				
 				GamesInProgress.curSlot = slot;
 				Dungeon.hero = null;
+				Dungeon.daily = false;
 				ActionIndicator.action = null;
 				InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
 				
@@ -332,6 +333,33 @@ public class WndStartGame extends Window {
 							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.GLOVES, null));
 							heroMisc.icon(new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16 ));
 							break;
+							
+						case REIMU:
+							heroItem.icon(new ItemSprite(ItemSpriteSheet.YINYANG, null));
+							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.GOHEI, null));
+							heroMisc.icon(new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16 ));
+							break;
+						case MARISA:
+							heroItem.icon(new ItemSprite(ItemSpriteSheet.HAKKERO, null));
+							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.MARISASTAFF, null));
+							heroMisc.icon(new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16 ));
+							break;
+						case SAKUYA:
+							heroItem.icon(new ItemSprite(ItemSpriteSheet.ARTIFACT_HOURGLASS, null));
+							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.KNIFE, null));
+							heroMisc.icon(new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16 ));
+							break;
+						case REISEN:
+							heroItem.icon(new ItemSprite(ItemSpriteSheet.REISENGUN, null));
+							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.GLOVES, null));
+							heroMisc.icon(new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16 ));
+							break;
+						default:
+							heroItem.icon(new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null));
+							heroLoadout.icon(new ItemSprite(ItemSpriteSheet.GLOVES, null));
+							heroMisc.icon(new Image(Assets.Environment.TILES_SEWERS, 112, 96, 16, 16 ));
+							break;
+						
 					}
 					
 					layout();

@@ -21,6 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FrostImbue;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -56,6 +60,12 @@ public class PotionOfFrost extends Potion {
 		
 	}
 	
+	@Override
+	protected void drink( Hero hero ) {
+		Buff.prolong(hero, FrostImbue.class, 8f);
+		super.drink(hero);
+	}
+
 	@Override
 	public int value() {
 		return isKnown() ? 30 * quantity : super.value();

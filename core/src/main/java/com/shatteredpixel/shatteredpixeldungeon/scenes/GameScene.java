@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -80,7 +81,6 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.TerrainFeaturesTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.WallBlockingTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.AttackIndicator;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ReimuSkill;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Banner;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.CharHealthIndicator;
@@ -88,6 +88,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.GameLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.InventoryPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.LootIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.ui.ReimuSkill;
 import com.shatteredpixel.shatteredpixeldungeon.ui.MenuPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ResumeIndicator;
@@ -186,7 +187,7 @@ public class GameScene extends PixelScene {
 	private Toolbar toolbar;
 	private Toast prompt;
 
-	private ReimuSkill reimu;
+	private ReimuSkill reimuTag;
 	private AttackIndicator attack;
 	private LootIndicator loot;
 	private ActionIndicator action;
@@ -287,9 +288,6 @@ public class GameScene extends PixelScene {
 		
 		for (Mob mob : Dungeon.level.mobs) {
 			addMobSprite( mob );
-			if (Statistics.amuletObtained) {
-				mob.beckon( Dungeon.hero.pos );
-			}
 		}
 		
 		raisedTerrain = new RaisedTerrainTilemap();
@@ -356,13 +354,13 @@ public class GameScene extends PixelScene {
 		boss.setPos( 6 + (uiCamera.width - boss.width())/2, 20);
 		add(boss);
 
-		reimu = new ReimuSkill();
-		reimu.camera = uiCamera;
-		add( reimu );
-
 		attack = new AttackIndicator();
 		attack.camera = uiCamera;
 		add( attack );
+
+		reimuTag = new ReimuSkill();
+		reimuTag.camera = uiCamera;
+		add(reimuTag);
 
 		loot = new LootIndicator();
 		loot.camera = uiCamera;
@@ -532,7 +530,8 @@ public class GameScene extends PixelScene {
 				}
 
 				//50%/75% chance, use level's seed so that we get the same result for the same level
-				Random.pushGenerator(Dungeon.seedCurDepth());
+				//offset seed slightly to avoid output patterns
+				Random.pushGenerator(Dungeon.seedCurDepth()+1);
 					if (reqSecrets <= 0 && Random.Int(4) <= Dungeon.hero.pointsInTalent(Talent.ROGUES_FORESIGHT)){
 						GLog.p(Messages.get(this, "secret_hint"));
 					}
@@ -567,6 +566,10 @@ public class GameScene extends PixelScene {
 				if (!mob.buffs(ChampionEnemy.class).isEmpty()) {
 					GLog.w(Messages.get(ChampionEnemy.class, "warn"));
 				}
+			}
+
+			if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+				Dungeon.hero.buff(AscensionChallenge.class).saySwitch();
 			}
 
 			InterlevelScene.mode = InterlevelScene.Mode.NONE;
@@ -716,21 +719,21 @@ public class GameScene extends PixelScene {
 		if (tagAttack != attack.active ||
 				tagLoot != loot.visible ||
 				tagAction != action.visible ||
-				tagReimu != reimu.visible ||
-				tagResume != resume.visible) {
-				
+				tagResume != resume.visible ||
+				reimuTagBool != reimuTag.visible) {
+
 			//we only want to change the layout when new tags pop in, not when existing ones leave.
 			boolean tagAppearing = (attack.active && !tagAttack) ||
 									(loot.visible && !tagLoot) ||
 									(action.visible && !tagAction) ||
-									(reimu.visible && !tagReimu) ||
-									(resume.visible && !tagResume);
+									(resume.visible && !tagResume) ||
+									(!reimuTagBool && reimuTag.visible);
 
 			tagAttack = attack.active;
 			tagLoot = loot.visible;
 			tagAction = action.visible;
 			tagResume = resume.visible;
-			tagReimu = reimu.visible;
+			reimuTagBool = reimuTag.visible;
 
 			if (tagAppearing) layoutTags();
 		}
@@ -758,7 +761,7 @@ public class GameScene extends PixelScene {
 	private boolean tagLoot      = false;
 	private boolean tagAction    = false;
 	private boolean tagResume    = false;
-	private boolean tagReimu	 = false;
+	private boolean reimuTagBool  = false;
 
 	public static void layoutTags() {
 
@@ -821,11 +824,11 @@ public class GameScene extends PixelScene {
 			scene.resume.flip(tagsOnLeft);
 		}
 
-		if (scene.tagReimu) {
-			scene.resume.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
-			scene.resume.flip(tagsOnLeft);
+		if (scene.reimuTagBool){
+			scene.action.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
+			scene.action.flip(tagsOnLeft);
+			pos = scene.reimuTag.top();
 		}
-
 	}
 	
 	@Override
@@ -937,6 +940,8 @@ public class GameScene extends PixelScene {
 	
 	public static void add( Heap heap ) {
 		if (scene != null) {
+			//heaps that aren't added as part of levelgen don't count for exploration bonus
+			heap.autoExplored = true;
 			scene.addHeapSprite( heap );
 		}
 	}
@@ -949,8 +954,10 @@ public class GameScene extends PixelScene {
 	
 	public static void add( Mob mob ) {
 		Dungeon.level.mobs.add( mob );
-		scene.addMobSprite( mob );
-		Actor.add( mob );
+		if (scene != null) {
+			scene.addMobSprite(mob);
+			Actor.add(mob);
+		}
 	}
 
 	public static void addSprite( Mob mob ) {

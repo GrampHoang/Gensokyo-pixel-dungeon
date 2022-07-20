@@ -21,6 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -54,6 +57,12 @@ public class PotionOfLiquidFlame extends Potion {
 
 			}
 		}
+	}
+
+	@Override
+	protected void drink( Hero hero ) {
+		Buff.affect(hero, FireImbue.class).set(8f);
+		super.drink(hero);
 	}
 	
 	@Override

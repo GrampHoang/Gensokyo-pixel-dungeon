@@ -22,12 +22,17 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -286,7 +291,7 @@ public class WandOfWarding extends Wand {
 		@Override
 		public int defenseSkill(Char enemy) {
 			if (tier > 3){
-				defenseSkill = 4 + Dungeon.depth;
+				defenseSkill = 4 + Dungeon.scalingDepth();
 			}
 			return super.defenseSkill(enemy);
 		}
@@ -294,7 +299,7 @@ public class WandOfWarding extends Wand {
 		@Override
 		public int drRoll() {
 			if (tier > 3){
-				return Math.round(Random.NormalIntRange(0, 3 + Dungeon.depth/2) / (7f - tier));
+				return Math.round(Random.NormalIntRange(0, 3 + Dungeon.scalingDepth()/2) / (7f - tier));
 			} else {
 				return 0;
 			}
@@ -328,6 +333,7 @@ public class WandOfWarding extends Wand {
 			}
 
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
+				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail( getClass() );
 			}
 
@@ -422,6 +428,10 @@ public class WandOfWarding extends Wand {
 		}
 		
 		{
+			immunities.add( Sleep.class );
+			immunities.add( Terror.class );
+			immunities.add( Dread.class );
+			immunities.add( Vertigo.class );
 			immunities.add( AllyBuff.class );
 		}
 
@@ -444,10 +454,6 @@ public class WandOfWarding extends Wand {
 			viewDistance = 3 + tier;
 			wandLevel = bundle.getInt(WAND_LEVEL);
 			totalZaps = bundle.getInt(TOTAL_ZAPS);
-		}
-		
-		{
-			properties.add(Property.IMMOVABLE);
 		}
 	}
 }

@@ -1174,7 +1174,7 @@ public class Hero extends Char {
 		KindOfWeapon wep = belongings.weapon();
 
 		if (wep != null) damage = wep.proc( this, enemy, damage );
-		if (wep instanceof MarisaStaff && Dungeon.hero.hasTalent(Talent.SHINING_STAR)){
+		if (Dungeon.hero.hasTalent(Talent.SHINING_STAR)){
 			if (Random.Int(0,99) < Dungeon.hero.pointsInTalent(Talent.SHINING_STAR) * 15){
 				Buff.affect(Dungeon.hero, Light.class, 8f);
 			}

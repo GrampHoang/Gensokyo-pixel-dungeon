@@ -106,6 +106,9 @@ public class Ofuda extends MissileWeapon {
 				if(Random.Int(0,99) < 15 + 5 * Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
 					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
 				}
+				if(Random.Int(0,2) < Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
+					wep.enchantment.proc(wep, attacker, defender, damage);
+				}
 			} else {
 				if(Random.Int(0,9) < 1){
 					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );

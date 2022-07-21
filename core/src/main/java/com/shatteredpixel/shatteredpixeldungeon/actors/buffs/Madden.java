@@ -45,6 +45,6 @@ public class Madden extends FlavourBuff {
 
     @Override
     public String desc() {
-        return Messages.get(this, "desc", dispTurns(), (float)Math.pow(1.03f, madstack));
+        return Messages.get(this, "desc", dispTurns(), (1f + 0.03f* madstack));
     }
 }

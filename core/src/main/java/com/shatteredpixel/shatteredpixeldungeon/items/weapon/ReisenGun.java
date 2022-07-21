@@ -111,7 +111,7 @@ public class ReisenGun extends Weapon {
 			else{
 				Madden madden = defender.buff(Madden.class);
 				Buff.prolong( defender, Madden.class, Madden.DURATION );
-				multiplier = (float) (Math.pow(1.2f, madden.madstack));
+				multiplier = (1f + 0.03f * madden.madstack);
 				damage = Math.round(damage * multiplier);
 				if (madden.madstack < 5){
 					madden.madstack++;

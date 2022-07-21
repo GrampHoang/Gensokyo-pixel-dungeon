@@ -113,6 +113,36 @@ public class HeroSelectScene extends PixelScene {
 			add(fadeRight);
 		}
 
+		// Hero start at front so that we can calculate how high should we push the menu
+		HeroClass[] classes = HeroClass.values();
+
+		int btnWidth = HeroBtn.MIN_WIDTH;
+		int curX = (Camera.main.width - btnWidth * classes.length)/2;
+		if (curX > 0){
+			btnWidth += Math.min(curX/(classes.length/2), 15);
+			curX = (Camera.main.width - btnWidth * classes.length)/2;
+		}
+
+		// This is used to determine how many hero selection can be on the same line
+		// If not enough classes to push to 2nd line, use length to align center neatly
+		// If too much classes, get the division so that we can push some classes to 2nd line
+		int maxhero = Math.min(Camera.main.width/btnWidth, classes.length);
+		int linecount = 0; //lines of hero, will be very useful
+		int placed = 0;	//hero counted
+		int heroBtnleft = curX;
+		for (HeroClass cl : classes){
+			HeroBtn button = new HeroBtn(cl);
+			if (placed % maxhero == 0){	//Everytime you hit max count for line, you reset . Also note 0%anything = 0, which is why linecount start with 0
+				curX = (Camera.main.width - btnWidth * maxhero) / 2;
+				linecount++;
+			}
+			button.setRect(curX, Camera.main.height-HeroBtn.HEIGHT*linecount+3, btnWidth, HeroBtn.HEIGHT); // and increase the height for the 2nd line
+			curX += btnWidth;
+			placed++;
+			add(button);
+			heroBtns.add(button);
+		}
+
 		startBtn = new StyledButton(Chrome.Type.GREY_BUTTON_TR, ""){
 			@Override
 			protected void onClick() {
@@ -135,7 +165,7 @@ public class HeroSelectScene extends PixelScene {
 		};
 		startBtn.icon(Icons.get(Icons.ENTER));
 		startBtn.setSize(80, 21);
-		startBtn.setPos((Camera.main.width - startBtn.width())/2f, (Camera.main.height - HeroBtn.HEIGHT + 2 - startBtn.height()));
+		startBtn.setPos((Camera.main.width - startBtn.width())/2f, (Camera.main.height - HeroBtn.HEIGHT*linecount + 2 - startBtn.height()));
 		add(startBtn);
 		startBtn.visible = false;
 
@@ -155,23 +185,6 @@ public class HeroSelectScene extends PixelScene {
 		infoButton.setSize(20, 21);
 		add(infoButton);
 
-		HeroClass[] classes = HeroClass.values();
-
-		int btnWidth = HeroBtn.MIN_WIDTH;
-		int curX = (Camera.main.width - btnWidth * classes.length)/2;
-		if (curX > 0){
-			btnWidth += Math.min(curX/(classes.length/2), 15);
-			curX = (Camera.main.width - btnWidth * classes.length)/2;
-		}
-
-		int heroBtnleft = curX;
-		for (HeroClass cl : classes){
-			HeroBtn button = new HeroBtn(cl);
-			button.setRect(curX, Camera.main.height-HeroBtn.HEIGHT+3, btnWidth, HeroBtn.HEIGHT);
-			curX += btnWidth;
-			add(button);
-			heroBtns.add(button);
-		}
 
 		optionsPane = new GameOptions();
 		optionsPane.visible = optionsPane.active = false;
@@ -202,7 +215,7 @@ public class HeroSelectScene extends PixelScene {
 				return Messages.get(HeroSelectScene.class, "options");
 			}
 		};
-		btnOptions.setRect(heroBtnleft + 16, Camera.main.height-HeroBtn.HEIGHT-16, 20, 21);
+		btnOptions.setRect(heroBtnleft + 16, Camera.main.height-HeroBtn.HEIGHT*linecount-16, 20, 21);
 		updateOptionsColor();
 		btnOptions.visible = false;
 
@@ -221,7 +234,7 @@ public class HeroSelectScene extends PixelScene {
 
 		prompt = PixelScene.renderTextBlock(Messages.get(this, "title"), 12);
 		prompt.hardlight(Window.TITLE_COLOR);
-		prompt.setPos( (Camera.main.width - prompt.width())/2f, (Camera.main.height - HeroBtn.HEIGHT - prompt.height() - 4));
+		prompt.setPos( (Camera.main.width - prompt.width())/2f, (Camera.main.height - HeroBtn.HEIGHT*linecount - prompt.height() - 4));
 		PixelScene.align(prompt);
 		add(prompt);
 

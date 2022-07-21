@@ -430,12 +430,6 @@ abstract public class Weapon extends KindOfWeapon {
 
 		protected float procChanceMultiplier( Char attacker ){
 			float multi = 1f;
-			if (attacker instanceof Hero && ((Hero) attacker).hasTalent(Talent.ENRAGED_CATALYST)){
-				Berserk rage = attacker.buff(Berserk.class);
-				if (rage != null) {
-					multi += (rage.rageAmount() * 0.15f) * ((Hero) attacker).pointsInTalent(Talent.ENRAGED_CATALYST);
-				}
-			}
 			if (attacker.buff(Talent.SpiritBladesTracker.class) != null
 					&& ((Hero)attacker).pointsInTalent(Talent.SPIRIT_BLADES) == 4){
 				multi += 0.1f;
@@ -444,8 +438,18 @@ abstract public class Weapon extends KindOfWeapon {
 					&& ((Hero)attacker).pointsInTalent(Talent.STRIKING_WAVE) == 4){
 				multi += 0.2f;
 			}
-			if (((Hero) attacker).hasTalent(Talent.NO_MERCY) && ((Hero)attacker).buff(Exterminating.class) != null){
-				multi += 0.15* ((Hero)attacker).pointsInTalent(Talent.NO_MERCY);
+			if (attacker instanceof Hero){
+				if ( ((Hero) attacker).hasTalent(Talent.NO_MERCY) && ((Hero)attacker).buff(Exterminating.class) != null ){
+					multi += 0.15* ((Hero)attacker).pointsInTalent(Talent.NO_MERCY);
+				}
+
+				if (((Hero) attacker).hasTalent(Talent.ENRAGED_CATALYST)){
+					Berserk rage = attacker.buff(Berserk.class);
+					if (rage != null) {
+					multi += (rage.rageAmount() * 0.15f) * ((Hero) attacker).pointsInTalent(Talent.ENRAGED_CATALYST);
+					}
+				}
+
 			}
 			return multi;
 		}

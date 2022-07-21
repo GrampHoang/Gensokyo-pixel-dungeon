@@ -187,7 +187,7 @@ public class GameScene extends PixelScene {
 	private Toolbar toolbar;
 	private Toast prompt;
 
-	private ReimuSkill reimuTag;
+	private ReimuSkill reimu;
 	private AttackIndicator attack;
 	private LootIndicator loot;
 	private ActionIndicator action;
@@ -358,9 +358,9 @@ public class GameScene extends PixelScene {
 		attack.camera = uiCamera;
 		add( attack );
 
-		reimuTag = new ReimuSkill();
-		reimuTag.camera = uiCamera;
-		add(reimuTag);
+		reimu = new ReimuSkill();
+		reimu.camera = uiCamera;
+		add(reimu);
 
 		loot = new LootIndicator();
 		loot.camera = uiCamera;
@@ -720,20 +720,20 @@ public class GameScene extends PixelScene {
 				tagLoot != loot.visible ||
 				tagAction != action.visible ||
 				tagResume != resume.visible ||
-				reimuTagBool != reimuTag.visible) {
+				reimuTag != reimu.visible) {
 
 			//we only want to change the layout when new tags pop in, not when existing ones leave.
 			boolean tagAppearing = (attack.active && !tagAttack) ||
 									(loot.visible && !tagLoot) ||
 									(action.visible && !tagAction) ||
 									(resume.visible && !tagResume) ||
-									(!reimuTagBool && reimuTag.visible);
+									(!reimuTag && reimu.visible);
 
 			tagAttack = attack.active;
 			tagLoot = loot.visible;
 			tagAction = action.visible;
 			tagResume = resume.visible;
-			reimuTagBool = reimuTag.visible;
+			reimuTag = reimu.visible;
 
 			if (tagAppearing) layoutTags();
 		}
@@ -761,7 +761,7 @@ public class GameScene extends PixelScene {
 	private boolean tagLoot      = false;
 	private boolean tagAction    = false;
 	private boolean tagResume    = false;
-	private boolean reimuTagBool  = false;
+	private boolean reimuTag  = false;
 
 	public static void layoutTags() {
 
@@ -824,10 +824,10 @@ public class GameScene extends PixelScene {
 			scene.resume.flip(tagsOnLeft);
 		}
 
-		if (scene.reimuTagBool){
+		if (scene.reimuTag){
 			scene.action.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
 			scene.action.flip(tagsOnLeft);
-			pos = scene.reimuTag.top();
+			pos = scene.reimu.top();
 		}
 	}
 	

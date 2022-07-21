@@ -1,4 +1,17 @@
-# Shattered Pixel Dungeon
+# Gensokyo Pixel Dungeon
+
+A fork of Shattered Pixel Dungeon, a fun project I do in the summer. It help me a lot with re-learning and seeing how OOP work, also see why some people hate Java because my god this language is too verbose.
+
+This is heavily inspired by Shattered PD (obviously) and TouhouPD. The game also borrow idea from some other fork (usually from TrashBox stuffs though). So check out TouhouPD, Summoning PD, RKPD2-DLC, Too Cruel PD, etc.
+
+My plan is to include new character that aren't too broken, different route that have different bosses, lots of items and utilities. Well I hope we can get there before I'm burnt out and abanddon this project.
+
+Also English is not my first language. I have no trouble reading or understanding it, just make writing mistakes every now and then
+
+I'll release Beta when I'm done with 4 characters. I don't know if I should make armor ability for them or not... I'm sooooo lazy
+
+
+
 
 A Roguelike RPG, with randomly generated levels, items, enemies, and traps! Based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://www.watabou.ru).
 

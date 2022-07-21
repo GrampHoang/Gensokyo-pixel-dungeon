@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
@@ -249,6 +250,10 @@ public class ShopRoom extends SpecialRoom {
 			}
 		}
 
+		if (Dungeon.hero.hasTalent(Talent.MAGIC_BARGAIN)){
+			itemsToSpawn.add(Generator.random( Generator.Category.WAND ));
+		}
+		
 		Item rare;
 		switch (Random.Int(10)){
 			case 0:

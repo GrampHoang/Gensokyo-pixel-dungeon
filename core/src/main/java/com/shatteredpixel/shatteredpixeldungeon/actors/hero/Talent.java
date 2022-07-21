@@ -28,22 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.EnhancedRings;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WandEmpower;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -195,13 +180,13 @@ public enum Talent {
 	//Fantasy Seal -Orbs- (explode + damage)
 
 	//Marisa
-	MAGIC_SHROOM(192), POT_INTUITION(193), MAGIC_STRIKE(194), SPARK_SHIELD(195),
+	MAGIC_SHROOM(192), MAGIC_BARGAIN(193), MAGIC_STRIKE(194), SPARK_SHIELD(195),
 	//Marisa T2
 	MAGICIAN_MEAL(196), MAGICAL_RETREAT(197), SHINING_STAR(198), NIMBLE(199), BLINDING_MS(200),
 	//Marisa T3
 	LOVE_MS(201, 3), MAGUS_BALL(202, 3),
 	//Magician T3
-	BURN_MS(203, 3), CRIPPLE_MS(204, 3), PARA_MS(205, 3),
+	HEAT_HAKKERO(203, 3), CRIPPLE_MS(204, 3), PARA_MS(205, 3),
 	//Thief T3
 	MAGICAL_FLIGHT(206, 3), EXTENDED_FLIGHT(207, 3), MAGUS_NIGHT(208, 3),
 	//Final Master Spark (big MS)
@@ -486,6 +471,10 @@ public enum Talent {
 			SpellSprite.show(hero, SpellSprite.CHARGE, 0, 1, 1);
 		}
 		
+		if(hero.hasTalent(SHRINE_MEAL)){
+			Buff.affect( hero, AttackEmpower.class).set(1 + hero.pointsInTalent(SHRINE_MEAL), 1 + hero.pointsInTalent(SHRINE_MEAL) * 2);
+		}
+
 		if(hero.hasTalent(MAGIC_SHROOM)){
 			Buff.affect( hero, Vertigo.class, 4f);
 			Buff.affect( hero, WandEmpower.class).set(2 + 2*hero.pointsInTalent(MAGIC_SHROOM), 1);
@@ -708,10 +697,6 @@ public enum Talent {
 		if (hero.pointsInTalent(WEAPON_INTUITION) == 2){
 			if (item instanceof MeleeWeapon) ((MeleeWeapon) item).identify();
 		}
-
-		if (hero.pointsInTalent(POT_INTUITION) == 2){
-			if (item instanceof Potion) ((Potion) item).setKnown();
-		}
 	}
 
 	//note that IDing can happen in alchemy scene, so be careful with VFX here
@@ -800,13 +785,13 @@ public enum Talent {
 				Collections.addAll(tierTalents, NATURES_BOUNTY, SURVIVALISTS_INTUITION, FOLLOWUP_STRIKE, NATURES_AID);
 				break;
 			case REIMU:
-				Collections.addAll(tierTalents, SHRINE_MEAL, WEAPON_INTUITION, FANTASY_NATURE, DUPLEX_BARRIER);
+				Collections.addAll(tierTalents, SHRINE_MEAL, WEAPON_INTUITION, GAP_GIFT, DUPLEX_BARRIER);
 				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, PREPARED_PIE, MAID_INTUITION, MUDA_STRIKE, TIME_PROTECTION);
 				break;
 			case MARISA:
-				Collections.addAll(tierTalents, MAGIC_SHROOM, POT_INTUITION, MAGIC_STRIKE, SPARK_SHIELD);
+				Collections.addAll(tierTalents, MAGIC_SHROOM, MAGIC_BARGAIN, MAGIC_STRIKE, SPARK_SHIELD);
 				break;
 			case REISEN:
 				Collections.addAll(tierTalents, EINTEI_MEAL, EIRIN_BOOK, HEADSHOT, BULLEYES);
@@ -839,7 +824,7 @@ public enum Talent {
 				break;
 
 			case REIMU:
-				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, GAP_GIFT, GOD_BLESSING, HIDDEN_NEEDLE);
+				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, FANTASY_NATURE, GOD_BLESSING, HIDDEN_NEEDLE);
 				break;
 			case MARISA:
 				Collections.addAll(tierTalents, MAGICIAN_MEAL, MAGICAL_RETREAT, SHINING_STAR, NIMBLE, BLINDING_MS);
@@ -957,7 +942,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, HEALING_ACCEL, AGELESS, SUPERSPEED);
 				break;
 			case MAGICIAN:
-				Collections.addAll(tierTalents, BURN_MS, CRIPPLE_MS, PARA_MS);
+				Collections.addAll(tierTalents, HEAT_HAKKERO, CRIPPLE_MS, PARA_MS);
 				break;
 			case THIEF:
 				Collections.addAll(tierTalents, MAGICAL_FLIGHT, EXTENDED_FLIGHT, MAGUS_NIGHT);

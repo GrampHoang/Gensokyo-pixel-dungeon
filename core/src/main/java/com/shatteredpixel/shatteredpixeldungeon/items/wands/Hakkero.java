@@ -25,12 +25,16 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -49,16 +53,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
@@ -73,6 +74,8 @@ public class Hakkero extends DamageWand {
 
         unique = true;
 		bones = false;
+
+		isMagician = false;
 	}
 
 
@@ -88,6 +91,10 @@ public class Hakkero extends DamageWand {
 		return 2;
 	}
 
+	public void turnMagician() {
+		this.isMagician = true;
+	}
+
 	@Override
 	public int targetingPos(Hero user, int dst) {
 		return dst;
@@ -95,11 +102,18 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
-		if (Dungeon.hero.hasTalent(Talent.SPARK_SHIELD)){
-			Buff.affect(Dungeon.hero, Barrier.class).setShield(Dungeon.hero.pointsInTalent(Talent.SPARK_SHIELD));
-		}
 		if (Dungeon.hero.hasTalent(Talent.MAGIC_STRIKE)){
-			Buff.affect(Dungeon.hero, Kinetic.ConservedDamage.class).setBonus(2*Dungeon.hero.pointsInTalent(Talent.MAGIC_STRIKE));
+			Buff.affect(Dungeon.hero, AttackEmpower.class).set(Dungeon.hero.pointsInTalent(Talent.MAGIC_STRIKE)*2,1);
+		}
+
+		if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
+			Camera.main.shake( 1, 1f );
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				if (Dungeon.level.heroFOV[mob.pos]) {
+					Buff.affect( mob, Vertigo.class, 1f );
+					Buff.affect( mob, Blindness.class, 1f );
+				}
+			}
 		}
         boolean noticed = false;
 		boolean terrainAffected = false;
@@ -119,6 +133,10 @@ public class Hakkero extends DamageWand {
             if (!Dungeon.level.insideMap(c)){
 				continue;
 			}
+			if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
+				GameScene.add( Blob.seed( c, 2, Fire.class ) );
+			}
+
 			for (int n : PathFinder.NEIGHBOURS9){
 				int cell = c+n;
 
@@ -164,7 +182,7 @@ public class Hakkero extends DamageWand {
 				
 			}
 			
-			CellEmitter.center( c ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
+			CellEmitter.center( c ).burst( PurpleParticle.BURST, Random.IntRange( 3, 5 ) );
 		}
 		if (terrainAffected) {
 			Dungeon.observe();
@@ -174,16 +192,35 @@ public class Hakkero extends DamageWand {
 		for (Char ch : chars) {
 			wandProc(ch, chargesPerCast());
 			affectTarget(ch);
+			int dmg = damageRoll(lvl);
+
+			//this is a bit messy, we have to check buff and deal buff damage for all enemies first
+			if (Dungeon.hero.buff(HakkeroOverheat.class) != null){
+				dmg *= (1f + 0.1f * Dungeon.hero.pointsInTalent(Talent.HEAT_HAKKERO));
+			}
+
 			ch.damage( damageRoll(lvl), this );
 			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 			ch.sprite.flash();
 
-
+			if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
+				Buff.affect(ch, Burning.class).reignite(ch);
+				Buff.affect(ch, Cripple.class, 2f);
+			}
             //
             //  Talent add here
             //
             //
             //
+		}
+
+		if (Dungeon.hero.hasTalent(Talent.SPARK_SHIELD)){
+			Buff.affect(Dungeon.hero, Barrier.class).setShield(Dungeon.hero.pointsInTalent(Talent.SPARK_SHIELD)*chars.size());
+		}
+
+		//Then refresh the overheat here so that the first zap won't get anything
+		if (Dungeon.hero.hasTalent(Talent.HEAT_HAKKERO)){
+			Buff.prolong(Dungeon.hero, HakkeroOverheat.class, (float)(Dungeon.hero.pointsInTalent(Talent.HEAT_HAKKERO)));
 		}
 	}
 
@@ -203,9 +240,6 @@ public class Hakkero extends DamageWand {
 			}
 		}
 
-		if (Dungeon.hero.hasTalent(Talent.BURN_MS)){
-			Buff.affect(ch, Burning.class).reignite(ch, -1 + 2*Dungeon.hero.pointsInTalent(Talent.BURN_MS));;
-		}
 		if (Dungeon.hero.hasTalent(Talent.CRIPPLE_MS)){
 			Buff.affect(ch, Cripple.class, -1 + 2*Dungeon.hero.pointsInTalent(Talent.CRIPPLE_MS));
 		}
@@ -239,4 +273,5 @@ public class Hakkero extends DamageWand {
 		particle.setSize( 0.5f, 3f);
 		particle.shuffleXY(1f);
 	}
+	
 }

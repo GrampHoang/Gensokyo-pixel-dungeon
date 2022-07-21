@@ -51,6 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
@@ -59,6 +60,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfHakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ReisenHand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gohei;
@@ -92,6 +94,10 @@ public enum HeroClass {
 	public void initHero( Hero hero ) {
 
 		//debug test itesm
+
+		ScrollOfDebug sod = new ScrollOfDebug();
+		sod.quantity(1).collect();
+
 		PotionOfExperience poe = new PotionOfExperience();
 		poe.quantity(30).collect();
 
@@ -113,6 +119,8 @@ public enum HeroClass {
 		StoneOfFlock sof = new StoneOfFlock();
 		sof.quantity(30).collect();
 
+		RingOfWealth row = new RingOfWealth();
+		row.upgrade(15).collect();
 		// PotionOfLiquidFlame pol = new PotionOfLiquidFlame();
 		// pol.quantity(30).collect();
 		// PotionOfToxicGas pot = new PotionOfToxicGas();
@@ -274,20 +282,6 @@ public enum HeroClass {
 
 	private static void initMarisa( Hero hero ) {
 		
-		//debug test itesm
-			PotionOfExperience poe = new PotionOfExperience();
-			poe.quantity(30).collect();
-
-			TengusMask tengu = new TengusMask();
-			tengu.quantity(2).collect();
-			
-			PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-			podi.quantity(6).collect();
-
-			ScrollOfUpgrade sou = new ScrollOfUpgrade();
-			sou.quantity(15).collect();
-		//end of test items
-
 		Hakkero h = new Hakkero();
 		h.identify().collect();
 		Dungeon.quickslot.setSlot(1, h);
@@ -299,7 +293,7 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(0, staff);
 
 		new ScrollOfRetribution().identify();
-		new PotionOfLiquidFlame().identify();
+		new PotionOfLevitation().identify();
 	}
 
 	private static void initSakuya( Hero hero ) {
@@ -320,13 +314,13 @@ public enum HeroClass {
 	}
 
 	private static void initReisen( Hero hero ) {
-		(hero.belongings.weapon = new Gloves()).identify();
+		(hero.belongings.weapon = new ReisenHand()).identify();
 		ReisenGun gun = new ReisenGun();
 		gun.identify().collect();
 
 		Dungeon.quickslot.setSlot(0, gun);
 
-		new PotionOfMindVision().identify();
+		new ScrollOfRage().identify();
 		new ScrollOfLullaby().identify();
 	}
 

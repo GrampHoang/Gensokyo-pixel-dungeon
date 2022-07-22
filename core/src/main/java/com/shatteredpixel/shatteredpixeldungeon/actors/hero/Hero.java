@@ -51,6 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -583,6 +584,14 @@ public class Hero extends Char {
 		if (momentum != null){
 			((HeroSprite)sprite).sprint( momentum.freerunning() ? 1.5f : 1f );
 			speed *= momentum.speedMultiplier();
+		} else {
+			((HeroSprite)sprite).sprint( 1f );
+		}
+
+		Magicdust dust = buff(Magicdust.class);
+		if (dust != null){
+			((HeroSprite)sprite).sprint( dust.freeflying() ? 1.5f : 1f );
+			speed *= dust.speedMultiplier();
 		} else {
 			((HeroSprite)sprite).sprint( 1f );
 		}
@@ -1454,6 +1463,10 @@ public class Hero extends Char {
 
 			if (subClass == HeroSubClass.FREERUNNER){
 				Buff.affect(this, Momentum.class).gainStack();
+			}
+
+			if (subClass == HeroSubClass.THIEF){
+				Buff.affect(this, Magicdust.class).gainStack();
 			}
 
 			float speed = speed();

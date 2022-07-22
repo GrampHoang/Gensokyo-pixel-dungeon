@@ -58,6 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
@@ -102,11 +103,23 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
+		Buff.prolong( curUser, Light.class, 1f);
+		
 		if (Dungeon.hero.hasTalent(Talent.MAGIC_STRIKE)){
 			Buff.affect(Dungeon.hero, AttackEmpower.class).set(Dungeon.hero.pointsInTalent(Talent.MAGIC_STRIKE)*2,1);
 		}
 
 		if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
+			if(Dungeon.hero.hasTalent(Talent.ENERGY_RECYCLE)){
+				for (Wand.Charger c : Dungeon.hero.buffs(Wand.Charger.class)){
+					if (c.wand() != this){
+						c.gainCharge(0.1f * Dungeon.hero.pointsInTalent(Talent.ENERGY_RECYCLE));
+						ScrollOfRecharging.charge(Dungeon.hero);
+					}
+				}
+			}
+
+
 			Camera.main.shake( 1, 1f );
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				if (Dungeon.level.heroFOV[mob.pos]) {
@@ -117,7 +130,6 @@ public class Hakkero extends DamageWand {
 		}
         boolean noticed = false;
 		boolean terrainAffected = false;
-		Buff.prolong( curUser, Light.class, 1f);
 
 		int level = buffedLvl();
 		
@@ -225,23 +237,27 @@ public class Hakkero extends DamageWand {
 	}
 
 	private void affectTarget(Char ch){
-		if (Dungeon.hero.hasTalent(Talent.BLINDING_MS)){
-			if(Random.Int(0,1) < Dungeon.hero.pointsInTalent(Talent.BLINDING_MS)){
-				Buff.affect(ch, Blindness.class, 3f);
+
+		if(Dungeon.hero.subClass == HeroSubClass.THIEF){
+			if(Dungeon.hero.buff(Magicdust.class) != null && Dungeon.hero.hasTalent(Talent.EXTENDED_FLIGHT)){
+				if (Dungeon.hero.buff(Magicdust.class).freeflying()){
+					Dungeon.hero.buff(Magicdust.class).extend(Dungeon.hero.pointsInTalent(Talent.EXTENDED_FLIGHT));
+				}
+				if (Dungeon.hero.buff(Magicdust.class).resting()){
+					Dungeon.hero.buff(Magicdust.class).reduce(Dungeon.hero.pointsInTalent(Talent.EXTENDED_FLIGHT));
+				}
 			}
+
 		}
+
 		if (Dungeon.hero.hasTalent(Talent.LOVE_MS)){
 			if(Random.Int(0,99) < 15*Dungeon.hero.pointsInTalent(Talent.LOVE_MS)){
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 					if (Dungeon.level.heroFOV[mob.pos]) {
-						Buff.affect(ch, Charm.class, 3f);
+						Buff.affect(ch, Charm.class, 4f);
 					}
 				}
 			}
-		}
-
-		if (Dungeon.hero.hasTalent(Talent.CRIPPLE_MS)){
-			Buff.affect(ch, Cripple.class, -1 + 2*Dungeon.hero.pointsInTalent(Talent.CRIPPLE_MS));
 		}
 		if (Dungeon.hero.hasTalent(Talent.PARA_MS)){
 			Buff.affect(ch, Paralysis.class, Dungeon.hero.pointsInTalent(Talent.PARA_MS));

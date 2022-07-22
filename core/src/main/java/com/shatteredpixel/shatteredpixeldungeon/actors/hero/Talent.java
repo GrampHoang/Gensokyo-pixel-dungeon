@@ -182,11 +182,11 @@ public enum Talent {
 	//Marisa
 	MAGIC_SHROOM(192), MAGIC_BARGAIN(193), MAGIC_STRIKE(194), SPARK_SHIELD(195),
 	//Marisa T2
-	MAGICIAN_MEAL(196), MAGICAL_RETREAT(197), SHINING_STAR(198), NIMBLE(199), BLINDING_MS(200),
+	MAGICIAN_MEAL(196), MAGICAL_RETREAT(197), SHINING_STAR(198), NIMBLE(199), SNEAKY(200),
 	//Marisa T3
 	LOVE_MS(201, 3), MAGUS_BALL(202, 3),
 	//Magician T3
-	HEAT_HAKKERO(203, 3), CRIPPLE_MS(204, 3), PARA_MS(205, 3),
+	HEAT_HAKKERO(203, 3), ENERGY_RECYCLE(204, 3), PARA_MS(205, 3),
 	//Thief T3
 	MAGICAL_FLIGHT(206, 3), EXTENDED_FLIGHT(207, 3), MAGUS_NIGHT(208, 3),
 	//Final Master Spark (big MS)
@@ -495,10 +495,10 @@ public enum Talent {
 			}
 			if(Dungeon.hero.pointsInTalent(Talent.MAGICIAN_MEAL) == 2){
 				Buff.affect( hero, Recharging.class, 6f);
-				Buff.affect( hero, Light.class, 25f);
+				Buff.affect( hero, Light.class, 20f);
 				ScrollOfRecharging.charge( hero );
-				hero.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 1 + hero.pointsInTalent(MAGICIAN_MEAL));
-				hero.sprite.emitter().burst(Speck.factory(Speck.STAR), 1 + hero.pointsInTalent(MAGICIAN_MEAL));
+				hero.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 2 + hero.pointsInTalent(MAGICIAN_MEAL));
+				hero.sprite.emitter().burst(Speck.factory(Speck.STAR), 2 + hero.pointsInTalent(MAGICIAN_MEAL));
 			}
 		}	
 		if (hero.hasTalent(TIME_MEAL)){
@@ -827,7 +827,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, POOR_MEAL, BATTLECRY_UPGRADE, FANTASY_NATURE, GOD_BLESSING, HIDDEN_NEEDLE);
 				break;
 			case MARISA:
-				Collections.addAll(tierTalents, MAGICIAN_MEAL, MAGICAL_RETREAT, SHINING_STAR, NIMBLE, BLINDING_MS);
+				Collections.addAll(tierTalents, MAGICIAN_MEAL, MAGICAL_RETREAT, SHINING_STAR, NIMBLE, SNEAKY);
 				break;
 			case SAKUYA:
 				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SUPRISE_PROJECTILES);
@@ -942,7 +942,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, HEALING_ACCEL, AGELESS, SUPERSPEED);
 				break;
 			case MAGICIAN:
-				Collections.addAll(tierTalents, HEAT_HAKKERO, CRIPPLE_MS, PARA_MS);
+				Collections.addAll(tierTalents, HEAT_HAKKERO, ENERGY_RECYCLE, PARA_MS);
 				break;
 			case THIEF:
 				Collections.addAll(tierTalents, MAGICAL_FLIGHT, EXTENDED_FLIGHT, MAGUS_NIGHT);

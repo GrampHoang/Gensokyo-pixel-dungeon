@@ -45,7 +45,7 @@ public class WandOfHakkero extends DamageWand {
 	{
 		image = ItemSpriteSheet.MARISASTAFF;
 
-		collisionProperties = Ballistica.MASTERSPARK;
+		collisionProperties = Ballistica.WONT_STOP;
 
         unique = true;
 		bones = false;

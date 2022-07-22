@@ -104,7 +104,7 @@ public class TengusMask extends Item {
 		curUser.sprite.operate( curUser.pos );
 		Sample.INSTANCE.play( Assets.Sounds.MASTERY );
 
-		if (Dungeon.hero.belongings.getItem(Hakkero.class) != null){
+		if (Dungeon.hero.belongings.getItem(Hakkero.class) != null && (way == HeroSubClass.MAGICIAN)){
 			Dungeon.hero.belongings.getItem(Hakkero.class).turnMagician();
 			Dungeon.hero.belongings.getItem(Hakkero.class).updateLevel();
 		}

@@ -58,6 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Madden;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
@@ -235,6 +236,10 @@ public abstract class Char extends Actor {
 		if (c == Dungeon.hero){
 			if (Dungeon.hero.subClass == HeroSubClass.FREERUNNER){
 				Buff.affect(Dungeon.hero, Momentum.class).gainStack();
+			}
+
+			if (Dungeon.hero.subClass == HeroSubClass.THIEF){
+				Buff.affect(Dungeon.hero, Magicdust.class).gainStack();
 			}
 
 			Dungeon.hero.busy();

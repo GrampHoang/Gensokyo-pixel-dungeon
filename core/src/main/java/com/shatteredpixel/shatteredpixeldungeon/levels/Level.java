@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
@@ -1160,6 +1161,7 @@ public abstract class Level implements Bundlable {
 			}
 			
 			if ((c instanceof Hero && ((Hero) c).subClass == HeroSubClass.WARDEN)
+				|| (c instanceof Hero && ((Hero) c).buff(Magicdust.class) != null && ((Hero) c).buff(Magicdust.class).freeflying() && ((Hero) c).pointsInTalent(Talent.MAGUS_NIGHT) >= 1)
 				|| c instanceof YogFist.SoiledFist) {
 				System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
 				blocking = modifiableBlocking;

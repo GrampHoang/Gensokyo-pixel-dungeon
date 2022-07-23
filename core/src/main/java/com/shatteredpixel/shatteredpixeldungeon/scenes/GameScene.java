@@ -819,15 +819,15 @@ public class GameScene extends PixelScene {
 			pos = scene.action.top();
 		}
 
+		if (scene.reimuTag){
+			scene.reimu.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
+			scene.reimu.flip(tagsOnLeft);
+			pos = scene.reimu.top();
+		}
+
 		if (scene.tagResume) {
 			scene.resume.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
 			scene.resume.flip(tagsOnLeft);
-		}
-
-		if (scene.reimuTag){
-			scene.action.setRect( tagLeft, pos - Tag.SIZE, tagWidth, Tag.SIZE );
-			scene.action.flip(tagsOnLeft);
-			pos = scene.reimu.top();
 		}
 	}
 	

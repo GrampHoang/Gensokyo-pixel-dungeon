@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle.TimeBubble;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -54,7 +55,9 @@ public class PotionOfParalyticGas extends Potion {
 	
 	@Override
 	protected void drink( Hero hero ) {
-		Buff.affect(hero, TimeBubble.class).sakuya(3f);
+		if(Dungeon.hero.subClass == HeroSubClass.REFUGEE){
+			Buff.affect(hero, TimeBubble.class).sakuya(3f);
+		}
 		super.drink(hero);
 	}
 

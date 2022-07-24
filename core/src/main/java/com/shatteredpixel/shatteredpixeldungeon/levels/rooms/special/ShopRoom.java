@@ -251,7 +251,10 @@ public class ShopRoom extends SpecialRoom {
 		}
 
 		if (Dungeon.hero.hasTalent(Talent.MAGIC_BARGAIN)){
-			itemsToSpawn.add(Generator.random( Generator.Category.WAND ));
+			Item wand = Generator.random( Generator.Category.WAND );
+			wand.cursed = false;
+			wand.cursedKnown = true;
+			itemsToSpawn.add(wand);
 		}
 		
 		Item rare;

@@ -772,7 +772,7 @@ public abstract class Mob extends Char {
 		float lootChance = this.lootChance;
 
 		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
-		lootChance *= (1f+0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
+		lootChance *= (1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
 		return lootChance;
 	}
 	

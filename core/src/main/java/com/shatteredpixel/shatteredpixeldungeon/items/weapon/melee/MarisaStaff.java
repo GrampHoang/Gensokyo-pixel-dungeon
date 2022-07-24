@@ -75,6 +75,7 @@ public class MarisaStaff extends MeleeWeapon {
 	public MarisaStaff(Wand wand){
 		this();
 		wand.maxCharges = 2;
+		wand.identify();
 		wand.cursed = false;
 		this.wand = wand;
 		updateWand(false);

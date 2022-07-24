@@ -103,8 +103,15 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
-		Buff.prolong( curUser, Light.class, 1f);
-		
+		float blind_dur = 0;
+		if (Dungeon.hero.hasTalent(Talent.STARLIGHT_SPARK)){
+			Buff.prolong( curUser, Light.class, Dungeon.hero.pointsInTalent(Talent.STARLIGHT_SPARK)*10);
+			blind_dur = 1 + Dungeon.hero.pointsInTalent(Talent.STARLIGHT_SPARK);
+		} else {
+			Buff.prolong( curUser, Light.class, 1f);
+			blind_dur = 1;
+		}
+
 		if (Dungeon.hero.hasTalent(Talent.MAGIC_STRIKE)){
 			Buff.affect(Dungeon.hero, AttackEmpower.class).set(Dungeon.hero.pointsInTalent(Talent.MAGIC_STRIKE)*2,1);
 		}
@@ -124,7 +131,7 @@ public class Hakkero extends DamageWand {
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				if (Dungeon.level.heroFOV[mob.pos]) {
 					Buff.affect( mob, Vertigo.class, 1f );
-					Buff.affect( mob, Blindness.class, 1f );
+					Buff.affect( mob, Blindness.class, blind_dur );
 				}
 			}
 		}
@@ -258,9 +265,6 @@ public class Hakkero extends DamageWand {
 					}
 				}
 			}
-		}
-		if (Dungeon.hero.hasTalent(Talent.PARA_MS)){
-			Buff.affect(ch, Paralysis.class, Dungeon.hero.pointsInTalent(Talent.PARA_MS));
 		}
 	}
 

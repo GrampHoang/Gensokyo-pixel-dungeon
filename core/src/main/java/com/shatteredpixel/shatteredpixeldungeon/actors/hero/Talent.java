@@ -186,7 +186,7 @@ public enum Talent {
 	//Marisa T3
 	LOVE_MS(201, 3), MAGUS_BALL(202, 3),
 	//Magician T3
-	HEAT_HAKKERO(203, 3), ENERGY_RECYCLE(204, 3), PARA_MS(205, 3),
+	HEAT_HAKKERO(203, 3), ENERGY_RECYCLE(204, 3), STARLIGHT_SPARK(205, 3),
 	//Thief T3
 	MAGICAL_FLIGHT(206, 3), EXTENDED_FLIGHT(207, 3), MAGUS_NIGHT(208, 3),
 	//Final Master Spark (big MS)
@@ -942,7 +942,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, HEALING_ACCEL, AGELESS, SUPERSPEED);
 				break;
 			case MAGICIAN:
-				Collections.addAll(tierTalents, HEAT_HAKKERO, ENERGY_RECYCLE, PARA_MS);
+				Collections.addAll(tierTalents, HEAT_HAKKERO, ENERGY_RECYCLE, STARLIGHT_SPARK);
 				break;
 			case THIEF:
 				Collections.addAll(tierTalents, MAGICAL_FLIGHT, EXTENDED_FLIGHT, MAGUS_NIGHT);

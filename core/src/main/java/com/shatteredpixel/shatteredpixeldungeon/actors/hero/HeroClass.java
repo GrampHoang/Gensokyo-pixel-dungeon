@@ -290,6 +290,7 @@ public enum HeroClass {
 		staff = new MarisaStaff(new WandOfHakkero());
 		(hero.belongings.weapon = staff).identify();
 		hero.belongings.weapon.activate(hero);
+
 		Dungeon.quickslot.setSlot(0, staff);
 
 		new ScrollOfRetribution().identify();

@@ -560,7 +560,9 @@ public class Hero extends Char {
 			dmg = RingOfForce.damageRoll(this);
 		}
 		if (dmg < 0) dmg = 0;
-
+		if (Dungeon.hero.heroClass == HeroClass.MARISA){
+			dmg *= 0.6;
+		}
 		return dmg;
 	}
 	

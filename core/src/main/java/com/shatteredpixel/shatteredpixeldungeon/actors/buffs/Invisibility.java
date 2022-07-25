@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -117,5 +118,11 @@ public class Invisibility extends FlavourBuff {
 		if (bubble != null){
 			bubble.detach();
 		}
+
+		KoishiHat.Koishibuff koi = Dungeon.hero.buff(KoishiHat.Koishibuff.class);
+		if (koi != null){
+			koi.turn_till_invis = koi.turn_to_invis + 1; //+1 because time will tick after this get reset
+		}
+		
 	}
 }

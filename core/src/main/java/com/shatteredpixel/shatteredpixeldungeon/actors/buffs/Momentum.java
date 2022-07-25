@@ -121,7 +121,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		} else if (freerunCooldown > 0){
 			icon.hardlight(0.5f,0.5f,1);
 		} else {
-			icon.hardlight(1f - (momentumStacks /10f),1,1f - (momentumStacks /10f));
+			icon.hardlight(1f - (momentumStacks /20f),1,1f - (momentumStacks /20f));
 		}
 	}
 
@@ -132,7 +132,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		} else if (freerunCooldown > 0){
 			return (freerunCooldown) / 30f;
 		} else {
-			return (10 - momentumStacks) / 10f;
+			return (20 - momentumStacks) / 20f;
 		}
 	}
 

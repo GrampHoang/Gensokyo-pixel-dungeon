@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
@@ -772,7 +773,9 @@ public abstract class Mob extends Char {
 		float lootChance = this.lootChance;
 
 		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
-		lootChance *= (1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
+		if (Dungeon.hero.heroClass == HeroClass.REIMU && Dungeon.hero.hasTalent(Talent.GOD_BLESSING)){
+			lootChance *= (1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
+		}
 		return lootChance;
 	}
 	

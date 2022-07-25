@@ -47,6 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
@@ -302,6 +303,10 @@ public enum HeroClass {
 
 		TimekeepersHourglass hourglass = new TimekeepersHourglass();
 		(hero.belongings.artifact = hourglass).identify();
+		hero.belongings.artifact.activate( hero );
+
+		KoishiHat hat = new KoishiHat();
+		(hero.belongings.artifact = hat).identify();
 		hero.belongings.artifact.activate( hero );
 
 		ThrowingKnife knives = new ThrowingKnife();

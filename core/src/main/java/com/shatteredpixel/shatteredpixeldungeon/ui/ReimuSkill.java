@@ -185,9 +185,9 @@ public class ReimuSkill extends Tag {
 
         int energy_cost = 2;
         if(Dungeon.hero.hasTalent(Talent.DANMAKU_COMBAT)){
-            if (Random.Int(0,9) > Dungeon.hero.pointsInTalent(Talent.DANMAKU_COMBAT)){
+            if (Random.IntRange(0,9) > Dungeon.hero.pointsInTalent(Talent.DANMAKU_COMBAT)){
                 energy_cost = 1;
-                if (Random.Int(0,9) > 5){
+                if (Random.IntRange(0,9) > 5){
                     energy_cost = 0;
                 }
             }

@@ -50,6 +50,9 @@ public enum HeroSubClass {
 	HUNTER(HeroIcon.HUNTER),
 	MAID(HeroIcon.MAID),
 	
+	IMAGINARY(HeroIcon.IMAGINARY),
+	SATORI(HeroIcon.SATORI),
+	
 	MAGICIAN(HeroIcon.MAGICIAN),
 	THIEF(HeroIcon.THIEF),
 

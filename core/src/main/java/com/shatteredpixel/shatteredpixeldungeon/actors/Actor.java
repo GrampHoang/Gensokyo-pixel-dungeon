@@ -82,6 +82,13 @@ public abstract class Actor implements Bundlable {
 	public float cooldown() {
 		return time - now;
 	}
+	//These 2 function are for Koishihat passive to override
+	public float koishiDummyCoolDown() {
+		return time - now;
+	}
+	public float koishiDummyTotal() {
+		return time - now;
+	}
 
 	public void clearTime() {
 		time = 0;

@@ -25,8 +25,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fury;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroAction;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -49,13 +52,26 @@ import java.util.ArrayList;
 public class KoishiHat extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_CAPE;
+		image = ItemSpriteSheet.ARTIFACT_KOISHIHAT;
 		levelCap = 10;
         exp = 0;
         unique = true;
         bones = false;
+		imaginary_friend = 0;
+		keptThoughLostInvent = true;
 	}
+
+	public float total = 15f;
+	public float cooldown = 15f;
     public boolean invis = false;
+
+	@Override
+	public ArrayList<String> actions(Hero hero) {
+		ArrayList<String> actions = super.actions( hero );
+		actions.remove( AC_THROW );
+		actions.remove( AC_DROP );
+		return actions;
+	}
 
     @Override
 	public int value() {
@@ -66,11 +82,6 @@ public class KoishiHat extends Artifact {
 	protected ArtifactBuff passiveBuff() {
 		return new Koishibuff();
 	}
-
-	@Override
-	public void restoreFromBundle(Bundle bundle) {
-		super.restoreFromBundle(bundle);
-	}
 	
 	@Override
 	public String desc() {
@@ -78,9 +89,58 @@ public class KoishiHat extends Artifact {
 		return desc;
 	}
 
+	@Override
+	public boolean doUnequip(Hero hero, boolean collect, boolean single) {
+		if (Dungeon.hero.buff(Invisibility.class) != null){
+			Dungeon.hero.buff(Invisibility.class).detach();
+		}
+		Buff.affect(Dungeon.hero, Fury.class);
+		Buff.affect(Dungeon.hero, Doom.class);
+		return super.doUnequip(hero, collect, single);
+	}
+
+	@Override
+	public boolean doEquip(Hero hero) {
+		if(Dungeon.hero.buff(Fury.class) != null){
+			GLog.w("Koishi hasn't calm down yet!");
+			return false;
+		} else {
+			if (Dungeon.hero.buff(Doom.class) != null){
+				Dungeon.hero.buff(Doom.class).detach();
+			};
+			return super.doEquip(hero);
+		}
+	}
+
+	private static final String TURN_TILL_INVIS =        "turn_till_invis";
+	private static final String TURN_TO_INVIS =        "turn_to_invis";
+	@Override
+		public void storeInBundle( Bundle bundle ) {
+			super.storeInBundle( bundle );
+			bundle.put( TURN_TILL_INVIS, passiveBuff.koishiDummyCoolDown() );
+			bundle.put( TURN_TO_INVIS, passiveBuff.koishiDummyTotal() );
+		}
+		
+		@Override
+		public void restoreFromBundle( Bundle bundle ) {
+			super.restoreFromBundle( bundle );
+			cooldown = bundle.getFloat( TURN_TILL_INVIS );
+			total = bundle.getFloat( TURN_TO_INVIS );
+		}
+
     public class Koishibuff extends ArtifactBuff{
-        public float turn_to_invis = 15 - Math.round((0.5f * level())); //total turn needed to invis
-        public float turn_till_invis = turn_to_invis;					 //how many turn left till invis
+        public float turn_to_invis = total - imaginary_friend; //total turn needed to invis
+        public float turn_till_invis = cooldown;					 //how many turn left till invis
+
+		@Override
+		public float koishiDummyCoolDown() {
+			return turn_till_invis;
+		}
+
+		@Override
+		public float koishiDummyTotal() {
+			return turn_to_invis;
+		}
 
         @Override
         public boolean act() {
@@ -113,7 +173,8 @@ public class KoishiHat extends Artifact {
 
 		@Override
 		public String desc() {
-			return String.format("Koishi closed her mind, which makes her presence cannot be noticed by other beings unless she allows it. After %1$.1f turns of not attacking, she will turn invisible. \n\nTurns visible remaining: %2$.1f.", turn_to_invis, turn_till_invis);
+			int chance = 40 + 10*Dungeon.hero.pointsInTalent(Talent.LEARNING);
+			return String.format("Koishi closed her mind, which makes her presence cannot be noticed by other beings unless she allows it. After %1$.1f turns of not attacking, she will turn invisible. \n\nTurns visible remaining: %2$.1f.\n\nHowever, by doing so Koishi have _%3$d%% chance_ to only gain 50%% exp instead (rounded down).", turn_to_invis, turn_till_invis, chance);
 		}
 
 		@Override
@@ -135,6 +196,6 @@ public class KoishiHat extends Artifact {
 		public String iconTextDisplay() {
 			return Integer.toString(Math.round(turn_till_invis));
 		}
-	
+
     }
 }

@@ -51,8 +51,7 @@ public class ReisenHand extends MeleeWeapon {
 
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-        if (true){
-        // if (Random.Int(0, (this.level() + 5)) < (this.level()+1)){
+        if (Random.IntRange(0, (this.level() + 5)) < (this.level()+1)){
 			Ballistica trajectory = new Ballistica(attacker.pos, defender.pos, Ballistica.STOP_TARGET);
 			//trim it to just be the part that goes past them
 			trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);

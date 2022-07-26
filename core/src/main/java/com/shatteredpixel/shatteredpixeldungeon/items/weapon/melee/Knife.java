@@ -54,7 +54,7 @@ public class Knife extends MeleeWeapon {
 			Hero hero = (Hero) owner;
 			Char enemy = hero.enemy();
 			if (Dungeon.hero.belongings.weapon() instanceof Knife) {
-                if ((buffedLvl() + 1) > Random.Int(0, (buffedLvl() + 5) )){
+                if ((buffedLvl() + 1) > Random.IntRange(0, (buffedLvl() + 5) )){
                     Buff.affect(enemy, Bleeding.class).set(Math.round((max()+1)/4));
                 }
 			}

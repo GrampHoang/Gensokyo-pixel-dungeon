@@ -649,6 +649,10 @@ public abstract class Mob extends Char {
 	}
 
 	public boolean surprisedBy( Char enemy, boolean attacking ){
+		if (Dungeon.hero.hasTalent(Talent.DIRECT_SURPRISE) && (!attacking || ((Hero)enemy).canSurpriseAttack())){
+			if(Dungeon.hero.pointsInTalent(Talent.DIRECT_SURPRISE)*2 > Random.IntRange(0,9))
+			return true;
+		}
 		return enemy == Dungeon.hero
 				&& (enemy.invisible > 0 || !enemySeen)
 				&& (!attacking || ((Hero)enemy).canSurpriseAttack());
@@ -732,7 +736,7 @@ public abstract class Mob extends Char {
 				Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
 			}
 			if(cause == Dungeon.hero && Dungeon.hero.hasTalent(Talent.DUPLEX_BARRIER)){
-				if(Random.Int(0,1) < Dungeon.hero.pointsInTalent(Talent.DUPLEX_BARRIER)){
+				if(Random.IntRange(0,1) < Dungeon.hero.pointsInTalent(Talent.DUPLEX_BARRIER)){
 					Buff.affect(Dungeon.hero, Barrier.class).setShield(2);
 				}
 			}

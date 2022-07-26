@@ -21,21 +21,23 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Fury extends Buff {
 	
-	public static float LEVEL	= 0.5f;
+	public static float LEVEL	= 0.3f;
 
 	{
 		type = buffType.POSITIVE;
 		announced = true;
 	}
-	
+
 	@Override
 	public boolean act() {
-		if (target.HP > target.HT * LEVEL) {
+		if (target.HP < target.HT * LEVEL) {
 			detach();
 		}
 		
@@ -61,6 +63,11 @@ public class Fury extends Buff {
 
 	@Override
 	public String desc() {
-		return Messages.get(this, "desc");
+		if(Dungeon.hero.heroClass == HeroClass.KOISHI){
+			return Messages.get(this, "koishi_desc");
+		} else{
+			return Messages.get(this, "desc");
+		}
+		
 	}
 }

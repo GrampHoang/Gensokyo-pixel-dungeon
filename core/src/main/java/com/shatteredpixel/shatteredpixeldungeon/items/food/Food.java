@@ -97,6 +97,7 @@ public class Food extends Item {
 			|| Dungeon.hero.hasTalent(Talent.POOR_MEAL)
 			|| Dungeon.hero.hasTalent(Talent.MAGICIAN_MEAL)
 			|| Dungeon.hero.hasTalent(Talent.MED_MEAL)
+			|| Dungeon.hero.hasTalent(Talent.MIND_FOOD)
 			|| Dungeon.hero.hasTalent(Talent.INVIGORATING_MEAL)){
 			return TIME_TO_EAT - 2;
 		} else if(Dungeon.hero.hasTalent(Talent.TIME_MEAL)){

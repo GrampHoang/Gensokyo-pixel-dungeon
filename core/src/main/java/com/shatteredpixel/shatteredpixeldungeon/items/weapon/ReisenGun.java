@@ -122,29 +122,29 @@ public class ReisenGun extends Weapon {
 		proc_mul += 0.05f*stack;
 
 		if (Dungeon.hero.hasTalent(Talent.HEADSHOT)){
-			if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.HEADSHOT)*proc_mul){
+			if(Random.IntRange(0,9) < Dungeon.hero.pointsInTalent(Talent.HEADSHOT)*proc_mul){
 				Buff.prolong(defender, Paralysis.class, 1f);
 			}
 		}
 
 
 		if (Dungeon.hero.hasTalent(Talent.INSANITY_INDUCE)){
-			if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.INSANITY_INDUCE)*proc_mul){
+			if(Random.IntRange(0,9) < Dungeon.hero.pointsInTalent(Talent.INSANITY_INDUCE)*proc_mul){
 				Buff.affect(defender, Amok.class, 3f);
 			}
 		}
 		if (Dungeon.hero.hasTalent(Talent.CHARM_GAZE)){
-			if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.CHARM_GAZE)*proc_mul){
+			if(Random.IntRange(0,9) < Dungeon.hero.pointsInTalent(Talent.CHARM_GAZE)*proc_mul){
 				Buff.affect(defender, Charm.class, 3f);
 			}
 		}
 		if (Dungeon.hero.hasTalent(Talent.LEG_SHOT)){
-			if(Random.Int(0,99) < (1 + 2 * Dungeon.hero.pointsInTalent(Talent.LEG_SHOT))*stack*proc_mul){
+			if(Random.IntRange(0,99) < (1 + 2 * Dungeon.hero.pointsInTalent(Talent.LEG_SHOT))*stack*proc_mul){
 				Buff.affect(defender, Cripple.class, 5f);
 			}
 		}
 		if (Dungeon.hero.hasTalent(Talent.HEART_PIERCE)){
-			if(Random.Int(0,99) < (0.5f + 0.5f*Dungeon.hero.pointsInTalent(Talent.HEART_PIERCE))*stack*proc_mul){
+			if(Random.IntRange(0,99) < (0.5f + 0.5f*Dungeon.hero.pointsInTalent(Talent.HEART_PIERCE))*stack*proc_mul){
 				if(defender.properties().contains(Char.Property.BOSS) || defender.properties().contains(Char.Property.MINIBOSS)){
 					Buff.affect(defender, Bleeding.class).set(8f);
 				}
@@ -155,13 +155,13 @@ public class ReisenGun extends Weapon {
 		}
 		if (Dungeon.hero.hasTalent(Talent.ILLUSION_SEEKER)){
 			float chance = 5 * stack;
-			if(Random.Int(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 0){
+			if(Random.IntRange(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 0){
 				Buff.affect(defender, Burning.class).reignite(defender, 5f);
 			}
-			if(Random.Int(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 1){
+			if(Random.IntRange(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 1){
 				Buff.affect(defender, Poison.class).set(5);
 			}
-			if(Random.Int(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 2){
+			if(Random.IntRange(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 2){
 				Buff.affect(defender, Corrosion.class).set(5f,5);
 			}
 		}
@@ -352,7 +352,7 @@ public class ReisenGun extends Weapon {
 		
 		@Override
 		public float delayFactor(Char user) {
-			if (Dungeon.hero.pointsInTalent(Talent.QUICKDRAW) > Random.Int(0,9)){
+			if (Dungeon.hero.pointsInTalent(Talent.QUICKDRAW) > Random.IntRange(0,9)){
 				return 0;
 			}
 			return ReisenGun.this.delayFactor(user);

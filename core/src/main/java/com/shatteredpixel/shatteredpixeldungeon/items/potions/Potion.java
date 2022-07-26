@@ -290,7 +290,7 @@ public class Potion extends Item {
 	
 	protected void drink( Hero hero ) {
 		//Have be be refugee, next one is chance to proc, last one is save-able potions: not PoH and PoT
-		if( (hero.subClass == HeroSubClass.REFUGEE) && (hero.pointsInTalent(Talent.POT_RESERVE) + 1 > Random.Int(0,9)) && (this.save == true)){
+		if( (hero.subClass == HeroSubClass.REFUGEE) && (hero.pointsInTalent(Talent.POT_RESERVE) + 1 > Random.IntRange(0,9)) && (this.save == true)){
 			GLog.i("Potion reserved!");
 	 	} else{
 		detach( hero.belongings.backpack );
@@ -311,15 +311,15 @@ public class Potion extends Item {
 	protected void onThrow( int cell ) {
 		if((Dungeon.hero.subClass == HeroSubClass.REFUGEE)){
 			if(Dungeon.hero.hasTalent(Talent.FAKE_THROW)){
-				if (Dungeon.hero.pointsInTalent(Talent.FAKE_THROW)*2 > Random.Int(0,9)){
+				if (Dungeon.hero.pointsInTalent(Talent.FAKE_THROW)*2 > Random.IntRange(0,9)){
 					this.collect();
 				}
-			}else if (1 > Random.Int(0,9)){
+			}else if (1 > Random.IntRange(0,9)){
 				this.collect();
 			}
 
 			if(Dungeon.hero.hasTalent(Talent.POTION_WARFARE)){
-				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE) > Random.Int(0,2)){
+				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE) > Random.IntRange(0,2)){
 					if (ExoticPotion.regToExo.get(getClass()) != null) {
 						Reflection.newInstance(ExoticPotion.regToExo.get(getClass())).shatter(cell);
 					}

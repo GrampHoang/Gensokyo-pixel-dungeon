@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -34,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.watabou.utils.Random;
 
 public class WndTradeItem extends WndInfoItem {
 
@@ -157,6 +159,38 @@ public class WndTradeItem extends WndInfoItem {
 			};
 			btnSteal.setRect(0, pos + 1, width, BTN_HEIGHT);
 			btnSteal.icon(new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND));
+			add(btnSteal);
+
+			pos = btnSteal.bottom();
+
+		}
+
+		if (Dungeon.hero.hasTalent(Talent.BAD_GIRL)){
+			int chance = Dungeon.hero.pointsInTalent(Talent.BAD_GIRL)*2 + 5;
+			RedButton btnSteal = new RedButton(Messages.get(this, "bad_girl_steal", chance)) {
+				@Override
+				protected void onClick() {
+					if (chance > Random.IntRange(0,9)) {
+						Hero hero = Dungeon.hero;
+						Item item = heap.pickUp();
+						hide();
+						if (!item.doPickUp(hero)) {
+							Dungeon.level.drop(item, heap.pos).sprite.drop();
+						}
+					} else {
+						for (Mob mob : Dungeon.level.mobs) {
+							if (mob instanceof Shopkeeper) {
+								mob.yell(Messages.get(mob, "thief"));
+								((Shopkeeper) mob).flee();
+								break;
+							}
+						}
+						hide();
+					}
+				}
+			};
+			btnSteal.setRect(0, pos + 1, width, BTN_HEIGHT);
+			btnSteal.icon(new ItemSprite(ItemSpriteSheet.ARTIFACT_KOISHIHAT));
 			add(btnSteal);
 
 			pos = btnSteal.bottom();

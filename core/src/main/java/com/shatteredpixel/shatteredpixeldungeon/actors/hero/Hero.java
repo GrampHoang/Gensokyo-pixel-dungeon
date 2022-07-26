@@ -42,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CooldownPush;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Exterminating;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
@@ -87,6 +88,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat.Koishibuff;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -113,6 +116,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
@@ -129,6 +133,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
@@ -487,10 +492,10 @@ public class Hero extends Char {
 			return INFINITE_EVASION;
 		}
 		
-		if (Random.Int(0, 99) < 11*pointsInTalent(Talent.BACKTRACK)){
+		if (Random.IntRange(0, 99) < 11*pointsInTalent(Talent.BACKTRACK)){
 			return INFINITE_EVASION;
 		}
-		if (Random.Int(0, 99) < 15*pointsInTalent(Talent.FANTASY_NATURE)){
+		if (Random.IntRange(0, 99) < 15*pointsInTalent(Talent.FANTASY_NATURE)){
 			return INFINITE_EVASION;
 		}
 		float evasion = defenseSkill;
@@ -603,6 +608,10 @@ public class Hero extends Char {
 			speed *= (2f + 0.25f*pointsInTalent(Talent.GROWING_POWER));
 		}
 		
+
+		if(buff(Invisibility.class) != null && pointsInTalent(Talent.FREE_SPIRIT) > 0){
+			speed *= 1.5f;
+		}
 		speed = AscensionChallenge.modifyHeroSpeed(speed);
 
 		return speed;
@@ -695,6 +704,10 @@ public class Hero extends Char {
 			buff(Endure.EndureTracker.class).endEnduring();
 		}
 		
+		if(Dungeon.hero.buff(Invisibility.class) != null && Dungeon.hero.pointsInTalent(Talent.FREE_SPIRIT) > 2){
+			Buff.prolong(Dungeon.hero, MindVision.class, 2f);
+		}
+
 		if (!ready) {
 			//do a full observe (including fog update) if not resting.
 			if (!resting || buff(MindVision.class) != null || buff(Awareness.class) != null) {
@@ -1186,7 +1199,7 @@ public class Hero extends Char {
 
 		if (wep != null) damage = wep.proc( this, enemy, damage );
 		if (Dungeon.hero.hasTalent(Talent.SHINING_STAR)){
-			if (Random.Int(0,99) < Dungeon.hero.pointsInTalent(Talent.SHINING_STAR) * 15){
+			if (Random.IntRange(0,99) < Dungeon.hero.pointsInTalent(Talent.SHINING_STAR) * 15){
 				Buff.affect(Dungeon.hero, Light.class, 8f);
 			}
 		}
@@ -1198,7 +1211,17 @@ public class Hero extends Char {
 		}
 
 		damage = Talent.onAttackProc( this, enemy, damage );
-		
+		// TODO
+		if (Dungeon.hero.hasTalent(Talent.SURPRISE_PUSH) && buff(CooldownPush.class) == null && Dungeon.hero.buff(Invisibility.class) != null) {
+			for(int i : PathFinder.NEIGHBOURS8){
+					if (Dungeon.level.map[enemy.pos + i] == Terrain.CHASM){
+						enemy.sprite.move(enemy.pos, enemy.pos + i);
+						enemy.move(enemy.pos + i, true);
+						Buff.prolong(Dungeon.hero, CooldownPush.class, 100f-20f*Dungeon.hero.pointsInTalent(Talent.SURPRISE_PUSH));
+					}
+				}
+		}
+
 		switch (subClass) {
 		case SNIPER:
 			if (wep instanceof MissileWeapon && !(wep instanceof SpiritBow.SpiritArrow) && enemy != this) {
@@ -1564,7 +1587,12 @@ public class Hero extends Char {
 	}
 	
 	public void earnExp( int exp, Class source ) {
-		
+		if(this.heroClass == HeroClass.KOISHI && this.buff(KoishiHat.Koishibuff.class) != null){
+			if(Random.IntRange(0,9) > 4 + this.pointsInTalent(Talent.LEARNING)){
+				exp *= 0.5f;
+			}
+				
+		}
 		this.exp += exp;
 		float percent = exp/(float)maxExp();
 

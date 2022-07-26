@@ -22,42 +22,28 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.watabou.utils.Bundle;
 
-public class Doom extends Buff {
-	
+public class CooldownPush extends FlavourBuff {
 	{
-		type = buffType.NEGATIVE;
-		announced = true;
+		type = buffType.POSITIVE;
 	}
-	
-	@Override
-	public void fx(boolean on) {
-		if (on) target.sprite.add( CharSprite.State.DARKENED );
-		else if (target.invisible == 0) target.sprite.remove( CharSprite.State.DARKENED );
-	}
-	
+
 	@Override
 	public int icon() {
-		return BuffIndicator.CORRUPT;
+		return BuffIndicator.TIME;
 	}
-	
+
 	@Override
 	public String toString() {
-		if (Dungeon.hero.heroClass == HeroClass.KOISHI){
-			return Messages.get(this, "koishi_name");
-		}
 		return Messages.get(this, "name");
 	}
-	
+
 	@Override
 	public String desc() {
-		if (Dungeon.hero.heroClass == HeroClass.KOISHI){
-			return Messages.get(this, "koishi_desc");
-		}
-		return Messages.get(this, "desc");
+		return Messages.get(this, "desc", dispTurns());
 	}
 }

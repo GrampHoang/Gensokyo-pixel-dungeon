@@ -54,6 +54,9 @@ public class Artifact extends KindofMisc {
 
 	//used by some artifacts to keep track of duration of effects or cooldowns to use.
 	protected int cooldown = 0;
+	
+	// For koishi hat only
+	public int imaginary_friend = 0;
 
 	@Override
 	public boolean doEquip( final Hero hero ) {
@@ -217,6 +220,10 @@ public class Artifact extends KindofMisc {
 
 		public int itemLevel() {
 			return level();
+		}
+		//this is a dummy function for Koishi hat, not sure if it work or not
+		public float filler1(float a) {
+			return a;
 		}
 
 		public boolean isCursed() {

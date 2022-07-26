@@ -103,23 +103,23 @@ public class Ofuda extends MissileWeapon {
 	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
 			if (Dungeon.hero.hasTalent(Talent.LUCKY_SHOT)){
-				if(Random.Int(0,99) < 15 + 5 * Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
+				if(Random.IntRange(0,99) < 15 + 5 * Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
 					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
 				}
-				if(Random.Int(0,2) < Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
+				if(Random.IntRange(0,2) < Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
 					wep.enchantment.proc(wep, attacker, defender, damage);
 				}
 			} else {
-				if(Random.Int(0,9) < 1){
+				if(Random.IntRange(0,9) < 1){
 					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
 				}
 			}
 
 			if (Dungeon.hero.hasTalent(Talent.SEALCRIP)){
-				if(Random.Int(0,9) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
+				if(Random.IntRange(0,9) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
 					Buff.prolong( defender, Cripple.class, 4f);
 				}
-				if(Random.Int(0,19) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
+				if(Random.IntRange(0,19) < Dungeon.hero.pointsInTalent(Talent.SEALCRIP)){
 					Buff.prolong( defender, Slow.class, 4f);
 				}
 			}

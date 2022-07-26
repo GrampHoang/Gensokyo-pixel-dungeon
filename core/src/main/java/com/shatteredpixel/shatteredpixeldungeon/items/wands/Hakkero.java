@@ -258,7 +258,7 @@ public class Hakkero extends DamageWand {
 		}
 
 		if (Dungeon.hero.hasTalent(Talent.LOVE_MS)){
-			if(Random.Int(0,99) < 15*Dungeon.hero.pointsInTalent(Talent.LOVE_MS)){
+			if(Random.IntRange(0,99) < 15*Dungeon.hero.pointsInTalent(Talent.LOVE_MS)){
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 					if (Dungeon.level.heroFOV[mob.pos]) {
 						Buff.affect(ch, Charm.class, 4f);

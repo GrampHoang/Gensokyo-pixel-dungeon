@@ -51,7 +51,7 @@ public class KoiKnife extends MeleeWeapon {
 			Hero hero = (Hero)owner;
 			Char enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
-				//Triple damage if suprise attack.
+				//Triple damage if surprise attack.
 				int damage = augment.damageFactor(Random.NormalIntRange(
 						min()*3,
 						max()*3));

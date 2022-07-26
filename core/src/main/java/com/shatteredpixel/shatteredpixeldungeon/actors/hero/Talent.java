@@ -35,12 +35,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Surprise;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.FrozenCarpaccio;
@@ -151,7 +151,7 @@ public enum Talent {
 	//Sakuya T1
 	PREPARED_PIE(128), MAID_INTUITION(129), MUDA_STRIKE(130), TIME_PROTECTION(131),
 	//Sakuya T2
-	TIME_MEAL(132), RESTORED_TIME(133), MAID_STEPS(134), MAID_SENSES(135), SUPRISE_PROJECTILES(136),
+	TIME_MEAL(132), RESTORED_TIME(133), MAID_STEPS(134), MAID_SENSES(135), SURPRISE_PROJECTILES(136),
 	//Sakuya T3
 	TIME_STOP_LETHALITY(137, 3), NATURAL_POWER(138, 3),
 	//Hunter T3
@@ -207,6 +207,20 @@ public enum Talent {
 	//Mind Stopper (sentries)
 	//Lunatic Red eye (amok)
 
+	// Reisen T1
+	FAST_FOOD(224), LEARNING(225), OPEN_WOUND(226), SURPRISE_SHIELD(227),
+	// Reisen T2
+	MIND_FOOD(228), FEARFUL_UPGRADE(229), SURPRISE_MOMENTUM(230), SURPRISE_PUSH(231), BAD_GIRL(232),
+	// Reisen T3
+	ANSWER_PHONE(233, 3), DIRECT_SURPRISE(234, 3),
+	// MoonRabbit T3
+	IMAGINARY_FRIEND(235, 3), HIDDEN_DANGER(236, 3), FREE_SPIRIT(237, 3),
+	// Refugee T3
+	CORRUPTION(238, 3), MIND_BREAK(239, 3), MIND_READ(240, 3),
+	// Full Moon (shoot circle)
+	//Mind Stopper (sentries)
+	//Lunatic Red eye (amok)
+
 
 	//Default for new template character:
 	DEFAULT_STR_UP(30), DEFAULT_HP_UP(31), DEFAULT_MORE_HP_UP(31,3),
@@ -223,6 +237,8 @@ public enum Talent {
 		public String toString() { return Messages.get(this, "name"); }
 		public String desc() { return Messages.get(this, "desc", dispTurns(visualcooldown())); }
 	};
+
+	public static class PushTracker extends FlavourBuff{};
 	public static class LethalMomentumTracker extends FlavourBuff{};
 	public static class StrikingWaveTracker extends FlavourBuff{};
 	public static class WandPreservationCounter extends CounterBuff{{revivePersists = true;}};
@@ -425,6 +441,13 @@ public enum Talent {
 				poh.identify();
 			}
 		}
+
+		if (talent == IMAGINARY_FRIEND){
+			KoishiHat hat = hero.belongings.getItem(KoishiHat.class);
+			if (hat != null){
+				hat.imaginary_friend = Dungeon.hero.pointsInTalent(IMAGINARY_FRIEND);
+			}
+		}
 	}
 
 	public static class CachedRationsDropped extends CounterBuff{{revivePersists = true;}};
@@ -479,7 +502,7 @@ public enum Talent {
 			Buff.affect( hero, Vertigo.class, 4f);
 			Buff.affect( hero, WandEmpower.class).set(2 + 2*hero.pointsInTalent(MAGIC_SHROOM), 1);
 			ScrollOfRecharging.charge( hero );
-			if (Random.Int(0,9) < 2*Dungeon.hero.pointsInTalent(Talent.MAGIC_SHROOM)){
+			if (Random.IntRange(0,9) < 2*Dungeon.hero.pointsInTalent(Talent.MAGIC_SHROOM)){
 				FrozenCarpaccio.effect(hero);
 			}
 		}	
@@ -524,10 +547,19 @@ public enum Talent {
 			hero.sprite.emitter().burst(Speck.factory(Speck.TOXIC), hero.pointsInTalent(EINTEI_MEAL));
 		}
 
+		if (hero.hasTalent(FAST_FOOD)){
+			Buff.prolong( hero, Stamina.class, 1f + 2f * hero.pointsInTalent(FAST_FOOD));
+		}
+
+		if (hero.hasTalent(MIND_FOOD)){
+			Buff.affect( hero, MindVision.class, 1f + 2f * hero.pointsInTalent(MIND_FOOD));
+		}
+
 		if (hero.hasTalent(INVIGORATING_MEAL)){
 			//effectively 1/2 turns of haste
 			Buff.prolong( hero, Haste.class, 0.67f+hero.pointsInTalent(INVIGORATING_MEAL));
 		}
+		
 	}
 
 	public static class WarriorFoodImmunity extends FlavourBuff{
@@ -663,6 +695,14 @@ public enum Talent {
 			hero.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 			Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
 		}
+
+		if (hero.hasTalent(FEARFUL_UPGRADE)){
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				if (Dungeon.level.heroFOV[mob.pos]) {
+					Buff.affect( mob, Terror.class, 2f*Dungeon.hero.pointsInTalent(Talent.FEARFUL_UPGRADE) );
+				}
+			}
+		}
 	}
 
 	public static void onArtifactUsed( Hero hero ){
@@ -747,6 +787,35 @@ public enum Talent {
 				dmg += -1 + 2 * hero.pointsInTalent(Talent.RUTHLESS);
 		}
 
+		if (hero.hasTalent(Talent.OPEN_WOUND)
+				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)){
+			Buff.affect(enemy, Bleeding.class).set(Dungeon.hero.pointsInTalent(Talent.OPEN_WOUND));
+		}
+
+		if (hero.hasTalent(Talent.SURPRISE_SHIELD)
+				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)){
+			Buff.affect(Dungeon.hero, Barrier.class).setShield(1 + Dungeon.hero.pointsInTalent(Talent.SURPRISE_SHIELD));
+		}
+
+		if (hero.hasTalent(Talent.SURPRISE_MOMENTUM)
+				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)){
+			Buff.affect(Dungeon.hero, Haste.class, Dungeon.hero.pointsInTalent(Talent.SURPRISE_MOMENTUM));
+		}
+
+		if (hero.hasTalent(Talent.HIDDEN_DANGER)
+				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)){
+					if (hero.pointsInTalent(Talent.HIDDEN_DANGER) > 0){
+						Buff.affect(enemy, Vertigo.class, 3f);
+					}
+					if (hero.pointsInTalent(Talent.HIDDEN_DANGER) > 1){
+						Buff.affect(enemy, Haste.class, 3f);
+					}
+					if (hero.pointsInTalent(Talent.HIDDEN_DANGER) > 2){
+						Buff.affect(enemy, Haste.class, 3f);
+					}
+			
+		}
+
 		return dmg;
 	}
 
@@ -796,6 +865,10 @@ public enum Talent {
 			case REISEN:
 				Collections.addAll(tierTalents, EINTEI_MEAL, EIRIN_BOOK, HEADSHOT, BULLEYES);
 				break;
+			case KOISHI:
+				Collections.addAll(tierTalents, FAST_FOOD, LEARNING, OPEN_WOUND, SURPRISE_SHIELD);
+				break;
+
 			default:
 				Collections.addAll(tierTalents, DEFAULT_STR_UP, ARMSMASTERS_INTUITION, DEFAULT_HP_UP, DEFAULT_MORE_HP_UP);
 				break;
@@ -830,10 +903,13 @@ public enum Talent {
 				Collections.addAll(tierTalents, MAGICIAN_MEAL, MAGICAL_RETREAT, SHINING_STAR, NIMBLE, SNEAKY);
 				break;
 			case SAKUYA:
-				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SUPRISE_PROJECTILES);
+				Collections.addAll(tierTalents, TIME_MEAL, RESTORED_TIME, MAID_STEPS, MAID_SENSES, SURPRISE_PROJECTILES);
 				break;
 			case REISEN:
 				Collections.addAll(tierTalents, MED_MEAL, QUICK_BITTER_HEAL, WAVE_DETECT, SCOUT_SHOT, QUICKDRAW);
+				break;
+			case KOISHI:
+				Collections.addAll(tierTalents, MIND_FOOD, FEARFUL_UPGRADE, SURPRISE_MOMENTUM, SURPRISE_PUSH, BAD_GIRL);
 				break;
 			default:
 				Collections.addAll(tierTalents, LETHAL_MOMENTUM, HEIGHTENED_SENSES, WIDE_SEARCH, SILENT_STEPS, REJUVENATING_STEPS);
@@ -873,6 +949,9 @@ public enum Talent {
 				break;
 			case REISEN:
 				Collections.addAll(tierTalents, INSANITY_INDUCE, CHARM_GAZE);
+				break;
+			case KOISHI:
+				Collections.addAll(tierTalents, ANSWER_PHONE, DIRECT_SURPRISE);
 				break;
 			default:
 				Collections.addAll(tierTalents, STRONGMAN, AGELESS);
@@ -952,6 +1031,12 @@ public enum Talent {
 				break;
 			case REFUGEE:
 				Collections.addAll(tierTalents, POT_RESERVE, FAKE_THROW, POTION_WARFARE);
+				break;
+			case IMAGINARY:
+				Collections.addAll(tierTalents, IMAGINARY_FRIEND, HIDDEN_DANGER, FREE_SPIRIT);
+				break;
+			case SATORI:
+				Collections.addAll(tierTalents, CORRUPTION, MIND_BREAK, MIND_READ);
 				break;
 			default:
 				Collections.addAll(tierTalents, MAID_INSTINCT, HEALING_ACCEL, BACKTRACK);

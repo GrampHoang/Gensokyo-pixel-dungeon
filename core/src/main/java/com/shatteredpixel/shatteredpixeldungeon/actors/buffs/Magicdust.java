@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -253,7 +254,6 @@ public class Magicdust extends Buff implements ActionIndicator.Action {
 		if (Dungeon.hero.pointsInTalent(Talent.MAGUS_NIGHT) == 3) {
 			Buff.prolong(Dungeon.hero, Light.class, 1f);
 		}
-
 		freeflyTurns = dustStacks;
 		//cooldown is functionally 10+2*stacks when active effect ends
 		freeflyCooldown = 10 + 3*dustStacks;
@@ -263,6 +263,8 @@ public class Magicdust extends Buff implements ActionIndicator.Action {
 		dustStacks = 0;
 		BuffIndicator.refreshHero();
 		ActionIndicator.clearAction(this);
+		//Update FoV for the see through tall grass
+		Dungeon.level.updateFieldOfView(Dungeon.hero, Dungeon.level.heroFOV);
 	}
 
 }

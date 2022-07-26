@@ -66,6 +66,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gohei;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Knife;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KoiKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
@@ -84,6 +85,7 @@ public enum HeroClass {
 	REIMU(HeroSubClass.EXTERMINATOR, HeroSubClass.MAIDEN),
 	MARISA( HeroSubClass.MAGICIAN, HeroSubClass.THIEF ),
 	SAKUYA( HeroSubClass.HUNTER, HeroSubClass.MAID ),
+	KOISHI( HeroSubClass.IMAGINARY, HeroSubClass.SATORI),
 	REISEN( HeroSubClass.MOONRABBIT, HeroSubClass.REFUGEE );
 
 	private HeroSubClass[] subClasses;
@@ -176,7 +178,11 @@ public enum HeroClass {
 				break;
 
 			case SAKUYA:
-				initSakuya( hero);
+				initSakuya( hero );
+				break;
+
+			case KOISHI:
+				initKoishi( hero );
 				break;
 
 			case REISEN:
@@ -305,10 +311,6 @@ public enum HeroClass {
 		(hero.belongings.artifact = hourglass).identify();
 		hero.belongings.artifact.activate( hero );
 
-		KoishiHat hat = new KoishiHat();
-		(hero.belongings.artifact = hat).identify();
-		hero.belongings.artifact.activate( hero );
-
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect();
 
@@ -317,6 +319,17 @@ public enum HeroClass {
 
 		new ScrollOfTeleportation().identify();
 		new PotionOfHaste().identify();
+	}
+	
+	private static void initKoishi( Hero hero ) {
+		(hero.belongings.weapon = new KoiKnife()).identify();
+
+		KoishiHat hat = new KoishiHat();
+		(hero.belongings.artifact = hat).identify();
+		hero.belongings.artifact.activate( hero );
+
+		new ScrollOfRetribution().identify();
+		new PotionOfMindVision().identify();
 	}
 
 	private static void initReisen( Hero hero ) {
@@ -352,9 +365,13 @@ public enum HeroClass {
 				return new ArmorAbility[]{new SmokeBomb(), new DeathMark(), new ShadowClone()};
 			case HUNTRESS:
 				return new ArmorAbility[]{new SpectralBlades(), new NaturesPower(), new SpiritHawk()};
+			case REIMU:
+				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
 			case SAKUYA:
 				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
 			case MARISA:
+				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
+			case KOISHI:
 				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
 			default:
 				return new ArmorAbility[]{new SmokeBomb(), new HeroicLeap(), new WarpBeacon()};
@@ -379,6 +396,8 @@ public enum HeroClass {
 				return Assets.Sprites.MARISA;
 			case REISEN:
 				return Assets.Sprites.REISEN;
+			case KOISHI:
+				return Assets.Sprites.KOISHI;
 		}
 	}
 
@@ -400,6 +419,8 @@ public enum HeroClass {
 				return Assets.Splashes.MARISA;
 			case REISEN:
 				return Assets.Splashes.REISEN;
+			case KOISHI:
+				return Assets.Splashes.KOISHI;
 		}
 	}
 	

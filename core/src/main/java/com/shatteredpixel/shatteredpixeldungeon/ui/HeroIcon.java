@@ -46,28 +46,32 @@ public class HeroIcon extends Image {
 	public static final int SNIPER      = 6;
 	public static final int WARDEN      = 7;
 	
-	public static final int EXTERMINATOR= 1;
-	public static final int MAIDEN		= 7;
-	public static final int HUNTER 		= 4;
-	public static final int MAID		= 5;
-	public static final int MAGICIAN 	= 2;
-	public static final int THIEF		= 5;
-	public static final int MOONRABBIT  = 6;
-	public static final int REFUGEE     = 7;
+	public static final int EXTERMINATOR= 8;
+	public static final int MAIDEN		= 9;
+	public static final int IMAGINARY   = 11;
+	public static final int SATORI      = 10;
+	public static final int HUNTER 		= 10;
+	public static final int MAID		= 11;
+	public static final int MAGICIAN 	= 12;
+	public static final int THIEF		= 13;
+	public static final int MOONRABBIT  = 14;
+	public static final int REFUGEE     = 15;
+
 	//abilities
-	public static final int HEROIC_LEAP     = 8;
-	public static final int SHOCKWAVE       = 9;
-	public static final int ENDURE          = 10;
-	public static final int ELEMENTAL_BLAST = 11;
-	public static final int WILD_MAGIC      = 12;
-	public static final int WARP_BEACON     = 13;
-	public static final int SMOKE_BOMB      = 14;
-	public static final int DEATH_MARK      = 15;
-	public static final int SHADOW_CLONE    = 16;
-	public static final int SPECTRAL_BLADES = 17;
-	public static final int NATURES_POWER   = 18;
-	public static final int SPIRIT_HAWK     = 19;
-	public static final int RATMOGRIFY      = 20;
+	public static final int HEROIC_LEAP     = 16;
+	public static final int SHOCKWAVE       = 17;
+	public static final int ENDURE          = 18;
+	public static final int ELEMENTAL_BLAST = 19;
+	public static final int WILD_MAGIC      = 20;
+	public static final int WARP_BEACON     = 21;
+	public static final int SMOKE_BOMB      = 22;
+	public static final int DEATH_MARK      = 23;
+
+	public static final int SHADOW_CLONE    = 32;
+	public static final int SPECTRAL_BLADES = 33;
+	public static final int NATURES_POWER   = 34;
+	public static final int SPIRIT_HAWK     = 35;
+	public static final int RATMOGRIFY      = 36;
 	public static final int THE_WORLD   	= 18;
 	public static final int KNIFE_RAIN  	= 18;
 	public static final int BLINK  			= 18;

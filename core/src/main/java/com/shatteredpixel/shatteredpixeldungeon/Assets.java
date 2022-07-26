@@ -230,6 +230,7 @@ public class Assets {
 		public static final String MARISA	= "splashes/marisa.jpg";
 		public static final String REIMU	= "splashes/reimu.jpg";
 		public static final String REISEN	= "splashes/reisen.jpg";
+		public static final String KOISHI	= "splashes/koishi.jpg";
 	}
 
 	public static class Sprites {
@@ -244,6 +245,7 @@ public class Assets {
 		public static final String MARISA	= "sprites/marisa.png";
 		public static final String REIMU	= "sprites/reimu.png";
 		public static final String REISEN	= "sprites/reisen.png";
+		public static final String KOISHI	= "sprites/koishi.png";
 		public static final String AVATARS  = "sprites/avatars.png";
 		public static final String PET      = "sprites/pet.png";
 		public static final String AMULET   = "sprites/amulet.png";

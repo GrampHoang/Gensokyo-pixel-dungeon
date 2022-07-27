@@ -445,7 +445,13 @@ public enum Talent {
 		if (talent == IMAGINARY_FRIEND){
 			KoishiHat hat = hero.belongings.getItem(KoishiHat.class);
 			if (hat != null){
-				hat.imaginary_friend = Dungeon.hero.pointsInTalent(IMAGINARY_FRIEND);
+				hat.imaginary_friend = hero.pointsInTalent(IMAGINARY_FRIEND);
+				hero.belongings.getItem(KoishiHat.class).updateTalent();
+			}
+		}
+		if (talent == FREE_SPIRIT){
+			if(hero.buff(Invisibility.class) != null && hero.pointsInTalent(Talent.FREE_SPIRIT) > 2){
+				Buff.prolong(Dungeon.hero, MindVision.class, 1.5f);
 			}
 		}
 	}

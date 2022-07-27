@@ -497,7 +497,7 @@ public abstract class Char extends Actor {
 		acuRoll *= AscensionChallenge.statModifier(attacker);
 
 		float defRoll = Random.Float( defStat );
-		if (defender == hero && hero.hasTalent(Talent.SMALL_HITBOX)){
+		if (defender == hero && hero.pointsInTalent(Talent.SMALL_HITBOX) > 0){
 			defRoll *= (1f + hero.pointsInTalent(Talent.SMALL_HITBOX) * 0.33f);
 		}
 		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;

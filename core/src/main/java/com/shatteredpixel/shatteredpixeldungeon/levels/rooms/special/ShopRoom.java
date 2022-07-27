@@ -250,7 +250,7 @@ public class ShopRoom extends SpecialRoom {
 			}
 		}
 
-		if (Dungeon.hero.hasTalent(Talent.MAGIC_BARGAIN)){
+		if (Dungeon.hero.pointsInTalent(Talent.MAGIC_BARGAIN) > 0){
 			Item wand = Generator.random( Generator.Category.WAND );
 			wand.cursed = false;
 			wand.cursedKnown = true;

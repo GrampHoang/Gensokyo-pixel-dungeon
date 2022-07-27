@@ -232,7 +232,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 1;
+		depth = 5;
 		branch = 0;
 
 		gold = 0;

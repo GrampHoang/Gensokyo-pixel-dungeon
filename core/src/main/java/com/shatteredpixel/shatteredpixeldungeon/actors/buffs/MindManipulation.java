@@ -21,20 +21,18 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 
-public class SoulMark extends FlavourBuff {
+public class MindManipulation extends FlavourBuff {
 
 	public static final float DURATION	= 10f;
 
 	{
 		type = buffType.NEGATIVE;
-		announced = true;
+        announced = true;
 	}
 
 	@Override
@@ -54,8 +52,10 @@ public class SoulMark extends FlavourBuff {
 
 	@Override
 	public void fx(boolean on) {
-		if (on) target.sprite.add(CharSprite.State.MARKED);
-		else target.sprite.remove(CharSprite.State.MARKED);
+		if (on) target.sprite.add(CharSprite.State.MIND);
+		else target.sprite.remove(CharSprite.State.MIND);
+        if (on) target.sprite.add(CharSprite.State.DARKENED);
+		else target.sprite.remove(CharSprite.State.DARKENED);
 	}
 
 	@Override
@@ -65,9 +65,6 @@ public class SoulMark extends FlavourBuff {
 
 	@Override
 	public String desc() {
-		if(Dungeon.hero.subClass == HeroSubClass.SATORI){
-			return Messages.get(this, "koishi_desc", dispTurns());
-		}
 		return Messages.get(this, "desc", dispTurns());
 	}
 }

@@ -206,6 +206,12 @@ public abstract class Mob extends Char {
 			state = FLEEING;
 		}
 		
+		if(buff(MindManipulation.class) != null){
+			int proc = Random.Int(10);
+			if (proc == 0){Buff.prolong(this, Charm.class, 2f);}
+			if (proc == 1){Buff.prolong(this, Amok.class, 2f);}
+			if (proc == 2){Buff.prolong(this, Terror.class, 2f);}
+		}
 		enemy = chooseEnemy();
 		
 		boolean enemyInFOV = enemy != null && enemy.isAlive() && fieldOfView[enemy.pos] && enemy.invisible <= 0;
@@ -598,6 +604,15 @@ public abstract class Mob extends Char {
 		}
 		
 		if (surprisedBy(enemy)) {
+			if(Dungeon.hero.hasTalent(Talent.MIND_BREAK)){
+				int chance = Dungeon.hero.pointsInTalent(Talent.MIND_BREAK) + 1;
+				if(Dungeon.hero.buff(Invisibility.class) != null){
+					chance *= 2;
+				}
+				if( chance > Random.IntRange(0,9)){
+					Buff.affect(this, SoulMark.class, 10f);
+				}
+			}
 			Statistics.sneakAttacks++;
 			Badges.validateRogueUnlock();
 			//TODO this is somewhat messy, it would be nicer to not have to manually handle delays here
@@ -615,6 +630,11 @@ public abstract class Mob extends Char {
 			}
 		}
 
+		if(enemy instanceof Hero
+			&& Dungeon.hero.subClass == HeroSubClass.SATORI
+			&& (this.surprisedBy(Dungeon.hero) ? 4 : 1) > Random.IntRange(0, 9)){
+				Buff.affect(this, MindManipulation.class, 10f);
+			}
 		//if attacked by something else than current target, and that thing is closer, switch targets
 		if (this.enemy == null
 				|| (enemy != this.enemy && (Dungeon.level.distance(pos, enemy.pos) < Dungeon.level.distance(pos, this.enemy.pos)))) {
@@ -649,7 +669,7 @@ public abstract class Mob extends Char {
 	}
 
 	public boolean surprisedBy( Char enemy, boolean attacking ){
-		if (Dungeon.hero.hasTalent(Talent.DIRECT_SURPRISE) && (!attacking || ((Hero)enemy).canSurpriseAttack())){
+		if (enemy instanceof Hero && Dungeon.hero.hasTalent(Talent.DIRECT_SURPRISE) && (!attacking || ((Hero)enemy).canSurpriseAttack())){
 			if(Dungeon.hero.pointsInTalent(Talent.DIRECT_SURPRISE)*2 > Random.IntRange(0,9))
 			return true;
 		}
@@ -743,11 +763,13 @@ public abstract class Mob extends Char {
 			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
 				if(Dungeon.hero.buff(Exterminating.class) == null){
 					Buff.affect(Dungeon.hero, Exterminating.class, 15f);
-					// Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-10);
+					Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-10);
 				} else {
 					Buff.affect(Dungeon.hero, Exterminating.class, Dungeon.hero.pointsInTalent(Talent.EXTENDED_EXTER)*2);
 				}
-
+			}
+			if(cause == Dungeon.hero && Dungeon.hero.hasTalent(Talent.MIND_READ) && this.surprisedBy(Dungeon.hero)){
+				Buff.prolong(Dungeon.hero, MindVision.class, Dungeon.hero.pointsInTalent(Talent.MIND_READ)*3f);
 			}
 		}
 
@@ -756,8 +778,20 @@ public abstract class Mob extends Char {
 		}
 
 		boolean soulMarked = buff(SoulMark.class) != null;
+		boolean mindManipulated = buff(MindManipulation.class) != null;
 
-		super.die( cause );
+		if (mindManipulated 
+			&& Dungeon.hero.pointsInTalent(Talent.CORRUPTION) > 0
+			&& ((Dungeon.hero.pointsInTalent(Talent.CORRUPTION)*5 + 5) > Random.IntRange(0, 99))
+			&& !this.isImmune(Corruption.class)){
+				Corruption.corruptionHeal(this);
+				AllyBuff.affectAndLoot(this, Dungeon.hero, Corruption.class);
+				this.next();
+		}
+		else{
+			super.die( cause );
+		}
+		
 
 		if (!(this instanceof Wraith)
 				&& soulMarked
@@ -771,13 +805,15 @@ public abstract class Mob extends Char {
 				}
 			}
 		}
+
+		
 	}
 
 	public float lootChance(){
 		float lootChance = this.lootChance;
 
 		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
-		if (Dungeon.hero.heroClass == HeroClass.REIMU && Dungeon.hero.hasTalent(Talent.GOD_BLESSING)){
+		if (Dungeon.hero.heroClass == HeroClass.REIMU && Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING) > 0){
 			lootChance *= (1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
 		}
 		return lootChance;

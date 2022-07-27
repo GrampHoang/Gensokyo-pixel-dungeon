@@ -705,7 +705,7 @@ public class Hero extends Char {
 		}
 		
 		if(Dungeon.hero.buff(Invisibility.class) != null && Dungeon.hero.pointsInTalent(Talent.FREE_SPIRIT) > 2){
-			Buff.prolong(Dungeon.hero, MindVision.class, 2f);
+			Buff.prolong(Dungeon.hero, MindVision.class, 1.5f);
 		}
 
 		if (!ready) {

@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortswor
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Ofuda_handheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
 
@@ -277,11 +278,12 @@ public enum HeroClass {
 		wss.identify();
 		hero.belongings.weapon = wss;
 
+		if (hero.belongings.weapon != null){
+			((Weapon)hero.belongings.weapon).affixSeal(new YinYang());
+		}
+
 		Ofuda_handheld o = new Ofuda_handheld();
 		o.quantity(10).collect();
-		
-		YinYang yy = new YinYang();
-		yy.quantity(1).collect();
 
 		new PotionOfStrength().identify();
 		new ScrollOfUpgrade().identify();

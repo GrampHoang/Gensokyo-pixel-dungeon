@@ -57,11 +57,11 @@ public class KoishiHat extends Artifact {
         exp = 0;
         unique = true;
         bones = false;
-		imaginary_friend = 0;
 		keptThoughLostInvent = true;
 	}
 
-	public float total = 15f;
+	public float imaginary_friend = 0;
+	public float total = 15f - imaginary_friend - level();
 	public float cooldown = 15f;
     public boolean invis = false;
 
@@ -71,6 +71,19 @@ public class KoishiHat extends Artifact {
 		actions.remove( AC_THROW );
 		actions.remove( AC_DROP );
 		return actions;
+	}
+
+	public void updateTalent(){
+		total = 15f - imaginary_friend;
+		if (Dungeon.hero.buff(KoishiHat.Koishibuff.class) != null){
+			Dungeon.hero.buff(KoishiHat.Koishibuff.class).updateTalent();
+		}
+	}
+
+	@Override
+	public int level() {
+		int level = Dungeon.hero == null ? 0 : Dungeon.hero.lvl/3;
+		return level;
 	}
 
     @Override
@@ -108,7 +121,9 @@ public class KoishiHat extends Artifact {
 			if (Dungeon.hero.buff(Doom.class) != null){
 				Dungeon.hero.buff(Doom.class).detach();
 			};
-			return super.doEquip(hero);
+			boolean ret = super.doEquip(hero);
+			Dungeon.hero.buff(KoishiHat.Koishibuff.class).updateTalent();
+			return ret;
 		}
 	}
 
@@ -117,8 +132,15 @@ public class KoishiHat extends Artifact {
 	@Override
 		public void storeInBundle( Bundle bundle ) {
 			super.storeInBundle( bundle );
-			bundle.put( TURN_TILL_INVIS, passiveBuff.koishiDummyCoolDown() );
-			bundle.put( TURN_TO_INVIS, passiveBuff.koishiDummyTotal() );
+			if (passiveBuff != null){
+				cooldown = passiveBuff.koishiDummyCoolDown();
+				total = passiveBuff.koishiDummyTotal();
+			} else {
+				cooldown = 15;
+				total = 15f - imaginary_friend - level();
+			}
+			bundle.put( TURN_TILL_INVIS, cooldown );
+			bundle.put( TURN_TO_INVIS, total );
 		}
 		
 		@Override
@@ -129,8 +151,12 @@ public class KoishiHat extends Artifact {
 		}
 
     public class Koishibuff extends ArtifactBuff{
-        public float turn_to_invis = total - imaginary_friend; //total turn needed to invis
+        public float turn_to_invis = total; //total turn needed to invis
         public float turn_till_invis = cooldown;					 //how many turn left till invis
+
+		public void updateTalent() {
+			turn_to_invis = 15f - level() - imaginary_friend;
+		}
 
 		@Override
 		public float koishiDummyCoolDown() {

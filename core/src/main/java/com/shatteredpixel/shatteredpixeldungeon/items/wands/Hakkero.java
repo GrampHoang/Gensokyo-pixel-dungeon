@@ -103,6 +103,8 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
+		CellEmitter.center(Dungeon.hero.pos).burst(Speck.factory(Speck.STAR_MS), 8 );
+		
 		float blind_dur = 0;
 		if (Dungeon.hero.hasTalent(Talent.STARLIGHT_SPARK)){
 			Buff.prolong( curUser, Light.class, Dungeon.hero.pointsInTalent(Talent.STARLIGHT_SPARK)*10);
@@ -177,6 +179,7 @@ public class Hakkero extends DamageWand {
 			    Sample.INSTANCE.play( Assets.Sounds.SECRET );
             }
 			CellEmitter.center(c).burst( RainbowParticle.BURST, Random.IntRange( 1, 2 ) );
+			CellEmitter.center(c).burst(Speck.factory(Speck.STAR_HAKKERO), 1);
             //End Light
 			Char ch;
 			if ((ch = Actor.findChar( c )) != null) {

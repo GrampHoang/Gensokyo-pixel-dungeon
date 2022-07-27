@@ -89,7 +89,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			} else {
 
 				float newLevel = level + STEP;
-				if (Dungeon.hero.hasTalent(Talent.AGELESS)) {
+				if (Dungeon.hero.pointsInTalent(Talent.AGELESS) > 0) {
                     newLevel = level + (STEP - Dungeon.hero.pointsInTalent(Talent.AGELESS));
                 }
 				if (newLevel >= STARVING) {

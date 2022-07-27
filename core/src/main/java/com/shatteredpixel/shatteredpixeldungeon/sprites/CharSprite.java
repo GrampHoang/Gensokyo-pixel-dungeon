@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TorchHalo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SacrificialParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -82,7 +83,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY
 	}
 	private int stunStates = 0;
 	
@@ -102,6 +103,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Emitter marked;
 	protected Emitter levitation;
 	protected Emitter healing;
+	protected Emitter mind;
+	protected Emitter starfly;
 	protected Emitter hearts;
 	
 	protected IceBlock iceBlock;
@@ -407,6 +410,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				hearts = emitter();
 				hearts.pour(Speck.factory(Speck.HEART), 0.5f);
 				break;
+			case MIND:
+				mind = emitter();
+				mind.pour(Speck.factory(Speck.QUESTION), 0.8f);
+				break;
+			case STAR_FLY:
+				starfly = emitter();
+				starfly.pour(Speck.factory(Speck.STAR_FLY), 0.1f);
+				break;
 		}
 	}
 	
@@ -480,6 +491,18 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					hearts = null;
 				}
 				break;
+			case MIND:
+				if (mind != null){
+					mind.on = false;
+					mind = null;
+				}
+				break;
+			case STAR_FLY:
+				if (starfly != null){
+					starfly.on = false;
+					starfly = null;
+				}
+				break;
 		}
 	}
 
@@ -538,6 +561,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 		if (hearts != null){
 			hearts.visible = visible;
+		}
+		if (mind != null){
+			mind.visible = visible;
+		}
+		if (starfly != null){
+			starfly.visible = visible;
 		}
 		if (aura != null){
 			if (aura.parent == null){

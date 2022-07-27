@@ -35,6 +35,10 @@ public class Speck extends Image {
 
 	public static final int HEALING     = 0;
 	public static final int STAR        = 1;
+	public static final int STAR_MS		= 15;
+	public static final int STAR_FLY	= 16;
+	public static final int STAR_HAKKERO= 17;
+
 	public static final int LIGHT       = 2;
 	public static final int QUESTION    = 3;
 	public static final int UP          = 4;
@@ -121,6 +125,15 @@ public class Speck extends Image {
 		case FORGE:
 			frame( film.get( STAR ) );
 			break;
+		case STAR_MS:
+			frame( film.get( STAR ) );
+			break;
+		case STAR_FLY:
+			frame( film.get( STAR ) );
+			break;
+		case STAR_HAKKERO:
+			frame( film.get( STAR ) );
+			break;
 		case RATTLE:
 			frame( film.get( BONE ) );
 			break;
@@ -168,7 +181,28 @@ public class Speck extends Image {
 			angularSpeed = Random.Float( -360, +360 );
 			lifespan = 1f;
 			break;
-		
+
+		case STAR_MS:
+			speed.set( Random.IntRange(-20,20), Random.IntRange(-20,20));
+			lifespan = 1f;
+			angle = Random.Float( 360 );
+			angularSpeed = Random.Float( -360, +360 );
+			break;
+
+		case STAR_HAKKERO:
+			speed.set( Random.IntRange(-2,2), Random.IntRange(-2, 2));
+			lifespan = 0.2f;
+			angle = Random.Float( 360 );
+			angularSpeed = Random.Float( -360, +360 );
+			break;
+
+		case STAR_FLY:
+			speed.set( Random.IntRange(-20,20), Random.IntRange(10,30));
+			lifespan = 0.3f;
+			angle = Random.Float( 360 );
+			angularSpeed = Random.Float( -360, +360 );
+			break;
+
 		case FORGE:
 			speed.polar( Random.Float( -3.1415926f ), Random.Float( 64 ) );
 			acc.set( 0, 128 );

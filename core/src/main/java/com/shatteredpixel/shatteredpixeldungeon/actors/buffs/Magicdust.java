@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIcon;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
@@ -133,7 +134,7 @@ public class Magicdust extends Buff implements ActionIndicator.Action {
 
 	public float speedMul(){
 		int STRdif = Dungeon.hero.STR() - Dungeon.hero.belongings.armor.STRReq();
-		if (Dungeon.hero.hasTalent(Talent.MAGICAL_FLIGHT) && STRdif > 0){
+		if (Dungeon.hero.pointsInTalent(Talent.MAGICAL_FLIGHT) > 0 && STRdif > 0){
 			return ((Dungeon.hero.pointsInTalent(Talent.MAGICAL_FLIGHT) * 0.05f + 0.05f) * STRdif);
 		}
 		else {
@@ -259,12 +260,19 @@ public class Magicdust extends Buff implements ActionIndicator.Action {
 		freeflyCooldown = 10 + 3*dustStacks;
 		Sample.INSTANCE.play(Assets.Sounds.MISS, 1f, 0.8f);
 		target.sprite.emitter().burst(Speck.factory(Speck.JET), 5+ dustStacks);
+		target.sprite.emitter().burst(Speck.factory(Speck.STAR_FLY), 10);
 		SpellSprite.show(target, SpellSprite.HASTE, 1, 1, 0);
 		dustStacks = 0;
 		BuffIndicator.refreshHero();
 		ActionIndicator.clearAction(this);
 		//Update FoV for the see through tall grass
 		Dungeon.level.updateFieldOfView(Dungeon.hero, Dungeon.level.heroFOV);
+	}	
+
+	@Override
+	public void fx(boolean on) {
+		if (on) target.sprite.add(CharSprite.State.STAR_FLY);
+		else target.sprite.remove(CharSprite.State.STAR_FLY);
 	}
 
 }

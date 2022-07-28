@@ -1212,7 +1212,10 @@ public class Hero extends Char {
 
 		damage = Talent.onAttackProc( this, enemy, damage );
 		// TODO
-		if (Dungeon.hero.hasTalent(Talent.SURPRISE_PUSH) && buff(CooldownPush.class) == null && Dungeon.hero.buff(Invisibility.class) != null) {
+		if (Dungeon.hero.hasTalent(Talent.SURPRISE_PUSH) 
+			&& buff(CooldownPush.class) == null 
+			&& (enemy.flying != true)
+			&& Dungeon.hero.buff(Invisibility.class) != null) {
 			for(int i : PathFinder.NEIGHBOURS8){
 					if (Dungeon.level.map[enemy.pos + i] == Terrain.CHASM){
 						enemy.sprite.move(enemy.pos, enemy.pos + i);

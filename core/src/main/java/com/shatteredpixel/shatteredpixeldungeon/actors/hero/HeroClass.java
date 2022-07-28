@@ -99,14 +99,14 @@ public enum HeroClass {
 
 		//debug test items
 
-		ScrollOfDebug sod = new ScrollOfDebug();
-		sod.quantity(1).collect();
+		// ScrollOfDebug sod = new ScrollOfDebug();
+		// sod.quantity(1).collect();
 
 		// PotionOfExperience poe = new PotionOfExperience();
 		// poe.quantity(30).collect();
 
-		TengusMask tengu = new TengusMask();
-		tengu.quantity(2).collect();
+		// TengusMask tengu = new TengusMask();
+		// tengu.quantity(2).collect();
 		// KingsCrown crown = new KingsCrown();
 		// crown.quantity(2).collect();
 		

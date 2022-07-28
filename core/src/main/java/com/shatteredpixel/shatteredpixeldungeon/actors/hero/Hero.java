@@ -2086,22 +2086,22 @@ public class Hero extends Char {
 							
 						//unintentional trap detection scales from 40% at floor 0 to 30% at floor 25
 						} else if (Dungeon.level.map[curr] == Terrain.SECRET_TRAP) {
-							if(Dungeon.hero.hasTalent(Talent.MAID_SENSES)){
+							// if(Dungeon.hero.pointsInTalent(talent)(Talent.MAID_SENSES) > 0){
+							// 	chance = 0.4f - (Dungeon.depth / 250f);
+							// 	chance *= (1 + Dungeon.hero.pointsInTalent(Talent.MAID_SENSES) );
+							// }
+							// else{
 								chance = 0.4f - (Dungeon.depth / 250f);
-								chance *= (1 + Dungeon.hero.pointsInTalent(Talent.MAID_SENSES) );
-							}
-							else{
-								chance = 0.4f - (Dungeon.depth / 250f);
-							}
+							// }
 						//unintentional door detection scales from 20% at floor 0 to 0% at floor 20
 						} else {
-							if(Dungeon.hero.hasTalent(Talent.MAID_SENSES)){
-								chance = 0.2f - (Dungeon.depth / 100f);
-								chance *= (1 + Dungeon.hero.pointsInTalent(Talent.MAID_SENSES) );
-							}
-							else {
+							// if(Dungeon.hero.pointsInTalent(talent)(Talent.MAID_SENSES) > 0){
+							// 	chance = 0.2f - (Dungeon.depth / 100f);
+							// 	chance *= (1 + Dungeon.hero.pointsInTalent(Talent.MAID_SENSES) );
+							// }
+							// else {
 							chance = 0.2f - (Dungeon.depth / 100f);
-							}
+							// }
 						}
 						
 						if (Random.Float() < chance) {

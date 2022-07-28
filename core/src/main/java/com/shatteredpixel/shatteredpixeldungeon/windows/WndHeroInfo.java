@@ -82,6 +82,9 @@ public class WndHeroInfo extends WndTabbed {
 			case REISEN:
 				tabIcon = new ItemSprite(ItemSpriteSheet.REISENGUN, null);
 				break;
+			case KOISHI:
+				tabIcon = new ItemSprite(ItemSpriteSheet.KNIFE, null);
+				break;
 		}
 
 		int finalHeight = MIN_HEIGHT;
@@ -213,6 +216,11 @@ public class WndHeroInfo extends WndTabbed {
 				case REISEN:
 					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.REISENGUN),
 					new ItemSprite(ItemSpriteSheet.GLOVES),
+					new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					break;
+				case KOISHI:
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_KOISHIHAT),
+					new ItemSprite(ItemSpriteSheet.KNIFE),
 					new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
 			}

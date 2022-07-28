@@ -269,10 +269,4 @@ public class Magicdust extends Buff implements ActionIndicator.Action {
 		Dungeon.level.updateFieldOfView(Dungeon.hero, Dungeon.level.heroFOV);
 	}	
 
-	@Override
-	public void fx(boolean on) {
-		if (on) target.sprite.add(CharSprite.State.STAR_FLY);
-		else target.sprite.remove(CharSprite.State.STAR_FLY);
-	}
-
 }

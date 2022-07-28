@@ -97,34 +97,34 @@ public enum HeroClass {
 
 	public void initHero( Hero hero ) {
 
-		//debug test itesm
+		//debug test items
 
 		ScrollOfDebug sod = new ScrollOfDebug();
 		sod.quantity(1).collect();
 
-		PotionOfExperience poe = new PotionOfExperience();
-		poe.quantity(30).collect();
+		// PotionOfExperience poe = new PotionOfExperience();
+		// poe.quantity(30).collect();
 
 		TengusMask tengu = new TengusMask();
 		tengu.quantity(2).collect();
-		KingsCrown crown = new KingsCrown();
-		crown.quantity(2).collect();
+		// KingsCrown crown = new KingsCrown();
+		// crown.quantity(2).collect();
 		
-		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-		podi.quantity(6).collect();
+		// PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+		// podi.quantity(6).collect();
 
-		ScrollOfUpgrade sou = new ScrollOfUpgrade();
-		sou.quantity(15).collect();
+		// ScrollOfUpgrade sou = new ScrollOfUpgrade();
+		// sou.quantity(15).collect();
 
-		Dungeon.energy = 69;
+		// Dungeon.energy = 69;
 
-		ScrollOfMagicMapping somm = new ScrollOfMagicMapping();
-		somm.quantity(10).collect();
-		StoneOfFlock sof = new StoneOfFlock();
-		sof.quantity(30).collect();
+		// ScrollOfMagicMapping somm = new ScrollOfMagicMapping();
+		// somm.quantity(10).collect();
+		// StoneOfFlock sof = new StoneOfFlock();
+		// sof.quantity(30).collect();
 
-		RingOfWealth row = new RingOfWealth();
-		row.upgrade(15).collect();
+		// RingOfWealth row = new RingOfWealth();
+		// row.upgrade(15).collect();
 		// PotionOfLiquidFlame pol = new PotionOfLiquidFlame();
 		// pol.quantity(30).collect();
 		// PotionOfToxicGas pot = new PotionOfToxicGas();

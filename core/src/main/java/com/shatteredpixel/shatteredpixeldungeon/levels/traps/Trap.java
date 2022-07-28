@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -92,7 +93,8 @@ public abstract class Trap implements Bundlable {
 	}
 
 	public void trigger() {
-		if  (Dungeon.hero.hasTalent(Talent.NIMBLE) && (Dungeon.hero.pointsInTalent(Talent.NIMBLE) > Random.Int(0,1))){
+		if  (	(Dungeon.hero.hasTalent(Talent.NIMBLE) && (Dungeon.hero.pointsInTalent(Talent.NIMBLE) > Random.Int(0,1)))
+				|| Dungeon.hero.subClass == HeroSubClass.IMAGINARY){
 				return;
 		}
 		if (active) {

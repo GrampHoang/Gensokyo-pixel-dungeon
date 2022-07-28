@@ -212,7 +212,7 @@ public enum Talent {
 	// Reisen T2
 	MIND_FOOD(228), FEARFUL_UPGRADE(229), SURPRISE_MOMENTUM(230), SURPRISE_PUSH(231), BAD_GIRL(232),
 	// Reisen T3
-	ANSWER_PHONE(233, 3), DIRECT_SURPRISE(234, 3),
+	NIGHTMARE(233, 3), DIRECT_SURPRISE(234, 3),
 	// MoonRabbit T3
 	IMAGINARY_FRIEND(235, 3), HIDDEN_DANGER(236, 3), FREE_SPIRIT(237, 3),
 	// Refugee T3
@@ -822,6 +822,23 @@ public enum Talent {
 			
 		}
 
+		if (hero.hasTalent(Talent.NIGHTMARE)){
+			int mul = ( enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) ? 4 : 1;
+			if((Dungeon.hero.pointsInTalent(Talent.NIGHTMARE)*5*mul) > Random.IntRange(0,99)){
+				switch (Random.IntRange(1,Dungeon.hero.pointsInTalent(Talent.NIGHTMARE))){
+					case 1:
+						Buff.affect(enemy, Weakness.class, 5);
+						break;
+					case 2:
+						Buff.affect(enemy, Hex.class, 5);
+						break;
+					case 3:
+						Buff.affect(enemy, Vulnerable.class, 5);
+						break;
+				}
+			}
+		}
+
 		return dmg;
 	}
 
@@ -957,7 +974,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, INSANITY_INDUCE, CHARM_GAZE);
 				break;
 			case KOISHI:
-				Collections.addAll(tierTalents, ANSWER_PHONE, DIRECT_SURPRISE);
+				Collections.addAll(tierTalents, NIGHTMARE, DIRECT_SURPRISE);
 				break;
 			default:
 				Collections.addAll(tierTalents, STRONGMAN, AGELESS);

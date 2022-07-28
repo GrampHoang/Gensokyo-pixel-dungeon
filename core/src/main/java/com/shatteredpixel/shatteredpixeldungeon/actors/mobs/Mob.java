@@ -761,6 +761,9 @@ public abstract class Mob extends Char {
 				}
 			}
 			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
+				if(Random.Int(9) == 0){
+					Dungeon.energy += 1;
+				}
 				if(Dungeon.hero.buff(Exterminating.class) == null){
 					Buff.affect(Dungeon.hero, Exterminating.class, 15f);
 					Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-10);
@@ -813,9 +816,11 @@ public abstract class Mob extends Char {
 		float lootChance = this.lootChance;
 
 		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
+
 		if (Dungeon.hero.heroClass == HeroClass.REIMU && Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING) > 0){
 			lootChance *= (1f + 0.2f*Dungeon.hero.pointsInTalent(Talent.GOD_BLESSING));
 		}
+		
 		return lootChance;
 	}
 	
@@ -969,15 +974,13 @@ public abstract class Mob extends Char {
 						enemyStealth = Float.POSITIVE_INFINITY;
 					}
 				}
-				
-				if (enemy instanceof Hero && ((Hero) enemy).hasTalent(Talent.MAID_STEPS)){
-					if (Dungeon.level.distance(pos, enemy.pos) >= 4 - ((Hero) enemy).pointsInTalent(Talent.MAID_STEPS)) {
-						enemyStealth = Float.POSITIVE_INFINITY;
-					}
-				}
 
 				if (enemy instanceof Hero && ((Hero) enemy).hasTalent(Talent.SNEAKY)){
 					enemyStealth += 0.5f * ((Hero) enemy).pointsInTalent(Talent.SNEAKY);
+				}
+
+				if (enemy instanceof Hero && ((Hero) enemy).subClass == HeroSubClass.IMAGINARY){
+					enemyStealth++;
 				}
 
 				if (Random.Float( distance( enemy ) + enemyStealth ) < 1) {

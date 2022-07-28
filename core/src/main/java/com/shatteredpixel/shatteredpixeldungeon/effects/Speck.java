@@ -72,7 +72,16 @@ public class Speck extends Image {
 	public static final int STORM       = 117;
 	public static final int INFERNO     = 118;
 	public static final int BLIZZARD    = 119;
-	
+	public static final int STAR_CIRCLE_1 = 201;
+	public static final int STAR_CIRCLE_2 = 202;
+	public static final int STAR_CIRCLE_3 = 203;
+	public static final int STAR_CIRCLE_4 = 204;
+	public static final int STAR_CIRCLE_5 = 205;
+	public static final int STAR_CIRCLE_6 = 206;
+	public static final int STAR_CIRCLE_7 = 207;
+	public static final int STAR_CIRCLE_8 = 208;
+	public static final int STAR_CIRCLE_9 = 209;
+
 	private static final int SIZE = 7;
 	
 	private int type;
@@ -112,7 +121,6 @@ public class Speck extends Image {
 	
 	public void reset( int index, float x, float y, int type ) {
 		revive();
-		
 		this.type = type;
 		switch (type) {
 		case DISCOVER:
@@ -123,17 +131,21 @@ public class Speck extends Image {
 		case MASK:
 		case CROWN:
 		case FORGE:
-			frame( film.get( STAR ) );
-			break;
 		case STAR_MS:
-			frame( film.get( STAR ) );
-			break;
 		case STAR_FLY:
-			frame( film.get( STAR ) );
-			break;
 		case STAR_HAKKERO:
+		case STAR_CIRCLE_1:
+		case STAR_CIRCLE_2:
+		case STAR_CIRCLE_3:
+		case STAR_CIRCLE_4:
+		case STAR_CIRCLE_5:
+		case STAR_CIRCLE_6:
+		case STAR_CIRCLE_7:
+		case STAR_CIRCLE_8:
+		case STAR_CIRCLE_9:
 			frame( film.get( STAR ) );
 			break;
+
 		case RATTLE:
 			frame( film.get( BONE ) );
 			break;
@@ -220,7 +232,7 @@ public class Speck extends Image {
 			break;
 
 		case MASK:
-			speed.polar( index * 3.1415926f / 5, 50 );
+			speed.polar( index * 3.1415926f / 5,  50 );
 			acc.set( -speed.x, -speed.y );
 			angle = index * 36;
 			angularSpeed = 360;
@@ -410,8 +422,62 @@ public class Speck extends Image {
 			acc.y = 256;
 			lifespan = -speed.y / acc.y * 2;
 			break;
-		}
 		
+		case STAR_CIRCLE_1:
+			speed.polar( 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_2:
+			speed.polar( 2 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_3:
+			speed.polar(  3 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_4:
+			speed.polar(  4 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_5:
+			speed.polar(  5 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_6:
+			speed.polar(  6 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_7:
+			speed.polar(  7 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_8:
+			speed.polar(  8 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		case STAR_CIRCLE_9:
+			speed.polar(  9 * 3.1415926f / 5, 30 );
+			acc.set( -speed.x*1.3f, -speed.y*1.3f);
+			lifespan = 1.5f;
+			angularSpeed = 360;
+			break;
+		}
 		left = lifespan;
 	}
 	
@@ -435,7 +501,17 @@ public class Speck extends Image {
 				scale.set( 1 - p );
 				am = p < 0.2f ? p * 5f : (1 - p) * 1.25f;
 				break;
-				
+			case STAR_CIRCLE_1:
+			case STAR_CIRCLE_2:
+			case STAR_CIRCLE_3:
+			case STAR_CIRCLE_4:
+			case STAR_CIRCLE_5:
+			case STAR_CIRCLE_6:
+			case STAR_CIRCLE_7:
+			case STAR_CIRCLE_8:
+			case STAR_CIRCLE_9:
+				am = 1;
+				break;
 			case MASK:
 			case CROWN:
 				am = 1 - p * p;

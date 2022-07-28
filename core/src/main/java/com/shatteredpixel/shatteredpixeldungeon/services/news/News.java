@@ -45,27 +45,8 @@ public class News {
 	private static final long CHECK_DELAY = 1000*60*60; //1 hour
 
 	public static void checkForNews(){
-		if (!supportsNews()) return;
-		if (lastCheck != null && (new Date().getTime() - lastCheck.getTime()) < CHECK_DELAY) return;
-
-		boolean useHTTPS = true;
-		if (Gdx.app.getType() == Application.ApplicationType.Android && Gdx.app.getVersion() < 20){
-			useHTTPS = false; //android versions below 5.0 don't support TLSv1.2 by default
-		}
-		service.checkForArticles(!SPDSettings.WiFi(), useHTTPS, new NewsService.NewsResultCallback() {
-			@Override
-			public void onArticlesFound(ArrayList<NewsArticle> articles) {
-				lastCheck = new Date();
-				News.articles = articles;
-			}
-
-			@Override
-			public void onConnectionFailed() {
-				lastCheck = null;
-				News.articles = null;
-			}
-		});
-
+		return;
+		//No news because why news?
 	}
 
 	private static ArrayList<NewsArticle> articles;

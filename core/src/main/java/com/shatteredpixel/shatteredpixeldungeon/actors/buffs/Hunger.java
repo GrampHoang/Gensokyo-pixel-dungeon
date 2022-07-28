@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
@@ -92,6 +93,9 @@ public class Hunger extends Buff implements Hero.Doom {
 				if (Dungeon.hero.pointsInTalent(Talent.AGELESS) > 0) {
                     newLevel = level + (STEP - Dungeon.hero.pointsInTalent(Talent.AGELESS));
                 }
+				if (Dungeon.hero.subClass == HeroSubClass.IMAGINARY){
+					newLevel = level + (STEP - 2);
+				}
 				if (newLevel >= STARVING) {
 
 					GLog.n( Messages.get(this, "onstarving") );

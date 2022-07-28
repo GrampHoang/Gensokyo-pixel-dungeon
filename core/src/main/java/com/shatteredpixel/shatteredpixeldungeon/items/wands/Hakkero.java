@@ -65,6 +65,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import java.util.ArrayList;
+import com.watabou.noosa.particles.Emitter;
 
 public class Hakkero extends DamageWand {
 
@@ -79,7 +80,9 @@ public class Hakkero extends DamageWand {
 		isMagician = false;
 	}
 
-
+	float interval = 2f;
+	int quantity = 1;
+	
 	public int min(int lvl){
 		return 2 + Dungeon.depth;
 	}
@@ -103,7 +106,18 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica beam) {
-		CellEmitter.center(Dungeon.hero.pos).burst(Speck.factory(Speck.STAR_MS), 8 );
+
+		//yes I'm serious, it doesn't look as good as I though though
+		//I wanted to burst 3 times, quickly, like how touhou work buuuut it doesn't go as planned...
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_1), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_2), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_3), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_4), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_5), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_6), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_7), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_8), quantity);
+		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_9), quantity);
 		
 		float blind_dur = 0;
 		if (Dungeon.hero.hasTalent(Talent.STARLIGHT_SPARK)){
@@ -179,7 +193,6 @@ public class Hakkero extends DamageWand {
 			    Sample.INSTANCE.play( Assets.Sounds.SECRET );
             }
 			CellEmitter.center(c).burst( RainbowParticle.BURST, Random.IntRange( 1, 2 ) );
-			CellEmitter.center(c).burst(Speck.factory(Speck.STAR_HAKKERO), 1);
             //End Light
 			Char ch;
 			if ((ch = Actor.findChar( c )) != null) {

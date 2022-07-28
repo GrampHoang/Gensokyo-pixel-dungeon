@@ -46,31 +46,8 @@ public class Updates {
 	}
 
 	public static void checkForUpdate(){
-		if (!isUpdateable()) return;
-		if (lastCheck != null && (new Date().getTime() - lastCheck.getTime()) < CHECK_DELAY) return;
-
-		//We do this so that automatically enabled beta checking (for users who DLed a beta) persists afterward
-		if (SPDSettings.betas()){
-			SPDSettings.betas(true);
-		}
-
-		service.checkForUpdate(!SPDSettings.WiFi(), SPDSettings.betas(), new UpdateService.UpdateResultCallback() {
-			@Override
-			public void onUpdateAvailable(AvailableUpdateData update) {
-				lastCheck = new Date();
-				updateData = update;
-			}
-
-			@Override
-			public void onNoUpdateFound() {
-				lastCheck = new Date();
-			}
-
-			@Override
-			public void onConnectionFailed() {
-				lastCheck = null;
-			}
-		});
+		return;
+		//no update
 	}
 
 	public static void launchUpdate( AvailableUpdateData data ){

@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class Ofuda_handheld extends MissileWeapon {
+public class OfudaHandheld extends MissileWeapon {
 
 	{
 		image = ItemSpriteSheet.OFUDA;

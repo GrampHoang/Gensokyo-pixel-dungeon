@@ -84,11 +84,11 @@ public class Hakkero extends DamageWand {
 	int quantity = 1;
 	
 	public int min(int lvl){
-		return 2 + Dungeon.depth;
+		return 2 + lvl + Dungeon.depth/2;
 	}
 
 	public int max(int lvl){
-		return 8 + 3*lvl + Dungeon.depth;
+		return 8 + 3*lvl + Dungeon.depth/2;
 	}
 	
     protected int initialCharges() {

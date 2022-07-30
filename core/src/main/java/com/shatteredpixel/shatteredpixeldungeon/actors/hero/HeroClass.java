@@ -45,6 +45,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.YinYang;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
@@ -53,6 +54,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
@@ -70,7 +72,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KoiKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Ofuda_handheld;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.OfudaHandheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -99,8 +101,15 @@ public enum HeroClass {
 
 		//debug test items
 
-		// ScrollOfDebug sod = new ScrollOfDebug();
-		// sod.quantity(1).collect();
+		ScrollOfDebug sod = new ScrollOfDebug();
+		sod.quantity(1).collect();
+
+		RingOfHaste cloak = new RingOfHaste();
+		(hero.belongings.ring = cloak).level(15);
+
+		PlateArmor plate = new PlateArmor();
+		plate.level(99);
+		plate.collect();
 
 		// PotionOfExperience poe = new PotionOfExperience();
 		// poe.quantity(30).collect();
@@ -282,7 +291,7 @@ public enum HeroClass {
 			((Weapon)hero.belongings.weapon).affixSeal(new YinYang());
 		}
 
-		Ofuda_handheld o = new Ofuda_handheld();
+		OfudaHandheld o = new OfudaHandheld();
 		o.quantity(10).collect();
 
 		new PotionOfStrength().identify();

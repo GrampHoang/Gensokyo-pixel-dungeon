@@ -166,7 +166,7 @@ public class WndTradeItem extends WndInfoItem {
 		}
 
 		if (Dungeon.hero.hasTalent(Talent.BAD_GIRL)){
-			int chance = Dungeon.hero.pointsInTalent(Talent.BAD_GIRL)*2 + 5;
+			int chance = Dungeon.hero.pointsInTalent(Talent.BAD_GIRL)*2 + 3;
 			RedButton btnSteal = new RedButton(Messages.get(this, "bad_girl_steal", chance)) {
 				@Override
 				protected void onClick() {

@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
@@ -32,6 +33,9 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class FrostBomb extends Bomb {
 	
@@ -42,10 +46,16 @@ public class FrostBomb extends Bomb {
 	@Override
 	public void explode(int cell) {
 		super.explode(cell);
-		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
+		int range = 2;
+		int amount = 10;
+		if(Dungeon.depth == 5){
+			range = 1;
+			amount = 2;
+		}
+		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), range );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				GameScene.add(Blob.seed(i, 10, Freezing.class));
+				GameScene.add(Blob.seed(i, amount, Freezing.class));
 				Char ch = Actor.findChar(i);
 				if (ch != null){
 					Buff.affect(ch, Frost.class, 2f);
@@ -58,5 +68,20 @@ public class FrostBomb extends Bomb {
 	public int value() {
 		//prices of ingredients
 		return quantity * (20 + 30);
+	}
+
+	public void onCirnoThrow( int cell ) {
+		if (!Dungeon.level.pit[ cell ] && true) {
+			Actor.addDelayed(fuse = new Fuse().ignite(this), 3);
+		}
+		if (Actor.findChar( cell ) != null && !(Actor.findChar( cell ) instanceof Hero) ){
+			ArrayList<Integer> candidates = new ArrayList<>();
+			for (int i : PathFinder.NEIGHBOURS8)
+				if (Dungeon.level.passable[cell + i])
+					candidates.add(cell + i);
+			int newCell = candidates.isEmpty() ? cell : Random.element(candidates);
+			Dungeon.level.drop( this, newCell ).sprite.drop( cell );
+		} else
+			super.onThrow( cell );
 	}
 }

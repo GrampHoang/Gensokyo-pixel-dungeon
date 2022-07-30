@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CirnoBoss;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
@@ -188,7 +189,11 @@ public class Bomb extends Item {
 				dmg -= ch.drRoll();
 
 				if (dmg > 0) {
+					if (this instanceof FrostBomb && ch instanceof CirnoBoss){
+					//do nothing
+					} else {
 					ch.damage(dmg, this);
+					}
 				}
 				
 				if (ch == Dungeon.hero && !ch.isAlive()) {

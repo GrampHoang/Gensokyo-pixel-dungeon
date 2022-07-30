@@ -1,0 +1,195 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 134217728 bytes for Failed to commit area from 0x0000000081c00000 to 0x0000000089c00000 of length 134217728.
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./open/src/hotspot/os/windows/os_windows.cpp:3287), pid=14048, tid=5492
+#
+# JRE version:  (11.0.15.1+2) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (11.0.15.1+2-LTS-10, mixed mode, sharing, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -DImplementation-Version=644 -DSpecification-Title=Gensokyo Pixel Dungeon -DSpecification-Version=1.3.1-INDEV -Dfile.encoding=UTF-8 -Duser.country=US -Duser.language=en -Duser.variant com.shatteredpixel.shatteredpixeldungeon.desktop.DesktopLauncher
+
+Host: Intel(R) Core(TM) i5-8265U CPU @ 1.60GHz, 8 cores, 7G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1806)
+Time: Fri Jul 29 13:49:13 2022 SE Asia Standard Time elapsed time: 0.038552 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001bd26c6b800):  JavaThread "Unknown thread" [_thread_in_vm, id=5492, stack(0x000000b0e4500000,0x000000b0e4600000)]
+
+Stack: [0x000000b0e4500000,0x000000b0e4600000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x629d8a]
+V  [jvm.dll+0x7638ff]
+V  [jvm.dll+0x764fa9]
+V  [jvm.dll+0x765633]
+V  [jvm.dll+0x23d9c8]
+V  [jvm.dll+0x6270aa]
+V  [jvm.dll+0x61be35]
+V  [jvm.dll+0x2f27dc]
+V  [jvm.dll+0x2f2662]
+V  [jvm.dll+0x2f7386]
+V  [jvm.dll+0x339d8f]
+V  [jvm.dll+0x3397c0]
+V  [jvm.dll+0x2cfdf8]
+V  [jvm.dll+0x2d0f66]
+V  [jvm.dll+0x73df07]
+V  [jvm.dll+0x73f79f]
+V  [jvm.dll+0x346ab9]
+V  [jvm.dll+0x723810]
+V  [jvm.dll+0x3b56cf]
+V  [jvm.dll+0x3b77e1]
+C  [jli.dll+0x5207]
+C  [ucrtbase.dll+0x21bb2]
+C  [KERNEL32.DLL+0x17034]
+C  [ntdll.dll+0x52651]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x000001bd24a112a0, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+
+Other Threads:
+  0x000001bd26c7f800 GCTaskThread "GC Thread#0" [stack: 0x000000b0e4600000,0x000000b0e4700000] [id=7480]
+  0x000001bd26caf800 ConcurrentGCThread "G1 Main Marker" [stack: 0x000000b0e4700000,0x000000b0e4800000] [id=16904]
+  0x000001bd26cb2000 ConcurrentGCThread "G1 Conc#0" [stack: 0x000000b0e4800000,0x000000b0e4900000] [id=12400]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffec87df087]
+
+VM state:not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x000001bd26c68170] Heap_lock - owner thread: 0x000001bd26c6b800
+
+Heap address: 0x0000000081c00000, size: 2020 MB, Compressed Oops mode: Non-zero based: 0x0000000081c00000
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff7a7530000 - 0x00007ff7a753f000 	C:\Program Files\Java\jdk-11.0.15.1\bin\java.exe
+0x00007fff52590000 - 0x00007fff52788000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007fff51d70000 - 0x00007fff51e2d000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007fff50120000 - 0x00007fff503ee000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007fff4fe10000 - 0x00007fff4ff10000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007fff33b90000 - 0x00007fff33ba5000 	C:\Program Files\Java\jdk-11.0.15.1\bin\VCRUNTIME140.dll
+0x00007fff3aa30000 - 0x00007fff3aa48000 	C:\Program Files\Java\jdk-11.0.15.1\bin\jli.dll
+0x00007fff50660000 - 0x00007fff5070e000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007fff524b0000 - 0x00007fff5254e000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007fff50740000 - 0x00007fff507dc000 	C:\WINDOWS\System32\sechost.dll
+0x00007fff508a0000 - 0x00007fff509c5000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007fff51910000 - 0x00007fff51ab0000 	C:\WINDOWS\System32\USER32.dll
+0x00007fff50060000 - 0x00007fff50082000 	C:\WINDOWS\System32\win32u.dll
+0x00007fff365f0000 - 0x00007fff3688a000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e\COMCTL32.dll
+0x00007fff52100000 - 0x00007fff5212a000 	C:\WINDOWS\System32\GDI32.dll
+0x00007fff504e0000 - 0x00007fff505eb000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007fff503f0000 - 0x00007fff5048d000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007fff463a0000 - 0x00007fff463aa000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007fff50710000 - 0x00007fff50740000 	C:\WINDOWS\System32\IMM32.DLL
+0x00007ffed8da0000 - 0x00007ffed8e3b000 	C:\Program Files\Java\jdk-11.0.15.1\bin\msvcp140.dll
+0x00007ffec8500000 - 0x00007ffec9016000 	C:\Program Files\Java\jdk-11.0.15.1\bin\server\jvm.dll
+0x00007fff51f60000 - 0x00007fff51f68000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007fff2dd70000 - 0x00007fff2dd79000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007fff51810000 - 0x00007fff5187b000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007fff33ab0000 - 0x00007fff33ad7000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007fff4dbb0000 - 0x00007fff4dbc2000 	C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+0x00007fff4a120000 - 0x00007fff4a130000 	C:\Program Files\Java\jdk-11.0.15.1\bin\verify.dll
+0x00007fff4a380000 - 0x00007fff4a564000 	C:\WINDOWS\SYSTEM32\DBGHELP.DLL
+0x00007fff2eb00000 - 0x00007fff2eb2c000 	C:\WINDOWS\SYSTEM32\dbgcore.DLL
+0x00007fff50090000 - 0x00007fff50112000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007fff32f90000 - 0x00007fff32fb8000 	C:\Program Files\Java\jdk-11.0.15.1\bin\java.dll
+0x00007fff48380000 - 0x00007fff4838a000 	C:\Program Files\Java\jdk-11.0.15.1\bin\jimage.dll
+0x00007fff1ff10000 - 0x00007fff1ff26000 	C:\Program Files\Java\jdk-11.0.15.1\bin\zip.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\Java\jdk-11.0.15.1\bin;C:\WINDOWS\SYSTEM32;C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.19041.1110_none_60b5254171f9507e;C:\Program Files\Java\jdk-11.0.15.1\bin\server
+
+VM Arguments:
+jvm_args: -DImplementation-Version=644 -DSpecification-Title=Gensokyo Pixel Dungeon -DSpecification-Version=1.3.1-INDEV -Dfile.encoding=UTF-8 -Duser.country=US -Duser.language=en -Duser.variant 
+java_command: com.shatteredpixel.shatteredpixeldungeon.desktop.DesktopLauncher
+java_class_path (initial): C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\desktop\build\classes\java\main;C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\desktop\build\resources\main;C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\core\build\libs\core-1.3.1.jar;C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\services\updates\githubUpdates\build\libs\githubUpdates-1.3.1.jar;C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\services\news\shatteredNews\build\libs\shatteredNews-1.3.1.jar;C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\SPD-classes\build\libs\SPD-classes-1.3.1.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-freetype\1.11.0\a3634ad2e6c56d251268d6ab5c0f66eee2841f2c\gdx-freetype-1.11.0.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-backend-lwjgl3\1.11.0\58a96db4cd349be4292d547856aa1e1c5f065f4e\gdx-backend-lwjgl3-1.11.0.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-platform\1.11.0\697fb13eada6d3c6ca648c9788692b0159add126\gdx-platform-1.11.0-natives-desktop.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx\gdx-freetype-platform\1.11.0\420e2c2c206843a0d51010be28a141a1eb946235\gdx-freetype-platform-1.11.0-natives-desktop.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\com.badlogicgames.gdx-controllers\gdx-controllers-desktop\2.2.2\625b3bdbe803e9c4af181b4791202cfcf776d805\gdx-controllers-desktop-2.2.2.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\org.lwjgl\lwjgl-tinyfd\3.3.1\ff1914111ef2e3e0110ef2dabc8d8cdaad82347\lwjgl-tinyfd-3.3.1.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\org.lwjgl\lwjgl-tinyfd\3.3.1\a5d830475ec0958d9fdba1559efa99aef211e6ff\lwjgl-tinyfd-3.3.1-natives-windows.jar;C:\Users\ASUS\.gradle\caches\modules-2\files-2.1\org.lwjgl\lwjgl-tinyfd\3.3.1\78641a0fa5e9afa714adfdd152c357930c97a1ce\lwjgl
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 134217728                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 2118123520                                {product} {ergonomic}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5836300                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122910970                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122910970                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+     bool UseCompressedClassPointers               = true                                 {lp64_product} {ergonomic}
+     bool UseCompressedOops                        = true                                 {lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags
+ #1: stderr all=off uptime,level,tags
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk-11.0.15.1
+JRE_HOME=C:\Program Files\Java\jre1.8.0_333
+CLASSPATH=C:\Users\ASUS\Desktop\Github Project\Shattered-touhou-pixel-dungeon\\gradle\wrapper\gradle-wrapper.jar
+PATH=C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;D:\app\oracle\product\19c\db_home1\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\MinGW\bin;D:\Program Files\Matlab\runtime\win64;D:\Program Files\Matlab\bin;D:\Program Files\Matlab\polyspace\bin;C:\Program Files\R\R-3.3.2\bin\64x;C:\Program Files\dotnet\;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Program Files\Azure Data Studio\bin;C:\Program Files\Java\jdk-11.0.15.1\bin;C:\Program Files\Java\jre1.8.0_333\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Cloudflare\Cloudflare WARP\;C:\Users\ASUS\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\ASUS\AppData\Local\Programs\Python\Python38-32\;C:\Users\ASUS\AppData\Local\Microsoft\WindowsApps;C:\Program Files\ffmpeg\bin;C:\Users\ASUS\AppData\Local\Programs\Microsoft VS Code\bin;C:\ffmpeg\bin;C:\FFmpeg\bin;C:\Users\ASUS\AppData\Local\GitHubDesktop\bin;C:\Users\ASUS\AppData\Roaming\npm
+USERNAME=ASUS
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 142 Stepping 11, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10 , 64 bit Build 19041 (10.0.19041.1806)
+
+CPU:total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 142 stepping 11 microcode 0xde, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, ht, tsc, tscinvbit, bmi1, bmi2, adx, fma
+
+Memory: 4k page, system-wide physical 8079M (370M free)
+TotalPageFile size 17187M (AvailPageFile size 13M)
+current process WorkingSet (physical memory assigned to process): 9M, peak: 9M
+current process commit charge ("private bytes"): 60M, peak: 188M
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (11.0.15.1+2-LTS-10) for windows-amd64 JRE (11.0.15.1+2-LTS-10), built on Apr 25 2022 21:51:57 by "mach5one" with MS VC++ 15.9 (VS2017)
+
+END.

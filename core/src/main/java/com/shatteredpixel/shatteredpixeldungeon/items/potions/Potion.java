@@ -490,12 +490,7 @@ public class Potion extends Item {
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			//size = 1 -> All fail
-			//size = 2 -> All fail, but refugee can craft
-			//size = 3 -> Refugee fail, other can craft
-			if ((ingredients.size() == 1) 
-			|| ((ingredients.size() == 2) && (Dungeon.hero.subClass != HeroSubClass.REFUGEE))
-			|| ((ingredients.size() == 3) && (Dungeon.hero.subClass == HeroSubClass.REFUGEE)) ) {
+			if (ingredients.size() != 3) {
 				return false;
 			}
 			for (Item ingredient : ingredients){

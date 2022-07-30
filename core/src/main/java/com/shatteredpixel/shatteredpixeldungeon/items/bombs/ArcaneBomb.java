@@ -44,7 +44,7 @@ public class ArcaneBomb extends Bomb {
 	}
 	
 	@Override
-	protected void onThrow(int cell) {
+	public void onThrow(int cell) {
 		super.onThrow(cell);
 		if (fuse != null){
 			PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );

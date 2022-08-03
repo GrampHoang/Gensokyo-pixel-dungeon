@@ -39,7 +39,13 @@ public class PathFinder {
 	private static int[] dirLR;
 
 	//performance-light shortcuts for some common pathfinder cases
-	//they are in array-access order for increased memory performance
+	//they are in arrzy-access order for increased memory performance
+	public static int NEIGHBOURS_TOPLEFT;
+	public static int NEIGHBOURS_TOPRIGHT;
+	public static int NEIGHBOURS_BOTLEFT;
+	public static int NEIGHBOURS_BOTRIGHT;
+
+	public static int[] NEIGHBOURS4_CORNERS;
 	public static int[] NEIGHBOURS4;
 	public static int[] NEIGHBOURS8;
 	public static int[] NEIGHBOURS9;
@@ -63,6 +69,13 @@ public class PathFinder {
 
 		dir = new int[]{-1, +1, -width, +width, -width-1, -width+1, +width-1, +width+1};
 		dirLR = new int[]{-1-width, -1, -1+width, -width, +width, +1-width, +1, +1+width};
+
+		NEIGHBOURS_TOPLEFT = -width-1;
+		NEIGHBOURS_TOPRIGHT = -width+1;
+		NEIGHBOURS_BOTLEFT = +width-1;
+		NEIGHBOURS_BOTRIGHT = +width+1;
+
+		NEIGHBOURS4_CORNERS = new int[]{-width-1, -width+1, +width-1, +width+1};
 
 		NEIGHBOURS4 = new int[]{-width, -1, +1, +width};
 		NEIGHBOURS8 = new int[]{-width-1, -width, -width+1, -1, +1, +width-1, +width, +width+1};

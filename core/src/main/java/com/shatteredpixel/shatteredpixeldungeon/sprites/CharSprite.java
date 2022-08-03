@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SacrificialParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -83,7 +84,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING
 	}
 	private int stunStates = 0;
 	
@@ -105,6 +106,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Emitter healing;
 	protected Emitter mind;
 	protected Emitter starfly;
+	protected Emitter charging;
 	protected Emitter hearts;
 	
 	protected IceBlock iceBlock;
@@ -418,6 +420,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				starfly = emitter();
 				starfly.pour(Speck.factory(Speck.STAR_FLY), 0.1f);
 				break;
+			case CHARGING:
+				charging = emitter();
+				charging.pour(EnergyParticle.FACTORY, 0.05f);
+				break;
 		}
 	}
 	
@@ -503,6 +509,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					starfly = null;
 				}
 				break;
+			case CHARGING:
+				if (charging != null){
+					charging.on = false;
+					charging = null;
+				}
+				break;
 		}
 	}
 
@@ -567,6 +579,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 		if (starfly != null){
 			starfly.visible = visible;
+		}
+		if (charging != null){
+			charging.visible = visible;
 		}
 		if (aura != null){
 			if (aura.parent == null){

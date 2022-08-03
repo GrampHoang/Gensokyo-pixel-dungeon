@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
@@ -32,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -68,6 +70,14 @@ public class FrostBomb extends Bomb {
 	public int value() {
 		//prices of ingredients
 		return quantity * (20 + 30);
+	}
+
+	@Override
+	public boolean doPickUp(Hero hero, int pos) {
+		if (Dungeon.depth == 5 && Dungeon.level.map[178] == Terrain.EMPTY_SP && Dungeon.level.map[182] == Terrain.EMPTY_SP)
+			{return false;}
+		else{
+			return super.doPickUp(hero, pos);}
 	}
 
 	public void onCirnoThrow( int cell ) {

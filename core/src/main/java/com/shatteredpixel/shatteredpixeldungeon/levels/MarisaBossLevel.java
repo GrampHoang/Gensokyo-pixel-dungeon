@@ -36,66 +36,59 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
 
+
 import com.watabou.utils.Random;
 
-public class CirnoBossLevel extends Level {
+public class MarisaBossLevel extends Level {
 
-    private static final int SIZE = 19;
+    private static final int SIZE_W = 29;
+    private static final int SIZE_H = 18;
 
     {
-        color1 = 0x4b6794;
-        color2 = 0x3a4f70;
+        color1 = 0xeeee00;
+        color2 = 0x000000;
 
         viewDistance = 69;
     }
 
     @Override
     public String tilesTex() {
-        return Assets.Environment.TILES_SEWERS;
+        return Assets.Environment.TILES_CITY;
     }
 
     @Override
     public String waterTex() {
-        return Assets.Environment.WATER_SEWERS;
+        return Assets.Environment.WATER_CITY;
     }
 
     @Override
     protected boolean build() {
 
-        setSize(19, 19);
+        setSize(31, 20);
 
-        for (int i=1; i < SIZE-1; i++) {
-            for (int j=1; j < SIZE-1; j++) {
-                map[i * width() + j] = Terrain.WATER;
-                if (Random.IntRange(0,15) == 0){
-                    map[i * width() + j] = Terrain.EMPTY;
-                }
+        for (int i=1; i < SIZE_H-1; i++) {
+            for (int j=1; j < SIZE_W-1; j++) {
+                int o = Random.IntRange(0,20);
+                if ( o < 3)      { map[i * width() + j] = Terrain.WATER;}
+                else if ( o < 5) { map[i * width() + j] = Terrain.WALL;}
+                else if ( o < 7) { map[i * width() + j] = Terrain.BOOKSHELF;}
+                else   
+                    {   if (Random.IntRange(0,3) == 0){
+                            map[i * width() + j] = Terrain.EMPTY_DECO;
+                            }
+                        else{
+                            map[i * width() + j] = Terrain.EMPTY;
+                        }
+                    }
             }
         }
 
-        for (int i = (SIZE/2)-1; i <= (SIZE/2) +1; i++) {
-            for (int j = (SIZE/2)-1; j <= (SIZE/2) +1; j++) {
-                map[i * width() + j] = Terrain.EMPTY_SP;
-            }
+        for (int i = 1; i < SIZE_H - 1; i++) {
+            map[i * width() + 15] = Terrain.EMPTY_SP;
         }
 
-        map[4 * width() + SIZE/4] = Terrain.EMPTY_SP;
-        map[4 * width() + SIZE/2] = Terrain.EMPTY_SP;
-        map[4 * width() + SIZE/4*3+2] = Terrain.EMPTY_SP;
-
-        map[((SIZE/2-2) * width()) + SIZE/2] = Terrain.EMPTY_SP;
-        map[(SIZE/2 * width()) + SIZE/4] = Terrain.EMPTY_SP;
-        map[(SIZE/2 * width()) + SIZE/2] = Terrain.WATER;
-        map[(SIZE/2 * width()) + SIZE/4*3+2] = Terrain.EMPTY_SP;
-        map[(SIZE/2+2) * width()+ SIZE/2] = Terrain.EMPTY_SP;
-
-        map[(SIZE/4*3+2) * width() + SIZE/4] = Terrain.EMPTY_SP;
-        map[(SIZE/4*3+2) * width() + SIZE/2] = Terrain.EMPTY_SP;
-        map[(SIZE/4*3+2) * width() + SIZE/4*3+2] = Terrain.EMPTY_SP;
-
-        //These 2 also determined the fact that you can't pick up frost bomb from cirno
-        entrance = (SIZE/2 * width()) + SIZE/2 - 2;
-        exit     = (SIZE/2 * width()) + SIZE/2 + 2;
+        entrance = 16 * width() + 15;
+        exit     = width() + 15;
         map[entrance] = Terrain.ENTRANCE;
 
         transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
@@ -105,11 +98,14 @@ public class CirnoBossLevel extends Level {
     @Override
     public void occupyCell( Char ch ) {
         super.occupyCell( ch );
-
+        //If the hero is here
+        // entrance still there = boss haven't appeared
+        // Exit not there => Haven't triger and kill boss
+        // And move away from the entrance
         if (map[entrance] == Terrain.ENTRANCE 
             && ch == Dungeon.hero
             && map[exit] != Terrain.EXIT
-            && Dungeon.level.distance(ch.pos, entrance) >= 0) {
+            && Dungeon.level.distance(ch.pos, entrance) > 2) {
             seal();
         }
     }
@@ -117,6 +113,7 @@ public class CirnoBossLevel extends Level {
     @Override
     public void seal() {
         super.seal();
+        map[6 * width() + 6] = Terrain.EMPTY;
         set( entrance, Terrain.EMPTY_SP );
         set( exit, Terrain.EMPTY_SP );
         GameScene.updateMap( entrance );
@@ -124,9 +121,10 @@ public class CirnoBossLevel extends Level {
 
         Dungeon.observe();
 
-        CirnoBoss cirno = new CirnoBoss();
-        cirno.pos = (SIZE/2)* width() + SIZE/2;
-        GameScene.add( cirno );
+        MarisaBoss mari = new MarisaBoss();
+        mari.pos = (4 * width() + 15);;
+        GameScene.add(mari);
+
     }
 
     @Override
@@ -170,14 +168,15 @@ public class CirnoBossLevel extends Level {
     @Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-        bundle.put( "CIRNO_ENTRANCE", entrance );
-        bundle.put( "CIRNO_EXIT", exit );
+        bundle.put( "MARISA_ENTRANCE", entrance );
+        bundle.put( "MARISA_EXIT", exit );
     }
 
     @Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-        entrance = bundle.getInt( "CIRNO_ENTRANCE" );
-        exit = bundle.getInt( "CIRNO_EXIT" );
+        entrance = bundle.getInt( "MARISA_ENTRANCE" );
+        exit = bundle.getInt( "MARISA_EXIT" );
 	}
+
 }

@@ -104,8 +104,16 @@ public enum HeroClass {
 		ScrollOfDebug sod = new ScrollOfDebug();
 		sod.quantity(1).collect();
 
-		RingOfHaste cloak = new RingOfHaste();
-		(hero.belongings.ring = cloak).level(15);
+		RingOfMight ring = new RingOfMight();
+		ring.level(99);
+		ring.doEquip(hero);
+		// ring.activate( hero );
+
+		RingOfTenacity ring2 = new RingOfTenacity();
+		ring2.level(99);
+		ring2.doEquip(hero);
+
+		PotionOfHealing.heal(hero);
 
 		PlateArmor plate = new PlateArmor();
 		plate.level(99);

@@ -58,6 +58,7 @@ public class Necromancer extends Mob {
 		properties.add(Property.UNDEAD);
 		
 		HUNTING = new Hunting();
+		FLEEING = new Fleeing();
 	}
 	
 	public boolean summoning = false;

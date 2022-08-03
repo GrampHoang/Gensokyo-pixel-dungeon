@@ -29,16 +29,15 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PointF;
 
 
-public class MasterSpark extends Image {
+public class MasterSparkBig extends Image {
 
 	private static final double A = 180 / Math.PI;
 	
 	private  float duration;
 	
 	private float timeLeft;
-	private MasterSpark(PointF s, PointF e, Effects.Type asset, float duration) {
+	private MasterSparkBig(PointF s, PointF e, Effects.Type asset, float duration) {
 		super( Effects.get( asset ) );
-		
 		origin.set( 0, height / 2 );
 		
 		x = s.x - origin.x;
@@ -47,15 +46,15 @@ public class MasterSpark extends Image {
 		float dx = e.x - s.x;
 		float dy = e.y - s.y;
 		angle = (float)(Math.atan2( dy, dx ) * A);
-		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width;
+		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width * 1.1f;
 		
 		Sample.INSTANCE.play( Assets.Sounds.RAY );
 		
 		timeLeft = this.duration = duration;
 	}
 
-	public static class MiniMasterSpark extends MasterSpark{
-		public MiniMasterSpark(PointF s, PointF e, float dur){
+	public static class BigMasterSpark extends MasterSparkBig{
+		public BigMasterSpark(PointF s, PointF e, float dur){
 			super(s, e, Effects.Type.LIGHT_RAY, dur);
 		}
 	}

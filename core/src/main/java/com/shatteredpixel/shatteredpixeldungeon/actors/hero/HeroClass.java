@@ -99,25 +99,24 @@ public enum HeroClass {
 
 	public void initHero( Hero hero ) {
 
-		//debug test items
+		// hero.lvl = 30;
+		// //debug test items
+		// ScrollOfDebug sod = new ScrollOfDebug();
+		// sod.quantity(1).collect();
 
-		ScrollOfDebug sod = new ScrollOfDebug();
-		sod.quantity(1).collect();
+		// RingOfMight ring = new RingOfMight();
+		// ring.level(99);
+		// ring.doEquip(hero);
 
-		RingOfMight ring = new RingOfMight();
-		ring.level(99);
-		ring.doEquip(hero);
-		// ring.activate( hero );
+		// RingOfTenacity ring2 = new RingOfTenacity();
+		// ring2.level(99);
+		// ring2.doEquip(hero);
 
-		RingOfTenacity ring2 = new RingOfTenacity();
-		ring2.level(99);
-		ring2.doEquip(hero);
+		// PotionOfHealing.heal(hero);
 
-		PotionOfHealing.heal(hero);
-
-		PlateArmor plate = new PlateArmor();
-		plate.level(99);
-		plate.collect();
+		// PlateArmor plate = new PlateArmor();
+		// plate.level(99);
+		// plate.collect();
 
 		// PotionOfExperience poe = new PotionOfExperience();
 		// poe.quantity(30).collect();

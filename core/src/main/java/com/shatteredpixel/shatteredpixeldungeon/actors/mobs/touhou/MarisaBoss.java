@@ -74,11 +74,11 @@ public class MarisaBoss extends Mob {
 	{
 		spriteClass = MarisaBossSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 120 : 80;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 325 : 250;
 
-		defenseSkill = 6;
+		defenseSkill = 30;
 
-		EXP = 10;
+		EXP = 40;
 
 		state = WANDERING;
 		HUNTING = new Hunting();
@@ -95,7 +95,7 @@ public class MarisaBoss extends Mob {
 	private boolean charging_skill = false; 
 	private int dash_cd = DASH_CD - 3;
 	private int masterspark_cd = MS_CD - 3;
-    private int sts_cd = 6;
+	
 	@Override
 	protected void onAdd() {
 		//when he's removed and re-added to the fight, his time is always set to now.
@@ -143,6 +143,27 @@ public class MarisaBoss extends Mob {
 	@Override
 	public int attackSkill(Char target) {
 		return 99;
+	}
+
+	@Override
+	public void damage(int dmg, Object src) {
+		if (!Dungeon.level.mobs.contains(this)){
+			return;
+		}
+		
+		int hpBracket = HT / 3;
+		
+		int beforeHitHP = HP;
+		super.damage(dmg, src);
+		dmg = beforeHitHP - HP;
+		
+		// cannot be hit through multiple brackets at a time
+		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
+			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
+		}
+		// if (beforeHitHP / hpBracket != HP / hpBracket) {
+		// 	shootTheFloor();
+		// }
 	}
 
 	@Override
@@ -194,6 +215,15 @@ public class MarisaBoss extends Mob {
 		}
 		return damage;
 	}
+
+	// public void shootTheFloor() {
+	// 	damage = super.attackProc(enemy, damage);
+	// 	if (hero instanceof Hero) {
+	// 		// Buff.prolong(enemy, Blindness.class, 0.9f);
+	// 		return damage;
+	// 	}
+	// 	return damage;
+	// }
 
 	private class Hunting extends Mob.Hunting{
 		
@@ -330,6 +360,7 @@ public class MarisaBoss extends Mob {
 		}
         for (int p : targetedCells) {
 			CellEmitter.get(p).start(Speck.factory(Speck.JET), 0.05f, 10);
+			CellEmitter.get(p).start(RainbowParticle.BURST, 0.05f, 10);
             Char ch = Actor.findChar(p);
             if (ch != null && (ch.alignment != this.alignment)) {
                 affected.add(ch);
@@ -344,6 +375,7 @@ public class MarisaBoss extends Mob {
             Dungeon.observe();
         }
         for (Char ch : affected) {
+			Buff.affect(ch, Bleeding.class).set(5);
             ch.damage(Random.NormalIntRange(10, 20), new Hakkero());
             if (Dungeon.level.heroFOV[pos]) {
                 ch.sprite.flash();
@@ -399,6 +431,7 @@ public class MarisaBoss extends Mob {
 		}
 
         for (int p : targetedCells_MS) {
+			CellEmitter.center(p).burst( RainbowParticle.BURST, Random.IntRange( 2, 4) );
             Char ch = Actor.findChar(p);
             if (ch != null && (ch.alignment != this.alignment) && !(ch instanceof MarisaBoss)) {
                 affected.add(ch);
@@ -417,7 +450,10 @@ public class MarisaBoss extends Mob {
             Dungeon.observe();
         }
         for (Char ch : affected) {
-            ch.damage(Random.NormalIntRange(10, 20), new Hakkero());
+			Buff.affect(ch, Blindness.class, 2f);
+			Buff.affect(ch, Cripple.class, 2f);
+			Buff.affect(ch, Vertigo.class, 2f);
+            ch.damage(Random.NormalIntRange(20, 35), new Hakkero());
             if (Dungeon.level.heroFOV[pos]) {
                 ch.sprite.flash();
                 CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));

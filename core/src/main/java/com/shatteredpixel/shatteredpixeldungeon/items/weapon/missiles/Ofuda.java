@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
@@ -106,7 +107,9 @@ public class Ofuda extends MissileWeapon {
 				if(Random.IntRange(0,99) < 15 + 5 * Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
 					Buff.affect( defender, Bleeding.class ).set( Math.round(damage*0.3f) );
 				}
-				if(Random.IntRange(0,2) < Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)){
+				if(wep.enchantment != null
+					&& Random.IntRange(0,2) < Dungeon.hero.pointsInTalent(Talent.LUCKY_SHOT)
+					&& attacker.buff(MagicImmune.class) == null ){
 					wep.enchantment.proc(wep, attacker, defender, damage);
 				}
 			} else {
@@ -127,21 +130,14 @@ public class Ofuda extends MissileWeapon {
 		return super.proc( attacker, defender, damage );
 	}
 
- @Override
+	@Override
 	protected void onThrow( int cell ) {
 		Char enemy = Actor.findChar( cell );
 		if (enemy == null || enemy == curUser) {
 				parent = null;
 				super.onThrow( cell );
 		} else {
-			if (!curUser.shoot( enemy, this )) {
-				decrementDurability();
-				rangedMiss( cell );
-			} else {
-				decrementDurability();
-				rangedHit( enemy, cell );
-
-			}
+			curUser.shoot( enemy, this );
 		}
 	}
 }

@@ -234,8 +234,8 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 5;
-		branch = 1;
+		depth = 1;
+		branch = 0;
 
 		gold = 0;
 		energy = 0;
@@ -343,7 +343,7 @@ public class Dungeon {
 					level = new SewerLevel();
 					break;
 				case 5:
-					level = new CirnoBossLevel();
+					level = new MarisaBossLevel();
 					break;
 				case 6:
 				case 7:

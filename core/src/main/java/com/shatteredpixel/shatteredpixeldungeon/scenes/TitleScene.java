@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndSettings;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndUFO;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
@@ -137,6 +138,9 @@ public class TitleScene extends PixelScene {
 		StyledButton btnSupport = new SupportButton(GREY_TR, Messages.get(this, "support"));
 		add(btnSupport);
 
+		StyledButton btnUFO = new UFOButton(GREY_TR, Messages.get(this, "ufo"));
+		add(btnUFO);
+
 		StyledButton btnRankings = new StyledButton(GREY_TR,Messages.get(this, "rankings")){
 			@Override
 			protected void onClick() {
@@ -184,7 +188,9 @@ public class TitleScene extends PixelScene {
 			btnPlay.setRect(title.x-50, topRegion+GAP, ((title.width()+100)/2)-1, BTN_HEIGHT);
 			align(btnPlay);
 			btnSupport.setRect(btnPlay.right()+2, btnPlay.top(), btnPlay.width(), BTN_HEIGHT);
-			btnRankings.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, (btnPlay.width()*.67f)-1, BTN_HEIGHT);
+			btnUFO.setRect(btnPlay.left(),  btnPlay.bottom()+ GAP, btnPlay.width()*2, BTN_HEIGHT);
+
+			btnRankings.setRect(btnPlay.left(), btnUFO.bottom()+ GAP, (btnPlay.width()*.67f)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.left(), btnRankings.bottom()+GAP, btnRankings.width(), BTN_HEIGHT);
 			btnNews.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnChanges.setRect(btnNews.left(), btnNews.bottom() + GAP, btnRankings.width(), BTN_HEIGHT);
@@ -194,7 +200,8 @@ public class TitleScene extends PixelScene {
 			btnPlay.setRect(title.x, topRegion+GAP, title.width(), BTN_HEIGHT);
 			align(btnPlay);
 			btnSupport.setRect(btnPlay.left(), btnPlay.bottom()+ GAP, btnPlay.width(), BTN_HEIGHT);
-			btnRankings.setRect(btnPlay.left(), btnSupport.bottom()+ GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
+			btnUFO.setRect(btnSupport.left(), btnSupport.bottom()+ GAP, btnPlay.width(), BTN_HEIGHT);
+			btnRankings.setRect(btnPlay.left(), btnUFO.bottom()+ GAP, (btnPlay.width()/2)-1, BTN_HEIGHT);
 			btnBadges.setRect(btnRankings.right()+2, btnRankings.top(), btnRankings.width(), BTN_HEIGHT);
 			btnNews.setRect(btnRankings.left(), btnRankings.bottom()+ GAP, btnRankings.width(), BTN_HEIGHT);
 			btnChanges.setRect(btnNews.right()+2, btnNews.top(), btnNews.width(), BTN_HEIGHT);
@@ -363,6 +370,29 @@ public class TitleScene extends PixelScene {
 		@Override
 		protected void onClick() {
 			ShatteredPixelDungeon.switchNoFade(SupporterScene.class);
+		}
+	}
+
+	private static class UFOButton extends StyledButton {
+
+		public UFOButton( Chrome.Type type, String label ){
+			super(type, label);
+			if (Messages.lang().status() == Languages.Status.INCOMPLETE){
+				icon(Icons.get(Icons.LANGS));
+				icon.hardlight(1.5f, 0, 0);
+			} else {
+				icon(Icons.get(Icons.GOLD));
+			}
+		}
+
+		@Override
+		public void update() {
+			super.update();
+		}
+
+		@Override
+		protected void onClick() {
+			ShatteredPixelDungeon.scene().add(new WndUFO());
 		}
 	}
 }

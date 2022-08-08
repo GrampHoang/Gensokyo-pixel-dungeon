@@ -59,6 +59,11 @@ public class Statistics {
 	
 	public static float duration;
 	
+	public static int upgradeUFO_Red;
+	public static int upgradeUFO_Blue;
+	public static int upgradeUFO_Green;
+	public static int upgradeUFO_Rainbow;
+
 	public static boolean qualifiedForNoKilling = false;
 	public static boolean completedWithNoKilling = false;
 	public static boolean qualifiedForBossChallengeBadge = false;
@@ -135,6 +140,11 @@ public class Statistics {
 	private static final String THROWN		= "thrownAssists";
 
 	private static final String SPAWNERS	= "spawnersAlive";
+
+	private static final String UFO_RED		= "ufo_red";
+	private static final String UFO_BLUE	= "ufo_blue";
+	private static final String UFO_GREEN	= "ufo_green";
+	private static final String UFO_RAINBOW	= "ufo_rainbow";
 	
 	private static final String DURATION	= "duration";
 
@@ -177,6 +187,12 @@ public class Statistics {
 		bundle.put( THROWN,     thrownAttacks);
 
 		bundle.put( SPAWNERS,	spawnersAlive );
+
+		bundle.put( UFO_RED,	upgradeUFO_Red );
+		bundle.put( UFO_GREEN,	upgradeUFO_Green );
+		bundle.put( UFO_BLUE,	upgradeUFO_Blue );
+		bundle.put( UFO_RAINBOW,	upgradeUFO_Rainbow );
+
 		
 		bundle.put( DURATION,	duration );
 

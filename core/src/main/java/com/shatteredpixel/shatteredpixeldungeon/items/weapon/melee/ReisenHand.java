@@ -46,7 +46,7 @@ public class ReisenHand extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return (2 + lvl);  //just simplify the normal scaling equation, nerfed because of extra effect.
+		return (3 + lvl);  //just simplify the normal scaling equation, nerfed because of extra effect.
 	}
 
     @Override

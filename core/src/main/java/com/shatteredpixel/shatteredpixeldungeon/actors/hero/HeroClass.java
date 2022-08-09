@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
+import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -151,7 +152,6 @@ public enum HeroClass {
 		// pof.quantity(30).collect();
 
 	//end of test items
-
 		hero.heroClass = this;
 		Talent.initClassTalents(hero);
 
@@ -213,6 +213,27 @@ public enum HeroClass {
 				break;
 			}
 		}
+
+		if(UFOSettings.red_HP()){
+			hero.HT+=2;
+			hero.HP+=2;
+		}
+
+		if(UFOSettings.red_Gold()){
+			Dungeon.gold += 50;
+		}
+
+		if(UFOSettings.red_Item()){
+			Dungeon.energy += 3;
+		}
+
+		// if(UFOSettings.red_Acc()){
+		// 	hero.attackSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	hero.defenseSkill+=1;
+		// }
 
 	}
 

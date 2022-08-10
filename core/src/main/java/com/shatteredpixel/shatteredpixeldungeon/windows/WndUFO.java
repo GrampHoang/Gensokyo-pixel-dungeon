@@ -66,7 +66,7 @@ public class WndUFO extends WndTabbed {
 	private static final float GAP          = 2;
 
     private RedUFOTab       red;
-    // private BlueUFOTab      blue;
+    private BlueUFOTab      blue;
     // private GreenUFOTab     green;
     // private RainbowUFOTab   rainbow;
 
@@ -94,19 +94,19 @@ public class WndUFO extends WndTabbed {
 			}
 		});
 
-        // blue = new BlueUFOTab();
-		// blue.setSize(width, 0);
-		// height = Math.max(height, blue.height());
-		// add( blue );
+        blue = new BlueUFOTab();
+		blue.setSize(width, 0);
+		height = Math.max(height, blue.height());
+		add( blue );
 
-		// add( new IconTab(Icons.get(Icons.DISPLAY)){
-		// 	@Override
-		// 	protected void select(boolean value) {
-		// 		super.select(value);
-		// 		blue.visible = blue.active = value;
-		// 		if (value) last_index = 1;
-		// 	}
-		// });
+		add( new IconTab(Icons.get(Icons.DISPLAY)){
+			@Override
+			protected void select(boolean value) {
+				super.select(value);
+				blue.visible = blue.active = value;
+				if (value) last_index = 1;
+			}
+		});
 
         // green = new GreenUFOTab();
 		// green.setSize(width, 0);
@@ -249,21 +249,11 @@ public class WndUFO extends WndTabbed {
 			red_Vision.checked(UFOSettings.red_Vision());
 			add(red_Vision);
 
-			red_AttSpeed = new CheckBox(Messages.get(this, "red_attspeed")){
-				@Override
-				protected void onClick() {
-					super.onClick();
-					UFOSettings.red_AttSpeed(checked());
-				}
-			};
-			red_AttSpeed.checked(UFOSettings.red_AttSpeed());
-			add(red_AttSpeed);
-
 			red_Gold = new CheckBox(Messages.get(this, "red_gold")){
 				@Override
 				protected void onClick() {
 					super.onClick();
-					UFOSettings.red_Gold(checked());
+					UFOSettings.red_AttSpeed(checked());
 				}
 			};
 			red_Gold.checked(UFOSettings.red_Gold());
@@ -330,17 +320,16 @@ public class WndUFO extends WndTabbed {
 			// content.setSize(width, BTN_HEIGHT*13);
 			// pane.setRect(0, sep1.y + GAP, width, height - GAP*4.5f);
 			red_Quest.setRect(0, sep1.y + 1 + GAP + GAP, width-1, BTN_HEIGHT);
-            red_HP.setRect(0, red_Quest.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Hunger.setRect(0, red_HP.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_AttSpeed.setRect(0, red_Hunger.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Gold.setRect(0, red_AttSpeed.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Item.setRect(0, red_Gold.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Acc.setRect(0, red_Item.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Eva.setRect(0, red_Acc.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Vision.setRect(0, red_Eva.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Search.setRect(0, red_Vision.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Mobs.setRect(0, red_Search.bottom() + GAP, width-1, BTN_HEIGHT);
-			red_Shop.setRect(0, red_Mobs.bottom() + GAP, width-1, BTN_HEIGHT);
+            red_HP.setRect(0, red_Quest.bottom() , width-1, BTN_HEIGHT);
+			red_Hunger.setRect(0, red_HP.bottom() , width-1, BTN_HEIGHT);
+			red_Gold.setRect(0, red_Hunger.bottom() , width-1, BTN_HEIGHT);
+			red_Item.setRect(0, red_Gold.bottom() , width-1, BTN_HEIGHT);
+			red_Acc.setRect(0, red_Item.bottom() , width-1, BTN_HEIGHT);
+			red_Eva.setRect(0, red_Acc.bottom() , width-1, BTN_HEIGHT);
+			red_Vision.setRect(0, red_Eva.bottom() , width-1, BTN_HEIGHT);
+			red_Search.setRect(0, red_Vision.bottom() , width-1, BTN_HEIGHT);
+			red_Mobs.setRect(0, red_Search.bottom() , width-1, BTN_HEIGHT);
+			red_Shop.setRect(0, red_Mobs.bottom() , width-1, BTN_HEIGHT);
 
             height = red_Shop.bottom();
 
@@ -352,47 +341,142 @@ public class WndUFO extends WndTabbed {
 	}
 
 
-    // private static class BlueUFOTab extends Component {
+    private static class BlueUFOTab extends Component {
 
-	// 	RenderedTextBlock title;
-	// 	ColorBlock sep1;
-    //     CheckBox red_HP;
-    //     CheckBox upgrade_1_ACC;
-    //     CheckBox upgrade_1_EVA;
-    //     CheckBox upgrade_1_HUNGER;
+		RenderedTextBlock title;
+		ColorBlock sep1;
+        CheckBox blue_HP;
+		CheckBox blue_RunSpeed;
+		CheckBox blue_Hunger;
+		CheckBox blue_Search;
+		CheckBox blue_Quest;
+		CheckBox blue_Acc;
+		CheckBox blue_Damage;
+		CheckBox blue_Gold;
+		CheckBox blue_Item;
+
+        @Override
+		protected void createChildren() {
+			title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
+			title.hardlight(3355647); //Red
+			add(title);
+
+            sep1 = new ColorBlock(1, 1, 0xFF000000);
+			add(sep1);
+
+			blue_HP = new CheckBox(Messages.get(this, "blue_hp")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_HP(checked());
+				}
+			};
+			blue_HP.checked(UFOSettings.blue_HP());
+			add(blue_HP);
+
+			blue_RunSpeed = new CheckBox(Messages.get(this, "blue_runspeed")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_RunSpeed(checked());
+				}
+			};
+			blue_RunSpeed.checked(UFOSettings.blue_RunSpeed());
+			add(blue_RunSpeed);
+
+			blue_Hunger = new CheckBox(Messages.get(this, "blue_hunger")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Hunger(checked());
+				}
+			};
+			blue_Hunger.checked(UFOSettings.blue_Hunger());
+			add(blue_Hunger);
+
+			blue_Search = new CheckBox(Messages.get(this, "blue_search")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Search(checked());
+				}
+			};
+			blue_Search.checked(UFOSettings.blue_Search());
+			add(blue_Search);
+
+			blue_Quest = new CheckBox(Messages.get(this, "blue_quest")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Quest(checked());
+				}
+			};
+			blue_Quest.checked(UFOSettings.blue_Quest());
+			add(blue_Quest);
+
+			blue_Acc = new CheckBox(Messages.get(this, "blue_acc")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Acc(checked());
+				}
+			};
+			blue_Acc.checked(UFOSettings.blue_Acc());
+			add(blue_Acc);
+
+			blue_Damage = new CheckBox(Messages.get(this, "blue_damage")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Damage(checked());
+				}
+			};
+			blue_Damage.checked(UFOSettings.blue_Damage());
+			add(blue_Damage);
+
+			blue_Gold = new CheckBox(Messages.get(this, "blue_hp")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Gold(checked());
+				}
+			};
+			blue_Gold.checked(UFOSettings.blue_Gold());
+			add(blue_Gold);
+
+			blue_Item = new CheckBox(Messages.get(this, "blue_item")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.blue_Item(checked());
+				}
+			};
+			blue_Item.checked(UFOSettings.blue_Item());
+			add(blue_Item);
 
 
-    //     @Override
-	// 	protected void createChildren() {
-	// 		title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
-	// 		title.hardlight(16721446); //Red
-	// 		add(title);
+		}
 
-    //         sep1 = new ColorBlock(1, 1, 0xFF000000);
-	// 		add(sep1);
-
-	// 		red_HP = new CheckBox(Messages.get(this, "red_hp")){
-	// 			@Override
-	// 			protected void onClick() {
-	// 				super.onClick();
-	// 				UFOSettings.red_HP(checked());
-	// 			}
-	// 		};
-	// 		red_HP.checked(UFOSettings.red_HP());
-	// 		add(red_HP);
-	// 	}
-
-	// 	@Override
-	// 	protected void layout() {
-	// 		title.setPos((width - title.width())/2, y + GAP);
-	// 		sep1.size(width, 1);
-	//         sep1.y = title.bottom() + 2*GAP;
+		@Override
+		protected void layout() {
+			title.setPos((width - title.width())/2, y + GAP);
+			sep1.size(width, 1);
+	        sep1.y = title.bottom() + 2*GAP;
             
-    //         red_HP.setRect(0, sep1.y + 1 + GAP, width-1, BTN_HEIGHT);
-    //         height = upgrade_1_HUNGER.bottom();
-	// 	}
+            blue_HP.setRect(0, sep1.y + 1 + GAP + GAP, width-1, BTN_HEIGHT);
+			blue_RunSpeed.setRect(0, blue_HP.bottom(), width-1, BTN_HEIGHT);
+			blue_Hunger.setRect(0, blue_RunSpeed.bottom(), width-1, BTN_HEIGHT);
+			blue_Search.setRect(0, blue_Hunger.bottom(), width-1, BTN_HEIGHT);
+			blue_Quest.setRect(0, blue_Search.bottom(), width-1, BTN_HEIGHT);
+			blue_Acc.setRect(0, blue_Quest.bottom(), width-1, BTN_HEIGHT);
+			blue_Damage.setRect(0, blue_Acc.bottom(), width-1, BTN_HEIGHT);
+			blue_Gold.setRect(0, blue_Damage.bottom(), width-1, BTN_HEIGHT);
+			blue_Item.setRect(0, blue_Gold.bottom(), width-1, BTN_HEIGHT);
+            height = blue_Item.bottom();
+		}
 
-	// }
+
+	}
     // private static class GreenUFOTab extends Component {
 
 	// 	RenderedTextBlock title;

@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
@@ -913,6 +914,9 @@ public abstract class Mob extends Char {
 	}
 	
 	public String description() {
+		if (UFOSettings.red_Mobs()){
+			return String.format("_HP: %1d/%2d_ \n\n",HP,HT) + Messages.get(this, "desc");
+		}
 		return Messages.get(this, "desc");
 	}
 

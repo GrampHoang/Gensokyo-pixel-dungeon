@@ -190,7 +190,7 @@ public class KoishiHat extends Artifact {
 		@Override
 		public String desc() {
 			int chance = 40 + 10*Dungeon.hero.pointsInTalent(Talent.LEARNING);
-			return String.format("Koishi closed her mind, which makes her presence cannot be noticed by other beings unless she allows it. After %1$.1f turns of not attacking, she will turn invisible. \n\nTurns visible remaining: %2$.1f.\n\nHowever, by having this buff, Koishi only have _%3$d%% chance_ to gain exp from all source.", turn_to_invis, turn_till_invis, chance);
+			return String.format("Koishi closed her mind, which makes her presence cannot be noticed by other beings unless she allows it. After %1$.1f turns of not attacking, she will turn invisible. \n\nTurns visible remaining: %2$.1f.\n\nHowever, by having this buff, Koishi only have _%3$d%% chance_ to gain full exp from all source.", turn_to_invis, turn_till_invis, chance);
 		}
 
 		@Override

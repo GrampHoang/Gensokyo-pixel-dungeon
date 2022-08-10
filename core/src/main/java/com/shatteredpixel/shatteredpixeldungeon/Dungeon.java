@@ -234,7 +234,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 1;
+		depth = 11;
 		branch = 0;
 
 		gold = 0;

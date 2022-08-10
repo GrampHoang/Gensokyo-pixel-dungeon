@@ -182,11 +182,11 @@ public class Hero extends Char {
 	
 	public static final int MAX_LEVEL = 30;
 
-	public static final int STARTING_STR = 10;
+	public int STARTING_STR = 10;
 	
-	private static final float TIME_TO_REST		    = 1f;
-	private static final float TIME_TO_SEARCH	    = 2f;
-	private static final float HUNGER_FOR_SEARCH	= 6f;
+	private float TIME_TO_REST		    = 1f;
+	private float TIME_TO_SEARCH	    = 2f;
+	private float HUNGER_FOR_SEARCH	= 6f;
 	
 	public HeroClass heroClass = HeroClass.ROGUE;
 	public HeroSubClass subClass = HeroSubClass.NONE;
@@ -232,6 +232,51 @@ public class Hero extends Char {
 		belongings = new Belongings( this );
 		
 		visibleEnemies = new ArrayList<>();
+
+		if(UFOSettings.red_Acc()){
+			attackSkill+=1;
+		}
+
+		if(UFOSettings.red_Eva()){
+			defenseSkill+=1;
+		}
+
+		if(UFOSettings.red_Search()){
+			TIME_TO_SEARCH -=1;
+		}
+
+		// if(UFOSettings.green_Search()){
+		// 	TIME_TO_SEARCH -=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
+		// if(UFOSettings.red_Eva()){
+		// 	defenseSkill+=1;
+		// }
+
 	}
 	
 	public void updateHT( boolean boostHP ){

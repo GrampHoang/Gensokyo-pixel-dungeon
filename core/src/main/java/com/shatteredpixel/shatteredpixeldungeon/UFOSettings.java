@@ -136,4 +136,89 @@ public class UFOSettings extends GameSettings {
 		put( RED_SHOP, value );
 	}
 
+
+
+
+
+	public static final String BLUE_HP 	    	= "blue_hp";
+	public static final String BLUE_RUNSPEED 	= "blue_runspeed";
+	public static final String BLUE_HUNGER 	    = "blue_hunger";
+
+	public static final String BLUE_SEARCH 	    = "blue_search";
+	public static final String BLUE_QUEST 	    = "blue_quest";
+
+	public static final String BLUE_ACC 	    = "blue_acc";
+	public static final String BLUE_DAMAGE 	    = "blue_damage";
+
+	public static final String BLUE_GOLD 	    = "blue_gold";
+	public static final String BLUE_ITEM 	    = "blue_item";
+
+    //Blue UFO
+	//HP
+	public static boolean blue_HP() {
+		return getBoolean( BLUE_HP,  false);
+	}
+	public static void blue_HP( boolean value ) {
+		put( BLUE_HP, value );
+	}
+	//Hunger
+	public static boolean blue_Hunger() {
+		return getBoolean( BLUE_HUNGER,  false);
+	}
+	public static void blue_Hunger( boolean value ) {
+		put( BLUE_HUNGER, value );
+	}
+	//Run Speed
+	public static boolean blue_RunSpeed() {
+		return getBoolean( BLUE_RUNSPEED,  false);
+	}
+	public static void blue_RunSpeed( boolean value ) {
+		put( BLUE_RUNSPEED, value );
+	}
+
+	//Quest
+	public static boolean blue_Quest() {
+		return getBoolean( BLUE_QUEST,  false);
+	}
+	public static void blue_Quest( boolean value ) {
+		put( BLUE_QUEST, value );
+	}
+	//Search
+	public static boolean blue_Search() {
+		return getBoolean( BLUE_SEARCH,  false);
+	}
+	public static void blue_Search( boolean value ) {
+		put( BLUE_SEARCH, value );
+	}
+
+	//Accuracy
+	public static boolean blue_Acc() {
+		return getBoolean( BLUE_ACC,  false);
+	}
+	public static void blue_Acc( boolean value ) {
+		put( BLUE_ACC, value );
+	}
+	//Damage
+	public static boolean blue_Damage() {
+		return getBoolean( BLUE_DAMAGE,  false);
+	}
+	public static void blue_Damage( boolean value ) {
+		put( BLUE_DAMAGE, value );
+	}
+
+	//Gold
+	public static boolean blue_Gold() {
+		return getBoolean( BLUE_GOLD,  false);
+	}
+	public static void blue_Gold( boolean value ) {
+		put( BLUE_GOLD, value );
+	}
+	//Item
+	public static boolean blue_Item() {
+		return getBoolean( BLUE_ITEM,  false);
+	}
+	public static void blue_Item( boolean value ) {
+		put( BLUE_ITEM, value );
+	}
+
 }

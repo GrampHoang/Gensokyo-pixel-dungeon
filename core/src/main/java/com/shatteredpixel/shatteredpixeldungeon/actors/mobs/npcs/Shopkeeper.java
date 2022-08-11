@@ -115,9 +115,9 @@ public class Shopkeeper extends NPC {
 			UFOmodifier -= 0.05f;
 		}
 
-		// if (UFOSettings.green_Shop()){
-		// 	UFOmodifier -= 0.05f;
-		// }
+		if (UFOSettings.green_Shop()){
+			UFOmodifier -= 0.05f;
+		}
 
 		if (Dungeon.hero.hasTalent(Talent.MAGIC_BARGAIN)
 		&& item instanceof Wand){

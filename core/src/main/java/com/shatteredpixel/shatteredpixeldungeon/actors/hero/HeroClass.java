@@ -57,6 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDiv
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
+import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDeepSleep;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
@@ -241,6 +242,15 @@ public enum HeroClass {
 		if (UFOSettings.blue_Item()){
 			i = new Food();
 			i.collect();
+		}
+
+		if (UFOSettings.green_Item()){
+			i = new StoneOfDeepSleep();
+			i.quantity(2).collect();
+		}
+
+		if (UFOSettings.green_Gold()){
+			Dungeon.gold += 100;
 		}
 	}
 

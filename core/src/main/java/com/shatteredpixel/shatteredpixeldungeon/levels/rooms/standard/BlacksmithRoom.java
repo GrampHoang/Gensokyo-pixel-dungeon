@@ -51,16 +51,20 @@ public class BlacksmithRoom extends StandardRoom {
 		Painter.fill( level, this, 1, Terrain.TRAP );
 		Painter.fill( level, this, 2, Terrain.EMPTY_SP );
 		
-		for (int i=0; i < 2; i++) {
-			int pos;
+		int pos;
 			do {
 				pos = level.pointToCell(random());
 			} while (level.map[pos] != Terrain.EMPTY_SP);
-			
-			if (UFOSettings.red_Quest()){
-				DarkGold dg = new DarkGold();
-				level.drop(dg.quantity(5), pos);
-			}
+		
+		if (UFOSettings.red_Quest()){
+			DarkGold dg = new DarkGold();
+			level.drop(dg.quantity(5), pos);
+		}
+
+		for (int i=0; i < 2; i++) {
+			do {
+				pos = level.pointToCell(random());
+			} while (level.map[pos] != Terrain.EMPTY_SP);
 			
 			level.drop(
 				Generator.random( Random.oneOf(

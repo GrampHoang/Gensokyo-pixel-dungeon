@@ -132,6 +132,17 @@ public class Hakkero extends DamageWand {
 			Buff.affect(Dungeon.hero, AttackEmpower.class).set(Dungeon.hero.pointsInTalent(Talent.MAGIC_STRIKE)*2,1);
 		}
 
+		
+		if (Dungeon.hero.hasTalent(Talent.LOVE_MS)){
+			if(Random.IntRange(0,99) < 15*Dungeon.hero.pointsInTalent(Talent.LOVE_MS)){
+				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+					if (Dungeon.level.heroFOV[mob.pos]) {
+						Buff.affect(mob, Charm.class, 4f);
+					}
+				}
+			}
+		}
+
 		if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
 			if(Dungeon.hero.hasTalent(Talent.ENERGY_RECYCLE)){
 				for (Wand.Charger c : Dungeon.hero.buffs(Wand.Charger.class)){
@@ -141,8 +152,7 @@ public class Hakkero extends DamageWand {
 					}
 				}
 			}
-
-
+			
 			Camera.main.shake( 1, 1f );
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				if (Dungeon.level.heroFOV[mob.pos]) {
@@ -237,16 +247,6 @@ public class Hakkero extends DamageWand {
 			ch.damage( damageRoll(lvl), this );
 			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 			ch.sprite.flash();
-
-			if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
-				Buff.affect(ch, Burning.class).reignite(ch);
-				Buff.affect(ch, Cripple.class, 2f);
-			}
-            //
-            //  Talent add here
-            //
-            //
-            //
 		}
 
 		if (Dungeon.hero.hasTalent(Talent.SPARK_SHIELD)){
@@ -270,17 +270,11 @@ public class Hakkero extends DamageWand {
 					Dungeon.hero.buff(Magicdust.class).reduce(Dungeon.hero.pointsInTalent(Talent.EXTENDED_FLIGHT));
 				}
 			}
-
 		}
 
-		if (Dungeon.hero.hasTalent(Talent.LOVE_MS)){
-			if(Random.IntRange(0,99) < 15*Dungeon.hero.pointsInTalent(Talent.LOVE_MS)){
-				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-					if (Dungeon.level.heroFOV[mob.pos]) {
-						Buff.affect(ch, Charm.class, 4f);
-					}
-				}
-			}
+		if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN){
+			Buff.affect(ch, Burning.class).reignite(ch);
+			Buff.affect(ch, Cripple.class, 2f);
 		}
 	}
 

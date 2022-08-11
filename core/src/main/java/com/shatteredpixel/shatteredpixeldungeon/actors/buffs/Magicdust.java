@@ -173,7 +173,7 @@ public class Magicdust extends Buff implements ActionIndicator.Action {
 		} else if (freeflyCooldown > 0){
 			return (freeflyCooldown) / 30f;
 		} else {
-			return (10 - dustStacks) / 10f;
+			return (20 - dustStacks) / 20f;
 		}
 	}
 

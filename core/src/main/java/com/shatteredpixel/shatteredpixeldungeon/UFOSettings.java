@@ -147,7 +147,7 @@ public class UFOSettings extends GameSettings {
 	public static final String BLUE_SEARCH 	    = "blue_search";
 	public static final String BLUE_QUEST 	    = "blue_quest";
 
-	public static final String BLUE_ACC 	    = "blue_acc";
+	public static final String BLUE_ACC		    = "blue_acc";
 	public static final String BLUE_DAMAGE 	    = "blue_damage";
 
 	public static final String BLUE_GOLD 	    = "blue_gold";
@@ -219,6 +219,82 @@ public class UFOSettings extends GameSettings {
 	}
 	public static void blue_Item( boolean value ) {
 		put( BLUE_ITEM, value );
+	}
+
+
+	public static final String GREEN_RUNSPEED  	= "green_runspeed";
+	public static final String GREEN_SEARCH 	= "green_search";
+	public static final String GREEN_HP 	    = "green_hp";
+
+	public static final String GREEN_ACC 	    = "green_ac";
+	public static final String GREEN_EVA 	    = "green_eva";
+
+	public static final String GREEN_GOLD		= "green_gold";
+	public static final String GREEN_QUEST 	    = "green_quest";
+
+	public static final String GREEN_ITEM	    = "green_item";
+	public static final String GREEN_SHOP 	    = "green_shop";
+	public static final String GREEN_STRENGTH 	= "green_strength";
+
+	public static boolean green_RunSpeed() {
+		return getBoolean( GREEN_RUNSPEED,  false);
+	}
+	public static void green_RunSpeed( boolean value ) {
+		put( GREEN_RUNSPEED, value );
+	}
+	public static boolean green_Search() {
+		return getBoolean( GREEN_SEARCH,  false);
+	}
+	public static void green_Search( boolean value ) {
+		put( GREEN_SEARCH, value );
+	}
+	public static boolean green_HP() {
+		return getBoolean( GREEN_HP,  false);
+	}
+	public static void green_HP( boolean value ) {
+		put( GREEN_HP, value );
+	}
+	public static boolean green_Acc() {
+		return getBoolean( GREEN_ACC,  false);
+	}
+	public static void green_Acc( boolean value ) {
+		put( GREEN_ACC, value );
+	}
+	public static boolean green_Eva() {
+		return getBoolean( GREEN_EVA,  false);
+	}
+	public static void green_Eva( boolean value ) {
+		put( GREEN_EVA, value );
+	}
+	public static boolean green_Shop() {
+		return getBoolean( GREEN_SHOP,  false);
+	}
+	public static void green_Shop( boolean value ) {
+		put( GREEN_SHOP, value );
+	}
+	public static boolean green_Gold() {
+		return getBoolean( GREEN_GOLD,  false);
+	}
+	public static void green_Gold( boolean value ) {
+		put( GREEN_GOLD, value );
+	}
+	public static boolean green_Quest() {
+		return getBoolean( GREEN_QUEST,  false);
+	}
+	public static void green_Quest( boolean value ) {
+		put( GREEN_QUEST, value );
+	}
+	public static boolean green_Item() {
+		return getBoolean( GREEN_ITEM,  false);
+	}
+	public static void green_Item( boolean value ) {
+		put( GREEN_ITEM, value );
+	}
+	public static boolean green_Strength() {
+		return getBoolean( GREEN_STRENGTH,  false);
+	}
+	public static void green_Strength( boolean value ) {
+		put( GREEN_STRENGTH, value );
 	}
 
 }

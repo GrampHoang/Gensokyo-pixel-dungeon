@@ -93,10 +93,6 @@ public abstract class Trap implements Bundlable {
 	}
 
 	public void trigger() {
-		if  (	(Dungeon.hero.hasTalent(Talent.NIMBLE) && (Dungeon.hero.pointsInTalent(Talent.NIMBLE) > Random.Int(0,1)))
-				|| Dungeon.hero.subClass == HeroSubClass.IMAGINARY){
-				return;
-		}
 		if (active) {
 			if (Dungeon.level.heroFOV[pos]) {
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);

@@ -67,7 +67,7 @@ public class WndUFO extends WndTabbed {
 
     private RedUFOTab       red;
     private BlueUFOTab      blue;
-    // private GreenUFOTab     green;
+    private GreenUFOTab     green;
     // private RainbowUFOTab   rainbow;
 
 
@@ -108,19 +108,19 @@ public class WndUFO extends WndTabbed {
 			}
 		});
 
-        // green = new GreenUFOTab();
-		// green.setSize(width, 0);
-		// height = Math.max(height, green.height());
-		// add( green );
+        green = new GreenUFOTab();
+		green.setSize(width, 0);
+		height = Math.max(height, green.height());
+		add( green );
 
-		// add( new IconTab(Icons.get(Icons.DISPLAY)){
-		// 	@Override
-		// 	protected void select(boolean value) {
-		// 		super.select(value);
-		// 		green.visible = green.active = value;
-		// 		if (value) last_index = 2;
-		// 	}
-		// });
+		add( new IconTab(Icons.get(Icons.DISPLAY)){
+			@Override
+			protected void select(boolean value) {
+				super.select(value);
+				green.visible = green.active = value;
+				if (value) last_index = 2;
+			}
+		});
 
         // rainbow = new RainbowUFOTab();
 		// rainbow.setSize(width, 0);
@@ -477,85 +477,159 @@ public class WndUFO extends WndTabbed {
 
 
 	}
-    // private static class GreenUFOTab extends Component {
 
-	// 	RenderedTextBlock title;
-	// 	ColorBlock sep1;
-    //     CheckBox upgrade_1_HP;
-    //     CheckBox upgrade_1_ACC;
-    //     CheckBox upgrade_1_EVA;
-    //     CheckBox upgrade_1_HUNGER;
+    private static class GreenUFOTab extends Component {
 
+		RenderedTextBlock title;
+		ColorBlock sep1;
+        CheckBox green_HP;
+		CheckBox green_RunSpeed;
+		CheckBox green_Shop;
+		CheckBox green_Search;
+		CheckBox green_Quest;
+		CheckBox green_Acc;
+		CheckBox green_Eva;
+		CheckBox green_Strength;
+		CheckBox green_Gold;
+		CheckBox green_Item;
 
-    //     @Override
-	// 	protected void createChildren() {
-	// 		title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
-	// 		title.hardlight(16721446); //Red
-	// 		add(title);
+        @Override
+		protected void createChildren() {
+			title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
+			title.hardlight(3407667); //Red
+			add(title);
 
-    //         sep1 = new ColorBlock(1, 1, 0xFF000000);
-	// 		add(sep1);
+            sep1 = new ColorBlock(1, 1, 0xFF000000);
+			add(sep1);
 
-	// 		upgrade_1_HP = new CheckBox(Messages.get(this, "red_hp")){
-	// 			@Override
-	// 			protected void onClick() {
-	// 				super.onClick();
-	// 				UFOSettings.upgrade_1_HP(checked());
-	// 			}
-	// 		};
-	// 		upgrade_1_HP.checked(UFOSettings.upgrade_1_HP());
-	// 		add(upgrade_1_HP);
+			green_HP = new CheckBox(Messages.get(this, "green_hp")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_HP(checked());
+				}
+			};
+			green_HP.checked(UFOSettings.green_HP());
+			add(green_HP);
 
+			green_RunSpeed = new CheckBox(Messages.get(this, "green_runspeed")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_RunSpeed(checked());
+				}
+			};
+			green_RunSpeed.checked(UFOSettings.green_RunSpeed());
+			add(green_RunSpeed);
 
-    //         upgrade_1_EVA = new CheckBox(Messages.get(this, "red_eva")){
-	// 			@Override
-	// 			protected void onClick() {
-	// 				super.onClick();
-	// 				UFOSettings.upgrade_1_EVA(checked());
-	// 			}
-	// 		};
-	// 		upgrade_1_EVA.checked(UFOSettings.upgrade_1_EVA());
-	// 		add(upgrade_1_EVA);
+			green_Search = new CheckBox(Messages.get(this, "green_search")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Search(checked());
+				}
+			};
+			green_Search.checked(UFOSettings.green_Search());
+			add(green_Search);
 
+			green_Quest = new CheckBox(Messages.get(this, "green_quest")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Quest(checked());
+				}
+			};
+			green_Quest.checked(UFOSettings.green_Quest());
+			add(green_Quest);
 
-    //         upgrade_1_ACC = new CheckBox(Messages.get(this, "red_acc")){
-	// 			@Override
-	// 			protected void onClick() {
-	// 				super.onClick();
-	// 				UFOSettings.upgrade_1_ACC(checked());
-	// 			}
-	// 		};
-	// 		upgrade_1_ACC.checked(UFOSettings.upgrade_1_ACC());
-	// 		add(upgrade_1_ACC);
+			green_Acc = new CheckBox(Messages.get(this, "green_acc")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Acc(checked());
+				}
+			};
+			green_Acc.checked(UFOSettings.green_Acc());
+			add(green_Acc);
 
-    //         upgrade_1_HUNGER = new CheckBox(Messages.get(this, "red_hunger")){
-	// 			@Override
-	// 			protected void onClick() {
-	// 				super.onClick();
-	// 				UFOSettings.upgrade_1_HUNGER(checked());
-	// 			}
-	// 		};
-	// 		upgrade_1_HUNGER.checked(UFOSettings.upgrade_1_HUNGER());
-	// 		add(upgrade_1_HUNGER);
+			green_Eva = new CheckBox(Messages.get(this, "green_eva")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Eva(checked());
+				}
+			};
+			green_Eva.checked(UFOSettings.green_Eva());
+			add(green_Eva);
 
+			green_Strength = new CheckBox(Messages.get(this, "green_strength")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Strength(checked());
+				}
+			};
+			green_Strength.checked(UFOSettings.green_Strength());
+			add(green_Strength);
 
-	// 	}
+			green_Gold = new CheckBox(Messages.get(this, "green_gold")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Gold(checked());
+				}
+			};
+			green_Gold.checked(UFOSettings.green_Gold());
+			add(green_Gold);
 
-	// 	@Override
-	// 	protected void layout() {
-	// 		title.setPos((width - title.width())/2, y + GAP);
-	// 		sep1.size(width, 1);
-	//         sep1.y = title.bottom() + 2*GAP;
-            
-    //         upgrade_1_HP.setRect(0, sep1.y + 1 + GAP, width-1, BTN_HEIGHT);
-    //         upgrade_1_ACC.setRect(0, upgrade_1_HP.bottom() + GAP, width-1, BTN_HEIGHT);
-    //         upgrade_1_EVA.setRect(0, upgrade_1_ACC.bottom() + GAP, width-1, BTN_HEIGHT);
-    //         upgrade_1_HUNGER.setRect(0, upgrade_1_EVA.bottom() + GAP, width-1, BTN_HEIGHT);
+			green_Item = new CheckBox(Messages.get(this, "green_item")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Item(checked());
+				}
+			};
+			green_Item.checked(UFOSettings.green_Item());
+			add(green_Item);
 
-    //         height = upgrade_1_HUNGER.bottom();
-	// 	}
+			green_Shop = new CheckBox(Messages.get(this, "green_shop")){
+				@Override
+				protected void onClick() {
+					super.onClick();
+					UFOSettings.green_Shop(checked());
+				}
+			};
+			green_Shop.checked(UFOSettings.green_Shop());
+			add(green_Shop);
 
-	// }
+		}
+
+		@Override
+		protected void layout() {
+			title.setPos((width - title.width())/2, y + GAP);
+			sep1.size(width, 1);
+	        sep1.y = title.bottom() + 2*GAP;
+			
+			green_RunSpeed.setRect(0, sep1.y + 1 + GAP + GAP, width-1, BTN_HEIGHT);
+			green_Search.setRect(0, green_RunSpeed.bottom(), width-1, BTN_HEIGHT);
+
+            green_HP.setRect(0, green_Search.bottom(), width-1, BTN_HEIGHT);
+			green_Acc.setRect(0, green_HP.bottom(), width-1, BTN_HEIGHT);
+			green_Eva.setRect(0, green_Acc.bottom(), width-1, BTN_HEIGHT);
+			green_Shop.setRect(0, green_Eva.bottom(), width-1, BTN_HEIGHT);
+
+			green_Gold.setRect(0, green_Shop.bottom(), width-1, BTN_HEIGHT);
+
+			green_Quest.setRect(0, green_Gold.bottom(), width-1, BTN_HEIGHT);
+			green_Item.setRect(0, green_Quest.bottom(), width-1, BTN_HEIGHT);
+
+			green_Strength.setRect(0, green_Item.bottom(), width-1, BTN_HEIGHT);
+			
+			
+            height = green_Strength.bottom();
+		}
+
+	}
     // private static class RainbowUFOTab extends Component {
 
 	// 	RenderedTextBlock title;

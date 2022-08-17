@@ -25,9 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.CirnoBoss;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MeilingBoss;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Alice;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MarisaBoss;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -121,7 +119,11 @@ public class MarisaBossLevel extends Level {
 
         Dungeon.observe();
 
-        MarisaBoss mari = new MarisaBoss();
+        // MarisaBoss mari = new MarisaBoss();
+        // mari.pos = (4 * width() + 15);;
+        // GameScene.add(mari);
+
+        ReimuBoss mari = new ReimuBoss();
         mari.pos = (4 * width() + 15);;
         GameScene.add(mari);
 

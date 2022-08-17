@@ -33,6 +33,16 @@ public class LeafParticle extends PixelParticle.Shrinking {
 	public static int color1;
 	public static int color2;
 	
+	public static final Emitter.Factory FACTORY = new Factory() {
+		@Override
+		public void emit( Emitter emitter, int index, float x, float y ) {
+			((EnergyParticle)emitter.recycle( EnergyParticle.class )).reset( x, y );
+		}
+		@Override
+		public boolean lightMode() {
+			return true;
+		}
+	};
 	
 	public static final Emitter.Factory GENERAL = new Factory() {
 		@Override

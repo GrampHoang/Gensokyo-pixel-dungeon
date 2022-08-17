@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KoiKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.TheWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.OfudaHandheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
@@ -104,6 +105,10 @@ public enum HeroClass {
 	{
 		hero.lvl = 30;
 		//debug test items
+
+		TheWeapon we = new TheWeapon();
+		we.collect();
+
 		ScrollOfDebug sod = new ScrollOfDebug();
 		sod.quantity(1).collect();
 

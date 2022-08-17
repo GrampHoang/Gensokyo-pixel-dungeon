@@ -37,7 +37,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SacrificialParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -84,7 +86,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER
 	}
 	private int stunStates = 0;
 	
@@ -108,6 +110,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Emitter starfly;
 	protected Emitter charging;
 	protected Emitter hearts;
+	protected Emitter bursting_power;
 	
 	protected IceBlock iceBlock;
 	protected DarkBlock darkBlock;
@@ -424,6 +427,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				charging = emitter();
 				charging.pour(EnergyParticle.FACTORY, 0.05f);
 				break;
+			case BURSTING_POWER:
+				bursting_power = emitter();
+				bursting_power.pour(SacrificialParticle.FACTORY, 0.1f);
+				break;
 		}
 	}
 	
@@ -515,6 +522,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					charging = null;
 				}
 				break;
+			case BURSTING_POWER:
+				if (bursting_power != null){
+					bursting_power.on = false;
+					bursting_power = null;
+				}
+				break;
 		}
 	}
 
@@ -582,6 +595,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 		if (charging != null){
 			charging.visible = visible;
+		}
+		if (bursting_power != null){
+			bursting_power.visible = visible;
 		}
 		if (aura != null){
 			if (aura.parent == null){

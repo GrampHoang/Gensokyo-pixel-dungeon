@@ -51,6 +51,10 @@ public class Hunger extends Buff implements Hero.Doom {
 	private static final String LEVEL			= "level";
 	private static final String PARTIALDAMAGE 	= "partialDamage";
 
+	public float getHunger(){
+		return level;
+	}
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);

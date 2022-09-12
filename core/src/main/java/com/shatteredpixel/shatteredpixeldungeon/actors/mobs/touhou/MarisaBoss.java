@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.FrostBomb;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
@@ -63,7 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-
+import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +77,7 @@ public class MarisaBoss extends Mob {
 
 		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 325 : 250;
 
-		defenseSkill = 30;
+		defenseSkill = 20;
 
 		EXP = 40;
 
@@ -95,7 +96,16 @@ public class MarisaBoss extends Mob {
 	private boolean charging_skill = false; 
 	private int dash_cd = DASH_CD - 3;
 	private int masterspark_cd = MS_CD - 3;
-	
+	private int phase = 1;
+
+	private int summonpos1 = 479; 
+	private int summonpos2 = 481; //left + right of entrance
+	private int summonpos3 = 45;
+	private int summonpos4 = 47; //left + right of exit
+	private int summonpos5 = 280;
+	private int summonpos6 = 306;	// left + right side of map
+
+
 	@Override
 	protected void onAdd() {
 		//when he's removed and re-added to the fight, his time is always set to now.
@@ -156,6 +166,21 @@ public class MarisaBoss extends Mob {
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
+		if (phase == 1 && HP < HT*2/3){
+			callPachouli();
+			phase++;
+			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE);
+			GLog.w("Help meeee! Patchouliiii");
+		}
+
+		if (phase == 2 && HP < HT*1/3){
+			callAlice();
+			phase++;
+			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE);
+			GLog.w("Help meeee! Aliiiiiice");
+		}
 		
 		// cannot be hit through multiple brackets at a time
 		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
@@ -268,6 +293,47 @@ public class MarisaBoss extends Mob {
 
 	//SKILLLLLLLLL
 
+	public void callPachouli(){
+		callHelp(summonpos1, Elemental.FireElemental.class);
+		callHelp(summonpos2, Elemental.FrostElemental.class);
+		callHelp(summonpos3, Warlock.class);
+		callHelp(summonpos4, Shaman.RedShaman.class);
+		callHelp(summonpos5, Shaman.BlueShaman.class);
+		callHelp(summonpos6, Shaman.PurpleShaman.class);
+	}
+
+	public void callAlice(){
+		callHelp(summonpos1, ShanghaiDoll.class);
+		callHelp(summonpos2, AliceDoll.class);
+		callHelp(summonpos3, AliceDoll.class);
+		callHelp(summonpos4, AliceDoll.class);
+		callHelp(summonpos5, AliceDoll.class);
+		callHelp(summonpos6, HouraiDoll.class);
+	}
+
+	public boolean callHelp( int pos, Class<?extends Mob> type){
+		if (Actor.findChar(pos) instanceof Sheep){
+			Actor.findChar(pos).die(null);
+		}
+
+		if (Actor.findChar(pos) == null) {
+			Mob m = Reflection.newInstance(type);
+			m.pos = pos;
+			m.maxLvl = -2;
+			GameScene.add(m);
+			Dungeon.level.occupyCell(m);
+			m.state = m.HUNTING;
+		} else {
+			Char ch = Actor.findChar(pos);
+			CellEmitter.center(pos).burst(BlastParticle.FACTORY, 20);
+			ch.damage(Random.NormalIntRange(20, 40), target);
+			if (!ch.isAlive() && ch == Dungeon.hero) {
+				Dungeon.fail(MarisaBoss.class);
+			}
+		}
+		return true;
+	}
+
 	public boolean canUseReady(){
 		if ((masterspark_cd < 3 && masterspark_cd > 0)|| (dash_cd < 2 && dash_cd > 0)){
 			return true;
@@ -354,7 +420,7 @@ public class MarisaBoss extends Mob {
 		for (int p : PathFinder.NEIGHBOURS8) {
 			CellEmitter.get(stopCell + p).start(Speck.factory(Speck.ROCK), 0.07f, 10);
 			Char ch = Actor.findChar(stopCell + p);
-			if(ch != null){
+			if(ch != null && ch != this){
 				Buff.affect(ch, Paralysis.class, 1.5f);
 			}
 		}
@@ -362,7 +428,7 @@ public class MarisaBoss extends Mob {
 			CellEmitter.get(p).start(Speck.factory(Speck.JET), 0.05f, 10);
 			CellEmitter.get(p).start(RainbowParticle.BURST, 0.05f, 10);
             Char ch = Actor.findChar(p);
-            if (ch != null && (ch.alignment != this.alignment)) {
+            if (ch != null && ch != this) {
                 affected.add(ch);
             }
             if (Dungeon.level.flamable[p]) {
@@ -376,7 +442,11 @@ public class MarisaBoss extends Mob {
         }
         for (Char ch : affected) {
 			Buff.affect(ch, Bleeding.class).set(5);
-            ch.damage(Random.NormalIntRange(10, 20), new Hakkero());
+			if (ch.alignment != this.alignment){
+            	ch.damage(Random.NormalIntRange(10, 20), new Hakkero());
+			} else {
+				ch.damage(Random.NormalIntRange(5, 10), new Hakkero());
+			}
             if (Dungeon.level.heroFOV[pos]) {
                 ch.sprite.flash();
                 CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
@@ -418,12 +488,11 @@ public class MarisaBoss extends Mob {
 
 	private boolean masterspark() {
 		this.sprite.remove(CharSprite.State.CHARGING);
-		Buff.affect(this, Paralysis.class, 4f);
 
         HashSet<Char> affected = new HashSet<>();
         boolean terrainAffected = false;
 
-		Camera.main.shake( 3f, 1f );
+		Camera.main.shake( phase, 1f );
 		Sample.INSTANCE.play( Assets.Sounds.ROCKS );
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 		for (int p : stopCells_MS) {
@@ -431,9 +500,9 @@ public class MarisaBoss extends Mob {
 		}
 
         for (int p : targetedCells_MS) {
-			CellEmitter.center(p).burst( RainbowParticle.BURST, Random.IntRange( 2, 4) );
+			CellEmitter.center(p).burst( RainbowParticle.BURST, Random.IntRange( phase, 4) );
             Char ch = Actor.findChar(p);
-            if (ch != null && (ch.alignment != this.alignment) && !(ch instanceof MarisaBoss)) {
+            if (ch != null && !(ch instanceof MarisaBoss)) {
                 affected.add(ch);
             }
             if (Dungeon.level.flamable[p]) {
@@ -441,8 +510,8 @@ public class MarisaBoss extends Mob {
                 GameScene.updateMap(p);
                 terrainAffected = true;
             }
-			if (p != this.pos){
-				GameScene.add( Blob.seed( p, 2, Fire.class ) );
+			if (p != this.pos && this.phase > 2){
+				GameScene.add( Blob.seed( p, phase, Fire.class ) );
 			}
 			
         }
@@ -453,7 +522,11 @@ public class MarisaBoss extends Mob {
 			Buff.affect(ch, Blindness.class, 2f);
 			Buff.affect(ch, Cripple.class, 2f);
 			Buff.affect(ch, Vertigo.class, 2f);
-            ch.damage(Random.NormalIntRange(20, 35), new Hakkero());
+			if (ch.alignment != this.alignment){
+            	ch.damage(Random.NormalIntRange(20, 35), new Hakkero());
+			} else {
+				ch.damage(Random.NormalIntRange(5, 10), new Hakkero());
+			}
             if (Dungeon.level.heroFOV[pos]) {
                 ch.sprite.flash();
                 CellEmitter.center(pos).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
@@ -477,6 +550,7 @@ public class MarisaBoss extends Mob {
 	private static final String MS_STOP_CELLS     = "masterspark_stop_cells";
 	private static final String CHARING_SKILL     = "charging_skill";
 	private static final String STOP_CELL     = "stop_Cell";
+	private static final String MARISA_PHASE     = "marisa_phase";
 
 
 	@Override
@@ -486,7 +560,7 @@ public class MarisaBoss extends Mob {
 		bundle.put( DASH_COOLDOWN, dash_cd );
 		bundle.put( MS_COOLDOWN, masterspark_cd );
 		bundle.put( STOP_CELL, stopCell);
-		
+		bundle.put( MARISA_PHASE, phase);
 		int[] bundleArr = new int[targetedCells_MS.size()];
 		for (int i = 0; i < targetedCells_MS.size(); i++){
 			bundleArr[i] = targetedCells_MS.get(i);
@@ -513,6 +587,7 @@ public class MarisaBoss extends Mob {
 		dash_cd = bundle.getInt( DASH_COOLDOWN );
 		masterspark_cd = bundle.getInt( MS_COOLDOWN );
 		stopCell = bundle.getInt( STOP_CELL);
+		phase = bundle.getInt(MARISA_PHASE);
 		for (int i : bundle.getIntArray(DASH_TARGETED_CELLS)){
 			targetedCells_MS.add(i);
 		}

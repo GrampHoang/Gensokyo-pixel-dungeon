@@ -718,7 +718,22 @@ public abstract class Char extends Actor {
 	public boolean isAlive() {
 		return HP > 0 || deathMarked;
 	}
-	
+
+	public void spend_modified( float time ) {
+		
+		float timeScale = 1f;
+		if (buff( Slow.class ) != null) {
+			timeScale *= 0.5f;
+			//slowed and chilled do not stack
+		} else if (buff( Chill.class ) != null) {
+			timeScale *= buff( Chill.class ).speedFactor();
+		}
+		if (buff( Speed.class ) != null) {
+			timeScale *= 2.0f;
+		}
+		super.spend( time / timeScale );
+	}
+
 	@Override
 	protected void spend( float time ) {
 		

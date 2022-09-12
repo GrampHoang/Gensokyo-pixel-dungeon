@@ -74,7 +74,7 @@ public class ReimuBoss extends Mob {
 	{
 		spriteClass = ReimuBossSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 325 : 250;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 32500 : 25000;
 
 		defenseSkill = 30;
 
@@ -89,21 +89,15 @@ public class ReimuBoss extends Mob {
 		immunities.add( Slow.class );
 	}
 
-	private static int MARRED_CD = 6;
-    private static int SPREAD_CD = 8;
-    private static int ORBS_CD = 10;
+	private static int MARRED_CD = 9;
+    private static int SPREAD_CD = 12;
+    private static int ORBS_CD = 15;
 
     private static int marred_cd = MARRED_CD-2;
     private static int spread_cd = SPREAD_CD-2;
     private static int orbs_cd = ORBS_CD-2;
-
-
-	private static int DASH_CD = 8;
-	private int MS_CD = 16;
-	private boolean charging_skill = false; 
-	private int dash_cd = DASH_CD - 3;
-	private int masterspark_cd = MS_CD - 3;
 	
+	private static boolean charging_skill = false;
 	@Override
 	protected void onAdd() {
 		//when he's removed and re-added to the fight, his time is always set to now.
@@ -152,17 +146,14 @@ public class ReimuBoss extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		return attack.collisionPos == enemy.pos;
+		return enemySeen;
+		// Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+		// return attack.collisionPos == enemy.pos;
 	}
 
 	@Override
 	protected boolean getCloser( int target ) {
-		if (state == HUNTING) {
-			return enemySeen && getFurther( target );
-		} else {
 			return super.getCloser( target );
-		}
 	}
 
 	@Override
@@ -197,7 +188,7 @@ public class ReimuBoss extends Mob {
 
 	// public void shootTheFloor() {
 	// 	damage = super.attackProc(enemy, damage);
-	// 	if (hero instanceof Hero) {
+	// 	if (hero instanceof Hero) {	
 	// 		// Buff.prolong(enemy, Blindness.class, 0.9f);
 	// 		return damage;
 	// 	}
@@ -208,7 +199,7 @@ public class ReimuBoss extends Mob {
 		
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			GLog.w("%1d,     %2d",dash_cd, masterspark_cd);
+			GLog.w("%1d,     %2d,           %3d",marred_cd, orbs_cd, spread_cd);
 			if (enemyInFOV && !isCharmedBy( enemy ) && canAttack( enemy )) {
 
 				if (canUseReady()){
@@ -223,6 +214,7 @@ public class ReimuBoss extends Mob {
 				
 				if (enemyInFOV || charging_skill) {
 					target = Dungeon.hero.pos;
+					aggro(enemy);
 				} else {
 					sprite.showLost();
 					charging_skill = false;
@@ -231,12 +223,13 @@ public class ReimuBoss extends Mob {
 				}
 				
 				//if not charmed, attempt to use an ability, even if the enemy can't be seen
-				if (canUseAbility()){
-					return useAbility();
-				}
 				if (canUseReady()){
 					return useReady();
 				}
+				if (canUseAbility()){
+					return useAbility();
+				}
+				
 				spend( TICK );
 				return true;
 				
@@ -248,7 +241,7 @@ public class ReimuBoss extends Mob {
 	//SKILLLLLLLLL
 
 	public boolean canUseReady(){
-		if ((orbs_cd < 3 && orbs_cd > 0)|| (spread_cd < 2 && marred_cd > 0)){
+		if ((orbs_cd < 3 && orbs_cd > 0)){
 			return true;
 		} else {
 			return false;
@@ -260,13 +253,14 @@ public class ReimuBoss extends Mob {
 		charging_skill = true;
 		if (orbs_cd == 2){
 			orbs_cd--;
+			marred_cd++;
+			spread_cd++;
 			return orbs_ready_1();
 		} else if (orbs_cd == 1) {
 			orbs_cd--;
+			marred_cd++;
+			spread_cd++;
 			return orbs_ready_2();
-		} else if (orbs_cd == 1){
-			orbs_cd--;
-			return orbs_ready_3();
 		}
 		return false;
 	}
@@ -274,14 +268,12 @@ public class ReimuBoss extends Mob {
 	public boolean canUseAbility(){
 		if (orbs_cd < 1 || marred_cd < 1 || spread_cd < 1){
 			return true;
-        } else if (charging_skill){
-            return false;
 		} else {
 			orbs_cd--;
 			marred_cd--;
             spread_cd--;
 			return false;
-		}
+		} 
 	}
 	
 	public boolean useAbility(){
@@ -289,7 +281,6 @@ public class ReimuBoss extends Mob {
 		charging_skill = false;
 		if (orbs_cd < 1){
 			orbs_cd = ORBS_CD;
-			// if (dash_cd < 3){dash_cd = 3;} //prevent from dash at the same time
             return orbs();
         } 
 		else if (marred_cd < 1){
@@ -312,30 +303,25 @@ public class ReimuBoss extends Mob {
     
     public boolean marred(){
         Char enemy = this.enemy;
-        Ballistica b = new Ballistica(this.pos, enemy.pos, Ballistica.WONT_STOP);
-        WandOfBlastWave.BlastWave.blast(this.pos);
-		CellEmitter.center(this.pos).burst(BlastParticle.FACTORY, 20);
-        Buff.affect(enemy, Roots.class, 4f);
+        WandOfBlastWave.BlastWave.blast(enemy.pos);
+		CellEmitter.center(enemy.pos).burst(SnowParticle.FACTORY, 20);
+		CellEmitter.center(enemy.pos).burst(WoolParticle.FACTORY, 20);
+        Buff.affect(enemy, Roots.class, 1f);
         Buff.affect(enemy, Blindness.class, 4f);
         Buff.affect(enemy, Degrade.class, 4f);
         return true;
     }
 
     public boolean spread(){
-        for (int i : PathFinder.NEIGHBOURS_HORSEMOVES){
-            for (int j  : PathFinder.NEIGHBOURS8){
-                Char ch = Actor.findChar(i + j);
-    
-                if (ch != null){    
-                    if (ch.pos == i + j) {
-                        Ballistica trajectory = new Ballistica(pos, pos+i+j, Ballistica.MAGIC_BOLT);
-                        int strength = 1 + Math.round(Random.Int(6) / 2f);
-                        WandOfBlastWave.throwChar(ch, trajectory, strength, false, true, getClass());
-                    }
-    
-                }
-            }
-        }
+		Char enemy = this.enemy;
+		for (int j  : PathFinder.NEIGHBOURS8){
+			if(Random.Int(3) > 1){
+				WandOfBlastWave.BlastWave.blast(enemy.pos + j);
+				Ballistica trajectory = new Ballistica(enemy.pos, pos+j, Ballistica.MAGIC_BOLT);
+				int strength = 1 + Math.round(Random.Int(6) / 2f);
+				WandOfBlastWave.throwChar(enemy, trajectory, strength, false, true, getClass());
+			}
+		}
         return true;
     }
 
@@ -344,44 +330,24 @@ public class ReimuBoss extends Mob {
         for (int i : PathFinder.NEIGHBOURS8){
             int t = pos + i;
             sprite.parent.add(new TargetedCell(t, 0xFF0000));
-            targetedCells.add(t);
+            // targetedCells.add(t);
         }
         return true;
     }
     public boolean orbs_ready_2(){
         for (int i : PathFinder.NEIGHBOURS8){
-            int t = pos + 2*i;
-            sprite.parent.add(new TargetedCell(t, 0xFF0000));
-            targetedCells.add(t);
+			Ballistica b = new Ballistica(this.pos, this.pos+i, Ballistica.STOP_SOLID);
+			for (int p : b.subPath(1, Dungeon.level.distance(this.pos, b.collisionPos))){
+				sprite.parent.add(new TargetedCell(p, 0xFF0000));
+				targetedCells.add(p);
+			}
         }
         for (int i : PathFinder.NEIGHBOURS_HORSEMOVES){
-            int t = pos +i;
-            sprite.parent.add(new TargetedCell(t, 0xFF0000));
-            targetedCells.add(t);
-        }
-        return true;
-    }
-    public boolean orbs_ready_3(){
-        int c = Random.IntRange(0,1);
-        switch (c){
-            case(0):
-                for (int i : PathFinder.NEIGHBOURS_HORSEMOVES){
-                    Ballistica b = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
-                    for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
-                        sprite.parent.add(new TargetedCell(p, 0xFF0000));
-                        targetedCells.add(p);
-                    }
-                }
-                break;
-            case(1):
-            for (int i : PathFinder.NEIGHBOURS8){
-                Ballistica b = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
-                for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
-                    sprite.parent.add(new TargetedCell(p, 0xFF0000));
-                    targetedCells.add(p);
-                }
-            }
-                break;
+            Ballistica b = new Ballistica(this.pos, this.pos+i, Ballistica.STOP_SOLID);
+			for (int p : b.subPath(1, Dungeon.level.distance(this.pos, b.collisionPos))){
+				sprite.parent.add(new TargetedCell(p, 0xFF0000));
+				targetedCells.add(p);
+			}
         }
         return true;
     }
@@ -391,6 +357,8 @@ public class ReimuBoss extends Mob {
         Sample.INSTANCE.play( Assets.Sounds.ROCKS );
         for (int i :targetedCells){
             CellEmitter.get(i).start(Speck.factory(Speck.ROCK), 0.07f, 10);
+			CellEmitter.get(i).start(Speck.factory(Speck.STEAM), 0.07f, 10);
+			CellEmitter.center(enemy.pos).burst(EarthParticle.FACTORY, 20);
 			Char ch = Actor.findChar(i);
 			if(ch != null){
 				Buff.affect(ch, Paralysis.class, 4f);
@@ -398,7 +366,7 @@ public class ReimuBoss extends Mob {
 	}
         }
         return true;
-    }
+    }	
 
 	private static final String MARRED_COOLDOWN     = "marred_cd";
 	private static final String SPREAD_COOLDOWN     = "spread_cd";
@@ -429,6 +397,7 @@ public class ReimuBoss extends Mob {
 		charging_skill = bundle.getBoolean( CHARING_SKILL );
 		marred_cd = bundle.getInt( MARRED_COOLDOWN );
 		spread_cd = bundle.getInt( SPREAD_COOLDOWN );
+		orbs_cd = bundle.getInt( ORBS_COOLDOWN );
 		// stopCell = bundle.getInt( STOP_CELL);
 
 		for (int i : bundle.getIntArray(REIMU_TARGETED_CELLS)){

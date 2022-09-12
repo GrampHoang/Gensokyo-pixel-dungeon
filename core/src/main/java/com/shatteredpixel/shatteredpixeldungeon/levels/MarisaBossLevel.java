@@ -66,19 +66,20 @@ public class MarisaBossLevel extends Level {
 
         for (int i=1; i < SIZE_H-1; i++) {
             for (int j=1; j < SIZE_W-1; j++) {
-                int o = Random.IntRange(0,20);
-                if ( o < 3)      { map[i * width() + j] = Terrain.WATER;}
-                else if ( o < 5) { map[i * width() + j] = Terrain.WALL;}
-                else if ( o < 7) { map[i * width() + j] = Terrain.BOOKSHELF;}
-                else   
-                    {   if (Random.IntRange(0,3) == 0){
-                            map[i * width() + j] = Terrain.EMPTY_DECO;
-                            }
-                        else{
-                            map[i * width() + j] = Terrain.EMPTY;
-                        }
-                    }
+                if (i%2==0){
+                    map[i * width() + j] = Terrain.BOOKSHELF;
+                }
+                else{
+                    map[i * width() + j] = Terrain.EMPTY;
+                }
+                
             }
+        }
+
+        for (int i=1; i < SIZE_W-1; i = i+Random.IntRange(3,5)) {
+                for (int j=1; j < SIZE_H-1; j++) {
+                    map[j * width() + i] = Terrain.EMPTY;
+                }
         }
 
         for (int i = 1; i < SIZE_H - 1; i++) {
@@ -119,13 +120,13 @@ public class MarisaBossLevel extends Level {
 
         Dungeon.observe();
 
-        // MarisaBoss mari = new MarisaBoss();
-        // mari.pos = (4 * width() + 15);;
-        // GameScene.add(mari);
-
-        ReimuBoss mari = new ReimuBoss();
+        MarisaBoss mari = new MarisaBoss();
         mari.pos = (4 * width() + 15);;
         GameScene.add(mari);
+
+        // ReimuBoss mari = new ReimuBoss();
+        // mari.pos = (4 * width() + 15);;
+        // GameScene.add(mari);
 
     }
 

@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 public class SharpteethGauntlet extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.GLOVES;
+		image = ItemSpriteSheet.SHARPTEETH;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 0.6f;
 

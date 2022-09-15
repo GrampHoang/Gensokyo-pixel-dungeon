@@ -34,7 +34,7 @@ import com.watabou.utils.Random;
 public class GluttonyFan extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_CAPE;
+		image = ItemSpriteSheet.GLUTTONYFAN;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1.3f;
 

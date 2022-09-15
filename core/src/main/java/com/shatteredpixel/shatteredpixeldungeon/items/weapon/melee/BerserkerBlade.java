@@ -32,7 +32,7 @@ import com.watabou.utils.Random;
 public class BerserkerBlade extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.SCIMITAR;
+		image = ItemSpriteSheet.BERSERKERBLADE;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 1f;
 

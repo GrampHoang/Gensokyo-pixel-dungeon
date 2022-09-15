@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class HisouBlade extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.SWORD;
+		image = ItemSpriteSheet.HISOUBLADE;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 0.5f;
 

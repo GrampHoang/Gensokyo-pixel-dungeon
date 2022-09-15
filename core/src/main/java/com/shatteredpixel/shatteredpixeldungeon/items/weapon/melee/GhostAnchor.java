@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 public class GhostAnchor extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_BEACON;
+		image = ItemSpriteSheet.ANCHOR;
 		hitSound = Assets.Sounds.HIT_STRONG;
 		hitSoundPitch = 0.5f;
 

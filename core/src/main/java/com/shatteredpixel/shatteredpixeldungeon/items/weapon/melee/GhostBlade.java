@@ -31,7 +31,7 @@ import com.watabou.utils.Random;
 public class GhostBlade extends MeleeWeapon {
 	
 	{
-		image = ItemSpriteSheet.GREATSWORD;
+		image = ItemSpriteSheet.GHOSTBLADE;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 2f;
 		ACC = 999;

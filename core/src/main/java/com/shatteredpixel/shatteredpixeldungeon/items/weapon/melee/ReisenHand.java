@@ -34,7 +34,7 @@ import com.watabou.utils.Random;
 public class ReisenHand extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.GLOVES;
+		image = ItemSpriteSheet.REISENHAND;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1.3f;
 

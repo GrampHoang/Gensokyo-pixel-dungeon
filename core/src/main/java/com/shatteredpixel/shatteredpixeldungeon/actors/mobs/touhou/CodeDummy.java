@@ -21,54 +21,40 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-import com.watabou.utils.Callback;
-import com.watabou.utils.Reflection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-public class Alice extends Mob {
-
-	private static final float TIME_TO_ZAP	= 1f;
-	
+public class CodeDummy extends Mob {
 	{
 		spriteClass = AliceSprite.class;
-
-		HP = HT = 138;
-
-		defenseSkill = 38;
-
-		EXP = 19;
-
-		maxLvl = 40;
-
+		HP = HT = 69;
+		defenseSkill = 1;
+		EXP = 1;
+		maxLvl = 1;
         loot = ScrollOfMirrorImage.class;
 		lootChance = 0.3f;
 	}
 
-    public float summon_cd = 10f;
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(32, 36);
+		return Random.NormalIntRange(5, 5);
 	}
 
 	@Override
 	public int attackSkill(Char target) {
-		return 40;
+		return 5;
 	}
 	
 	@Override
@@ -78,7 +64,7 @@ public class Alice extends Mob {
 
     @Override
 	public float speed() {
-		return 3f * super.speed() / 4f;
+		return super.speed();
 	}
 
     @Override
@@ -87,43 +73,23 @@ public class Alice extends Mob {
 		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
 	}
 
-    @Override
-	protected boolean getCloser( int target ) {
-		if (state == HUNTING) {
-			return enemySeen && getFurther( target );
-		} else {
-			return super.getCloser( target );
-		}
-	}
-
 	@Override
-	public void aggro(Char ch) {
-		//cannot be aggroed to something it can't see
-		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
-			super.aggro(ch);
+	public int attackProc(Char hero, int damage) {
+		damage = super.attackProc(enemy, damage);
+		if (hero instanceof Hero) {
+			Buff.prolong(enemy, Chill.class, 0.2f);
+			return damage;
 		}
+		return damage;
 	}
 
     @Override
 	protected boolean act() {
-        if (enemySeen){
-            if (summon_cd > 0){
-                summon_cd--;
-            } else {
-                summonDolls();
-            }
-        }
 		return super.act();
 	}
-    protected void summonDolls(){
-        summon_cd = 15;
-        for (int c : PathFinder.NEIGHBOURS4) {
-            if (Actor.findChar(this.pos + c) == null
-						&& Dungeon.level.passable[this.pos + c]
-						&& (Dungeon.level.openSpace[this.pos + c] || !hasProp(Actor.findChar(this.pos), Property.LARGE))){
-            Wraith wraith = Wraith.spawnAt(this.pos + c);
-		    Dungeon.level.occupyCell( wraith );
-            }
-        }
-    }
+
+	@Override
+	public void die(Object cause) {
+		super.die(cause);
+	}
 }

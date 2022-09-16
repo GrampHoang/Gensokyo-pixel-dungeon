@@ -305,5 +305,20 @@ public class Assets {
 		public static final String NINJA_LOG= "sprites/ninja_log.png";
 		public static final String SPIRIT_HAWK= "sprites/spirit_hawk.png";
 		public static final String RED_SENTRY= "sprites/red_sentry.png";
+
+		public static final String ALICE= "sprites/alice.png";
+		public static final String CIRNO= "sprites/cirno.png";
+		public static final String KOAKUMA= "sprites/koakuma.png";
+		public static final String LILY= "sprites/lily.png";
+		public static final String LUNA= "sprites/luna.png";
+		public static final String MEILING= "sprites/meiling.png";
+		public static final String MYSTIA= "sprites/mystia.png";
+		public static final String PATCHOULI= "sprites/patchouli.png";
+		public static final String RUMIA= "sprites/rumia.png";
+		public static final String STAR= "sprites/star.png";
+		public static final String SUNNY= "sprites/sunny.png";
+		public static final String WRIGGLE= "sprites/wriggle.png";
+		public static final String YUKARI= "sprites/yukari.png";
+
 	}
 }

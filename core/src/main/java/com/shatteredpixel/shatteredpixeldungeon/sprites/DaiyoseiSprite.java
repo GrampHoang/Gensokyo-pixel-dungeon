@@ -32,7 +32,7 @@ public class DaiyoseiSprite extends MobSprite {
 	public DaiyoseiSprite() {
 		super();
 		
-		texture( Assets.Sprites.GHOST );
+		texture( Assets.Sprites.DAIYOSEI );
 		
 		TextureFilm frames = new TextureFilm( texture, 13, 16 );
 		

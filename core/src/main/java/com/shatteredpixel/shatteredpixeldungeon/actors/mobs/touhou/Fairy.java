@@ -20,8 +20,10 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Alchemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -56,8 +58,8 @@ public class Fairy extends Mob {
 
 	@Override
 	public void die(Object cause) {
-        if (Random.IntRange(0, 10) == 9){
-            GameScene.add(Blob.seed(this.pos, 1, Alchemy.class));
+        if (Random.IntRange(0, 10) == 8){
+            Dungeon.level.drop( new EnergyCrystal().dropOne(), pos );
         }
 		super.die(cause);
 	}

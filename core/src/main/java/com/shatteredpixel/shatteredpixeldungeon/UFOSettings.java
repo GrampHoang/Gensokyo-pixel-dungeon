@@ -35,6 +35,18 @@ import com.watabou.utils.Point;
 import java.util.Locale;
 
 public class UFOSettings extends GameSettings {
+	public static final String RED_UFO 	    	= "red_ufo";
+	public static final String BLUE_UFO 	    	= "blue_ufo";
+	public static final String GREEN_UFO 	    	= "green_ufo";
+
+	public static int getRed(){
+		return getInt(RED_UFO, 0);
+	}
+	public static void changeRed(int value){
+		put( RED_UFO, getRed() + value );
+	}
+
+
 	public static final String RED_HP 	    	= "red_hp";
 	public static final String RED_ACC 	    	= "red_acc";
 	public static final String RED_EVA 	    	= "red_eva";

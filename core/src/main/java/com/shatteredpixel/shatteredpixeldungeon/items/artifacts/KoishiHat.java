@@ -51,7 +51,7 @@ public class KoishiHat extends Artifact {
 	}
 
 	public float imaginary_friend = 0;
-	public float total = 15f - imaginary_friend - level();
+	public float total = 15f - imaginary_friend - level()/2;
 	public float cooldown = 15f;
     public boolean invis = false;
 

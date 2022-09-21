@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GhostSprite;
@@ -286,6 +287,61 @@ public class Ghost extends NPC {
 		}
 		
 		public static void spawn( SewerLevel level ) {
+			if (!spawned && Dungeon.depth > 1 && Random.Int( 5 - Dungeon.depth ) == 0) {
+				
+				Ghost ghost = new Ghost();
+				do {
+					ghost.pos = level.randomRespawnCell( ghost );
+				} while (ghost.pos == -1);
+				level.mobs.add( ghost );
+				
+				spawned = true;
+				//dungeon depth determines type of quest.
+				//depth2=fetid rat, 3=gnoll trickster, 4=great crab
+				type = Dungeon.depth-1;
+				
+				given = false;
+				processed = false;
+				depth = Dungeon.depth;
+
+				//50%:tier2, 30%:tier3, 15%:tier4, 5%:tier5
+				switch (Random.chances(new float[]{0, 0, 10, 6, 3, 1})){
+					default:
+					case 2: armor = new LeatherArmor(); break;
+					case 3: armor = new MailArmor();    break;
+					case 4: armor = new ScaleArmor();   break;
+					case 5: armor = new PlateArmor();   break;
+				}
+				//50%:tier2, 30%:tier3, 15%:tier4, 5%:tier5
+				int wepTier = Random.chances(new float[]{0, 0, 10, 6, 3, 1});
+				Generator.Category c = Generator.wepTiers[wepTier - 1];
+				weapon = (MeleeWeapon) Reflection.newInstance(c.classes[Random.chances(c.probs)]);
+
+				//50%:+0, 30%:+1, 15%:+2, 5%:+3
+				float itemLevelRoll = Random.Float();
+				int itemLevel;
+				if (itemLevelRoll < 0.5f){
+					itemLevel = 0;
+				} else if (itemLevelRoll < 0.8f){
+					itemLevel = 1;
+				} else if (itemLevelRoll < 0.95f){
+					itemLevel = 2;
+				} else {
+					itemLevel = 3;
+				}
+				weapon.upgrade(itemLevel);
+				armor.upgrade(itemLevel);
+
+				//10% to be enchanted. We store it separately so enchant status isn't revealed early
+				if (Random.Int(10) == 0){
+					enchant = Weapon.Enchantment.random();
+					glyph = Armor.Glyph.random();
+				}
+
+			}
+		}
+		
+		public static void spawnForest( ForestLevel level ) {
 			if (!spawned && Dungeon.depth > 1 && Random.Int( 5 - Dungeon.depth ) == 0) {
 				
 				Ghost ghost = new Ghost();

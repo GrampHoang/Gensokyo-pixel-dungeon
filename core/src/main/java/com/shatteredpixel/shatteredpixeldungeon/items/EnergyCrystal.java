@@ -87,4 +87,9 @@ public class EnergyCrystal extends Item {
 		return this;
 	}
 
+	public Item dropOne() {
+		quantity = 1;
+		return this;
+	}
+
 }

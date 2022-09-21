@@ -486,7 +486,11 @@ public abstract class Level implements Bundlable {
 	
 	public Mob createMob() {
 		if (mobsToSpawn == null || mobsToSpawn.isEmpty()) {
+			if (Dungeon.branch == 1){
+				mobsToSpawn = Bestiary.getTouhouMobRotation(Dungeon.depth);
+			} else {
 			mobsToSpawn = Bestiary.getMobRotation(Dungeon.depth);
+			}
 		}
 
 		Mob m = Reflection.newInstance(mobsToSpawn.remove(0));

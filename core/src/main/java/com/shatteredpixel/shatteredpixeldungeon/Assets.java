@@ -308,6 +308,7 @@ public class Assets {
 
 		public static final String ALICE= "sprites/alice.png";
 		public static final String CIRNO= "sprites/cirno.png";
+		public static final String DAIYOSEI= "sprites/daiyosei.png";
 		public static final String KOAKUMA= "sprites/koakuma.png";
 		public static final String LILY= "sprites/lily.png";
 		public static final String LUNA= "sprites/luna.png";

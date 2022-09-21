@@ -51,6 +51,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Random;
+import com.watabou.utils.Callback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,8 +148,6 @@ public class WndUFO extends WndTabbed {
 		}
 	}
 
-
-
 	@Override
 	public void hide() {
 		super.hide();
@@ -168,6 +167,7 @@ public class WndUFO extends WndTabbed {
     private static class RedUFOTab extends Component {
 
 		RenderedTextBlock title;
+		RenderedTextBlock redCount;
 		ScrollPane pane;
 		Component content;
 		ColorBlock sep1;
@@ -176,13 +176,16 @@ public class WndUFO extends WndTabbed {
 		CheckBox red_Eva;
 		CheckBox red_Hunger;
 		CheckBox red_Vision;
-		CheckBox red_AttSpeed;
 		CheckBox red_Search;
 		CheckBox red_Mobs;
 		CheckBox red_Shop;
 		CheckBox red_Quest;
 		CheckBox red_Gold;
 		CheckBox red_Item;
+		protected void reRender(){
+			redCount = PixelScene.renderTextBlock(String.valueOf(UFOSettings.getRed()) + "Red UFOs", 9);
+			redCount.hardlight(16721446); //Red
+		}
 
         @Override
 		protected void createChildren() {
@@ -191,6 +194,8 @@ public class WndUFO extends WndTabbed {
 
 			// content = pane.content();
 			// content.clear();
+			reRender();
+			add(redCount);
 
 			title = PixelScene.renderTextBlock(Messages.get(this, "title"), 9);
 			title.hardlight(16721446); //Red
@@ -202,6 +207,17 @@ public class WndUFO extends WndTabbed {
 			red_HP = new CheckBox(Messages.get(this, "red_hp")){
 				@Override
 				protected void onClick() {
+					if (checked()){
+						UFOSettings.changeRed(2);
+						// Game.runOnRenderThread(new Callback() {
+						// 	@Override
+						// 	public void call() {
+						// 		ShatteredPixelDungeon.scene().add(new WndUFO());
+						// 	}
+						// });
+					} else {
+						UFOSettings.changeRed(-2);
+					}
 					super.onClick();
 					UFOSettings.red_HP(checked());
 				}
@@ -253,7 +269,7 @@ public class WndUFO extends WndTabbed {
 				@Override
 				protected void onClick() {
 					super.onClick();
-					UFOSettings.red_AttSpeed(checked());
+					UFOSettings.red_Gold(checked());
 				}
 			};
 			red_Gold.checked(UFOSettings.red_Gold());
@@ -312,6 +328,7 @@ public class WndUFO extends WndTabbed {
 
 		@Override
 		protected void layout() {
+			redCount.setPos(5, y + GAP);
 			title.setPos((width - title.width())/2, y + GAP);
 			sep1.size(width, 1);
 	        sep1.y = title.bottom() + 2*GAP;

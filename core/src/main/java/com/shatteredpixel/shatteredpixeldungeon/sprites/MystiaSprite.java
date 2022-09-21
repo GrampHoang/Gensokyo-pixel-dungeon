@@ -29,7 +29,7 @@ public class MystiaSprite extends MobSprite {
 	public MystiaSprite() {
 		super();
 		
-		texture( Assets.Sprites.SNAKE );
+		texture( Assets.Sprites.MYSTIA );
 		
 		TextureFilm frames = new TextureFilm( texture, 12, 14 );
 		

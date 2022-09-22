@@ -76,15 +76,12 @@ public class Lily extends Mob {
 
     @Override
 	protected boolean act() {
-        // if (charging_skill == true){
-        //     return lilySkill();
-        // } else {
-		// 	if(Random.IntRange(0,2) == 1){
-		// 		lilyCharge();
-		// 		charging_skill = true;
-		// 	}
-		//     return super.act();
-        // }
+        if (charging_skill == true){
+            return lilySkill();
+        } else if(Random.IntRange(0, 4) == 1){
+			lilyCharge();
+			charging_skill = true;
+		}
 		return super.act();
 	}
 
@@ -104,25 +101,28 @@ public class Lily extends Mob {
 				}
             }
 			Level.set(p, Terrain.FURROWED_GRASS);
+			GameScene.updateMap( p );
 		}
+		charging_skill = false;
 		lilySkillCells.clear();
         return true;
     }
 
     public void lilyCharge(){
-        Ballistica forward = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
-		for (int p : forward.subPath(0, Dungeon.level.distance(this.pos, forward.collisionPos))){
-			sprite.parent.add(new TargetedCell(p, 0xFF0000));
-			lilySkillCells.add(p);
-		}
+        // Ballistica forward = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
+		// for (int p : forward.subPath(0, Dungeon.level.distance(this.pos, forward.collisionPos))){
+		// 	sprite.parent.add(new TargetedCell(p, 0xFF0000));
+		// 	lilySkillCells.add(p);
+		// }
 
         for (int i : PathFinder.NEIGHBOURS8){
-			if (Random.IntRange(1, 8) == 2);
+			if (Random.IntRange(1, 8) == 2){
 				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.PROJECTILE);
 				for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
 					sprite.parent.add(new TargetedCell(p, 0xFF0000));
 					lilySkillCells.add(p);
 				}
+			}
 		}
         
 

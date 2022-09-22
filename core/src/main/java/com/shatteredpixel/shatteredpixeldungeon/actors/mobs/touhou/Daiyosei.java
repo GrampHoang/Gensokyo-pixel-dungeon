@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
@@ -32,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DaiyoseiSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -68,29 +70,27 @@ public class Daiyosei extends Mob {
 		return super.speed();
 	}
 
-    @Override
-	protected boolean canAttack( Char enemy ) {
-		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.WONT_STOP);
-		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
-	}
 
 	@Override
 	public int attackProc(Char hero, int damage) {
 		damage = super.attackProc(enemy, damage);
-		if (hero instanceof Hero) {
-			Buff.prolong(enemy, Chill.class, 0.2f);
-			return damage;
+		for (int p : PathFinder.NEIGHBOURS8){
+			Char ch = Actor.findChar(p+ this.pos);
+			if (ch.alignment == this.alignment){
+				ch.HP += 1;
+			}
 		}
 		return damage;
 	}
 
-    @Override
-	protected boolean act() {
-		return super.act();
-	}
-
 	@Override
 	public void die(Object cause) {
+		for (int p : PathFinder.NEIGHBOURS8){
+			Char ch = Actor.findChar(p + this.pos);
+			if (ch.alignment == this.alignment){
+				ch.HP += 5;
+			}
+		}
 		super.die(cause);
 	}
 }

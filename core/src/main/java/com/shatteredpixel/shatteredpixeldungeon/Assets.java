@@ -55,6 +55,10 @@ public class Assets {
 		public static final String CAVES_BOSS       = "environment/custom_tiles/caves_boss.png";
 		public static final String CITY_BOSS        = "environment/custom_tiles/city_boss.png";
 		public static final String HALLS_SP         = "environment/custom_tiles/halls_special.png";
+
+		public static final String TILES_FOREST = "environment/tiles_forest.png";
+		public static final String WATER_CLEAR = "environment/water10.png";
+
 	}
 	
 	//TODO include other font assets here? Some are platform specific though...

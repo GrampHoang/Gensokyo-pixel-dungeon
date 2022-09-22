@@ -59,9 +59,9 @@ public class Wriggle extends Mob {
 	@Override
 	public int attackProc(Char hero, int damage) {
 		damage = super.attackProc(enemy, damage);
-		if (hero instanceof Hero) {
-			Buff.affect(enemy, Blindness.class, 1.2f);
-            Buff.affect(enemy, Hex.class, 3f);
+		if (hero instanceof Hero && Random.IntRange(0,2) == 1) {
+			Buff.prolong(enemy, Blindness.class, 2f);
+            Buff.prolong(enemy, Hex.class, 3f);
 			return damage;
 		}
 		return damage;

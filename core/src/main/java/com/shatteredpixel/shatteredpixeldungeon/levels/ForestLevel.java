@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Ripple;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.SewerPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.AlarmTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ChillingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ConfusionTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlockTrap;
@@ -89,12 +90,12 @@ public class ForestLevel extends RegularLevel {
 	
 	@Override
 	public String tilesTex() {
-		return Assets.Environment.TILES_SEWERS;
+		return Assets.Environment.TILES_FOREST;
 	}
 	
 	@Override
 	public String waterTex() {
-		return Assets.Environment.WATER_SEWERS;
+		return Assets.Environment.WATER_CLEAR;
 	}
 	
 	@Override
@@ -104,7 +105,7 @@ public class ForestLevel extends RegularLevel {
 				new Class<?>[]{
 						ChillingTrap.class, ShockingTrap.class, ToxicTrap.class, WornDartTrap.class,
 						AlarmTrap.class, OozeTrap.class,
-						ConfusionTrap.class, FlockTrap.class, SummoningTrap.class, TeleportationTrap.class, GatewayTrap.class };
+						ConfusionTrap.class, BlazingTrap.class, SummoningTrap.class, TeleportationTrap.class, GatewayTrap.class };
 }
 
 	@Override

@@ -209,15 +209,15 @@ public class WndUFO extends WndTabbed {
 				protected void onClick() {
 					if (checked()){
 						UFOSettings.changeRed(2);
-						// Game.runOnRenderThread(new Callback() {
-						// 	@Override
-						// 	public void call() {
-						// 		ShatteredPixelDungeon.scene().add(new WndUFO());
-						// 	}
-						// });
 					} else {
 						UFOSettings.changeRed(-2);
 					}
+					Game.runOnRenderThread(new Callback() {
+						@Override
+						public void call() {
+							ShatteredPixelDungeon.scene().add(new WndUFO());
+						}
+					});
 					super.onClick();
 					UFOSettings.red_HP(checked());
 				}

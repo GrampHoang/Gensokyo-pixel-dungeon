@@ -21,10 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MystiaSprite;
@@ -68,15 +69,10 @@ public class Mystia extends Mob {
 
     @Override
     public void damage(int dmg, Object src) {
-        if (Random.IntRange(0,20) == 2 ){
-            for (Mob mob : Dungeon.level.mobs) {
-                mob.beckon( pos );
-            }
-
-            if (Dungeon.level.heroFOV[pos]) {
-                CellEmitter.center( pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
-            }
-        }
+        sing(20);
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			sing(20);	//roll again lmao
+		}
         super.damage(dmg, src);
     }
 
@@ -84,17 +80,32 @@ public class Mystia extends Mob {
 	public int attackProc(Char hero, int damage) {
 		damage = super.attackProc(enemy, damage);
 		if (hero instanceof Hero) {
-			if (Random.IntRange(0,15) == 7 ){
-                for (Mob mob : Dungeon.level.mobs) {
-                    mob.beckon( pos );
-                }
-
-                if (Dungeon.level.heroFOV[pos]) {
-                    CellEmitter.center( pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
-                }
-            }
+            sing(10);
+			if (Dungeon.isChallenged(Challenges.LUNATIC)){
+				sing(10);	//roll again lmao., maybe higher chance? nah
+			}
 		}
 		return damage;
+	}
+
+	//Higher roll = less chance
+	public void sing(int roll){
+		if (Random.IntRange(0, roll) == 1 ){
+			for (Mob mob : Dungeon.level.mobs) {
+				mob.beckon( pos );
+				if (Dungeon.isChallenged(Challenges.LUNATIC)){
+					Buff.affect(mob, Haste.class, 2f);
+				}
+			}
+
+			if (Dungeon.level.heroFOV[pos]) {
+				CellEmitter.center( pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+			}
+			
+			if (Dungeon.isChallenged(Challenges.LUNATIC) && enemy != null){
+				Buff.affect(enemy, Blindness.class, 2f);
+			}
+		}
 	}
 
     @Override

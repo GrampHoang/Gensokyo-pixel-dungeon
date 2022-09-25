@@ -47,6 +47,7 @@ public class Assets {
 		public static final String WATER_CAVES  = "environment/water2.png";
 		public static final String WATER_CITY   = "environment/water3.png";
 		public static final String WATER_HALLS  = "environment/water4.png";
+		public static final String WATER_CLEAR = "environment/water10.png";
 
 		public static final String WEAK_FLOOR       = "environment/custom_tiles/weak_floor.png";
 		public static final String SEWER_BOSS       = "environment/custom_tiles/sewer_boss.png";
@@ -57,8 +58,8 @@ public class Assets {
 		public static final String HALLS_SP         = "environment/custom_tiles/halls_special.png";
 
 		public static final String TILES_FOREST = "environment/tiles_forest.png";
-		public static final String WATER_CLEAR = "environment/water10.png";
-
+		public static final String TILES_SDM = "environment/tiles_sdm.png";
+		public static final String TILES_SKY = "environment/tiles_sky.png";
 	}
 	
 	//TODO include other font assets here? Some are platform specific though...

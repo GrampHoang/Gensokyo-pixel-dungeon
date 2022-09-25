@@ -290,7 +290,7 @@ public class Dungeon {
 					level = new SewerLevel();
 					break;
 				case 5:
-					level = new MarisaBossLevel();
+					level = new SewerBossLevel();
 					break;
 				case 6:
 				case 7:
@@ -344,7 +344,7 @@ public class Dungeon {
 					level = new ForestLevel();
 					break;
 				case 5:
-					level = new MarisaBossLevel();
+					level = new CirnoBossLevel();
 					break;
 				case 6:
 				case 7:

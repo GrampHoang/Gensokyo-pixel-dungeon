@@ -22,8 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WriggleSprite;
@@ -60,6 +62,7 @@ public class Wriggle extends Mob {
 	public int attackProc(Char hero, int damage) {
 		damage = super.attackProc(enemy, damage);
 		if (hero instanceof Hero && Random.IntRange(0,2) == 1) {
+			Buff.affect(enemy, Light.class, 3f);
 			Buff.prolong(enemy, Blindness.class, 2f);
             Buff.prolong(enemy, Hex.class, 3f);
 			return damage;
@@ -71,6 +74,42 @@ public class Wriggle extends Mob {
 	protected boolean act() {
 		return super.act();
 	}
+
+	// public boolean jumpkick(Char kickVictim){
+	// 	int leapPos = kickVictim.pos;
+	// 	Ballistica b = new Ballistica(pos, leapPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
+	// 	//check if leap pos is not obstructed by terrain
+	// 	if (rooted || b.collisionPos != leapPos){
+	// 		leapPos = -1;
+	// 		return true;
+	// 	}
+
+	// 	final int endPos;
+	// 	sprite.visible = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[leapPos] || Dungeon.level.heroFOV[endPos];
+	// 	sprite.jump(pos, leapPos, new Callback() {
+	// 		@Override
+	// 		public void call() {
+
+	// 			if (kickVictim != null && alignment != kickVictim.alignment){
+	// 				Buff.prolong(kickVictim, Paralysis.class, 1.5f);
+	// 				kickVictim.sprite.flash();
+	// 				Sample.INSTANCE.play(Assets.Sounds.HIT);
+	// 			}
+
+	// 			if (endPos != leapPos){
+	// 				Actor.addDelayed(new Pushing(MeilingBoss.this, leapPos, endPos), -1);
+	// 			}
+
+	// 			pos = endPos;
+	// 			leapPos = -1;
+	// 			sprite.idle();
+	// 			Dungeon.level.occupyCell(Wriggle.this);
+	// 			next();
+	// 		}
+	// 	});
+	// 	return false;
+	// 	return true;
+	// }
 
 	@Override
 	public void die(Object cause) {

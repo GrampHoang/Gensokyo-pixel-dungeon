@@ -78,6 +78,7 @@ public class Daiyosei extends Mob {
 			Char ch = Actor.findChar(p+ this.pos);
 			if (ch.alignment == this.alignment){
 				ch.HP += 1;
+				Buff.affect(ch, Bless.class, 5f);
 			}
 		}
 		return damage;
@@ -89,6 +90,7 @@ public class Daiyosei extends Mob {
 			Char ch = Actor.findChar(p + this.pos);
 			if (ch.alignment == this.alignment){
 				ch.HP += 5;
+				Buff.affect(ch, Bless.class, 10f);
 			}
 		}
 		super.die(cause);

@@ -914,10 +914,14 @@ public abstract class Mob extends Char {
 	}
 	
 	public String description() {
-		if (UFOSettings.red_Mobs()){
-			return String.format("_HP: %1d/%2d_ \n\n",HP,HT) + Messages.get(this, "desc");
+		String descript = Messages.get(this, "desc");
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			descript = descript + "\n\nLunatic mode:" + Messages.get(this, "lunatic");
 		}
-		return Messages.get(this, "desc");
+		if (UFOSettings.red_Mobs()){
+			descript = String.format("_HP: %1d/%2d_ \n\n",HP,HT) + descript;
+		}
+		return descript;
 	}
 
 	public String info(){

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -52,7 +52,6 @@ public class Lily extends Mob {
 		maxLvl = 12;
         loot =  StoneOfBlast.class;
 		lootChance = 0.3f;
-
         
 	}
 
@@ -78,7 +77,7 @@ public class Lily extends Mob {
 	protected boolean act() {
         if (charging_skill == true){
             return lilySkill();
-        } else if(Random.IntRange(0, 4) == 1){
+        } else if(Random.IntRange(0, (Dungeon.isChallenged(Challenges.LUNATIC) ? 2 : 4)) == 1 && enemySeen == true){
 			lilyCharge();
 			charging_skill = true;
 		}
@@ -96,7 +95,9 @@ public class Lily extends Mob {
             if (ch != null && ch != this) {
 				if(ch.alignment != this.alignment){
 					ch.damage(2, this);
+					Buff.affect(ch, Roots.class, 1f);
 				} else {
+					Buff.prolong(ch, Stamina.class, 2f);
 					ch.HP += 3;
 				}
             }
@@ -114,17 +115,21 @@ public class Lily extends Mob {
 		// 	sprite.parent.add(new TargetedCell(p, 0xFF0000));
 		// 	lilySkillCells.add(p);
 		// }
-
         for (int i : PathFinder.NEIGHBOURS8){
 			if (Random.IntRange(1, 8) == 2){
-				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.PROJECTILE);
+				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.MAGIC_BOLT);
 				for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
 					sprite.parent.add(new TargetedCell(p, 0xFF0000));
 					lilySkillCells.add(p);
 				}
 			}
 		}
-        
+
+		Ballistica aim = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.MAGIC_BOLT);
+		for (int p : aim.subPath(0, Dungeon.level.distance(this.pos, aim.collisionPos))){
+			sprite.parent.add(new TargetedCell(p, 0xFF0000));
+			lilySkillCells.add(p);
+		}
 
     }
 

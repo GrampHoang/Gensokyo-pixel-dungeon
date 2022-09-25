@@ -51,12 +51,12 @@ public class CirnoBossLevel extends Level {
 
     @Override
     public String tilesTex() {
-        return Assets.Environment.TILES_SEWERS;
+        return Assets.Environment.TILES_FOREST;
     }
 
     @Override
     public String waterTex() {
-        return Assets.Environment.WATER_SEWERS;
+        return Assets.Environment.WATER_CLEAR;
     }
 
     @Override

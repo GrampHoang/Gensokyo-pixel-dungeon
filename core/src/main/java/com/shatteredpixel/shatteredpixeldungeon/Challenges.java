@@ -38,8 +38,9 @@ public class Challenges {
 	public static final int STRONGER_BOSSES 	= 256;
 
 	public static final int TOUHOU 				= 512;
+	public static final int LUNATIC 			= 1024;
 
-	public static final int MAX_VALUE           = 1023;
+	public static final int MAX_VALUE           = 2047;
 
 	public static final String[] NAME_IDS = {
 			"champion_enemies",
@@ -51,11 +52,12 @@ public class Challenges {
 			"swarm_intelligence",
 			"darkness",
 			"no_scrolls",
-			"touhou"
+			"touhou",
+			"lunatic"
 	};
 
 	public static final int[] MASKS = {
-			CHAMPION_ENEMIES, STRONGER_BOSSES, NO_FOOD, NO_ARMOR, NO_HEALING, NO_HERBALISM, SWARM_INTELLIGENCE, DARKNESS, NO_SCROLLS, TOUHOU
+			CHAMPION_ENEMIES, STRONGER_BOSSES, NO_FOOD, NO_ARMOR, NO_HEALING, NO_HERBALISM, SWARM_INTELLIGENCE, DARKNESS, NO_SCROLLS, TOUHOU, LUNATIC
 	};
 
 	public static int activeChallenges(){

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
@@ -62,5 +63,14 @@ public class Fairy extends Mob {
             Dungeon.level.drop( new EnergyCrystal().dropOne(), pos );
         }
 		super.die(cause);
+	}
+
+	@Override
+	protected boolean canAttack( Char enemy ) {
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			return Dungeon.level.distance(this.pos, enemy.pos) < 3;
+		} else {
+			return super.canAttack(enemy);
+		}
 	}
 }

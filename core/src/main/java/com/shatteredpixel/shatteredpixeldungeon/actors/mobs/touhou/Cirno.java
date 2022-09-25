@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CirnoSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -43,6 +44,8 @@ public class Cirno extends Mob {
 		maxLvl = 10;
         loot = PotionOfFrost.class;
 		lootChance = 0.3f;
+
+		
 	}
 
 
@@ -61,18 +64,23 @@ public class Cirno extends Mob {
 		return Random.NormalIntRange(2, 4);
 	}
 
-    @Override
-	public float speed() {
-		return super.speed();
+	@Override
+	protected boolean canAttack( Char enemy ) {
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+			return (!Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4);
+		}
+		return super.canAttack(enemy);
 	}
 
 	@Override
 	public int attackProc(Char hero, int damage) {
 		damage = super.attackProc(enemy, damage);
-		if (hero instanceof Hero) {
-			Buff.prolong(enemy, Chill.class, 0.2f);
-			return damage;
+		if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
+			Buff.affect(enemy, Chill.class, 0.5f);
+			damage = damage/2;
 		}
+		Buff.affect(enemy, Chill.class, 0.5f);
 		return damage;
 	}
 

@@ -1,20 +1,31 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
+
+import java.util.ArrayList;
+
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.NecromancerSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SkeletonSprite;
 import com.watabou.utils.Bundle;
@@ -35,25 +46,55 @@ public class Patchouli extends Mob {
 		loot = new PotionOfHealing();
 		lootChance = 0.2f; //see lootChance()
 		
-		properties.add(Property.UNDEAD);
-		
-		HUNTING = new Hunting();
-		FLEEING = new Fleeing();
 	}
 	
-	public boolean summoning = false;
-	public int summoningPos = -1;
-	
-	protected boolean firstSummon = true;
-	
-	private NecroSkeleton mySkeleton;
-	private int storedSkeletonID = -1;
+	protected final int STATE_CASTING = 3;
+	protected final int STATE_FIRE = 1;
+	protected final int STATE_FROST = 2;
+	protected final int STATE_SHOCK = 3;
+	protected int state = STATE_FIRE;
+	protected int summonCD = Random.NormalIntRange( 20, 25 );
+	protected int skillCD = 5;
+	private ArrayList<Integer> pacthyCells = new ArrayList<>();
 
+
+	//TODO: Must be careful with enemy, it can easily result into null, need check later
 	@Override
 	protected boolean act() {
-		if (summoning && state != HUNTING){
-			summoning = false;
-			if (sprite instanceof NecromancerSprite) ((NecromancerSprite) sprite).cancelSummoning();
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			if (state == STATE_CASTING){
+				this.sprite.remove(CharSprite.State.CHARGING);
+				switch(state){
+					case STATE_FIRE:
+						skillFire(enemy);
+						break;
+					case STATE_FROST:
+						skillFrost(enemy);
+						break;
+					case STATE_SHOCK:
+						skillShock(enemy);
+						break;	
+				}
+				this.HP = this.HP/5*4;
+				skillCD = 4;
+			}
+			if (skillCD <= 0 && state != STATE_CASTING){
+				this.sprite.add(CharSprite.State.CHARGING);
+				state = STATE_CASTING;
+				readySkill(enemy);
+			}
+		}
+		skillCD--;
+		if (summonCD > 0){
+			summonCD--;
+		} else if (summonCD <= 0 && enemy != null){
+			for (int i : PathFinder.NEIGHBOURS8){
+				if (Actor.findChar(this.pos + i) == null 
+				&& (Dungeon.level.map[this.pos+i] == Terrain.EMPTY ||  Dungeon.level.map[this.pos+i] == Terrain.EMPTY_SP)){
+					summonCD = 25;
+					return summonBook(this.pos+i);
+				}
+			}
 		}
 		return super.act();
 	}
@@ -76,18 +117,6 @@ public class Patchouli extends Mob {
 	
 	@Override
 	public void die(Object cause) {
-		if (storedSkeletonID != -1){
-			Actor ch = Actor.findById(storedSkeletonID);
-			storedSkeletonID = -1;
-			if (ch instanceof NecroSkeleton){
-				mySkeleton = (NecroSkeleton) ch;
-			}
-		}
-		
-		if (mySkeleton != null && mySkeleton.isAlive()){
-			mySkeleton.die(null);
-		}
-		
 		super.die(cause);
 	}
 
@@ -96,262 +125,99 @@ public class Patchouli extends Mob {
 		return false;
 	}
 
-	private static final String SUMMONING = "summoning";
-	private static final String FIRST_SUMMON = "first_summon";
-	private static final String SUMMONING_POS = "summoning_pos";
-	private static final String MY_SKELETON = "my_skeleton";
+	private static final String SUMMONING_CD = "summoning_cd";
 	
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put( SUMMONING, summoning );
-		bundle.put( FIRST_SUMMON, firstSummon );
-		if (summoning){
-			bundle.put( SUMMONING_POS, summoningPos);
-		}
-		if (mySkeleton != null){
-			bundle.put( MY_SKELETON, mySkeleton.id() );
-		} else if (storedSkeletonID != -1){
-			bundle.put( MY_SKELETON, storedSkeletonID );
-		}
+		bundle.put( SUMMONING_CD, summonCD );
 	}
 	
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		summoning = bundle.getBoolean( SUMMONING );
-		if (bundle.contains(FIRST_SUMMON)) firstSummon = bundle.getBoolean(FIRST_SUMMON);
-		if (summoning){
-			summoningPos = bundle.getInt( SUMMONING_POS );
-		}
-		if (bundle.contains( MY_SKELETON )){
-			storedSkeletonID = bundle.getInt( MY_SKELETON );
-		}
+		summonCD = bundle.getInt( SUMMONING_CD );
 	}
 	
-	public void onZapComplete(){
-		if (mySkeleton == null || mySkeleton.sprite == null || !mySkeleton.isAlive()){
-			return;
-		}
-		
-		//heal skeleton first
-		if (mySkeleton.HP < mySkeleton.HT){
-
-			if (sprite.visible || mySkeleton.sprite.visible) {
-				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
-			}
-			
-			mySkeleton.HP = Math.min(mySkeleton.HP + 5, mySkeleton.HT);
-			if (mySkeleton.sprite.visible) mySkeleton.sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-			
-		//otherwise give it adrenaline
-		} else if (mySkeleton.buff(Adrenaline.class) == null) {
-
-			if (sprite.visible || mySkeleton.sprite.visible) {
-				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
-			}
-			
-			Buff.affect(mySkeleton, Adrenaline.class, 3f);
-		}
-		
-		next();
-	}
-
-	public void summonMinion(){
-		if (Actor.findChar(summoningPos) != null) {
-			int pushPos = pos;
-			for (int c : PathFinder.NEIGHBOURS8) {
-				if (Actor.findChar(summoningPos + c) == null
-						&& Dungeon.level.passable[summoningPos + c]
-						&& (Dungeon.level.openSpace[summoningPos + c] || !hasProp(Actor.findChar(summoningPos), Property.LARGE))
-						&& Dungeon.level.trueDistance(pos, summoningPos + c) > Dungeon.level.trueDistance(pos, pushPos)) {
-					pushPos = summoningPos + c;
-				}
-			}
-
-			//push enemy, or wait a turn if there is no valid pushing position
-			if (pushPos != pos) {
-				Char ch = Actor.findChar(summoningPos);
-				Actor.addDelayed( new Pushing( ch, ch.pos, pushPos ), -1 );
-
-				ch.pos = pushPos;
-				Dungeon.level.occupyCell(ch );
-
-			} else {
-
-				Char blocker = Actor.findChar(summoningPos);
-				if (blocker.alignment != alignment){
-					blocker.damage( Random.NormalIntRange(2, 10), this );
-				}
-
-				spend(TICK);
-				return;
-			}
+	public boolean summonBook(int summoningPos){
+		MagicBook patchyBook;
+		float roll = Random.Float();
+		if (roll < 0.4f){
+			state = STATE_FIRE;
+			patchyBook = new MagicBook.FireMagicBook();
+		} else if (roll < 0.8f){
+			state = STATE_FROST;
+			patchyBook = new MagicBook.FrostMagicBook();
+		} else {
+			state = STATE_SHOCK;
+			patchyBook = new MagicBook.ShockMagicBook();
 		}
 
-		summoning = firstSummon = false;
-
-		mySkeleton = new NecroSkeleton();
-		mySkeleton.pos = summoningPos;
-		GameScene.add( mySkeleton );
-		Dungeon.level.occupyCell( mySkeleton );
-		((NecromancerSprite)sprite).finishSummoning();
+		patchyBook.pos = summoningPos;
+		GameScene.add( patchyBook );
+		Dungeon.level.occupyCell( patchyBook );
 
 		for (Buff b : buffs(AllyBuff.class)){
-			Buff.affect(mySkeleton, b.getClass());
+			Buff.affect(patchyBook, b.getClass());
 		}
 		for (Buff b : buffs(ChampionEnemy.class)){
-			Buff.affect( mySkeleton, b.getClass());
+			Buff.affect( patchyBook, b.getClass());
 		}
+		return true;
 	}
-	
-	private class Hunting extends Mob.Hunting{
-		
-		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			enemySeen = enemyInFOV;
-			
-			if (storedSkeletonID != -1){
-				Actor ch = Actor.findById(storedSkeletonID);
-				storedSkeletonID = -1;
-				if (ch instanceof NecroSkeleton){
-					mySkeleton = (NecroSkeleton) ch;
+
+	public void readySkill(Char enemy){
+		pacthyCells.clear();
+		if (Random.IntRange(0, 0) == 0){
+			for (int i : PathFinder.NEIGHBOURS8){
+				if(Random.IntRange(0, 2) == 0){
+					Ballistica b = new Ballistica(this.pos, enemy.pos+i, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
+					pacthyCells.addAll(b.path);
 				}
+				pacthyCells.remove(pacthyCells.size() - 1);
 			}
-			
-			if (summoning){
-				summonMinion();
-				return true;
-			}
-			
-			if (mySkeleton != null &&
-					(!mySkeleton.isAlive()
-					|| !Dungeon.level.mobs.contains(mySkeleton)
-					|| mySkeleton.alignment != alignment)){
-				mySkeleton = null;
-			}
-			
-			//if enemy is seen, and enemy is within range, and we haven no skeleton, summon a skeleton!
-			if (enemySeen && Dungeon.level.distance(pos, enemy.pos) <= 4 && mySkeleton == null){
-				
-				summoningPos = -1;
-				for (int c : PathFinder.NEIGHBOURS8){
-					if (Actor.findChar(enemy.pos+c) == null
-							&& Dungeon.level.passable[enemy.pos+c]
-							&& fieldOfView[enemy.pos+c]
-							&& Dungeon.level.trueDistance(pos, enemy.pos+c) < Dungeon.level.trueDistance(pos, summoningPos)){
-						summoningPos = enemy.pos+c;
-					}
-				}
-				
-				if (summoningPos != -1){
-					
-					summoning = true;
-					sprite.zap( summoningPos );
-					
-					spend( firstSummon ? TICK : 2*TICK );
-				} else {
-					//wait for a turn
-					spend(TICK);
-				}
-				
-				return true;
-			//otherwise, if enemy is seen, and we have a skeleton...
-			} else if (enemySeen && mySkeleton != null){
-				
-				target = enemy.pos;
-				spend(TICK);
-				
-				if (!fieldOfView[mySkeleton.pos]){
-					
-					//if the skeleton is not next to the enemy
-					//teleport them to the closest spot next to the enemy that can be seen
-					if (!Dungeon.level.adjacent(mySkeleton.pos, enemy.pos)){
-						int telePos = -1;
-						for (int c : PathFinder.NEIGHBOURS8){
-							if (Actor.findChar(enemy.pos+c) == null
-									&& Dungeon.level.passable[enemy.pos+c]
-									&& fieldOfView[enemy.pos+c]
-									&& Dungeon.level.trueDistance(pos, enemy.pos+c) < Dungeon.level.trueDistance(pos, telePos)){
-								telePos = enemy.pos+c;
-							}
-						}
-						
-						if (telePos != -1){
-							
-							ScrollOfTeleportation.appear(mySkeleton, telePos);
-							mySkeleton.teleportSpend();
-							
-							if (sprite != null && sprite.visible){
-								sprite.zap(telePos);
-								return false;
-							} else {
-								onZapComplete();
-							}
-						}
-					}
-					
-					return true;
-					
-				} else {
-					
-					//zap skeleton
-					if (mySkeleton.HP < mySkeleton.HT || mySkeleton.buff(Adrenaline.class) == null) {
-						if (sprite != null && sprite.visible){
-							sprite.zap(mySkeleton.pos);
-							return false;
-						} else {
-							onZapComplete();
-						}
-					}
-					
-				}
-				
-				return true;
-				
-			//otherwise, default to regular hunting behaviour
-			} else {
-				return super.act(enemyInFOV, justAlerted);
-			}
-		}
+		} //Another patern maybe?
 	}
-	
-	public static class NecroSkeleton extends Skeleton {
-		
-		{
-			state = WANDERING;
-			
-			spriteClass = NecroSkeletonSprite.class;
-			
-			//no loot or exp
-			maxLvl = -5;
-			
-			//20/25 health to start
-			HP = 20;
-		}
 
-		@Override
-		public float spawningWeight() {
-			return 0;
-		}
+	public void skillFire(Char enemy){
+		Buff.affect(this, FireImbue.class).set(25f);
+		for (int p : pacthyCells) {
+            Char ch = Actor.findChar(p);
+            if (ch != null && ch.alignment == this.alignment){
+                pacthyCells.remove(ch.pos);
+            }
+			if (p != this.pos){
+				GameScene.add( Blob.seed( p, 2, Fire.class ) );
+			}
+        }
 
-		private void teleportSpend(){
-			spend(TICK);
-		}
-		
-		public static class NecroSkeletonSprite extends SkeletonSprite{
-			
-			public NecroSkeletonSprite(){
-				super();
-				brightness(0.75f);
+	}
+
+	public void skillFrost(Char enemy){
+		Buff.affect(this, FrostImbue.class, 25f);
+		for (int p : pacthyCells) {
+            Char ch = Actor.findChar(p);
+            if (ch != null && ch.alignment == this.alignment){
+                pacthyCells.remove(ch.pos);
+            }
+			if (p != this.pos){
+				GameScene.add( Blob.seed( p, 2, Freezing.class ) );
 			}
-			
-			@Override
-			public void resetColor() {
-				super.resetColor();
-				brightness(0.75f);
+        }
+
+	}
+
+	public void skillShock(Char enemy){
+		Buff.affect(this, Haste.class, 25f);
+		for (int p : pacthyCells) {
+            Char ch = Actor.findChar(p);
+            if (ch != null && ch.alignment == this.alignment){
+                pacthyCells.remove(ch.pos);
+            }
+			if (p != this.pos){
+				GameScene.add( Blob.seed( p, 2, ConfusionGas.class ) );
 			}
-		}
-		
+        }
+
 	}
 }

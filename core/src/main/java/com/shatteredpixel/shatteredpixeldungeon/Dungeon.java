@@ -52,6 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
+import com.shatteredpixel.shatteredpixeldungeon.levels.*;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CirnoBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
@@ -338,6 +339,8 @@ public class Dungeon {
 		} else if (branch == 1) {
 			switch (depth) {
 				case 1:
+					level = new RemiliaBossLevel();
+					break;
 				case 2:
 				case 3:
 				case 4:

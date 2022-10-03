@@ -34,5 +34,4 @@ public class ExplosiveTrap extends Trap {
 	public void activate() {
 		new Bomb().explode(pos);
 	}
-
 }

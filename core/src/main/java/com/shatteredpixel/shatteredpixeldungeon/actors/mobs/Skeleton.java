@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -72,9 +73,16 @@ public class Skeleton extends Mob {
 				int damage = Math.round(Random.NormalIntRange(6, 12));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
 				damage = Math.max( 0,  damage - (ch.drRoll() + ch.drRoll()) );
-				ch.damage( damage, this );
-				if (ch == Dungeon.hero && !ch.isAlive()) {
-					heroKilled = true;
+				if (!(ch instanceof Necromancer)){
+					ch.damage( damage, this );
+				}
+				if (ch == Dungeon.hero){
+					if (!ch.isAlive()) {
+						heroKilled = true;
+					} else {
+						Buff.affect(ch, Cripple.class, 3f);
+					}
+					
 				}
 			}
 		}

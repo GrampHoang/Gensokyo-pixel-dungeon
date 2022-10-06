@@ -24,8 +24,17 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.AlbinoSprite;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Random;
 
 public class Albino extends Rat {
@@ -38,6 +47,12 @@ public class Albino extends Rat {
 		
 		loot = new MysteryMeat();
 		lootChance = 1f;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Poison.class);
+			immunities.add(ToxicGas.class);
+			immunities.add(Paralysis.class);
+		}
 	}
 	
 	@Override
@@ -48,5 +63,16 @@ public class Albino extends Rat {
 		}
 		
 		return damage;
+	}
+
+	@Override
+	public void die( Object cause ) {
+		
+		super.die( cause );
+		if (cause == Chasm.class) return;
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			GameScene.add( Blob.seed( pos, 50 + 20 * Dungeon.depth, ToxicGas.class ) );
+			GameScene.add( Blob.seed( pos, 50 + 20 * Dungeon.depth, ParalyticGas.class ) );
+		}
 	}
 }

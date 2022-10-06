@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
@@ -60,6 +61,7 @@ public class Thief extends Mob {
 		FLEEING = new Fleeing();
 
 		properties.add(Property.UNDEAD);
+		invisible = 60;
 	}
 
 	private static final String ITEM = "item";
@@ -147,6 +149,15 @@ public class Thief extends Mob {
 		return super.defenseProc(enemy, damage);
 	}
 
+	@Override
+	public void damage(int dmg, Object src) {
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			if (Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 1)
+			dmg = dmg/2;
+		}
+		super.damage(dmg, src);
+	}
+	
 	protected boolean steal( Hero hero ) {
 
 		Item toSteal = hero.belongings.randomUnequipped();

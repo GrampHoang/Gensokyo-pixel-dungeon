@@ -21,14 +21,24 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SlimeSprite;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+
 
 public class Slime extends Mob {
 	
@@ -42,6 +52,10 @@ public class Slime extends Mob {
 		maxLvl = 9;
 		
 		lootChance = 0.2f; //by default, see lootChance()
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(ToxicGas.class);
+		}
 	}
 	
 	@Override
@@ -61,6 +75,26 @@ public class Slime extends Mob {
 			dmg = 4 + (int)(Math.sqrt(8*(dmg - 4) + 1) - 1)/2;
 		}
 		super.damage(dmg, src);
+	}
+
+	@Override
+	public void die( Object cause ) {
+		super.die( cause );
+		if (cause == Chasm.class) return;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			WandOfBlastWave.BlastWave.blast(this.pos);
+			for(int i : PathFinder.NEIGHBOURS8){
+				Char ch = Actor.findChar(this.pos+i);
+				if (ch != null){
+					if (ch instanceof Slime || ch instanceof CausticSlime){
+						ch.HP += 4;
+					} else {
+						Buff.affect(ch, Slow.class, 2f);
+					}
+				}
+			}
+		}
 	}
 
 	@Override

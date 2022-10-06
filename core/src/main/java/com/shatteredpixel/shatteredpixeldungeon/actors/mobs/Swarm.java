@@ -21,9 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -54,6 +57,11 @@ public class Swarm extends Mob {
 
 		loot = new PotionOfHealing();
 		lootChance = 0.1667f; //by default, see lootChance()
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Poison.class);
+			immunities.add(ToxicGas.class);
+		}
 	}
 	
 	private static final float SPLIT_DELAY	= 1f;
@@ -119,7 +127,14 @@ public class Swarm extends Mob {
 	}
 	
 	private Swarm split() {
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			GameScene.add( Blob.seed( pos, 50 + 20 * Dungeon.depth, ToxicGas.class ) );
+		}
 		Swarm clone = new Swarm();
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			clone.immunities.add(Poison.class);
+			clone.immunities.add(ToxicGas.class);
+		}
 		clone.generation = generation + 1;
 		clone.EXP = 0;
 		if (buff( Burning.class ) != null) {

@@ -21,9 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -154,6 +156,11 @@ public class Necromancer extends Mob {
 			return;
 		}
 		
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			Buff.affect(mySkeleton, Corrosion.class).set(15f, 1, this.getClass());
+			next();
+			return;
+		}
 		//heal skeleton first
 		if (mySkeleton.HP < mySkeleton.HT){
 
@@ -348,6 +355,9 @@ public class Necromancer extends Mob {
 			
 			//20/25 health to start
 			HP = 20;
+			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				baseSpeed = 0.6f;
+			}
 		}
 
 		@Override

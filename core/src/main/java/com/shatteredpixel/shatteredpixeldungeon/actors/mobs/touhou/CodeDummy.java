@@ -67,6 +67,11 @@ public class CodeDummy extends Mob {
 		return super.speed();
 	}
 
+	@Override
+	public int defenseProc( Char enemy, int damage ) {		
+		return super.defenseProc(enemy, damage);
+	}
+
     @Override
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.WONT_STOP);

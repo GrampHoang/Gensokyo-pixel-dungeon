@@ -916,7 +916,7 @@ public abstract class Mob extends Char {
 	public String description() {
 		String descript = Messages.get(this, "desc");
 		if (Dungeon.isChallenged(Challenges.LUNATIC)){
-			descript = descript + "\n\nLunatic mode:" + Messages.get(this, "lunatic");
+			descript = descript + "\n\nLunatic mode: " + Messages.get(this, "lunatic");
 		}
 		if (UFOSettings.red_Mobs()){
 			descript = String.format("_HP: %1d/%2d_ \n\n",HP,HT) + descript;

@@ -21,10 +21,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -37,6 +43,10 @@ public class Rat extends Mob {
 		defenseSkill = 2;
 		
 		maxLvl = 5;
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Poison.class);
+			immunities.add(ToxicGas.class);
+		}
 	}
 
 	@Override
@@ -51,6 +61,15 @@ public class Rat extends Mob {
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 1, 4 );
+	}
+
+	@Override
+	public void die( Object cause ) {
+		super.die( cause );
+		if (cause == Chasm.class) return;
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			GameScene.add( Blob.seed( this.pos, 50 + 20 * Dungeon.depth, ToxicGas.class ) );
+		}
 	}
 	
 	@Override

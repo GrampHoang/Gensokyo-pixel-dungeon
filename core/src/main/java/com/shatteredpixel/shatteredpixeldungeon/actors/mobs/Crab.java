@@ -21,9 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CrabSprite;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.watabou.utils.Random;
 
 public class Crab extends Mob {
@@ -40,6 +44,12 @@ public class Crab extends Mob {
 		
 		loot = new MysteryMeat();
 		lootChance = 0.167f;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Burning.class);
+			immunities.add(Chill.class);
+			immunities.add(ToxicGas.class);
+		}
 	}
 	
 	@Override

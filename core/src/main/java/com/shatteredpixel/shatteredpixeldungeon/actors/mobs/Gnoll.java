@@ -22,9 +22,17 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GnollSprite;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class Gnoll extends Mob {
 	
@@ -39,6 +47,11 @@ public class Gnoll extends Mob {
 		
 		loot = Gold.class;
 		lootChance = 0.5f;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Poison.class);
+			immunities.add(ToxicGas.class);
+		}
 	}
 	
 	@Override
@@ -51,6 +64,21 @@ public class Gnoll extends Mob {
 		return 10;
 	}
 	
+	@Override
+	public int defenseProc( Char enemy, int damage ) {
+		if(Dungeon.isChallenged(Challenges.LUNATIC) && enemySeen == true && Random.IntRange(0,3) == 2){
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				if(mob instanceof Gnoll){
+					mob.beckon( this.pos );
+				}
+			}
+			GLog.w("*Gnoll's howl*");		
+			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.2f, 2 );
+			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
+		}
+		return super.defenseProc(enemy, damage);
+	}
+
 	@Override
 	public int drRoll() {
 		return Random.NormalIntRange(0, 2);

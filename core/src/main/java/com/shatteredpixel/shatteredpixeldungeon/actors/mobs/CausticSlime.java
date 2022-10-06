@@ -21,9 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CausticSlimeSprite;
@@ -36,6 +42,9 @@ public class CausticSlime extends Slime {
 		spriteClass = CausticSlimeSprite.class;
 		
 		properties.add(Property.ACIDIC);
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(ToxicGas.class);
+		}
 	}
 	
 	@Override
@@ -48,6 +57,28 @@ public class CausticSlime extends Slime {
 		return super.attackProc( enemy, damage );
 	}
 	
+	@Override
+	public void die( Object cause ) {
+		super.die( cause );
+		if (cause == Chasm.class) return;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			WandOfBlastWave.BlastWave.blast(this.pos);
+			this.sprite.burst( 0x000000, 5 );
+			for(int i : PathFinder.NEIGHBOURS8){
+				Char ch = Actor.findChar(this.pos+i);
+				if (ch != null){
+					if (ch instanceof CausticSlime){
+						ch.HP += 8;
+					} else {
+						Buff.affect(ch, Slow.class, 2f);
+						Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void rollToDropLoot() {
 		if (Dungeon.hero.lvl > maxLvl + 2) return;

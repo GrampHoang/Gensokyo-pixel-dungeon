@@ -21,7 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
@@ -29,7 +31,12 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SnakeSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 
 public class Snake extends Mob {
 	
@@ -37,20 +44,28 @@ public class Snake extends Mob {
 		spriteClass = SnakeSprite.class;
 		
 		HP = HT = 4;
-		defenseSkill = 25;
+		defenseSkill = (Dungeon.isChallenged(Challenges.LUNATIC) ? 999 : 25);
 		
 		EXP = 2;
 		maxLvl = 7;
 		
 		loot = Generator.Category.SEED;
 		lootChance = 0.25f;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Poison.class);
+			immunities.add(ToxicGas.class);
+		}
 	}
 	
 	@Override
 	public int damageRoll() {
+		if (Dungeon.isChallenged(Challenges.LUNATIC) == true && Dungeon.level.distance(enemy.pos, this.pos) < 2){
+			Buff.affect(enemy, Poison.class).set(3f);
+		}
 		return Random.NormalIntRange( 1, 4 );
 	}
-	
+
 	@Override
 	public int attackSkill( Char target ) {
 		return 10;

@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -73,6 +74,14 @@ public class Bat extends Mob {
 		}
 		
 		return damage;
+	}
+
+	@Override
+	protected boolean act() {
+		if(Dungeon.isChallenged(Challenges.LUNATIC) && Dungeon.hero != null && Dungeon.hero.HP < Dungeon.hero.HT/4 && Random.IntRange(0,30) == 2){
+			beckon(Dungeon.hero.pos);
+		}
+		return super.act();
 	}
 	
 	@Override

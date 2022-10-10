@@ -21,10 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -52,6 +54,10 @@ public class DM200 extends Mob {
 
 		properties.add(Property.INORGANIC);
 		properties.add(Property.LARGE);
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			properties.remove(Property.LARGE);
+		}
 
 		HUNTING = new Hunting();
 	}
@@ -130,6 +136,9 @@ public class DM200 extends Mob {
 
 	private boolean canVent(int target){
 		if (ventCooldown > 0) return false;
+		if(Dungeon.isChallenged(Challenges.LUNATIC) && Dungeon.level.distance(this.pos, target) > 4){
+			return true;
+		}
 		PathFinder.buildDistanceMap(target, BArray.not(Dungeon.level.solid, null), Dungeon.level.distance(pos, target)+1);
 		//vent can go around blocking terrain, but not through it
 		if (PathFinder.distance[pos] == Integer.MAX_VALUE){

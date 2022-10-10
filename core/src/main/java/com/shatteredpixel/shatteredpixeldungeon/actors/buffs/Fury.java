@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -63,7 +64,7 @@ public class Fury extends Buff {
 
 	@Override
 	public String desc() {
-		if(Dungeon.hero.heroClass == HeroClass.KOISHI){
+		if(target instanceof Hero && ((Hero)target).heroClass == HeroClass.KOISHI){
 			return Messages.get(this, "koishi_desc");
 		} else{
 			return Messages.get(this, "desc");

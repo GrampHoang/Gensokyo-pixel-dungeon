@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -79,7 +80,7 @@ public class Skeleton extends Mob {
 				if (ch == Dungeon.hero){
 					if (!ch.isAlive()) {
 						heroKilled = true;
-					} else {
+					} else if(Dungeon.isChallenged(Challenges.LUNATIC)){
 						Buff.affect(ch, Cripple.class, 3f);
 					}
 					

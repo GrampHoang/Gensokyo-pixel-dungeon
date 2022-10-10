@@ -21,15 +21,34 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DM201Sprite;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
+import com.watabou.noosa.Camera;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class DM201 extends DM200 {
 
@@ -42,6 +61,11 @@ public class DM201 extends DM200 {
 
 		HUNTING = new Mob.Hunting();
 	}
+
+	private final int ROCKNADE_CD = 15;
+	private int rocknade_cd = ROCKNADE_CD;
+	private int rocknade_stop_pos = 0;
+	private ArrayList<Integer> rocknadeCells = new ArrayList<>();
 
 	@Override
 	public int damageRoll() {
@@ -69,6 +93,15 @@ public class DM201 extends DM200 {
 				zap();
 				return true;
 			}
+		}
+		if (rocknade_cd > 1){
+			rocknade_cd--;
+		} else if (rocknade_cd == 1 && enemy != null && enemySeen){
+			rocknade_cd--;
+			return useReady(enemy);
+		} else if (rocknade_cd == 0){
+			rocknade_cd = ROCKNADE_CD;
+			return rockGrenade();
 		}
 		return super.act();
 	}
@@ -100,6 +133,50 @@ public class DM201 extends DM200 {
 
 	}
 
+	public boolean useReady(Char enemy){
+		spend(TICK);
+		Ballistica b = new Ballistica(this.pos, enemy.pos, Ballistica.STOP_SOLID);
+		rocknade_stop_pos = b.collisionPos;
+		for (int p : b.subPath(1, Dungeon.level.distance(this.pos, b.collisionPos))){
+			rocknadeCells.add(p);
+            sprite.parent.add(new TargetedCell(p, 0xFF0000));
+        }
+		return true;
+	}
+
+	public boolean rockGrenade(){
+		sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(rocknade_stop_pos)));
+        for (int i :rocknadeCells){
+			Char ch = Actor.findChar(i);
+			if(ch != null && (!(ch instanceof DM201))){
+                ch.damage(Random.IntRange(8,16), this);
+			}
+        }
+		CellEmitter.center(rocknade_stop_pos).burst(BlastParticle.FACTORY, 30);
+		PathFinder.buildDistanceMap( rocknade_stop_pos, BArray.not( Dungeon.level.solid, null ), 1 );
+		for (int i = 0; i < PathFinder.distance.length; i++) {
+			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+				if (Dungeon.level.pit[i])
+					GameScene.add(Blob.seed(i, 1, Fire.class));
+				else{
+					GameScene.add(Blob.seed(i, 5, Fire.class));
+				}
+				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
+				CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
+				CellEmitter.get(i).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
+				Char ch = Actor.findChar(i);
+					if (ch != null && !(ch instanceof DM201)) {
+						ch.damage(20, this);
+						Buff.affect(ch, Paralysis.class, 3f);
+					}
+			}
+		}
+		Camera.main.shake( 2, 0.7f );
+		rocknadeCells.clear();
+        return true;
+    }	
+
+
 	@Override
 	protected boolean getCloser(int target) {
 		return true;
@@ -121,6 +198,34 @@ public class DM201 extends DM200 {
 			ofs = PathFinder.NEIGHBOURS8[Random.Int(8)];
 		} while (Dungeon.level.solid[pos + ofs] && !Dungeon.level.passable[pos + ofs]);
 		Dungeon.level.drop( new MetalShard(), pos + ofs ).sprite.drop( pos );
+	}
+
+	private static final String ROCKNADE_COOLDOWN     = "rocknade_cooldown";
+	private static final String ROCKNADE_CELLS     = "rocknade_cells";
+	private static final String ROCKNADE_STOP_POS     = "rocknade_pos";
+
+	@Override
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+		bundle.put( ROCKNADE_COOLDOWN, rocknade_cd );
+		bundle.put( ROCKNADE_STOP_POS, rocknade_stop_pos );
+
+		int[] bundleArr = new int[rocknadeCells.size()];
+		for (int i = 0; i < rocknadeCells.size(); i++){
+			bundleArr[i] = rocknadeCells.get(i);
+		}
+        bundle.put(ROCKNADE_CELLS, bundleArr);
+	}
+	
+	@Override
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+		rocknade_cd = bundle.getInt( ROCKNADE_COOLDOWN );
+		rocknade_stop_pos = bundle.getInt( ROCKNADE_STOP_POS );
+
+		for (int i : bundle.getIntArray(ROCKNADE_CELLS)){
+			rocknadeCells.add(i);
+		}
 	}
 
 }

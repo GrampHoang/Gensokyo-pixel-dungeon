@@ -21,11 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
@@ -33,6 +37,8 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.BruteSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -76,6 +82,24 @@ public class Brute extends Mob {
 
 		if (cause == Chasm.class){
 			hasRaged = true; //don't let enrage trigger for chasm deaths
+		}
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				if (mob.alignment == this.alignment && mob.fieldOfView[this.pos]) {
+					if(mob.buff(Fury.class) == null){
+						Buff.affect(mob, Fury.class);
+					}
+					else {
+						Buff.affect(mob, Fury.class);
+						Buff.affect(mob, Stamina.class, 5f);
+					}
+				}
+			}
+	
+			GLog.w("ROAR!");
+			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 		}
 	}
 

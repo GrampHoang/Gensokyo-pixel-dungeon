@@ -23,10 +23,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
@@ -151,6 +153,9 @@ public abstract class Shaman extends Mob {
 		@Override
 		protected void debuff( Char enemy ) {
 			Buff.prolong( enemy, Weakness.class, Weakness.DURATION );
+			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				Buff.prolong( enemy, Degrade.class, 12f );
+			}
 		}
 	}
 	
@@ -162,6 +167,9 @@ public abstract class Shaman extends Mob {
 		@Override
 		protected void debuff( Char enemy ) {
 			Buff.prolong( enemy, Vulnerable.class, Vulnerable.DURATION );
+			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				Buff.prolong( enemy, Degrade.class, 12f );
+			}
 		}
 	}
 	
@@ -173,6 +181,9 @@ public abstract class Shaman extends Mob {
 		@Override
 		protected void debuff( Char enemy ) {
 			Buff.prolong( enemy, Hex.class, Hex.DURATION );
+			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				Buff.prolong( enemy, Degrade.class, 12f );
+			}
 		}
 	}
 	

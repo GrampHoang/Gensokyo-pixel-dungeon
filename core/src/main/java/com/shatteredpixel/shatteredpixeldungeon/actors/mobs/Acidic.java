@@ -21,13 +21,19 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.AcidicSprite;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.watabou.utils.PathFinder;
 
 public class Acidic extends Scorpio {
 
@@ -51,6 +57,23 @@ public class Acidic extends Scorpio {
 			Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
 		}
 		return super.defenseProc( enemy, damage );
+	}
+
+	@Override
+	public void die( Object cause ) {
+		super.die( cause );
+		if (cause == Chasm.class) return;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			for (int p : PathFinder.NEIGHBOURS9){
+				Char c = Actor.findChar(p + pos);
+				if (c != null){
+					Buff.affect(c, Slow.class, 3f);
+					Buff.affect(c, Blindness.class, 3f);
+				}
+			}
+			GameScene.add( Blob.seed( this.pos, 50 + 10 * Dungeon.depth, ToxicGas.class ) );
+		}
 	}
 
 	@Override

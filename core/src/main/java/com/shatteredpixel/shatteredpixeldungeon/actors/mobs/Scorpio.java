@@ -21,8 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
@@ -31,8 +35,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.Chasm;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ScorpioSprite;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
@@ -52,6 +59,10 @@ public class Scorpio extends Mob {
 		lootChance = 0.5f;
 
 		properties.add(Property.DEMONIC);
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add( Burning.class );
+		}
 	}
 	
 	@Override
@@ -99,6 +110,23 @@ public class Scorpio extends Mob {
 		//cannot be aggroed to something it can't see
 		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
 			super.aggro(ch);
+		}
+	}
+
+	@Override
+	public void die( Object cause ) {
+		super.die( cause );
+		if (cause == Chasm.class) return;
+
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			for (int p : PathFinder.NEIGHBOURS9){
+				Char c = Actor.findChar(p + pos);
+				if (c != null){
+					Buff.affect(c, Slow.class, 3f);
+					Buff.affect(c, Blindness.class, 3f);
+				}
+			}
+			GameScene.add( Blob.seed( this.pos, 50 + 10 * Dungeon.depth, Inferno.class ) );
 		}
 	}
 

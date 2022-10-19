@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -63,6 +65,9 @@ public class Monk extends Mob {
 	
 	@Override
 	public float attackDelay() {
+		if(Dungeon.isChallenged(Challenges.LUNATIC) && this.buff(Focus.class) != null){
+			return super.attackDelay()*0.33f;
+		}
 		return super.attackDelay()*0.5f;
 	}
 	

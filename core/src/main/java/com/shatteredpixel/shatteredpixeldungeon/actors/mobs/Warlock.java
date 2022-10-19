@@ -21,10 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
@@ -108,6 +110,22 @@ public class Warlock extends Mob implements Callback {
 			if (enemy == Dungeon.hero && Random.Int( 2 ) == 0) {
 				Buff.prolong( enemy, Degrade.class, Degrade.DURATION );
 				Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
+				if(Dungeon.isChallenged(Challenges.LUNATIC)){
+					Buff.affect( this, Doom.class);
+					Buff.affect(this, Corrosion.class).set(4,3);
+					Buff.prolong( enemy, Hex.class, Hex.DURATION/2 );
+					Buff.prolong( enemy, Vulnerable.class, Vulnerable.DURATION/2 );
+					Buff.prolong( enemy, Weakness.class, Weakness.DURATION/2 );
+					Buff.prolong( enemy, Cripple.class, Cripple.DURATION/2 );
+					if (Random.IntRange(0,15) == 6){
+						Sample.INSTANCE.play( Assets.Sounds.CURSED );
+						Sample.INSTANCE.play( Assets.Sounds.DEGRADE );
+						Sample.INSTANCE.play( Assets.Sounds.HEALTH_CRITICAL );
+						Buff.affect(this, Paralysis.class, 6f);
+						Buff.prolong( enemy, Slow.class, 6f );
+						Buff.prolong( enemy, Blindness.class, 6f );
+					}
+				}
 			}
 			
 			int dmg = Random.NormalIntRange( 12, 18 );

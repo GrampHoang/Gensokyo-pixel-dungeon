@@ -24,6 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -134,6 +140,14 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
+	public int defenseProc(Char enemy, int damage) {
+		GameScene.add(Blob.seed(pos, 30, ToxicGas.class));
+		GameScene.add(Blob.seed(pos, 30, CorrosiveGas.class));
+		return super.defenseProc(enemy, damage);
+	}
+
+
+	@Override
 	public void die(Object cause) {
 		if (spawnRecorded){
 			Statistics.spawnersAlive--;
@@ -166,5 +180,10 @@ public class DemonSpawner extends Mob {
 		immunities.add( Dread.class );
 		immunities.add( Terror.class );
 		immunities.add( Vertigo.class );
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add( CorrosiveGas.class );
+			immunities.add( ToxicGas.class );
+			immunities.add( Burning.class );
+		}
 	}
 }

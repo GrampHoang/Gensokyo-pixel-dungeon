@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -38,6 +39,9 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.EyeSprite;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -162,7 +166,17 @@ public class Eye extends Mob {
 
 		boolean terrainAffected = false;
 
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			for (int p : PathFinder.NEIGHBOURS9){
+				GameScene.add( Blob.seed( p + this.pos, 12, Fire.class ) );
+			}
+		}
+		
+
 		for (int pos : beam.subPath(1, beam.dist)) {
+			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				GameScene.add( Blob.seed( pos, 12, Fire.class ) );
+			}
 
 			if (Dungeon.level.flamable[pos]) {
 

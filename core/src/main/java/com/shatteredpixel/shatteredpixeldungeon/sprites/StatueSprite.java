@@ -23,10 +23,13 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
 
 public class StatueSprite extends MobSprite {
 	
+	private Animation leap;
+
 	public StatueSprite() {
 		super();
 		
@@ -46,6 +49,9 @@ public class StatueSprite extends MobSprite {
 		die = new Animation( 5, false );
 		die.frames( frames, 11, 12, 13, 14, 15, 15 );
 		
+		leap = new Animation( 1, true );
+		leap.frames( frames, 12 );
+
 		play( idle );
 	}
 
@@ -62,7 +68,12 @@ public class StatueSprite extends MobSprite {
 		//death animation is always armorless
 
 		play( idle, true );
+	}
 
+	@Override
+	public void jump(int from, int to, Callback callback) {
+		super.jump(from, to, callback);
+		play( leap );
 	}
 
 	@Override

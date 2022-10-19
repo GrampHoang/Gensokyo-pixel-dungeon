@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SeniorSprite;
 import com.watabou.utils.Random;
@@ -42,6 +44,14 @@ public class Senior extends Monk {
 		super.move( step, travelling);
 	}
 	
+	@Override
+	public float attackDelay() {
+		if(Dungeon.isChallenged(Challenges.LUNATIC) && this.buff(Focus.class) != null){
+			return super.attackDelay()*0.2f;
+		}
+		return super.attackDelay()*0.5f;
+	}
+
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 16, 25 );

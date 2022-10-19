@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -57,7 +58,9 @@ public abstract class Elemental extends Mob {
 		
 		EXP = 10;
 		maxLvl = 20;
-		
+		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			baseSpeed = 2f;
+		}
 		flying = true;
 	}
 
@@ -96,7 +99,7 @@ public abstract class Elemental extends Mob {
 		return Random.NormalIntRange(0, 5);
 	}
 	
-	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
+	protected int rangedCooldown = Dungeon.isChallenged(Challenges.LUNATIC) ? Random.NormalIntRange( 2, 3 ) : Random.NormalIntRange( 3, 5 );
 	
 	@Override
 	protected boolean act() {

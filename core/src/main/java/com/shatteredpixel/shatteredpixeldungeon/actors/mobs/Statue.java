@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -33,6 +35,11 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.PathFinder;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -63,23 +70,42 @@ public class Statue extends Mob {
 	}
 	
 	private static final String WEAPON	= "weapon";
+	private static final String SKILL_COOLDOWN	= "skill_cooldown";
+
+	private static int SKILL_CD	= 60;
+	private int skill_cd = SKILL_CD;
+
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( WEAPON, weapon );
+		bundle.put( SKILL_COOLDOWN, skill_cd );
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		weapon = (Weapon)bundle.get( WEAPON );
+		skill_cd = bundle.getInt( SKILL_COOLDOWN );
 	}
 	
 	@Override
 	protected boolean act() {
 		if (Dungeon.level.heroFOV[pos]) {
 			Notes.add( Notes.Landmark.STATUE );
+		}
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			skill_cd--;
+			if(skill_cd == 0){
+				skill_cd = SKILL_CD;
+				SmolStatue smol = new SmolStatue();
+				smol.pos = Dungeon.level.randomRespawnCell(smol);
+				Dungeon.level.occupyCell(smol);
+				if(smol.pos != 1) {
+					GameScene.add(smol);
+				}
+			}
 		}
 		return super.act();
 	}
@@ -169,6 +195,9 @@ public class Statue extends Mob {
 
 	@Override
 	public String description() {
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			return Messages.get(this, "desc", weapon.name()) + "\n\nLunatic mode: " + Messages.get(this, "lunatic");
+		}
 		return Messages.get(this, "desc", weapon.name());
 	}
 	
@@ -183,5 +212,4 @@ public class Statue extends Mob {
 			return new Statue();
 		}
 	}
-	
 }

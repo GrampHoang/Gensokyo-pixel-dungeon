@@ -245,7 +245,7 @@ public class Bestiary {
 	private static ArrayList<Class<? extends Mob>> touhouMobRotation( int depth ){
 		switch(depth){
 			
-			// Sewers
+			// Forest
 			case 1: default:
 				//3x Fairy, 1x Wriggle
 				return new ArrayList<>(Arrays.asList(
@@ -270,32 +270,32 @@ public class Bestiary {
 						Cirno.class, Cirno.class,
 						Daiyosei.class, Daiyosei.class));
 				
-			// Prison
+			// Scarlet Devil Mansion
 			case 6:
-				//3x skeleton, 1x thief, 1x swarm
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class, Skeleton.class,
-						Thief.class,
-						Swarm.class));
+				//3x Meiling, 1x Marisa, 1x Cirno
+				return new ArrayList<>(Arrays.asList(Meiling.class, Meiling.class, Meiling.class,
+						Marisa.class,
+						Cirno.class));
 			case 7:
-				//3x skeleton, 1x thief, 1x DM-100, 1x guard
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class, Skeleton.class,
-						Thief.class,
-						DM100.class,
-						Guard.class));
+				//3x Meiling, 1x Marisa, 1x Rumia, 1x Sakuya
+				return new ArrayList<>(Arrays.asList(Meiling.class, Meiling.class, Meiling.class,
+						Marisa.class,
+						Rumia.class,
+						Sakuya.class));
 			case 8:
-				//2x skeleton, 1x thief, 2x DM-100, 2x guard, 1x necromancer
-				return new ArrayList<>(Arrays.asList(Skeleton.class, Skeleton.class,
-						Thief.class,
-						DM100.class, DM100.class,
-						Guard.class, Guard.class,
-						Necromancer.class));
+				//2x Meiling, 1x Marisa, 1x Rumia, 1x Koakuma, 2x Sakuya, 1x Patchouli
+				return new ArrayList<>(Arrays.asList(Meiling.class, Meiling.class,
+						Marisa.class,
+						Rumia.class, Koakuma.class,
+						Sakuya.class, Sakuya.class,
+						Patchouli.class));
 			case 9: case 10:
-				//1x skeleton, 1x thief, 2x DM-100, 2x guard, 2x necromancer
-				return new ArrayList<>(Arrays.asList(Skeleton.class,
-						Thief.class,
-						DM100.class, DM100.class,
-						Guard.class, Guard.class,
-						Necromancer.class, Necromancer.class));
+				//1x Meiling, 1x Marisa, 1x Rumia, 1x Koakuma, 2x Sakuya, 2x Patchouli
+				return new ArrayList<>(Arrays.asList(Meiling.class,
+						Marisa.class,
+						Rumia.class, Koakuma.class,
+						Sakuya.class, Sakuya.class,
+						Patchouli.class, Patchouli.class));
 				
 			// Caves
 			case 11:

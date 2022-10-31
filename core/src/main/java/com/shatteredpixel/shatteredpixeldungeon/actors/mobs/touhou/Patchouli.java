@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
 
 import java.util.ArrayList;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -16,6 +17,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
+import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -28,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.NecromancerSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SkeletonSprite;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -48,12 +52,13 @@ public class Patchouli extends Mob {
 		
 	}
 	
-	protected final int STATE_CASTING = 3;
+	protected final int STATE_CASTING = 4;
 	protected final int STATE_FIRE = 1;
 	protected final int STATE_FROST = 2;
 	protected final int STATE_SHOCK = 3;
-	protected int state = STATE_FIRE;
+	protected int state = 0;
 	protected int summonCD = Random.NormalIntRange( 20, 25 );
+	protected int SKILL_CD = 5;
 	protected int skillCD = 5;
 	private ArrayList<Integer> pacthyCells = new ArrayList<>();
 
@@ -62,29 +67,50 @@ public class Patchouli extends Mob {
 	@Override
 	protected boolean act() {
 		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			skillCD--;
+
+			if (!enemySeen && state == STATE_CASTING){
+				state = 0;
+				skillCD = SKILL_CD;
+				spend(TICK);
+				return true;
+			}
+
 			if (state == STATE_CASTING){
 				this.sprite.remove(CharSprite.State.CHARGING);
+				state = Random.IntRange(1,3);
 				switch(state){
 					case STATE_FIRE:
-						skillFire(enemy);
+						skillFire();
 						break;
 					case STATE_FROST:
-						skillFrost(enemy);
+						skillFrost();
 						break;
 					case STATE_SHOCK:
-						skillShock(enemy);
+						skillShock();
 						break;	
 				}
-				this.HP = this.HP/5*4;
-				skillCD = 4;
+				if (this.HP > 4){
+					this.HP = this.HP - 4;
+				}
+				skillCD = SKILL_CD;
+				state = 0;
+				spend(TICK);
+				return true;
 			}
-			if (skillCD <= 0 && state != STATE_CASTING){
+
+			if (skillCD <= 0 && state != STATE_CASTING & enemySeen){
 				this.sprite.add(CharSprite.State.CHARGING);
 				state = STATE_CASTING;
 				readySkill(enemy);
+				spend(TICK);
+				return true;
 			}
+
+
 		}
-		skillCD--;
+
+		
 		if (summonCD > 0){
 			summonCD--;
 		} else if (summonCD <= 0 && enemy != null){
@@ -154,6 +180,7 @@ public class Patchouli extends Mob {
 		}
 
 		patchyBook.pos = summoningPos;
+		CellEmitter.get( summoningPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 		GameScene.add( patchyBook );
 		Dungeon.level.occupyCell( patchyBook );
 
@@ -163,60 +190,74 @@ public class Patchouli extends Mob {
 		for (Buff b : buffs(ChampionEnemy.class)){
 			Buff.affect( patchyBook, b.getClass());
 		}
+		patchyBook.spend_modified(1f);
+		CellEmitter.get(summoningPos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+		Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		return true;
 	}
 
 	public void readySkill(Char enemy){
 		pacthyCells.clear();
-		if (Random.IntRange(0, 0) == 0){
-			for (int i : PathFinder.NEIGHBOURS8){
-				if(Random.IntRange(0, 2) == 0){
-					Ballistica b = new Ballistica(this.pos, enemy.pos+i, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
-					pacthyCells.addAll(b.path);
+		switch(Random.IntRange(0, 2)){
+			case 0:
+				for (int i : PathFinder.NEIGHBOURS8){
+					pacthyCells.add(enemy.pos + i);
+					sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
 				}
-				pacthyCells.remove(pacthyCells.size() - 1);
-			}
-		} //Another patern maybe?
+				break;
+			case 1:
+				for (int i : PathFinder.NEIGHBOURS4){
+					pacthyCells.add(enemy.pos + i);
+					sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+				}
+				pacthyCells.add(enemy.pos);
+				sprite.parent.add(new TargetedCell(enemy.pos, 0xFF0000));
+				break;
+			default:
+				for (int i : PathFinder.NEIGHBOURS4_CORNERS){
+					pacthyCells.add(enemy.pos + i);
+					sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+				}
+				pacthyCells.add(enemy.pos);
+				sprite.parent.add(new TargetedCell(enemy.pos, 0xFF0000));
+				break;
+		}
 	}
 
-	public void skillFire(Char enemy){
-		Buff.affect(this, FireImbue.class).set(25f);
+	public void skillFire(){
+		Buff.affect(this, FireImbue.class).set(10f);
 		for (int p : pacthyCells) {
             Char ch = Actor.findChar(p);
             if (ch != null && ch.alignment == this.alignment){
-                pacthyCells.remove(ch.pos);
-            }
-			if (p != this.pos){
+            } else {
 				GameScene.add( Blob.seed( p, 2, Fire.class ) );
 			}
         }
 
 	}
 
-	public void skillFrost(Char enemy){
-		Buff.affect(this, FrostImbue.class, 25f);
+	public void skillFrost(){
+		Buff.affect(this, FrostImbue.class, 10f);
 		for (int p : pacthyCells) {
             Char ch = Actor.findChar(p);
             if (ch != null && ch.alignment == this.alignment){
-                pacthyCells.remove(ch.pos);
-            }
-			if (p != this.pos){
+            } else {
+				if (ch != null){Buff.affect(ch, Chill.class, 3f);}
 				GameScene.add( Blob.seed( p, 2, Freezing.class ) );
 			}
         }
 
 	}
 
-	public void skillShock(Char enemy){
-		Buff.affect(this, Haste.class, 25f);
+	public void skillShock(){
+		Buff.affect(this, Stamina.class, 10f);
 		for (int p : pacthyCells) {
             Char ch = Actor.findChar(p);
             if (ch != null && ch.alignment == this.alignment){
-                pacthyCells.remove(ch.pos);
-            }
-			if (p != this.pos){
-				GameScene.add( Blob.seed( p, 2, ConfusionGas.class ) );
+            } else {
+				GameScene.add( Blob.seed( p, 2, ParalyticGas.class ) );
 			}
+			
         }
 
 	}

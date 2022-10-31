@@ -51,7 +51,7 @@ public class TheWeapon extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  69;
+		return  1;
 	}
 
     @Override
@@ -69,7 +69,6 @@ public class TheWeapon extends MeleeWeapon {
                 Buff.affect(mob, Amok.class, 20f);
                 Buff.affect(mob, Cripple.class, 10f);
                 Buff.affect(mob, Paralysis.class, 2f);
-                Buff.affect(mob, Bleeding.class).set(10f);
                 Buff.affect(mob, Doom.class);
 
             }

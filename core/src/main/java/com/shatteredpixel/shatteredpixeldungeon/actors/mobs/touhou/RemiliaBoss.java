@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
@@ -359,14 +360,9 @@ public class RemiliaBoss extends Mob {
 				Buff.affect(ch, Paralysis.class, 0.5f);
                 ch.damage(Random.IntRange(8,16), this);
 
-				// if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
-				// 	Ballistica trajectory = new Ballistica(ch.pos, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
-				// 	int strength = buffedLvl() + 3;
-				// 	throwChar(ch, trajectory, strength, false, true, getClass());
-				// }
-				
-				// Ballistica trajectory = new Ballistica(this.pos, ch.pos, Ballistica.MAGIC_BOLT);
-				// WandOfBlastWave.throwChar(ch, trajectory, 2, false, true, this.getClass());
+				Actor.addDelayed(new Pushing(ch, ch.pos, levatin_stop_pos), 0);
+				ch.pos = levatin_stop_pos;
+				Dungeon.level.occupyCell(ch);
 			}
         }
 		CellEmitter.center(levatin_stop_pos).burst(BlastParticle.FACTORY, 30);

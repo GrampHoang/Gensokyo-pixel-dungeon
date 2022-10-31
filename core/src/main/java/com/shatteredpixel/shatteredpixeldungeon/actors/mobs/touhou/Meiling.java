@@ -72,7 +72,7 @@ public class Meiling extends Mob {
 		baseSpeed = 1f;
 	}
 
-    private float rock_cd = 20;
+    private float rock_cd = 200;
 	private float punch_cd = 5;
     // ArrayList<Integer> punch_pos = new ArrayList<>();
     // ArrayList<Integer> punch_pos_drop = new ArrayList<>();
@@ -118,6 +118,7 @@ public class Meiling extends Mob {
 			((MonkSprite)sprite).spray(true);
 			yell(Messages.get(this, "Meiling is mad!"));
 		}
+		super.damage(dmg, src);
 	}
 
 	private static final String LAST_ENEMY_POS = "last_enemy_pos";

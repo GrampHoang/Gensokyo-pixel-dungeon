@@ -65,6 +65,15 @@ public class Cirno extends Mob {
 	}
 
 	@Override
+	protected boolean getCloser( int target ) {
+		if (state == HUNTING && (Dungeon.isChallenged(Challenges.LUNATIC))) {
+			return enemySeen && getFurther( target );
+		} else {
+			return super.getCloser( target );
+		}
+	}
+
+	@Override
 	protected boolean canAttack( Char enemy ) {
 		if (Dungeon.isChallenged(Challenges.LUNATIC)){
 			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);

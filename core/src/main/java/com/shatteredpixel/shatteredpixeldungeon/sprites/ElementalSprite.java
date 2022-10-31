@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -117,7 +118,11 @@ public abstract class ElementalSprite extends MobSprite {
 				new Callback() {
 					@Override
 					public void call() {
-						((Elemental)ch).onZapComplete();
+						if (ch instanceof MagicBook){
+							((MagicBook)ch).onZapComplete();
+						} else{
+							((Elemental)ch).onZapComplete();
+						}
 					}
 				} );
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
@@ -210,8 +215,11 @@ public abstract class ElementalSprite extends MobSprite {
 		public void zap( int cell ) {
 			turnTo( ch.pos , cell );
 			play( zap );
-			
-			((Elemental)ch).onZapComplete();
+			if (ch instanceof MagicBook){
+				((MagicBook)ch).onZapComplete();
+			} else{
+				((Elemental)ch).onZapComplete();
+			}
 			parent.add( new Beam.LightRay(center(), DungeonTilemap.raisedTileCenterToWorld(cell)));
 		}
 		

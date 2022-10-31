@@ -236,7 +236,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 1;
+		depth = 6;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -339,8 +339,6 @@ public class Dungeon {
 		} else if (branch == 1) {
 			switch (depth) {
 				case 1:
-					level = new RemiliaBossLevel();
-					break;
 				case 2:
 				case 3:
 				case 4:
@@ -353,10 +351,10 @@ public class Dungeon {
 				case 7:
 				case 8:
 				case 9:
-					level = new PrisonLevel();
+					level = new SDMLevel();
 					break;
 				case 10:
-					level = new PrisonBossLevel();
+					level = new RemiliaBossLevel();
 					break;
 				case 11:
 				case 12:

@@ -1,20 +1,28 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ThiefSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
@@ -35,6 +43,9 @@ public class Marisa extends Mob {
 
 		loot = new PotionOfHealing();
 		lootChance = 0.1667f; //by default, see lootChance()
+		if (isLunatic()){
+			immunities.add(ConfusionGas.class);
+		}
 
 	}
 	
@@ -62,6 +73,12 @@ public class Marisa extends Mob {
 		
 		if (alignment == Alignment.ENEMY && item == null
 				&& enemy instanceof Hero && steal( (Hero)enemy )) {
+			if(isLunatic()){
+				Buff.affect(this, Stamina.class, 10f);
+				Sample.INSTANCE.play( Assets.Sounds.SHATTER );
+				Sample.INSTANCE.play( Assets.Sounds.GAS );
+				GameScene.add( Blob.seed( this.pos, 50*Dungeon.depth, ConfusionGas.class ) );
+			}
 			state = FLEEING;
 		}
 

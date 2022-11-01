@@ -21,72 +21,81 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.BatSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
-public class Rumia extends Mob {
+public class Ran extends Mob {
 	{
-		spriteClass = BatSprite.class;
-		HP = HT = 22;
-		defenseSkill = 12;
-		EXP = 6;
-		maxLvl = 13;
-        loot = PotionOfShroudingFog.class;
-		lootChance = 0.15f;
-
-        flying = true;
+		spriteClass = AliceSprite.class;
+		HP = HT = 69;
+		defenseSkill = 1;
+		EXP = 1;
+		maxLvl = 1;
+        loot = ScrollOfMirrorImage.class;
+		lootChance = 0.3f;
 	}
 
 
-    @Override
-	public int damageRoll() {
-		return Random.NormalIntRange( 4, 12 );
-	}
-	
 	@Override
-	public int attackSkill( Char target ) {
-		return 10;
+	public int damageRoll() {
+		return Random.NormalIntRange(5, 5);
+	}
+
+	@Override
+	public int attackSkill(Char target) {
+		return 5;
 	}
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 4);
+		return Random.NormalIntRange(5, 10);
 	}
-	
+
+    @Override
+	public float speed() {
+		return super.speed();
+	}
+
 	@Override
-	protected boolean act() {
-		if(Dungeon.isChallenged(Challenges.LUNATIC) && Blob.volumeAt(this.pos, SmokeScreen.class) > 0 && this.HP < this.HT){
-			this.HP++;
+	public int defenseProc( Char enemy, int damage ) {		
+		return super.defenseProc(enemy, damage);
+	}
+
+    @Override
+	protected boolean canAttack( Char enemy ) {
+		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.WONT_STOP);
+		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
+	}
+
+	@Override
+	public int attackProc(Char hero, int damage) {
+		damage = super.attackProc(enemy, damage);
+		if (hero instanceof Hero) {
+			Buff.prolong(enemy, Chill.class, 0.2f);
+			return damage;
 		}
+		return damage;
+	}
+
+    @Override
+	protected boolean act() {
 		return super.act();
 	}
 
 	@Override
-	public int attackProc( Char enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
-		int reg = Math.min( damage - 4, HT - HP );
-		
-		if (reg > 0) {
-			HP += reg;
-			sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-            GameScene.add(Blob.seed(this.pos, 20, SmokeScreen.class));
-            Buff.affect(enemy, Blindness.class, 3f);
-		}
-		
-		return damage;
+	public void die(Object cause) {
+		super.die(cause);
 	}
-	
 }

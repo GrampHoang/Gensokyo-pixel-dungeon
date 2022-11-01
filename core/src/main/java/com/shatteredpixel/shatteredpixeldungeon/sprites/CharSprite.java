@@ -232,6 +232,18 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 	}
 	
+	public void teleport( int from, int to ) {
+		
+		place( to );
+
+		isMoving = true;
+
+		if (Dungeon.level.water[to]) {
+			GameScene.ripple( to );
+		}
+
+	}
+
 	public static void setMoveInterval( float interval){
 		moveInterval = interval;
 	}

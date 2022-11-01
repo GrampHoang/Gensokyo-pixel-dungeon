@@ -59,7 +59,7 @@ public class Patchouli extends Mob {
 	protected int state = 0;
 	protected int summonCD = Random.NormalIntRange( 20, 25 );
 	protected int SKILL_CD = 5;
-	protected int skillCD = 5;
+	protected int skill_cd = 5;
 	private ArrayList<Integer> pacthyCells = new ArrayList<>();
 
 
@@ -67,11 +67,11 @@ public class Patchouli extends Mob {
 	@Override
 	protected boolean act() {
 		if (Dungeon.isChallenged(Challenges.LUNATIC)){
-			skillCD--;
+			skill_cd--;
 
 			if (!enemySeen && state == STATE_CASTING){
 				state = 0;
-				skillCD = SKILL_CD;
+				skill_cd = SKILL_CD;
 				spend(TICK);
 				return true;
 			}
@@ -90,16 +90,16 @@ public class Patchouli extends Mob {
 						skillShock();
 						break;	
 				}
-				if (this.HP > 4){
+				if (this.HP > 4 && !isLunatic()){
 					this.HP = this.HP - 4;
 				}
-				skillCD = SKILL_CD;
+				skill_cd = SKILL_CD;
 				state = 0;
 				spend(TICK);
 				return true;
 			}
 
-			if (skillCD <= 0 && state != STATE_CASTING & enemySeen){
+			if (skill_cd <= 0 && state != STATE_CASTING && enemySeen){
 				this.sprite.add(CharSprite.State.CHARGING);
 				state = STATE_CASTING;
 				readySkill(enemy);
@@ -152,17 +152,34 @@ public class Patchouli extends Mob {
 	}
 
 	private static final String SUMMONING_CD = "summoning_cd";
+	private static final String CUR_STATE = "cur_state";
+	private static final String SKILL_COOLDOWN = "skill_cd";
+	private static final String PATCHYCELLS = "patchyCells";
+	// private static final String SUMMONING_CD = "summoning_cd";
 	
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put( SUMMONING_CD, summonCD );
+		bundle.put( CUR_STATE, state );
+		bundle.put( SKILL_COOLDOWN, skill_cd );
+		
+		int[] bundleArr = new int[pacthyCells.size()];
+		for (int i = 0; i < pacthyCells.size(); i++){
+			bundleArr[i] = pacthyCells.get(i);
+		}
+		bundle.put(PATCHYCELLS, bundleArr);
 	}
-	
+
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		summonCD = bundle.getInt( SUMMONING_CD );
+		state = bundle.getInt(CUR_STATE);
+		skill_cd = bundle.getInt(SKILL_COOLDOWN);
+		for (int i : bundle.getIntArray(PATCHYCELLS)){
+			pacthyCells.add(i);
+		}
 	}
 	
 	public boolean summonBook(int summoningPos){
@@ -255,7 +272,7 @@ public class Patchouli extends Mob {
             Char ch = Actor.findChar(p);
             if (ch != null && ch.alignment == this.alignment){
             } else {
-				GameScene.add( Blob.seed( p, 2, ParalyticGas.class ) );
+				GameScene.add( Blob.seed( p, 2, ConfusionGas.class ) );
 			}
 			
         }

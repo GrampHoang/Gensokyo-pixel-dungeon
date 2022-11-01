@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -42,6 +43,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfShr
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave.BlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ExplosiveTrap;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.FrostBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
@@ -98,8 +101,8 @@ public class RemiliaBoss extends Mob {
 		immunities.add(Fire.class);
 		immunities.add(Drowsy.class);
 	}
-
-	private int debug_summon_pos = 8*17+8;
+	private int middle_of_map = 8*17+8;
+	private int debug_summon_pos = 1*17+8;
 	
 	private final int LEVATIN_CD = (Dungeon.isChallenged(Challenges.LUNATIC) ? 14 : 25);
 
@@ -146,14 +149,14 @@ public class RemiliaBoss extends Mob {
 			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
 		}
 
-		// if (beforeHitHP / hpBracket != HP / hpBracket) {
-		// 	callSakuya( 10);
-		// }
+		if (beforeHitHP / hpBracket != HP / hpBracket) {
+			callSakuya(debug_summon_pos);
+		}
 	}
 
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(2, 8);
+		return Random.NormalIntRange(0, 5);
 	}
 
 	@Override
@@ -163,10 +166,16 @@ public class RemiliaBoss extends Mob {
 	
 	@Override
 	public void die( Object cause ) {
-		super.die( cause );
 		Dungeon.level.drop( new PotionOfExperience(), pos ).sprite.drop();
 		Dungeon.level.unseal();
 		GameScene.bossSlain();
+
+		if (Dungeon.hero.subClass == HeroSubClass.NONE) {
+			Dungeon.level.drop( new TengusMask(), pos ).sprite.drop();
+		}
+
+		Statistics.bossScores[1] += 2000;
+		super.die( cause );
 	}
 
 	@Override
@@ -197,15 +206,26 @@ public class RemiliaBoss extends Mob {
 
 
 	public void callSakuya(int summonPos) {
+		//Make sure mid map is empty
+		Char block = Actor.findChar(middle_of_map);
+		if(block != null){
+			block.move(15*17+8);
+			block.sprite.move( this.pos, 15*17+8 );
+		}
 		//Jump to mid map
 		if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( this.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-		sprite.move( this.pos, debug_summon_pos );
-		move( debug_summon_pos );
+		GameScene.add( Blob.seed( this.pos, 5, SmokeScreen.class ) );
+
+		if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( middle_of_map ).burst( Speck.factory( Speck.WOOL ), 6 );
+		sprite.move( this.pos, middle_of_map );
+		move( middle_of_map );
 		if (Dungeon.level.heroFOV[debug_summon_pos]) CellEmitter.get( debug_summon_pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 
-		//Stun herself and grant invul
-		Buff.affect(this, AnkhInvulnerability.class, 10f);
-		Buff.affect(this, Paralysis.class, 10f);
+		//Grant invul
+		//Release Smoke and set levatin_cd to 6
+		Buff.affect(this, AnkhInvulnerability.class, 6f);
+		GameScene.add( Blob.seed( this.pos, 200, SmokeScreen.class ) );
+		levatin_cd = 6;
 
 		//Summon Sakuya and deliver cake
 		if (Actor.findChar(summonPos) instanceof Sheep){
@@ -227,7 +247,7 @@ public class RemiliaBoss extends Mob {
 			}
 		}
 
-		
+		spend(TICK);
 	}
 
 	private class Hunting extends Mob.Hunting{
@@ -303,6 +323,7 @@ public class RemiliaBoss extends Mob {
 	}
 	
 	public boolean useReady(){
+		Dungeon.hero.interrupt();
 		spend(TICK);
 		
 		Camera.main.shake( 0.5f, 0.25f );
@@ -340,10 +361,6 @@ public class RemiliaBoss extends Mob {
             return throwLevatin();
         } 
         return false;
-		
-		// } else {
-		// 	return sts_cd(this);
-		// }
 	}
 
     public boolean throwLevatin(){
@@ -353,14 +370,16 @@ public class RemiliaBoss extends Mob {
 			if (Dungeon.isChallenged(Challenges.LUNATIC)){
 				GameScene.add(Blob.seed(i, 60, Fire.class));
 			}else {
-				Blob.seed(i, 5, Fire.class);
+				Blob.seed(i, 10, Fire.class);
 			}
 			Char ch = Actor.findChar(i);
 			if(ch != null && (!(ch instanceof RemiliaBoss))){
-				Buff.affect(ch, Paralysis.class, 0.5f);
+				Buff.affect(ch, Paralysis.class, 1f);
+				this.spend(TICK);
                 ch.damage(Random.IntRange(8,16), this);
 
 				Actor.addDelayed(new Pushing(ch, ch.pos, levatin_stop_pos), 0);
+				
 				ch.pos = levatin_stop_pos;
 				Dungeon.level.occupyCell(ch);
 			}
@@ -369,12 +388,13 @@ public class RemiliaBoss extends Mob {
 		PathFinder.buildDistanceMap( levatin_stop_pos, BArray.not( Dungeon.level.solid, null ), 1 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				if (Dungeon.level.pit[i])
-					GameScene.add(Blob.seed(i, 1, Fire.class));
-				else if (Dungeon.isChallenged(Challenges.LUNATIC))
+				// if (Dungeon.level.pit[i])
+				// 	GameScene.add(Blob.seed(i, 1, Fire.class));
+				// else 
+				if (Dungeon.isChallenged(Challenges.LUNATIC))
 					GameScene.add(Blob.seed(i, 60, Fire.class));
 				else{
-					GameScene.add(Blob.seed(i, 5, Fire.class));
+					GameScene.add(Blob.seed(i, 10, Fire.class));
 				}
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 				CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
@@ -439,14 +459,16 @@ public class RemiliaBoss extends Mob {
 	public static class MaidSakuya extends Sakuya {
 		
 		{
-			spriteClass = NecroSkeletonSprite.class;
+			
 			state = WANDERING;
 			//no loot or exp
 			maxLvl = -5;
 			
 			//20/25 health to start
 			viewDistance = 0;
-			HP = 20;
+			HT = 10;
+			HP = 10;
+			immunities.add(Fire.class);
 		}
 
 		@Override
@@ -469,7 +491,7 @@ public class RemiliaBoss extends Mob {
 						}
 						int healAmount = Math.round(30*(1-(find.HP/find.HT)));
 						if(Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-							healAmount = 15;
+							healAmount = 30;
 						}
 						find.HP += healAmount;
 						find.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 1 );
@@ -484,32 +506,19 @@ public class RemiliaBoss extends Mob {
 		@Override
 		public void die( Object cause ) {
 			super.die( cause );
-			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-				if (mob instanceof RemiliaBoss) {
-					if (mob.buff(Paralysis.class) != null){
-						mob.buff(Paralysis.class).detach();
-					}
-					if (mob.buff(AnkhInvulnerability.class) != null){
-						mob.buff(AnkhInvulnerability.class).detach();
-					}
-					if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( this.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
-				}
-			}
+			if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( this.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 		}
 		
-		public static class NecroSkeletonSprite extends SkeletonSprite{
-			
-			public NecroSkeletonSprite(){
-				super();
-				brightness(0.75f);
-			}
-			
-			@Override
-			public void resetColor() {
-				super.resetColor();
-				brightness(0.75f);
-			}
+		@Override
+		public float speed() {
+			float speed = (isLunatic() ? 2 : 1);
+			if ( buff( Cripple.class ) != null ) speed /= 2f;
+			if ( buff( Stamina.class ) != null) speed *= 1.5f;
+			if ( buff( Adrenaline.class ) != null) speed *= 2f;
+			if ( buff( Haste.class ) != null) speed *= 3f;
+			if ( buff( Exterminating.class ) != null) speed *= 1.2f;
+			if ( buff( Dread.class ) != null) speed *= 2f;
+			return speed;
 		}
-		
 	}
 }

@@ -55,6 +55,8 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.*;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CirnoBossLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.RemiliaBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
@@ -236,7 +238,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 6;
+		depth = 9;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;

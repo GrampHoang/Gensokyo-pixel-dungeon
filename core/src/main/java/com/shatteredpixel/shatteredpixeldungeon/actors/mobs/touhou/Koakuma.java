@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -54,7 +55,9 @@ public class Koakuma extends Mob {
 		lootChance = 0.25f;
 
 		properties.add(Property.DEMONIC);
-
+		if(isLunatic()){
+			Buff.affect( this, MagicImmune.class, 690f );
+		}
 	}
 
 	
@@ -72,9 +75,5 @@ public class Koakuma extends Mob {
 	public int drRoll() {
 		return Random.NormalIntRange(2, 6);
 	}
-	
-	@Override
-	protected boolean canAttack( Char enemy ) {
-		return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
-	}
+
 }

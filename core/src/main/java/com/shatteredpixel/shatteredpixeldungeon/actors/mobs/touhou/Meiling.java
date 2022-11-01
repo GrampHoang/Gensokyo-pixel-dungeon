@@ -70,9 +70,16 @@ public class Meiling extends Mob {
 		HUNTING = new Hunting();
 
 		baseSpeed = 1f;
+		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			immunities.add(Sleep.class);
+			immunities.add(MagicalSleep.class);
+		}; 
 	}
 
-    private float rock_cd = 200;
+	private float ROCK_COOLDOWN = (Dungeon.isChallenged(Challenges.LUNATIC) ? 50 : 100);
+	private float PUNCH_COOLDOWN = (Dungeon.isChallenged(Challenges.LUNATIC) ? 10 : 20); 
+	private float JUMP_COOLDOWN = (Dungeon.isChallenged(Challenges.LUNATIC) ? 5 : 10); 
+    private float rock_cd = 30;
 	private float punch_cd = 5;
     // ArrayList<Integer> punch_pos = new ArrayList<>();
     // ArrayList<Integer> punch_pos_drop = new ArrayList<>();
@@ -162,7 +169,7 @@ public class Meiling extends Mob {
                 if (i != 0){
                     Char ch = Actor.findChar(i);
                     if (ch != null && !(ch instanceof Meiling)){
-                        Buff.prolong( ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 4 : 2 );
+                        Buff.prolong( ch, Paralysis.class, 2);
                     }
                     Camera.main.shake( 1, 0.5f );
                     Sample.INSTANCE.play(Assets.Sounds.ROCKS);
@@ -208,7 +215,7 @@ public class Meiling extends Mob {
 
 			if (leapPos != -1){
 
-				leapCooldown = Random.NormalIntRange(2, 3);
+				leapCooldown = JUMP_COOLDOWN;
 				Ballistica b = new Ballistica(pos, leapPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
 
 				//check if leap pos is not obstructed by terrain
@@ -358,11 +365,11 @@ public class Meiling extends Mob {
 
 	public boolean useAbility(){
 		if(rock_cd < 1){
-            rock_cd = 30;
-            GLog.w("Meiling is about to punch the ceiling!");
+            rock_cd = ROCK_COOLDOWN;
+            GLog.w("Meiling is aiming upward!");
 			return dropRocks(Dungeon.hero);
 		} else {
-            punch_cd = 10;
+            punch_cd = PUNCH_COOLDOWN;
 			return punchShot(Dungeon.hero);
 		}
 	}
@@ -443,10 +450,7 @@ public class Meiling extends Mob {
 
 				Char ch = Actor.findChar(i);
 				if (ch != null && !(ch instanceof Meiling)){
-					Buff.prolong( ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 4 : 2 );
-					if (ch == Dungeon.hero){
-						Statistics.bossScores[2] -= 100;
-					}
+					Buff.prolong( ch, Paralysis.class, 2);
 				}
 			}
 

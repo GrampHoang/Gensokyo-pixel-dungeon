@@ -1270,5 +1270,9 @@ public abstract class Mob extends Char {
 	public static void clearHeldAllies(){
 		heldAllies.clear();
 	}
+
+	public boolean isLunatic(){
+		return Dungeon.isChallenged(Challenges.LUNATIC);
+	}
 }
 

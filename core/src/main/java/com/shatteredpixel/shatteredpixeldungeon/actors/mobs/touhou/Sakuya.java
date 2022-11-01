@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Chains;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -34,7 +35,10 @@ public class Sakuya extends Mob {
 		loot = Generator.Category.ARMOR;
 		lootChance = 0.2f; //by default, see lootChance()
 
-		// HUNTING = new Hunting();
+		if (isLunatic()){
+			immunities.add(Sleep.class);
+			immunities.add(MagicalSleep.class);
+		};
 	}
 
 	@Override
@@ -45,6 +49,15 @@ public class Sakuya extends Mob {
     @Override
 	public float attackDelay() {
 		return super.attackDelay()*0.5f;
+	}
+
+	@Override
+	public float speed() {
+		if (enemySeen){
+			return super.speed();
+		}else{
+			return super.speed()*3f;
+		}
 	}
 
 	@Override
@@ -69,25 +82,4 @@ public class Sakuya extends Mob {
 		Dungeon.LimitedDrops.GUARD_ARM.count++;
 		return super.createLoot();
 	}
-
-	// private class Hunting extends Mob.Hunting{
-	// 	@Override
-	// 	public boolean act( boolean enemyInFOV, boolean justAlerted ) {
-	// 		enemySeen = enemyInFOV;
-			
-	// 		if (!chainsUsed
-	// 				&& enemyInFOV
-	// 				&& !isCharmedBy( enemy )
-	// 				&& !canAttack( enemy )
-	// 				&& Dungeon.level.distance( pos, enemy.pos ) < 5
-
-					
-	// 				&& chain(enemy.pos)){
-	// 			return !(sprite.visible || enemy.sprite.visible);
-	// 		} else {
-	// 			return super.act( enemyInFOV, justAlerted );
-	// 		}
-			
-	// 	}
-	// }
 }

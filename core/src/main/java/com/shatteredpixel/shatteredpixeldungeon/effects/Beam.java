@@ -66,6 +66,12 @@ public class Beam extends Image {
 		}
 	}
 
+	public static class YoumuSlash extends Beam{
+		public YoumuSlash(PointF s, PointF e){
+			super(s, e, Effects.Type.DEATH_RAY, 0.2f);
+		}
+	}
+
 	public static class HealthRay extends Beam{
 		public HealthRay(PointF s, PointF e){
 			super(s, e, Effects.Type.HEALTH_RAY, 0.75f);

@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
-
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -47,33 +47,34 @@ public class Alice extends Mob {
 	{
 		spriteClass = AliceSprite.class;
 
-		HP = HT = 138;
+		HP = HT = 50;
 
-		defenseSkill = 38;
+		defenseSkill = 17;
 
-		EXP = 19;
+		EXP = 9;
 
-		maxLvl = 40;
+		maxLvl = 17;
 
-        loot = ScrollOfMirrorImage.class;
-		lootChance = 0.3f;
+        loot = PotionOfHealing.class;
+		lootChance = 0.1667f;
 	}
 
-    public float summon_cd = 10f;
+	private float SUMMON_CD = 30f;
+    private float summon_cd = SUMMON_CD;
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(32, 36);
+		return Random.NormalIntRange(6, 16);
 	}
 
 	@Override
 	public int attackSkill(Char target) {
-		return 40;
+		return 22;
 	}
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(5, 10);
+		return Random.NormalIntRange(2, 8);
 	}
 
     @Override
@@ -117,7 +118,7 @@ public class Alice extends Mob {
 	}
     protected void summonDolls(){
         summon_cd = 15;
-        for (int c : PathFinder.NEIGHBOURS4) {
+        for (int c : PathFinder.NEIGHBOURS8) {
             if (Actor.findChar(this.pos + c) == null
 						&& Dungeon.level.passable[this.pos + c]
 						&& (Dungeon.level.openSpace[this.pos + c] || !hasProp(Actor.findChar(this.pos), Property.LARGE))){

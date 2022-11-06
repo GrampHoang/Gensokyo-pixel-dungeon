@@ -33,21 +33,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
-import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfShroudingFog;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave.BlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ExplosiveTrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
-import com.shatteredpixel.shatteredpixeldungeon.items.bombs.FrostBomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -56,14 +48,11 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaBossSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
-import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSparkBig;
-import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSpark;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.noosa.audio.Sample;
@@ -83,7 +72,7 @@ import java.util.HashSet;
 public class RemiliaBoss extends Mob {
 
 	{
-		spriteClass = ReimuBossSprite.class;
+		spriteClass = RemiliaSprite.class;
 
 		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
 
@@ -143,12 +132,15 @@ public class RemiliaBoss extends Mob {
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
-		
+
 		// cannot be hit through multiple brackets at a time
 		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
 			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
 		}
 
+		if(HP <= 0){
+			return;
+		}
 		if (beforeHitHP / hpBracket != HP / hpBracket) {
 			callSakuya(debug_summon_pos);
 		}
@@ -164,6 +156,16 @@ public class RemiliaBoss extends Mob {
 		return super.act();
 	}
 	
+	private HashSet<Mob> getSubjects(){
+		HashSet<Mob> subjects = new HashSet<>();
+		for (Mob m : Dungeon.level.mobs){
+			if (m.alignment == alignment && (m instanceof MaidSakuya)){
+				subjects.add(m);
+			}
+		}
+		return subjects;
+	}
+
 	@Override
 	public void die( Object cause ) {
 		Dungeon.level.drop( new PotionOfExperience(), pos ).sprite.drop();
@@ -172,6 +174,10 @@ public class RemiliaBoss extends Mob {
 
 		if (Dungeon.hero.subClass == HeroSubClass.NONE) {
 			Dungeon.level.drop( new TengusMask(), pos ).sprite.drop();
+		}
+
+		for (Mob m : getSubjects()){
+			m.die(null);
 		}
 
 		Statistics.bossScores[1] += 2000;
@@ -208,7 +214,7 @@ public class RemiliaBoss extends Mob {
 	public void callSakuya(int summonPos) {
 		//Make sure mid map is empty
 		Char block = Actor.findChar(middle_of_map);
-		if(block != null){
+		if(block != null && !(block instanceof RemiliaBoss)){
 			block.move(15*17+8);
 			block.sprite.move( this.pos, 15*17+8 );
 		}
@@ -221,9 +227,7 @@ public class RemiliaBoss extends Mob {
 		move( middle_of_map );
 		if (Dungeon.level.heroFOV[debug_summon_pos]) CellEmitter.get( debug_summon_pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 
-		//Grant invul
 		//Release Smoke and set levatin_cd to 6
-		Buff.affect(this, AnkhInvulnerability.class, 6f);
 		GameScene.add( Blob.seed( this.pos, 200, SmokeScreen.class ) );
 		levatin_cd = 6;
 
@@ -254,7 +258,6 @@ public class RemiliaBoss extends Mob {
 		
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			// GLog.w("%1d,     %2d,           %3d",marred_cd, orbs_cd, spread_cd);
 			if (enemyInFOV && !isCharmedBy( enemy ) && canAttack( enemy )) {
 
 				if (canUseReady()){
@@ -273,7 +276,8 @@ public class RemiliaBoss extends Mob {
 				} else {
 					sprite.showLost();
 					levatin_throw = false;
-					levatin_cd = LEVATIN_CD - 3;
+					//is this even helpful at all?
+					levatin_cd += 2; 
 					state = WANDERING;
 					return true;
 				}

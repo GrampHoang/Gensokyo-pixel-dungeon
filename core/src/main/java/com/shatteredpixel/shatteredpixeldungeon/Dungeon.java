@@ -238,7 +238,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 9;
+		depth = 10;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;

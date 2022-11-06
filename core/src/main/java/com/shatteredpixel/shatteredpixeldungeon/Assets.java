@@ -246,7 +246,7 @@ public class Assets {
 		public static final String MAGE     = "sprites/mage.png";
 		public static final String ROGUE    = "sprites/rogue.png";
 		public static final String HUNTRESS = "sprites/huntress.png";
-		public static final String SAKUYA	= "sprites/sakuya.png";
+		// public static final String SAKUYA	= "sprites/sakuya.png";
 		public static final String MARISA	= "sprites/marisa.png";
 		public static final String REIMU	= "sprites/reimu.png";
 		public static final String REISEN	= "sprites/reisen.png";
@@ -312,18 +312,25 @@ public class Assets {
 		public static final String RED_SENTRY= "sprites/red_sentry.png";
 
 		public static final String ALICE= "sprites/alice.png";
+		//Forest
+		public static final String WRIGGLE= "sprites/wriggle.png";
 		public static final String CIRNO= "sprites/cirno.png";
-		public static final String DAIYOSEI= "sprites/daiyosei.png";
-		public static final String KOAKUMA= "sprites/koakuma.png";
-		public static final String LILY= "sprites/lily.png";
-		public static final String LUNA= "sprites/luna.png";
-		public static final String MEILING= "sprites/meiling.png";
 		public static final String MYSTIA= "sprites/mystia.png";
-		public static final String PATCHOULI= "sprites/patchouli.png";
-		public static final String RUMIA= "sprites/rumia.png";
+		public static final String DAIYOSEI= "sprites/daiyosei.png";
+		//Forest boss
 		public static final String STAR= "sprites/star.png";
 		public static final String SUNNY= "sprites/sunny.png";
-		public static final String WRIGGLE= "sprites/wriggle.png";
+		public static final String LUNA= "sprites/luna.png";
+		//Scarlet Devil Mansion
+		public static final String KOAKUMA= "sprites/koakuma.png";
+		public static final String MARISA_MOB= "sprites/marisa_mob.png";
+		public static final String LILY= "sprites/lily.png";
+		public static final String MEILING= "sprites/meiling.png";
+		public static final String PATCHOULI= "sprites/patchouli.png";
+		public static final String RUMIA= "sprites/rumia.png";
+		public static final String SAKUYA= "sprites/sakuya.png";
+		public static final String REMILIA= "sprites/remilia.png";
+		//Touhou 7
 		public static final String YUKARI= "sprites/yukari.png";
 
 	}

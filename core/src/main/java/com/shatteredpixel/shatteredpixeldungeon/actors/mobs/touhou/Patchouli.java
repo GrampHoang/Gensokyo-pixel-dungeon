@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.NecromancerSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.PatchouliSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SkeletonSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -39,7 +39,7 @@ import com.watabou.utils.Random;
 public class Patchouli extends Mob {
 	
 	{
-		spriteClass = NecromancerSprite.class;
+		spriteClass = PatchouliSprite.class;
 		
 		HP = HT = 40;
 		defenseSkill = 14;

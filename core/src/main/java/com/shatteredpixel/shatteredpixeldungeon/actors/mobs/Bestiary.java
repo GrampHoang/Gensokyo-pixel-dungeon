@@ -299,34 +299,34 @@ public class Bestiary {
 				
 			// Caves
 			case 11:
-				//3x bat, 1x brute, 1x shaman
+				//3x Letty, 1x Chen, 1x Ran
 				return new ArrayList<>(Arrays.asList(
-						Bat.class, Bat.class, Bat.class,
-						Brute.class,
-						Shaman.random()));
+						Letty.class, Letty.class, Letty.class,
+						Chen.class,
+						Ran.class));
 			case 12:
-				//2x bat, 2x brute, 1x shaman, 1x spinner
+				//2x Letty, 2x Chen, 1x Ran, 1x Alice
 				return new ArrayList<>(Arrays.asList(
-						Bat.class, Bat.class,
-						Brute.class, Brute.class,
-						Shaman.random(),
-						Spinner.class));
+						Letty.class, Letty.class,
+						Chen.class, Chen.class,
+						Ran.class,
+						Alice.class));
 			case 13:
-				//1x bat, 2x brute, 2x shaman, 2x spinner, 1x DM-200
+				//1x Letty, 2x Chen, 2x Ran, 2x Alice, 1x DM-200
 				return new ArrayList<>(Arrays.asList(
-						Bat.class,
-						Brute.class, Brute.class,
-						Shaman.random(), Shaman.random(),
-						Spinner.class, Spinner.class,
-						DM200.class));
+						Letty.class,
+						Chen.class, Chen.class,
+						Ran.class, Ran.class,
+						Alice.class, Alice.class,
+						Youmu.class));
 			case 14: case 15:
-				//1x bat, 1x brute, 2x shaman, 2x spinner, 2x DM-300
+				//1x Letty, 1x Chen, 2x Ran, 2x Alice, 2x DM-300
 				return new ArrayList<>(Arrays.asList(
-						Bat.class,
-						Brute.class,
-						Shaman.random(), Shaman.random(),
-						Spinner.class, Spinner.class,
-						DM200.class, DM200.class));
+					Letty.class,
+						Chen.class,
+						Ran.class, Ran.class,
+						Alice.class, Alice.class,
+						Youmu.class, Youmu.class));
 				
 			// City
 			case 16:

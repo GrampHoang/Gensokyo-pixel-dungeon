@@ -574,7 +574,7 @@ public abstract class Char extends Actor {
 		needsShieldUpdate = false;
 		return cachedShield;
 	}
-	
+
 	public void damage( int dmg, Object src ) {
 		
 		if (!isAlive() || dmg < 0) {

@@ -18,7 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ThiefSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -29,7 +29,7 @@ import com.watabou.utils.Random;
 public class Marisa extends Mob {
 
 	{
-		spriteClass = ThiefSprite.class;
+		spriteClass = MarisaSprite.class;
 		
 		HP = HT = 20;
 		defenseSkill = 12;
@@ -77,7 +77,7 @@ public class Marisa extends Mob {
 				Buff.affect(this, Stamina.class, 10f);
 				Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 				Sample.INSTANCE.play( Assets.Sounds.GAS );
-				GameScene.add( Blob.seed( this.pos, 50*Dungeon.depth, ConfusionGas.class ) );
+				GameScene.add( Blob.seed( this.pos, 20*Dungeon.depth, ConfusionGas.class ) );
 			}
 			state = FLEEING;
 		}

@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.BatSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.RumiaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
@@ -39,7 +39,7 @@ import com.watabou.utils.Random;
 
 public class Rumia extends Mob {
 	{
-		spriteClass = BatSprite.class;
+		spriteClass = RumiaSprite.class;
 		HP = HT = 22;
 		defenseSkill = 12;
 		EXP = 6;

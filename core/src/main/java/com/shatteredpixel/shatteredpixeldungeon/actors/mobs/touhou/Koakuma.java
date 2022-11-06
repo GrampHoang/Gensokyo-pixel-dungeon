@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ConeAOE;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.SlimeSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.KoakumaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -43,7 +43,7 @@ import com.watabou.utils.Random;
 public class Koakuma extends Mob {
 
 	{
-		spriteClass = SlimeSprite.class;
+		spriteClass = KoakumaSprite.class;
 
 		HP = HT = 40;
 		defenseSkill = 9;

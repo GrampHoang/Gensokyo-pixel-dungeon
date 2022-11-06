@@ -453,7 +453,7 @@ public enum HeroClass {
 			case REIMU:
 				return Assets.Sprites.REIMU;
 			case SAKUYA:
-				return Assets.Sprites.SAKUYA;
+				return Assets.Sprites.KOISHI;
 			case MARISA:
 				return Assets.Sprites.MARISA;
 			case REISEN:

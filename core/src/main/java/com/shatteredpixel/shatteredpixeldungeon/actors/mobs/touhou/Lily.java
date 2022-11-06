@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.LilySprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 
 public class Lily extends Mob {
 	{
-		spriteClass = AliceSprite.class;
+		spriteClass = LilySprite.class;
 		HP = HT = 20;
 		defenseSkill = 1;
 		EXP = 5;

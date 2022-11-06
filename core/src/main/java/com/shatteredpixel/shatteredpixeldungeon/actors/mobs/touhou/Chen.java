@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class Chen extends Mob {
@@ -55,10 +56,13 @@ public class Chen extends Mob {
 
 	private int ROLL_CD = 20;
 	private int roll_cd = ROLL_CD;
+	private boolean rolling = false;
+	private int enemy_pos = this.pos; //just to be safe
 
 	private static final String ROLL_COOLDOWN = "roll_cooldown";
-
-
+	private static final String ROLLING = "rolling";
+	private static final String ENEMY_POS = "enemy_pos";
+	
 	@Override	
 	public int damageRoll() {
 		if (Dungeon.level.water[pos]){
@@ -80,47 +84,28 @@ public class Chen extends Mob {
 		if (Dungeon.level.water[pos]){
 			return Random.NormalIntRange(0, 6);
 		}
-		return Random.NormalIntRange(0, 10);
+		return Random.NormalIntRange(4, 12);
 	}
-
-    // @Override
-	// public float speed() {
-	// 	return super.speed();
-	// }
-
-	// @Override
-	// public int defenseProc( Char enemy, int damage ) {		
-	// 	return super.defenseProc(enemy, damage);
-	// }
-
-    // @Override
-	// protected boolean canAttack( Char enemy ) {
-	// 	Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.WONT_STOP);
-	// 	return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
-	// }
-
-	// @Override
-	// public int attackProc(Char hero, int damage) {
-	// 	damage = super.attackProc(enemy, damage);
-	// 	if (hero instanceof Hero) {
-	// 		Buff.prolong(enemy, Chill.class, 0.2f);
-	// 		return damage;
-	// 	}
-	// 	return damage;
-	// }
 
     @Override
 	protected boolean act() {
 		if(isLunatic()){
-			if (roll_cd <= 2 && enemySeen){
-				int enemy_pos = ready(enemy.pos);
+			if(rolling == true){
+				rolling = false;
+				roll_cd --;
 				spend(TICK);
-				if (isLunatic() && Random.IntRange(1,5) == 2){
-					roll_cd = 1;
+				return roll(enemy_pos);
+			} else if (roll_cd <= 1 && enemySeen && rolling == false){
+				enemy_pos = ready(enemy.pos);
+				spend(TICK);
+				if (isLunatic() && Random.IntRange(1,3) == 2){
+					roll_cd = 2;
 				}else{
 					roll_cd = ROLL_CD;
 				}
-				return roll(enemy_pos);
+				rolling = true;
+				return true;
+			
 			} else if(Dungeon.level.water[this.pos]){
 				roll_cd--;
 				//Chance to reduce even further if on water
@@ -137,10 +122,12 @@ public class Chen extends Mob {
 	// public void die(Object cause) {
 	// 	super.die(cause);
 	// }
+
 	private int ready(int target){
 		// CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 20);
         Ballistica b = new Ballistica(this.pos, target, Ballistica.STOP_SOLID);
-		while(Dungeon.level.pit[b.collisionPos]){
+		//Make sure she won't roll into pit
+		while(Dungeon.level.pit[b.collisionPos] && b.collisionPos != this.pos){
 			b.collisionPos = b.path.get(b.path.indexOf(b.collisionPos) - 1);
 		}
         for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
@@ -159,10 +146,22 @@ public class Chen extends Mob {
             Char ch = Actor.findChar(p);
 			if (ch != null && !(ch instanceof Chen)){
 				ch.damage(10, this);
-				ch.move(b.path.get(Dungeon.level.distance(this.pos, stopCell) - 1));
-				ch.sprite.move(this.pos, b.path.get(Dungeon.level.distance(this.pos, stopCell) - 1));
 			}
         }
+		Char ch = Actor.findChar(stopCell);
+		int push_pos = this.pos;
+		if (ch != null){
+			for (int i : PathFinder.NEIGHBOURS8){
+				if (Actor.findChar(stopCell + i) == null && Dungeon.level.passable[stopCell + i]){
+					push_pos = stopCell+i;
+					break;
+				}
+			}
+			Actor.addDelayed(new Pushing(ch, ch.pos, push_pos), 0);
+			// ch.moveSprite(ch.pos, push_pos);
+			ch.move(push_pos);
+			Dungeon.level.occupyCell(ch);
+		}
         return true;
 	}
 
@@ -170,11 +169,15 @@ public class Chen extends Mob {
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put( ROLL_COOLDOWN, roll_cd );
+		bundle.put( ENEMY_POS, enemy_pos );
+		bundle.put( ROLLING, rolling );
 	}
 	
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		roll_cd = bundle.getInt( ROLL_COOLDOWN );
+		enemy_pos = bundle.getInt( ENEMY_POS );
+		rolling = bundle.getBoolean( ROLLING );
 	}
 }

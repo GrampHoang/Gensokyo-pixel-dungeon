@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MonkSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MeilingSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
@@ -58,7 +58,7 @@ import java.util.List;
 public class Meiling extends Mob {
 
 	{
-		spriteClass = MonkSprite.class;
+		spriteClass = MeilingSprite.class;
 
 		HP = HT = 25;
 		defenseSkill = 12;
@@ -122,7 +122,7 @@ public class Meiling extends Mob {
     @Override
 	public void damage(int dmg, Object src) {
 		if ((HP*3 <= HT)){
-			((MonkSprite)sprite).spray(true);
+			((MeilingSprite)sprite).spray(true);
 			yell(Messages.get(this, "Meiling is mad!"));
 		}
 		super.damage(dmg, src);
@@ -317,7 +317,7 @@ public class Meiling extends Mob {
 						if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[leapPos]){
 							GLog.w("Meiling is about to leap to your position!");
 							sprite.parent.addToBack(new TargetedCell(leapPos, 0xFF0000));
-							((MonkSprite)sprite).leapPrep( leapPos );
+							((MeilingSprite)sprite).leapPrep( leapPos );
 							Dungeon.hero.interrupt();
 						}
 						return true;

@@ -127,7 +127,7 @@ public enum HeroClass {
 		plate.level(99);
 		plate.collect();
 
-		PotionOfExperience poe = new PotionOfExperience();
+		PotionOfHealing poe = new PotionOfHealing();
 		poe.quantity(30).collect();
 
 		TengusMask tengu = new TengusMask();

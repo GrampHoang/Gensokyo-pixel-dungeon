@@ -488,7 +488,7 @@ public class MarisaBoss extends Mob {
 
 	private boolean masterspark() {
 		this.sprite.remove(CharSprite.State.CHARGING);
-
+		Sample.INSTANCE.play(Assets.Sounds.MASTERSPARK, 1f, 1f);
         HashSet<Char> affected = new HashSet<>();
         boolean terrainAffected = false;
 

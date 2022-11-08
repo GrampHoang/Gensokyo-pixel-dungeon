@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ChenSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -45,7 +45,7 @@ import com.watabou.utils.Random;
 
 public class Chen extends Mob {
 	{
-		spriteClass = AliceSprite.class;
+		spriteClass = ChenSprite.class;
 		HP = HT = 45;
 		defenseSkill = 15;
 		EXP = 8;
@@ -124,6 +124,7 @@ public class Chen extends Mob {
 	// }
 
 	private int ready(int target){
+		((ChenSprite)sprite).spinning();
 		// CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 20);
         Ballistica b = new Ballistica(this.pos, target, Ballistica.STOP_SOLID);
 		//Make sure she won't roll into pit
@@ -138,9 +139,23 @@ public class Chen extends Mob {
 	}
 
 	private boolean roll(int stopCell) {
+		//push char
+		Char cha = Actor.findChar(stopCell);
+		int push_pos = this.pos;
+		if (cha != null && cha != this){
+			for (int i : PathFinder.NEIGHBOURS8){
+				if (Actor.findChar(stopCell + i) == null && Dungeon.level.passable[stopCell + i]){
+					push_pos = stopCell+i;
+					break;
+				}
+			}
+			Actor.addDelayed(new Pushing(cha, cha.pos, push_pos), 0);
+			// ch.moveSprite(ch.pos, push_pos);
+			cha.move(push_pos);
+			Dungeon.level.occupyCell(cha);
+		}
+		//roll
         sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(stopCell)));
-        this.move( stopCell);
-        this.moveSprite(this.pos, stopCell);
 		Ballistica b = new Ballistica(this.pos, stopCell, Ballistica.STOP_SOLID);
 		for (int p : b.subPath(0, Dungeon.level.distance(this.pos, stopCell))){
             Char ch = Actor.findChar(p);
@@ -148,20 +163,9 @@ public class Chen extends Mob {
 				ch.damage(10, this);
 			}
         }
-		Char ch = Actor.findChar(stopCell);
-		int push_pos = this.pos;
-		if (ch != null){
-			for (int i : PathFinder.NEIGHBOURS8){
-				if (Actor.findChar(stopCell + i) == null && Dungeon.level.passable[stopCell + i]){
-					push_pos = stopCell+i;
-					break;
-				}
-			}
-			Actor.addDelayed(new Pushing(ch, ch.pos, push_pos), 0);
-			// ch.moveSprite(ch.pos, push_pos);
-			ch.move(push_pos);
-			Dungeon.level.occupyCell(ch);
-		}
+		//move
+		this.move( stopCell);
+        this.moveSprite(this.pos, stopCell);
         return true;
 	}
 

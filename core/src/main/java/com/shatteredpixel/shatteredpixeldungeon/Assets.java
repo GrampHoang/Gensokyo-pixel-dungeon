@@ -57,9 +57,11 @@ public class Assets {
 		public static final String CITY_BOSS        = "environment/custom_tiles/city_boss.png";
 		public static final String HALLS_SP         = "environment/custom_tiles/halls_special.png";
 
-		public static final String TILES_FOREST = "environment/tiles_forest.png";
-		public static final String TILES_SDM = "environment/tiles_sdm.png";
-		public static final String TILES_SKY = "environment/tiles_sky.png";
+		public static final String TILES_FOREST 	= "environment/tiles_forest.png";
+		public static final String TILES_SDM 		= "environment/tiles_sdm.png";
+		// public static final String TILES_SKY 	= "environment/tiles_sky.png";
+		public static final String TILES_BAMBOO 	= "environment/tiles_bamboo.png";
+		public static final String TILES_SHRINE 	= "environment/tiles_shrine.png";
 	}
 	
 	//TODO include other font assets here? Some are platform specific though...
@@ -210,6 +212,12 @@ public class Assets {
 		public static final String CHAINS   = "sounds/chains.mp3";
 		public static final String SCAN     = "sounds/scan.mp3";
 		public static final String SHEEP    = "sounds/sheep.mp3";
+		
+		// public static final String DAGGER_WOOSH 		= "sounds/new/mixkit_dagger_woosh_1487.wav";
+		// public static final String METAL_WOOSH 			= "sounds/new/mixkit_metal_hit_woosh_1485.wav";
+		// public static final String SWING 				= "sounds/new/swing.mp3";
+		public static final String SWING 				= "sounds/new/swing.mp3";
+		public static final String MASTERSPARK 				= "sounds/new/ms_sfx.mp3";
 
 		public static final String[] all = new String[]{
 				CLICK, BADGE, GOLD,
@@ -222,7 +230,9 @@ public class Assets {
 				DESCEND, EAT, READ, LULLABY, DRINK, SHATTER, ZAP, LIGHTNING, LEVELUP, DEATH,
 				CHALLENGE, CURSED, TRAP, EVOKE, TOMB, ALERT, MELD, BOSS, BLAST, PLANT, RAY, BEACON,
 				TELEPORT, CHARMS, MASTERY, PUFF, ROCKS, BURNING, FALLING, GHOST, SECRET, BONES,
-				BEE, DEGRADE, MIMIC, DEBUFF, CHARGEUP, GAS, CHAINS, SCAN, SHEEP
+				BEE, DEGRADE, MIMIC, DEBUFF, CHARGEUP, GAS, CHAINS, SCAN, SHEEP,
+
+				SWING
 		};
 	}
 
@@ -311,27 +321,41 @@ public class Assets {
 		public static final String SPIRIT_HAWK= "sprites/spirit_hawk.png";
 		public static final String RED_SENTRY= "sprites/red_sentry.png";
 
-		public static final String ALICE= "sprites/alice.png";
+		public static final String ALICE		= "sprites/alice.png";
 		//Forest
-		public static final String WRIGGLE= "sprites/wriggle.png";
-		public static final String CIRNO= "sprites/cirno.png";
-		public static final String MYSTIA= "sprites/mystia.png";
-		public static final String DAIYOSEI= "sprites/daiyosei.png";
+		public static final String WRIGGLE		= "sprites/wriggle.png";
+		public static final String CIRNO		= "sprites/cirno.png";
+		public static final String MYSTIA		= "sprites/mystia.png";
+		public static final String DAIYOSEI		= "sprites/daiyosei.png";
 		//Forest boss
-		public static final String STAR= "sprites/star.png";
-		public static final String SUNNY= "sprites/sunny.png";
-		public static final String LUNA= "sprites/luna.png";
+		public static final String STAR			= "sprites/star.png";
+		public static final String SUNNY		= "sprites/sunny.png";
+		public static final String LUNA			= "sprites/luna.png";
 		//Scarlet Devil Mansion
-		public static final String KOAKUMA= "sprites/koakuma.png";
-		public static final String MARISA_MOB= "sprites/marisa_mob.png";
-		public static final String LILY= "sprites/lily.png";
-		public static final String MEILING= "sprites/meiling.png";
-		public static final String PATCHOULI= "sprites/patchouli.png";
-		public static final String RUMIA= "sprites/rumia.png";
-		public static final String SAKUYA= "sprites/sakuya.png";
-		public static final String REMILIA= "sprites/remilia.png";
+		public static final String KOAKUMA		= "sprites/koakuma.png";
+		public static final String MARISA_MOB	= "sprites/marisa_mob.png";
+		public static final String LILY			= "sprites/lily.png";
+		public static final String MEILING		= "sprites/meiling.png";
+		public static final String PATCHOULI	= "sprites/patchouli.png";
+		public static final String RUMIA		= "sprites/rumia.png";
+		public static final String SAKUYA		= "sprites/sakuya.png";
+		public static final String REMILIA		= "sprites/remilia.png";
 		//Touhou 7
-		public static final String YUKARI= "sprites/yukari.png";
+		public static final String CHEN			= "sprites/chen.png";
+		public static final String RAN			= "sprites/ran.png";
+		public static final String LETTY		= "sprites/cirno.png";
+		// public static final String ALICE		= "sprites/alice.png";
+		// public static final String YUKARI= "sprites/yukari.png";
+		public static final String YOUMU		= "sprites/youmu.png";
+		public static final String YUKARI		= "sprites/yukari.png";
+		//Touhou 8
+		public static final String TEWI			= "sprites/tewi.png";
+		public static final String REISEN_MOB	= "sprites/reisen_mob.png";
+		public static final String KEINE		= "sprites/keine.png";
+		public static final String EIRIN		= "sprites/eirin.png";
+		public static final String KAGUYA		= "sprites/kaguya.png";
+		public static final String KAGEROU		= "sprites/kagerou.png";
+		public static final String MOKOU		= "sprites/moukou.png";
 
 	}
 }

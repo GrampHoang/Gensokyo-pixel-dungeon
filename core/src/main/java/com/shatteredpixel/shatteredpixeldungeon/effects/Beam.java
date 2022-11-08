@@ -49,7 +49,7 @@ public class Beam extends Image {
 		angle = (float)(Math.atan2( dy, dx ) * A);
 		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width;
 		
-		Sample.INSTANCE.play( Assets.Sounds.RAY );
+		// Sample.INSTANCE.play( Assets.Sounds.RAY );
 		
 		timeLeft = this.duration = duration;
 	}
@@ -57,12 +57,14 @@ public class Beam extends Image {
 	public static class DeathRay extends Beam{
 		public DeathRay(PointF s, PointF e){
 			super(s, e, Effects.Type.DEATH_RAY, 0.5f);
+			Sample.INSTANCE.play( Assets.Sounds.RAY );
 		}
 	}
 
 	public static class LightRay extends Beam{
 		public LightRay(PointF s, PointF e){
 			super(s, e, Effects.Type.LIGHT_RAY, 1f);
+			Sample.INSTANCE.play( Assets.Sounds.RAY );
 		}
 	}
 
@@ -75,6 +77,7 @@ public class Beam extends Image {
 	public static class HealthRay extends Beam{
 		public HealthRay(PointF s, PointF e){
 			super(s, e, Effects.Type.HEALTH_RAY, 0.75f);
+			Sample.INSTANCE.play( Assets.Sounds.RAY );
 		}
 	}
 	

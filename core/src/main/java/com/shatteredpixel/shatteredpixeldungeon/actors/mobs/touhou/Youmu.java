@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -35,19 +36,20 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.YoumuSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class Youmu extends Mob {
 	{
-		spriteClass = AliceSprite.class;
+		spriteClass = YoumuSprite.class;
 
 		HP = HT = 80;
 		defenseSkill = 12;
@@ -130,6 +132,7 @@ public class Youmu extends Mob {
 					while(Dungeon.level.pit[dash_pos] && dash_pos != this.pos){
 						dash_pos = b.path.get(b.path.indexOf(dash_pos) - 1);
 					}
+					Sample.INSTANCE.play(Assets.Sounds.SWING, 0.7f, 0.75f);
 					//push char
 					Char ch = Actor.findChar(dash_pos);
 					int push_pos = this.pos;
@@ -160,6 +163,7 @@ public class Youmu extends Mob {
 							}
 					}
 					//effect
+					Sample.INSTANCE.play(Assets.Sounds.SWING, 0.5f, 1.2f);
 					sprite.parent.add(new Beam.YoumuSlash(DungeonTilemap.raisedTileCenterToWorld(this.pos + PathFinder.NEIGHBOURS_TOPLEFT), DungeonTilemap.raisedTileCenterToWorld(this.pos + PathFinder.NEIGHBOURS_TOPRIGHT)));
 					sprite.parent.add(new Beam.YoumuSlash(DungeonTilemap.raisedTileCenterToWorld(this.pos + PathFinder.NEIGHBOURS_TOPLEFT), DungeonTilemap.raisedTileCenterToWorld(this.pos + PathFinder.NEIGHBOURS_BOTLEFT)));
 					sprite.parent.add(new Beam.YoumuSlash(DungeonTilemap.raisedTileCenterToWorld(this.pos + PathFinder.NEIGHBOURS_BOTRIGHT), DungeonTilemap.raisedTileCenterToWorld(this.pos + PathFinder.NEIGHBOURS_TOPRIGHT)));

@@ -153,6 +153,9 @@ public class RemiliaBoss extends Mob {
 
 	@Override
 	public boolean act() {
+		if(Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
+			GameScene.add(Blob.seed(this.pos, 3, Fire.class));
+		}
 		return super.act();
 	}
 	

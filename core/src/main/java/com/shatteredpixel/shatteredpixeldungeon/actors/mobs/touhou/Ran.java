@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.RanSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -44,7 +44,7 @@ import com.watabou.utils.Random;
 
 public class Ran extends Mob {
 	{
-		spriteClass = AliceSprite.class;
+		spriteClass = RanSprite.class;
 		HP = HT = 35;
 		defenseSkill = 15;
 		
@@ -112,16 +112,17 @@ public class Ran extends Mob {
 			
 			return super.doAttack( enemy );
 			
-		} else {
+		// } else {
 			
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
-				return false;
-			} else {
-				zap();
-				return true;
-			}
+		// 	if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
+		// 		sprite.zap( enemy.pos );
+		// 		return false;
+		// 	} else {
+		// 		zap();
+		// 		return true;
+		// 	}
 		}
+		return super.doAttack( enemy );
 	}
 	
 	//used so resistances can differentiate between melee and magical attacks

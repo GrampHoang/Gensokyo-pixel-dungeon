@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -74,7 +75,9 @@ public class SusGold extends Item {
 				Dungeon.gold = 0;
 				Buff.affect(Dungeon.hero, Poison.class).set(4f);
 			}
-            GLog.n( Messages.get(this.getClass(), "warn") );
+			if(!(Dungeon.isChallenged(Challenges.LUNATIC))){
+				GLog.n( Messages.get(this.getClass(), "warn") );
+			}
         } else if(effect < 45){
             Buff.affect(Dungeon.hero, Vertigo.class, 5f);
         } else if(effect < 50){

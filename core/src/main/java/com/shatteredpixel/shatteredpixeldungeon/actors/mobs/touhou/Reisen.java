@@ -28,12 +28,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -46,101 +44,81 @@ public class Reisen extends Mob {
 	{
 		spriteClass = ReisenSprite.class;
 
-		HP = HT = 20;
-		defenseSkill = 5;
+		HP = HT = 70;
+		defenseSkill = 18;
+		
+		EXP = 11;
+		maxLvl = 21;
+		
+		loot = Generator.Category.POTION;
+		lootChance = 0.5f;
 
-		EXP = 5;
-
-		state = WANDERING;
-
-		//at half quantity, see createLoot()
-		loot = Generator.Category.MISSILE;
-		lootChance = 1f;
 	}
 
-	private int combo = 0;
+	@Override
+	public int damageRoll() {
+		return Random.NormalIntRange( 8, 18 );
+	}
+	
+	@Override
+	public float attackDelay() {
+		if(Dungeon.level.adjacent(pos, enemy.pos)){
+			return super.attackDelay()*0.5f;
+		}
+		return super.attackDelay();
+	}
 
 	@Override
 	public int attackSkill( Char target ) {
-		return 16;
+		return 25;
 	}
-
+	
+	@Override
+	public int drRoll() {
+		return Random.NormalIntRange(0, 8);
+	}
+	
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
+		return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
 
 	@Override
 	public int attackProc( Char enemy, int damage ) {
-		if(UFOSettings.green_Quest()){
-			Buff.affect(this, Cripple.class, 10f);
-		}
-		damage = super.attackProc( enemy, damage );
-		//The gnoll's attacks get more severe the more the player lets it hit them
-		combo++;
-		int effect = Random.Int(4)+combo;
-
-		if (effect > 2) {
-
-			if (effect >=6 && enemy.buff(Burning.class) == null){
-
-				if (Dungeon.level.flamable[enemy.pos])
-					GameScene.add(Blob.seed(enemy.pos, 4, Fire.class));
-				Buff.affect(enemy, Burning.class).reignite( enemy );
-
-			} else
-				Buff.affect( enemy, Poison.class).set((effect-2) );
-
-		}
-		return damage;
-	}
-
-	@Override
-	protected boolean getCloser( int target ) {
-		combo = 0; //if he's moving, he isn't attacking, reset combo.
-		if (state == HUNTING) {
-			return enemySeen && getFurther( target );
+		if (Dungeon.level.adjacent( pos, enemy.pos )) {
+			if(isLunatic() && Random.IntRange(0,9) == 1){
+				//10% chance to push per hit
+				Ballistica trajectory = new Ballistica(this.pos, enemy.pos, Ballistica.STOP_TARGET);
+				//trim it to just be the part that goes past them
+				trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
+				//knock them back along that ballistica
+				WandOfBlastWave.throwChar(enemy, trajectory, 1, false, true, this.getClass());
+			}
+			return super.attackProc( enemy, damage );
 		} else {
-			return super.getCloser( target );
-		}
-	}
+			if(isLunatic()){
+				damage = super.attackProc( enemy, damage*3 );
+			} else{
+				damage = super.attackProc( enemy, damage*2 );
+			}
 
-	@Override
-	public void aggro(Char ch) {
-		//cannot be aggroed to something it can't see
-		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
-			super.aggro(ch);
+			int effect = Random.Int(10);
+			if (effect > 6) {
+
+				if (effect >= 9){
+					Buff.prolong(enemy, Vertigo.class, 2f);
+
+				} else
+					Buff.prolong( enemy, Charm.class, 2f);
+
+			}
+			return damage;
 		}
-	}
-	
-	@Override
-	public Item createLoot() {
-		MissileWeapon drop = (MissileWeapon)super.createLoot();
-		//half quantity, rounded up
-		drop.quantity((drop.quantity()+1)/2);
-		return drop;
 	}
 	
 	@Override
 	public void die( Object cause ) {
 		super.die( cause );
-
-		Ghost.Quest.process();
-	}
-
-	private static final String COMBO = "combo";
-
-	@Override
-	public void storeInBundle( Bundle bundle ) {
-		super.storeInBundle(bundle);
-		bundle.put(COMBO, combo);
-	}
-
-	@Override
-	public void restoreFromBundle( Bundle bundle ) {
-		super.restoreFromBundle( bundle );
-		combo = bundle.getInt( COMBO );
 	}
 
 }

@@ -73,20 +73,35 @@ public class Tewi extends Mob {
 		return Random.NormalIntRange(0, 4);
 	}
 	
+	// Messing around with Terrain flag lead nowhere so bear with me
+	private boolean trap_able(int ter){
+		if (ter == Terrain.EMPTY || ter == Terrain.EMPTY_DECO 
+			|| ter == Terrain.GRASS || ter == Terrain.EMBERS || ter == Terrain.HIGH_GRASS 
+			|| ter == Terrain.FURROWED_GRASS || ter == Terrain.WATER ||ter == Terrain.INACTIVE_TRAP){
+				return true;
+			}
+		return false;
+	}
+
+	private boolean dropGold_able(int ter){
+		if(trap_able(ter) || ter == Terrain.CHASM || ter == Terrain.EMPTY_WELL || ter == Terrain.OPEN_DOOR){
+			return true;
+		}
+		return false;
+	}
 	@Override
 	public void die(Object cause) {
         for(int i : PathFinder.NEIGHBOURS8){
-            if(Random.IntRange(0,2) == 1){
-                //33% chance to drop fake gold
+			int ter = Dungeon.level.map[this.pos + i];
+            if((Random.IntRange(0, 3) == 1) && dropGold_able(ter)){
+                //25% chance to drop fake gold per tile
                 Dungeon.level.drop( new SusGold(), pos+i ).sprite.drop();
-                Char ch = Actor.findChar(this.pos + i);
-                if(Random.IntRange(0,1) == 1){
-                    //Then another lower chance to place trap under fake gold
+                if((Random.IntRange(0,1) == 1 || isLunatic()) && trap_able(ter)){
                     // Hopefully won't break the game
                     Trap trap = ((Trap)Reflection.newInstance(Random.element(traps)));
                     Dungeon.level.setTrap(trap, this.pos+i);
-                    Dungeon.level.map[trap.pos] = trap.visible ? Terrain.TRAP : Terrain.SECRET_TRAP;
-                    trap.reveal(); 
+					Dungeon.level.map[trap.pos] = Terrain.TRAP;
+					trap.reveal(); 
                 }
             }
         }
@@ -96,13 +111,13 @@ public class Tewi extends Mob {
 	protected float[] trapChances() {
         if (isLunatic()){
             return new float[]{
-				1, 1, 1, 1, 1,
+				0, 1, 1, 0, 0,
 				2, 2, 0, 2,
                 4, 0, 4, 4, 4, 4, 4, 4 };
         }
 		return new float[]{
-				4, 4, 4, 4, 4,
-				2, 2, 0, 2,
+				0, 4, 4, 0, 0,
+				4, 2, 0, 4,
 				1, 0, 1, 1, 1, 1, 1, 1 };
 	}
     

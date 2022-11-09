@@ -11,7 +11,7 @@ public class YoumuSprite extends MobSprite {
 		
 		texture( Assets.Sprites.YOUMU );
 		
-		TextureFilm frames = new TextureFilm( texture, 16, 15 );
+		TextureFilm frames = new TextureFilm( texture, 12, 16 );
 		
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 1 );

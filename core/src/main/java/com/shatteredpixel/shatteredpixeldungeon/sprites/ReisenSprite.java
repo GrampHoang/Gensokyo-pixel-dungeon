@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun.Bullet;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.ParalyticDart;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.Callback;
@@ -38,7 +37,7 @@ public class ReisenSprite extends MobSprite {
 
 		texture( Assets.Sprites.REISEN );
 
-		TextureFilm frames = new TextureFilm( texture, 12, 15 );
+		TextureFilm frames = new TextureFilm( texture, 12, 16 );
 
 		idle = new MovieClip.Animation( 2, true );
 		idle.frames( frames, 0,0 );
@@ -62,7 +61,7 @@ public class ReisenSprite extends MobSprite {
 		if (!Dungeon.level.adjacent(cell, ch.pos)) {
 
 			((MissileSprite)parent.recycle( MissileSprite.class )).
-					reset( this, cell, new ParalyticDart(), new Callback() {
+					reset( this, cell, new Bullet(), new Callback() {
 						@Override
 						public void call() {
 							ch.onAttackComplete();
@@ -76,6 +75,12 @@ public class ReisenSprite extends MobSprite {
 
 			super.attack( cell );
 
+		}
+	}
+
+	public class Bullet extends Item {
+		{
+			image = ItemSpriteSheet.BULLET;
 		}
 	}
 }

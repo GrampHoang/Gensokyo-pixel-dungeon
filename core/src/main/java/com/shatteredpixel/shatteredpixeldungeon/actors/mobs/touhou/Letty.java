@@ -36,7 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.LettySprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -47,7 +47,7 @@ import com.watabou.utils.Random;
 
 public class Letty extends Mob {
 	{
-		spriteClass = AliceSprite.class;
+		spriteClass = LettySprite.class;
 		HP = HT = 30;
 		defenseSkill = 15;
 		EXP = 7;
@@ -104,6 +104,7 @@ public class Letty extends Mob {
     @Override
 	protected boolean act() {
         for (int i : PathFinder.NEIGHBOURS9){
+			//avoid items
 			Heap heap = Dungeon.level.heaps.get( this.pos + i );
 			if(Random.IntRange(0, 2) == 1 && heap == null){
 				GameScene.add( Blob.seed( this.pos + i, 2, Freezing.class ) );
@@ -119,10 +120,11 @@ public class Letty extends Mob {
 			PathFinder.buildDistanceMap( this.pos, BArray.not( Dungeon.level.solid, null ), 2 );
 			for (int i = 0; i < PathFinder.distance.length; i++) {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-					GameScene.add(Blob.seed(i, 5, Freezing.class));
+					//avoid items and mobs, including hero
+					Heap heap = Dungeon.level.heaps.get(i);
 					Char ch = Actor.findChar(i);
-					if (ch != null){
-						Buff.affect(ch, Frost.class, 2f);
+					if(heap == null || ch != null){
+						GameScene.add(Blob.seed(i, 5, Freezing.class));
 					}
 				}
 			}

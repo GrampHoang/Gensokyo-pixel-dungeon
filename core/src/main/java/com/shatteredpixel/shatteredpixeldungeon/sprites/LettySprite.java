@@ -31,7 +31,7 @@ public class LettySprite extends MobSprite {
 		
 		texture( Assets.Sprites.LETTY );
 		
-		TextureFilm frames = new TextureFilm( texture, 15, 15 );
+		TextureFilm frames = new TextureFilm( texture, 14, 14 );
 		
 		idle = new Animation( 8, true );
 		idle.frames( frames, 0, 1 );

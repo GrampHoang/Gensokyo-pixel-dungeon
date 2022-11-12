@@ -71,6 +71,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Speed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Reality;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
@@ -629,6 +630,10 @@ public abstract class Char extends Actor {
 			Buff.detach(this, MagicalSleep.class);
 		}
 		if (this.buff(Doom.class) != null && !isImmune(Doom.class)){
+			dmg *= 2;
+		}
+
+		if (this.buff(Reality.class) != null){
 			dmg *= 2;
 		}
 

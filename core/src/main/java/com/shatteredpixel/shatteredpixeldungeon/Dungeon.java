@@ -238,7 +238,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 10;
+		depth = 16;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -362,7 +362,7 @@ public class Dungeon {
 				case 12:
 				case 13:
 				case 14:
-					level = new CavesLevel();
+					level = new ShrineLevel();
 					break;
 				case 15:
 					level = new CavesBossLevel();

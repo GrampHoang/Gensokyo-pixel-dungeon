@@ -24,8 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Reality;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fury;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -98,7 +99,7 @@ public class KoishiHat extends Artifact {
 			Dungeon.hero.buff(Invisibility.class).detach();
 		}
 		Buff.affect(Dungeon.hero, Fury.class);
-		Buff.affect(Dungeon.hero, Doom.class);
+		Buff.affect(Dungeon.hero, Reality.class);
 		return super.doUnequip(hero, collect, single);
 	}
 
@@ -108,8 +109,8 @@ public class KoishiHat extends Artifact {
 			GLog.w("Koishi hasn't calm down yet!");
 			return false;
 		} else {
-			if (Dungeon.hero.buff(Doom.class) != null){
-				Dungeon.hero.buff(Doom.class).detach();
+			if (Dungeon.hero.buff(Reality.class) != null){
+				Dungeon.hero.buff(Reality.class).detach();
 			};
 			boolean ret = super.doEquip(hero);
 			Dungeon.hero.buff(KoishiHat.Koishibuff.class).updateTalent();
@@ -190,7 +191,7 @@ public class KoishiHat extends Artifact {
 		@Override
 		public String desc() {
 			int chance = 40 + 10*Dungeon.hero.pointsInTalent(Talent.LEARNING);
-			return String.format("Koishi closed her mind, which makes her presence cannot be noticed by other beings unless she allows it. After %1$.1f turns of not attacking, she will turn invisible. \n\nTurns visible remaining: %2$.1f.\n\nHowever, by having this buff, Koishi only have _%3$d%% chance_ to gain full exp from all source.", turn_to_invis, turn_till_invis, chance);
+			return Messages.get(this, "effect", turn_to_invis, turn_till_invis, chance);
 		}
 
 		@Override

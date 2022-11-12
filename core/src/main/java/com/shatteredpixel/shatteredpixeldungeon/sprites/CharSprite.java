@@ -441,7 +441,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case BURSTING_POWER:
 				bursting_power = emitter();
-				bursting_power.pour(SacrificialParticle.FACTORY, 0.1f);
+				bursting_power.pour(SacrificialParticle.FACTORY, 0.05f);
 				break;
 		}
 	}

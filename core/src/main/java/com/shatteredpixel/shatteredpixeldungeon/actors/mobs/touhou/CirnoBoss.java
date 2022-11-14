@@ -138,9 +138,9 @@ public class CirnoBoss extends Mob {
 	}
 
 	@Override
-	public int attackProc(Char hero, int damage) {
+	public int attackProc(Char enemy, int damage) {
 		damage = super.attackProc(enemy, damage);
-		if (hero instanceof Hero) {
+		if (enemy instanceof Hero) {
 			Buff.prolong(enemy, Chill.class, 0.2f);
 			return damage;
 		}

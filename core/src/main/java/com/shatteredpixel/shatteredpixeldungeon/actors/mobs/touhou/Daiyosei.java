@@ -72,7 +72,7 @@ public class Daiyosei extends Mob {
 
 
 	@Override
-	public int attackProc(Char hero, int damage) {
+	public int attackProc(Char enemy, int damage) {
 		damage = super.attackProc(enemy, damage);
 		for (int p : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(p+ this.pos);

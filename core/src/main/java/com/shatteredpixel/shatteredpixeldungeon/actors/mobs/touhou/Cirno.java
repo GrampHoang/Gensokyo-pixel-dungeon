@@ -83,7 +83,7 @@ public class Cirno extends Mob {
 	}
 
 	@Override
-	public int attackProc(Char hero, int damage) {
+	public int attackProc(Char enemy, int damage) {
 		damage = super.attackProc(enemy, damage);
 		if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
 			Buff.affect(enemy, Chill.class, 0.5f);

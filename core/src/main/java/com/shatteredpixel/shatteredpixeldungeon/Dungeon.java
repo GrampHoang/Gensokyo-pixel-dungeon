@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MarisaBossLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.BambooLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CavesBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
@@ -371,7 +372,7 @@ public class Dungeon {
 				case 17:
 				case 18:
 				case 19:
-					level = new CityLevel();
+					level = new BambooLevel();
 					break;
 				case 20:
 					level = new CityBossLevel();

@@ -355,7 +355,7 @@ public class Assets {
 		public static final String EIRIN		= "sprites/eirin.png";
 		public static final String KAGUYA		= "sprites/kaguya.png";
 		public static final String KAGEROU		= "sprites/kagerou.png";
-		public static final String MOKOU		= "sprites/moukou.png";
+		public static final String MOKOU		= "sprites/mokou.png";
 
 	}
 }

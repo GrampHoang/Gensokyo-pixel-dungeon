@@ -77,9 +77,9 @@ public class Mystia extends Mob {
     }
 
 	@Override
-	public int attackProc(Char hero, int damage) {
+	public int attackProc(Char enemy, int damage) {
 		damage = super.attackProc(enemy, damage);
-		if (hero instanceof Hero) {
+		if (enemy instanceof Hero) {
             sing(10);
 			if (Dungeon.isChallenged(Challenges.LUNATIC)){
 				sing(10);	//roll again lmao., maybe higher chance? nah

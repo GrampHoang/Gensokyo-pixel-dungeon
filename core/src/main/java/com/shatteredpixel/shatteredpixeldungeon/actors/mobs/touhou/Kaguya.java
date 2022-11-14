@@ -152,10 +152,8 @@ public class Kaguya extends Mob {
 	@Override
 	public void die(Object cause) {
 		if (isLunatic() && !revived){
-			Buff.affect(this, Paralysis.class, 5f);
-			Buff.affect(this, Terror.class, 10f);
+			Buff.affect(this, Reviving.class, Reviving.DOWN_TIME);
 			((KaguyaSprite)this.sprite).crumple();
-			this.HP = this.HT;
 			revived = true;
 		} else {
 		super.die(cause);

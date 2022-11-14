@@ -14,7 +14,6 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
 
-
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
 

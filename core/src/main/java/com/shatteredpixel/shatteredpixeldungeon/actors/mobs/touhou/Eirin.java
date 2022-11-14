@@ -72,6 +72,14 @@ public class Eirin extends Mob {
 	}
 	
 	@Override
+	protected boolean act() {
+        if(isLunatic() && enemySeen && this.HP < this.HT){
+			this.HP++;
+		}
+		return super.act();
+	}
+
+	@Override
 	protected boolean canAttack( Char enemy ) {
         return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}

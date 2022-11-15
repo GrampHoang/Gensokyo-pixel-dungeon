@@ -44,7 +44,7 @@ public class Snake extends Mob {
 		spriteClass = SnakeSprite.class;
 		
 		HP = HT = 4;
-		defenseSkill = (Dungeon.isChallenged(Challenges.LUNATIC) ? 999 : 25);
+		defenseSkill = (isLunatic() ? 999 : 25);
 		
 		EXP = 2;
 		maxLvl = 7;
@@ -52,7 +52,7 @@ public class Snake extends Mob {
 		loot = Generator.Category.SEED;
 		lootChance = 0.25f;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Poison.class);
 			immunities.add(ToxicGas.class);
 		}
@@ -60,7 +60,7 @@ public class Snake extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		if (Dungeon.isChallenged(Challenges.LUNATIC) == true && Dungeon.level.distance(enemy.pos, this.pos) < 2){
+		if (isLunatic() == true && Dungeon.level.distance(enemy.pos, this.pos) < 2){
 			Buff.affect(enemy, Poison.class).set(3f);
 		}
 		return Random.NormalIntRange( 1, 4 );

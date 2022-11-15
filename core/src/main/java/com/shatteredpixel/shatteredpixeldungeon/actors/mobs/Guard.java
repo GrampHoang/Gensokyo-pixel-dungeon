@@ -121,7 +121,7 @@ public class Guard extends Mob {
 		enemy.sprite.place(pullPos);
 		Dungeon.level.occupyCell(enemy);
 		Cripple.prolong(enemy, Cripple.class, 4f);
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			Cripple.prolong(enemy, Cripple.class, 6f);
 			Roots.prolong(enemy, Roots.class, 2f);
 		}

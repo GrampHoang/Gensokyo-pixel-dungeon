@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ScrollEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Silence;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -112,7 +113,10 @@ public abstract class Wand extends Item {
 		super.execute( hero, action );
 
 		if (action.equals( AC_ZAP )) {
-			
+			if(hero.buff(Silence.class) != null){
+				GLog.w( Messages.get(this, "silence") );
+				return;
+			}
 			curUser = hero;
 			curItem = this;
 			GameScene.selectCell( zapper );

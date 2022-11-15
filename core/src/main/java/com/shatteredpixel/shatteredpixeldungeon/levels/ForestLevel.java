@@ -182,7 +182,7 @@ public class ForestLevel extends RegularLevel {
 			this.pos = pos;
 			
 			PointF p = DungeonTilemap.tileCenterToWorld( pos );
-			pos( p.x - 2, p.y + 3, 4, 0 );
+			pos( p.x - 6, p.y - 8, 12, 12 );
 			
 			pour( factory, 0.1f );
 		}
@@ -212,8 +212,8 @@ public class ForestLevel extends RegularLevel {
 			acc.y = 50;
 			am = 0.5f;
 			
-			color( ColorMath.random( 0xb6ccc2, 0x3b6653 ) );
-			size( 2 );
+			color( ColorMath.random( 0x118811, 0x338833 ) );
+			size( 1 );
 		}
 		
 		public void reset( float x, float y ) {
@@ -222,7 +222,7 @@ public class ForestLevel extends RegularLevel {
 			this.x = x;
 			this.y = y;
 			
-			speed.set( Random.Float( -2, +2 ), 0 );
+			speed.set( Random.Float( -4, +4 ), 0 );
 			
 			left = lifespan = 0.4f;
 		}

@@ -93,7 +93,7 @@ public class RemiliaBoss extends Mob {
 	private int middle_of_map = 8*17+8;
 	private int debug_summon_pos = 1*17+8;
 	
-	private final int LEVATIN_CD = (Dungeon.isChallenged(Challenges.LUNATIC) ? 14 : 25);
+	private final int LEVATIN_CD = (isLunatic() ? 14 : 25);
 
 	private int levatin_cd = LEVATIN_CD;
 	// private int levatin_pos = 0;
@@ -374,7 +374,7 @@ public class RemiliaBoss extends Mob {
 		sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(levatin_stop_pos)));
         for (int i :levatinCells){
 			CellEmitter.get(i).start(Speck.factory(Speck.STEAM), 0.07f, 10);
-			if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			if (isLunatic()){
 				GameScene.add(Blob.seed(i, 60, Fire.class));
 			}else {
 				Blob.seed(i, 10, Fire.class);
@@ -398,7 +398,7 @@ public class RemiliaBoss extends Mob {
 				// if (Dungeon.level.pit[i])
 				// 	GameScene.add(Blob.seed(i, 1, Fire.class));
 				// else 
-				if (Dungeon.isChallenged(Challenges.LUNATIC))
+				if (isLunatic())
 					GameScene.add(Blob.seed(i, 60, Fire.class));
 				else{
 					GameScene.add(Blob.seed(i, 10, Fire.class));
@@ -493,7 +493,7 @@ public class RemiliaBoss extends Mob {
 				Char find = Char.findChar(this.pos + i);
 				if (find != null){
 					if (find instanceof RemiliaBoss){
-						if(Dungeon.isChallenged(Challenges.LUNATIC)){
+						if(isLunatic()){
 							Buff.affect(find, Stamina.class, 5f);
 						}
 						int healAmount = Math.round(30*(1-(find.HP/find.HT)));

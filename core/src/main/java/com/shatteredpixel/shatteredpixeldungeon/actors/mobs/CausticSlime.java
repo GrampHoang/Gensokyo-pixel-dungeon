@@ -42,7 +42,7 @@ public class CausticSlime extends Slime {
 		spriteClass = CausticSlimeSprite.class;
 		
 		properties.add(Property.ACIDIC);
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(ToxicGas.class);
 		}
 	}
@@ -62,7 +62,7 @@ public class CausticSlime extends Slime {
 		super.die( cause );
 		if (cause == Chasm.class) return;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			WandOfBlastWave.BlastWave.blast(this.pos);
 			this.sprite.burst( 0x000000, 5 );
 			for(int i : PathFinder.NEIGHBOURS8){

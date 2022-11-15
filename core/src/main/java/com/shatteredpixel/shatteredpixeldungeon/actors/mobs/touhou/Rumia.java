@@ -22,19 +22,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.*;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RumiaSprite;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
-import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 public class Rumia extends Mob {
@@ -68,7 +61,7 @@ public class Rumia extends Mob {
 	
 	@Override
 	protected boolean act() {
-		if(Dungeon.isChallenged(Challenges.LUNATIC) && Blob.volumeAt(this.pos, SmokeScreen.class) > 0 && this.HP < this.HT){
+		if(isLunatic() && Blob.volumeAt(this.pos, SmokeScreen.class) > 0 && this.HP < this.HT){
 			this.HP++;
 		}
 		return super.act();

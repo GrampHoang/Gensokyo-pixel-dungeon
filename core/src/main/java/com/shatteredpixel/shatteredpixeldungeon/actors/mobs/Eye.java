@@ -166,7 +166,7 @@ public class Eye extends Mob {
 
 		boolean terrainAffected = false;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			for (int p : PathFinder.NEIGHBOURS9){
 				GameScene.add( Blob.seed( p + this.pos, 12, Fire.class ) );
 			}
@@ -174,7 +174,7 @@ public class Eye extends Mob {
 		
 
 		for (int pos : beam.subPath(1, beam.dist)) {
-			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			if(isLunatic()){
 				GameScene.add( Blob.seed( pos, 12, Fire.class ) );
 			}
 

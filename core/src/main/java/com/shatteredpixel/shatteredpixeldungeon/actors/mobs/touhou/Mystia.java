@@ -21,19 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MystiaSprite;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class Mystia extends Mob {
 	{
@@ -70,7 +66,7 @@ public class Mystia extends Mob {
     @Override
     public void damage(int dmg, Object src) {
         sing(20);
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			sing(20);	//roll again lmao
 		}
         super.damage(dmg, src);
@@ -81,7 +77,7 @@ public class Mystia extends Mob {
 		damage = super.attackProc(enemy, damage);
 		if (enemy instanceof Hero) {
             sing(10);
-			if (Dungeon.isChallenged(Challenges.LUNATIC)){
+			if (isLunatic()){
 				sing(10);	//roll again lmao., maybe higher chance? nah
 			}
 		}
@@ -93,7 +89,7 @@ public class Mystia extends Mob {
 		if (Random.IntRange(0, roll) == 1 ){
 			for (Mob mob : Dungeon.level.mobs) {
 				mob.beckon( pos );
-				if (Dungeon.isChallenged(Challenges.LUNATIC)){
+				if (isLunatic()){
 					Buff.affect(mob, Haste.class, 2f);
 				}
 			}
@@ -102,7 +98,7 @@ public class Mystia extends Mob {
 				CellEmitter.center( pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 			}
 			
-			if (Dungeon.isChallenged(Challenges.LUNATIC) && enemy != null){
+			if (isLunatic() && enemy != null){
 				Buff.affect(enemy, Blindness.class, 2f);
 			}
 		}

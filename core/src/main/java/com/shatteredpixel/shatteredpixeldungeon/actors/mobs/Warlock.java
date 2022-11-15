@@ -110,7 +110,7 @@ public class Warlock extends Mob implements Callback {
 			if (enemy == Dungeon.hero && Random.Int( 2 ) == 0) {
 				Buff.prolong( enemy, Degrade.class, Degrade.DURATION );
 				Sample.INSTANCE.play( Assets.Sounds.DEBUFF );
-				if(Dungeon.isChallenged(Challenges.LUNATIC) && this.buffs(Doom.class) != null){
+				if(isLunatic() && this.buffs(Doom.class) != null){
 					Buff.affect( this, Doom.class);
 					Buff.affect(this, Corrosion.class).set(4,3);
 					Buff.prolong( enemy, Hex.class, Hex.DURATION/2 );

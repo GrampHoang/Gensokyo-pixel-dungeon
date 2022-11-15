@@ -21,9 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
@@ -66,7 +64,7 @@ public class Cirno extends Mob {
 
 	@Override
 	protected boolean getCloser( int target ) {
-		if (state == HUNTING && (Dungeon.isChallenged(Challenges.LUNATIC))) {
+		if (state == HUNTING && (isLunatic())) {
 			return enemySeen && getFurther( target );
 		} else {
 			return super.getCloser( target );
@@ -75,7 +73,7 @@ public class Cirno extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
 			return (!Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4);
 		}

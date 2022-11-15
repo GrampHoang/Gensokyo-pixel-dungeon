@@ -80,7 +80,7 @@ public class Skeleton extends Mob {
 				if (ch == Dungeon.hero){
 					if (!ch.isAlive()) {
 						heroKilled = true;
-					} else if(Dungeon.isChallenged(Challenges.LUNATIC)){
+					} else if(isLunatic()){
 						Buff.affect(ch, Cripple.class, 3f);
 					}
 					

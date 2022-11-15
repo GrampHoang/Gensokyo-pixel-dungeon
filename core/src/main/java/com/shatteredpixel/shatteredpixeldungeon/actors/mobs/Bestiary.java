@@ -330,33 +330,33 @@ public class Bestiary {
 				
 			// City
 			case 16:
-				//3x ghoul, 1x elemental, 1x warlock
+				//3x Tewi, 1x kaguya, 1x Reisen
 				return new ArrayList<>(Arrays.asList(
-						Ghoul.class, Ghoul.class, Ghoul.class,
-						Elemental.random(),
-						Warlock.class));
+						Tewi.class, Tewi.class,
+						Kaguya.class, Keine.class,
+						Reisen.class));
 			case 17:
-				//1x ghoul, 2x elemental, 1x warlock, 1x monk
+				//1x Tewi, 1x kaguya, 1x keine, 1x Reisen, 1x Kagerou
 				return new ArrayList<>(Arrays.asList(
-						Ghoul.class,
-						Elemental.random(), Elemental.random(),
-						Warlock.class,
-						Monk.class));
+						Tewi.class,
+						Kaguya.class, Keine.class,
+						Reisen.class,
+						Kagerou.class));
 			case 18:
-				//1x ghoul, 1x elemental, 2x warlock, 2x monk, 1x golem
+				//1x Tewi, 1x kaguya, 1x keine, 1x eirin, 2x Reisen, 2x Kagerou, 1x Mokou
 				return new ArrayList<>(Arrays.asList(
-						Ghoul.class,
-						Elemental.random(),
-						Warlock.class, Warlock.class,
-						Monk.class, Monk.class,
-						Golem.class));
+						Tewi.class,
+						Kaguya.class, Keine.class, Eirin.class,
+						Reisen.class, Reisen.class,
+						Kagerou.class, Kagerou.class,
+						Mokou.class));
 			case 19: case 20:
-				//1x elemental, 2x warlock, 2x monk, 3x golem
+				//1x kaguya, 1x keine, 1x eirin, 2x Reisen, 2x Kagerou, 3x Mokou
 				return new ArrayList<>(Arrays.asList(
-						Elemental.random(),
-						Warlock.class, Warlock.class,
-						Monk.class, Monk.class,
-						Golem.class, Golem.class, Golem.class));
+						Kaguya.class, Keine.class, Eirin.class,
+						Reisen.class, Reisen.class,
+						Kagerou.class, Kagerou.class,
+						Mokou.class, Mokou.class, Mokou.class));
 				
 			// Halls
 			case 21:

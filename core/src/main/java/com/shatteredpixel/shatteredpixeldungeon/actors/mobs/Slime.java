@@ -53,7 +53,7 @@ public class Slime extends Mob {
 		
 		lootChance = 0.2f; //by default, see lootChance()
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(ToxicGas.class);
 		}
 	}
@@ -82,7 +82,7 @@ public class Slime extends Mob {
 		super.die( cause );
 		if (cause == Chasm.class) return;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			WandOfBlastWave.BlastWave.blast(this.pos);
 			for(int i : PathFinder.NEIGHBOURS8){
 				Char ch = Actor.findChar(this.pos+i);

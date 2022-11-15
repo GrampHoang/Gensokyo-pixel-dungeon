@@ -48,7 +48,7 @@ public class Albino extends Rat {
 		loot = new MysteryMeat();
 		lootChance = 1f;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Poison.class);
 			immunities.add(ToxicGas.class);
 			immunities.add(Paralysis.class);
@@ -70,7 +70,7 @@ public class Albino extends Rat {
 		
 		super.die( cause );
 		if (cause == Chasm.class) return;
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			GameScene.add( Blob.seed( pos, 50 + 20 * Dungeon.depth, ToxicGas.class ) );
 			GameScene.add( Blob.seed( pos, 50 + 20 * Dungeon.depth, ParalyticGas.class ) );
 		}

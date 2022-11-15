@@ -65,7 +65,7 @@ public class Monk extends Mob {
 	
 	@Override
 	public float attackDelay() {
-		if(Dungeon.isChallenged(Challenges.LUNATIC) && this.buff(Focus.class) != null){
+		if(isLunatic() && this.buff(Focus.class) != null){
 			return super.attackDelay()*0.33f;
 		}
 		return super.attackDelay()*0.5f;

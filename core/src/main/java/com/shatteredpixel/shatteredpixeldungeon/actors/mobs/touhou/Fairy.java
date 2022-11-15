@@ -21,14 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Alchemy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
 
 import com.watabou.utils.Random;
@@ -67,7 +63,7 @@ public class Fairy extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			return Dungeon.level.distance(this.pos, enemy.pos) < 3;
 		} else {
 			return super.canAttack(enemy);

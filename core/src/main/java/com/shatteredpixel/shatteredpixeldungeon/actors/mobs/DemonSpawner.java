@@ -180,7 +180,7 @@ public class DemonSpawner extends Mob {
 		immunities.add( Dread.class );
 		immunities.add( Terror.class );
 		immunities.add( Vertigo.class );
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add( CorrosiveGas.class );
 			immunities.add( ToxicGas.class );
 			immunities.add( Burning.class );

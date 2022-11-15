@@ -153,7 +153,7 @@ public abstract class Shaman extends Mob {
 		@Override
 		protected void debuff( Char enemy ) {
 			Buff.prolong( enemy, Weakness.class, Weakness.DURATION );
-			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			if(isLunatic()){
 				Buff.prolong( enemy, Degrade.class, 12f );
 			}
 		}
@@ -167,7 +167,7 @@ public abstract class Shaman extends Mob {
 		@Override
 		protected void debuff( Char enemy ) {
 			Buff.prolong( enemy, Vulnerable.class, Vulnerable.DURATION );
-			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			if(isLunatic()){
 				Buff.prolong( enemy, Degrade.class, 12f );
 			}
 		}
@@ -181,7 +181,7 @@ public abstract class Shaman extends Mob {
 		@Override
 		protected void debuff( Char enemy ) {
 			Buff.prolong( enemy, Hex.class, Hex.DURATION );
-			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			if(isLunatic()){
 				Buff.prolong( enemy, Degrade.class, 12f );
 			}
 		}

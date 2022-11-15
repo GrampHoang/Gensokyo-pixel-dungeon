@@ -84,7 +84,7 @@ public class Brute extends Mob {
 			hasRaged = true; //don't let enrage trigger for chasm deaths
 		}
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				if (mob.alignment == this.alignment && mob.fieldOfView[this.pos]) {
 					if(mob.buff(Fury.class) == null){

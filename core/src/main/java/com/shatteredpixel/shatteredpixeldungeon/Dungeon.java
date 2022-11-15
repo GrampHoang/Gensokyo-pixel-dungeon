@@ -239,7 +239,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 16;
+		depth = 1;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -348,7 +348,7 @@ public class Dungeon {
 					level = new ForestLevel();
 					break;
 				case 5:
-					level = new CirnoBossLevel();
+					level = new ForestBossLevel();
 					break;
 				case 6:
 				case 7:
@@ -375,7 +375,7 @@ public class Dungeon {
 					level = new BambooLevel();
 					break;
 				case 20:
-					level = new CityBossLevel();
+					level = new MarisaBossLevel();
 					break;
 				case 21:
 				case 22:

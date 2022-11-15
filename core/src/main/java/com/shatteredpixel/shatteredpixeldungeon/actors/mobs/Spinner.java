@@ -55,7 +55,7 @@ public class Spinner extends Mob {
 
 		FLEEING = new Fleeing();
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			flying =	true;
 		}
 	}

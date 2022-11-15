@@ -151,7 +151,7 @@ public class Thief extends Mob {
 
 	@Override
 	public void damage(int dmg, Object src) {
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			if (Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 1)
 			dmg = dmg/2;
 		}

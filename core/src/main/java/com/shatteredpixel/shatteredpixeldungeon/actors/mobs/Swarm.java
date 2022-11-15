@@ -58,7 +58,7 @@ public class Swarm extends Mob {
 		loot = new PotionOfHealing();
 		lootChance = 0.1667f; //by default, see lootChance()
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Poison.class);
 			immunities.add(ToxicGas.class);
 		}
@@ -127,11 +127,11 @@ public class Swarm extends Mob {
 	}
 	
 	private Swarm split() {
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			GameScene.add( Blob.seed( pos, 50 + 20 * Dungeon.depth, ToxicGas.class ) );
 		}
 		Swarm clone = new Swarm();
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			clone.immunities.add(Poison.class);
 			clone.immunities.add(ToxicGas.class);
 		}

@@ -95,7 +95,7 @@ public class Statue extends Mob {
 		if (Dungeon.level.heroFOV[pos]) {
 			Notes.add( Notes.Landmark.STATUE );
 		}
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			skill_cd--;
 			if(skill_cd == 0){
 				skill_cd = SKILL_CD;
@@ -195,7 +195,7 @@ public class Statue extends Mob {
 
 	@Override
 	public String description() {
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			return Messages.get(this, "desc", weapon.name()) + "\n\nLunatic mode: " + Messages.get(this, "lunatic");
 		}
 		return Messages.get(this, "desc", weapon.name());

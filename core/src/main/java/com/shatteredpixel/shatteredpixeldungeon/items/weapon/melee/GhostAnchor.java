@@ -40,8 +40,8 @@ public class GhostAnchor extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(5f*(tier+1)) +    //15 base,
-				lvl*Math.round(2f*(tier+1)/3); //+2 per levl
+		return  Math.round(5f*(tier+1)) - 2 +    //13 base,
+				lvl*Math.round(2f*(tier+1)/3); //+2 per levl instead of 3
 	}
 
     @Override

@@ -64,7 +64,7 @@ public class RipperDemon extends Mob {
 
 		properties.add(Property.DEMONIC);
 		properties.add(Property.UNDEAD);
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add( CorrosiveGas.class );
 			immunities.add( ToxicGas.class );
 			immunities.add( Burning.class );
@@ -200,7 +200,7 @@ public class RipperDemon extends Mob {
 						next();
 					}
 				});
-				if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				if(isLunatic()){
 					for (int p : b.subPath(0, Dungeon.level.distance(pos, leapPos))){
 						GameScene.add( Blob.seed( p, 12, Fire.class ) );
 					}

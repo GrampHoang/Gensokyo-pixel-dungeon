@@ -45,7 +45,7 @@ public class Crab extends Mob {
 		loot = new MysteryMeat();
 		lootChance = 0.167f;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Burning.class);
 			immunities.add(Chill.class);
 			immunities.add(ToxicGas.class);

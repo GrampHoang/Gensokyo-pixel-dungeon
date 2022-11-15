@@ -60,7 +60,7 @@ public class Scorpio extends Mob {
 
 		properties.add(Property.DEMONIC);
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add( Burning.class );
 		}
 	}
@@ -118,7 +118,7 @@ public class Scorpio extends Mob {
 		super.die( cause );
 		if (cause == Chasm.class) return;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			for (int p : PathFinder.NEIGHBOURS9){
 				Char c = Actor.findChar(p + pos);
 				if (c != null){

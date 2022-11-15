@@ -55,7 +55,7 @@ public class DM200 extends Mob {
 		properties.add(Property.INORGANIC);
 		properties.add(Property.LARGE);
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			properties.remove(Property.LARGE);
 		}
 
@@ -136,7 +136,7 @@ public class DM200 extends Mob {
 
 	private boolean canVent(int target){
 		if (ventCooldown > 0) return false;
-		if(Dungeon.isChallenged(Challenges.LUNATIC) && Dungeon.level.distance(this.pos, target) > 4){
+		if(isLunatic() && Dungeon.level.distance(this.pos, target) > 4){
 			return true;
 		}
 		PathFinder.buildDistanceMap(target, BArray.not(Dungeon.level.solid, null), Dungeon.level.distance(pos, target)+1);

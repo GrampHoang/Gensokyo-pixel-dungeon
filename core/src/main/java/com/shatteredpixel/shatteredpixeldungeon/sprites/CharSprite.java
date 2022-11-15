@@ -39,6 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BurstingPowerParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -441,7 +442,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case BURSTING_POWER:
 				bursting_power = emitter();
-				bursting_power.pour(SacrificialParticle.FACTORY, 0.05f);
+				// bursting_power.pos(0, 0);
+				bursting_power.pour(BurstingPowerParticle.FACTORY, 0.1f);
 				break;
 		}
 	}

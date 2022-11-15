@@ -104,61 +104,60 @@ public enum HeroClass {
 
 	public void initHero( Hero hero ) {
 
-	{
-		hero.lvl = 30;
-		//debug test items
-		TheWeapon we = new TheWeapon();
-		we.collect();
+	// {
+	// 	hero.lvl = 30;
+	// 	TheWeapon we = new TheWeapon();
+	// 	we.collect();
 
-		ScrollOfDebug sod = new ScrollOfDebug();
-		sod.quantity(1).collect();
+	// 	ScrollOfDebug sod = new ScrollOfDebug();
+	// 	sod.quantity(1).collect();
 
-		RingOfMight ring = new RingOfMight();
-		ring.level(99);
-		ring.doEquip(hero);
+	// 	RingOfMight ring = new RingOfMight();
+	// 	ring.level(99);
+	// 	ring.doEquip(hero);
 
-		RingOfTenacity ring2 = new RingOfTenacity();
-		ring2.level(99);
-		ring2.doEquip(hero);
+	// 	RingOfTenacity ring2 = new RingOfTenacity();
+	// 	ring2.level(99);
+	// 	ring2.doEquip(hero);
 
-		PotionOfHealing.heal(hero);
+	// 	PotionOfHealing.heal(hero);
 
-		PlateArmor plate = new PlateArmor();
-		plate.level(99);
-		plate.collect();
+	// 	PlateArmor plate = new PlateArmor();
+	// 	plate.level(99);
+	// 	plate.collect();
 
-		PotionOfHealing poe = new PotionOfHealing();
-		poe.quantity(30).collect();
+	// 	PotionOfHealing poe = new PotionOfHealing();
+	// 	poe.quantity(30).collect();
 
-		TengusMask tengu = new TengusMask();
-		tengu.quantity(2).collect();
-		KingsCrown crown = new KingsCrown();
-		crown.quantity(2).collect();
+	// 	TengusMask tengu = new TengusMask();
+	// 	tengu.quantity(2).collect();
+	// 	KingsCrown crown = new KingsCrown();
+	// 	crown.quantity(2).collect();
 		
-		PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-		podi.quantity(6).collect();
+	// 	PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
+	// 	podi.quantity(6).collect();
 
-		ScrollOfUpgrade sou = new ScrollOfUpgrade();
-		sou.quantity(15).collect();
+	// 	ScrollOfUpgrade sou = new ScrollOfUpgrade();
+	// 	sou.quantity(15).collect();
 
-		Dungeon.energy = 69;
+	// 	Dungeon.energy = 69;
 
-		ScrollOfMagicMapping somm = new ScrollOfMagicMapping();
-		somm.quantity(10).collect();
-		StoneOfFlock sof = new StoneOfFlock();
-		sof.quantity(30).collect();
+	// 	ScrollOfMagicMapping somm = new ScrollOfMagicMapping();
+	// 	somm.quantity(10).collect();
+	// 	StoneOfFlock sof = new StoneOfFlock();
+	// 	sof.quantity(30).collect();
 
-		RingOfWealth row = new RingOfWealth();
-		row.upgrade(15).collect();
-		PotionOfLiquidFlame pol = new PotionOfLiquidFlame();
-		pol.quantity(30).collect();
-		PotionOfToxicGas pot = new PotionOfToxicGas();
-		pot.quantity(30).collect();
-		PotionOfParalyticGas popg = new PotionOfParalyticGas();
-		popg.quantity(30).collect();
-		PotionOfFrost pof = new PotionOfFrost();
-		pof.quantity(30).collect();
-	}
+	// 	RingOfWealth row = new RingOfWealth();
+	// 	row.upgrade(15).collect();
+	// 	PotionOfLiquidFlame pol = new PotionOfLiquidFlame();
+	// 	pol.quantity(30).collect();
+	// 	PotionOfToxicGas pot = new PotionOfToxicGas();
+	// 	pot.quantity(30).collect();
+	// 	PotionOfParalyticGas popg = new PotionOfParalyticGas();
+	// 	popg.quantity(30).collect();
+	// 	PotionOfFrost pof = new PotionOfFrost();
+	// 	pof.quantity(30).collect();
+	// }
 		
 	
 		hero.heroClass = this;

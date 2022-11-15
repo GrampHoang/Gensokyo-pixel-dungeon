@@ -48,7 +48,7 @@ public class Gnoll extends Mob {
 		loot = Gold.class;
 		lootChance = 0.5f;
 
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Poison.class);
 			immunities.add(ToxicGas.class);
 		}
@@ -66,7 +66,7 @@ public class Gnoll extends Mob {
 	
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
-		if(Dungeon.isChallenged(Challenges.LUNATIC) && enemySeen == true && Random.IntRange(0,3) == 2){
+		if(isLunatic() && enemySeen == true && Random.IntRange(0,3) == 2){
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				if(mob instanceof Gnoll){
 					mob.beckon( this.pos );

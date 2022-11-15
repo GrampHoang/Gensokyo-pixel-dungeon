@@ -70,15 +70,15 @@ public class Meiling extends Mob {
 		HUNTING = new Hunting();
 
 		baseSpeed = 1f;
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			immunities.add(Sleep.class);
 			immunities.add(MagicalSleep.class);
 		}; 
 	}
 
-	private float ROCK_COOLDOWN = (Dungeon.isChallenged(Challenges.LUNATIC) ? 50 : 100);
-	private float PUNCH_COOLDOWN = (Dungeon.isChallenged(Challenges.LUNATIC) ? 10 : 20); 
-	private float JUMP_COOLDOWN = (Dungeon.isChallenged(Challenges.LUNATIC) ? 5 : 10); 
+	private float ROCK_COOLDOWN = (isLunatic() ? 50 : 100);
+	private float PUNCH_COOLDOWN = (isLunatic() ? 10 : 20); 
+	private float JUMP_COOLDOWN = (isLunatic() ? 5 : 10); 
     private float rock_cd = 30;
 	private float punch_cd = 5;
     // ArrayList<Integer> punch_pos = new ArrayList<>();

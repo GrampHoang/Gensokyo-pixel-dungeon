@@ -42,7 +42,7 @@ public class ArmoredBrute extends Brute {
 		//see rollToDropLoot
 		loot = Generator.Category.ARMOR;
 		lootChance = 1f;
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Burning.class);
 			immunities.add(Chill.class);
 		}

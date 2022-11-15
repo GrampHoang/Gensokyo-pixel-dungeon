@@ -22,19 +22,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DaiyoseiSprite;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
-import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 public class Daiyosei extends Mob {
@@ -76,7 +69,7 @@ public class Daiyosei extends Mob {
 		damage = super.attackProc(enemy, damage);
 		for (int p : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(p+ this.pos);
-			if (ch.alignment == this.alignment){
+			if (ch != null && ch.alignment == this.alignment){
 				ch.HP += 1;
 				Buff.affect(ch, Bless.class, 5f);
 			}
@@ -88,7 +81,7 @@ public class Daiyosei extends Mob {
 	public void die(Object cause) {
 		for (int p : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(p + this.pos);
-			if (ch.alignment == this.alignment){
+			if (ch != null && ch.alignment == this.alignment){
 				ch.HP += 5;
 				Buff.affect(ch, Bless.class, 10f);
 			}

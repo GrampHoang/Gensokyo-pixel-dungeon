@@ -78,7 +78,7 @@ public class Bat extends Mob {
 
 	@Override
 	protected boolean act() {
-		if(Dungeon.isChallenged(Challenges.LUNATIC) && Dungeon.hero != null && Dungeon.hero.HP < Dungeon.hero.HT/4 && Random.IntRange(0,30) == 2){
+		if(isLunatic() && Dungeon.hero != null && Dungeon.hero.HP < Dungeon.hero.HT/4 && Random.IntRange(0,30) == 2){
 			beckon(Dungeon.hero.pos);
 		}
 		return super.act();

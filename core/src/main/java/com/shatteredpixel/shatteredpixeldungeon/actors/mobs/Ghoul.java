@@ -154,7 +154,7 @@ public class Ghoul extends Mob {
 				Actor.remove(this);
 				Dungeon.level.mobs.remove( this );
 				timesDowned++;
-				if(Dungeon.isChallenged(Challenges.LUNATIC)){
+				if(isLunatic()){
 					timesDowned = 1;
 				}
 				Buff.append(nearby, GhoulLifeLink.class).set(timesDowned*5, this);

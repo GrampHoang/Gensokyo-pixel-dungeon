@@ -156,7 +156,7 @@ public class Necromancer extends Mob {
 			return;
 		}
 		
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			Buff.affect(mySkeleton, Corrosion.class).set(15f, 1, this.getClass());
 			next();
 			return;
@@ -355,7 +355,7 @@ public class Necromancer extends Mob {
 			
 			//20/25 health to start
 			HP = 20;
-			if(Dungeon.isChallenged(Challenges.LUNATIC)){
+			if(isLunatic()){
 				baseSpeed = 0.6f;
 			}
 		}

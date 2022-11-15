@@ -32,15 +32,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
-import com.shatteredpixel.shatteredpixeldungeon.items.bombs.FrostBomb;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -51,23 +46,18 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaBossSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSparkBig;
-import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSpark;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class MarisaBoss extends Mob {
@@ -254,7 +244,6 @@ public class MarisaBoss extends Mob {
 		
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			GLog.w("%1d,     %2d",dash_cd, masterspark_cd);
 			if (enemyInFOV && !isCharmedBy( enemy ) && canAttack( enemy )) {
 
 				if (canUseReady()){
@@ -393,6 +382,7 @@ public class MarisaBoss extends Mob {
     private int stopCell;
 
     private boolean dash_ready(){
+		Dungeon.hero.interrupt();
 		targetedCells.clear();
 		CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 20);
         Ballistica b = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.MASTERSPARK);
@@ -464,6 +454,7 @@ public class MarisaBoss extends Mob {
 	private ArrayList<Integer> stopCells_MS = new ArrayList<>();
 
     private boolean masterspark_ready(){
+		Dungeon.hero.interrupt();
 		this.sprite.add(CharSprite.State.CHARGING);
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!(Actor.findChar(this.pos+i) instanceof MarisaBoss)){
@@ -480,6 +471,7 @@ public class MarisaBoss extends Mob {
     }
 
 	private boolean masterspark_ready_2(){
+		Dungeon.hero.interrupt();
 		for (int p : targetedCells_MS){
             sprite.parent.add(new TargetedCell(p, 0xFF0000));
         }

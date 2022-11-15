@@ -43,7 +43,7 @@ public class Rat extends Mob {
 		defenseSkill = 2;
 		
 		maxLvl = 5;
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			immunities.add(Poison.class);
 			immunities.add(ToxicGas.class);
 		}
@@ -67,7 +67,7 @@ public class Rat extends Mob {
 	public void die( Object cause ) {
 		super.die( cause );
 		if (cause == Chasm.class) return;
-		if(Dungeon.isChallenged(Challenges.LUNATIC)){
+		if(isLunatic()){
 			GameScene.add( Blob.seed( this.pos, 50 + 20 * Dungeon.depth, ToxicGas.class ) );
 		}
 	}

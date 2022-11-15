@@ -915,7 +915,7 @@ public abstract class Mob extends Char {
 	
 	public String description() {
 		String descript = Messages.get(this, "desc");
-		if (Dungeon.isChallenged(Challenges.LUNATIC)){
+		if (isLunatic()){
 			descript = descript + "\n\nLunatic mode: " + Messages.get(this, "lunatic");
 		}
 		if (UFOSettings.red_Mobs()){
@@ -1272,7 +1272,7 @@ public abstract class Mob extends Char {
 	}
 
 	public boolean isLunatic(){
-		return Dungeon.isChallenged(Challenges.LUNATIC);
+		return isLunatic();
 	}
 }
 

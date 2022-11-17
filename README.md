@@ -1,22 +1,28 @@
 # Gensokyo Pixel Dungeon
 
-A fork of Shattered Pixel Dungeon, a fun project I do in the summer. It help me a lot with re-learning and seeing how OOP work, also see why some people hate Java because my god this language is sooo verbose.
-This is heavily inspired by Shattered PD (obviously) and (old) TouhouPD. The game also borrow idea from some other forks (usually from TrashBox stuffs though). So check out TouhouPD, Summoning PD, RKPD2-DLC (now RK-Adventure), Too Cruel PD, etc so make sure to check them out!
-
-Also English is not my first language. I have no trouble reading or understanding it, just make writing mistakes every now and then
+This is heavily inspired by Shattered PD (obviously), (old) TouhouPD and Tommorow's RougeNights. The game also borrow idea from some other forks (usually from TrashBox stuffs though). So check out TouhouPD, Summoning PD, RKPD2-DLC (now RK-Adventure), Too Cruel PD, RougeNights, etc so make sure to check them out!
 
 Progress:
-- 4 new characters, they are a based on the classic existing 4. Plus one who is broken (literally) and I don't know how to hide her from selection screen. There will be 1-2 more in the far future.
+- 4 new characters, they are a based on the classic existing 4. Plus Sakuya who is broken, she's there because it's harder to remove her, you can pick her to handicap yoruself since half her kit doesn't work.
 - All new character have their own unique subclasses, no armor ability
-- A few more weapon to spice up the gameplay, spread evenly between tiers. They have lower drop rate though
+- A few more weapon to spice up the gameplay, spread evenly between tiers. They have lower drop rate though. Might nerf later, or change them into secret weapons. High Priority
+- New challenges: Lunatic where all enemy have additional perk and skill, doesn't affect normal boss though.
+- Alternative path (70%): Gensokyo challenge. Currently up to 4th region (19 floor) 2 bosses at 5 and 10. Not play tested, but on paper it should be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill and you should be fine. Except lots of repositioning though, and don't too rely on narrow pathway.
+
+Plan:
+- A lot more weapons
+- A few artifact (recycle useless gear into alchemy, bomb maker, recycle scroll into guarantee PoFlame or something lol)
+- Quite a bunch of secret gear and drop, some may require rare drop, some may require to do something unthinkable.
+- Maybe set effect
+- NPCs and Description that hint the above things
 - No new armor, I'm considering it but not sure what to implement.
-- Rouge-like shop (10%?): I'm technically done implementing, but I don't really understand how to make a decent UI for it, I literally hardcoded everything lmao. Also there are a few other problem, but ideas are all here, these are (probably) needed for the alternative path
-- Alternative path (20%): It's a challenge that have different enemies AND bosses, my plan is to make it slightly harder yet not too cancerous so that you should rely on the rougelike shop to have slightly better start.
-- Badges/UI/About/Changelogs: I haven't touch those lol
-- Consumeable: No idea for the moment
+- Rouge-like shop: On planning, very low priority
+- Badges/UI/About/Changelogs: A few idea, like play whole game without using melee attack or wand lol)
+- Consumeable: Some idea, but low priority.
 
 If there is any issue, just post them in the github Issue, or ping me on Discord.
 
+#ShatteredPD
 A Roguelike RPG, with randomly generated levels, items, enemies, and traps! Based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://www.watabou.ru).
 
 Shattered Pixel Dungeon currently compiles for Android, iOS and Desktop platforms. It is available from [Google Play](https://play.google.com/store/apps/details?id=com.shatteredpixel.shatteredpixeldungeon), [the App Store](https://apps.apple.com/app/shattered-pixel-dungeon/id1563121109), and right here on [GitHub](https://github.com/00-Evan/shattered-pixel-dungeon/releases).

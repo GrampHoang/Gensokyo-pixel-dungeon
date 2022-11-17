@@ -96,13 +96,18 @@ public class Letty extends Mob {
 
     @Override
 	protected boolean act() {
-        for (int i : PathFinder.NEIGHBOURS9){
-			//avoid items
-			Heap heap = Dungeon.level.heaps.get( this.pos + i );
-			if(Random.IntRange(0, 2) == 1 && heap == null){
-				GameScene.add( Blob.seed( this.pos + i, 2, Freezing.class ) );
+        PathFinder.buildDistanceMap( this.pos, BArray.not( Dungeon.level.solid, null ), 1 );
+			for (int i = 0; i < PathFinder.distance.length; i++) {
+				//33% chance per tile
+				if (PathFinder.distance[i] < Integer.MAX_VALUE && Random.IntRange(0,2) == 1) {
+					//avoid items and allies
+					Char ch = Actor.findChar(i);
+					Heap heap = Dungeon.level.heaps.get(i);
+					if(heap == null || (ch != null && ch.alignment != this.alignment)){
+						GameScene.add(Blob.seed(i, 2, Freezing.class));
+					}
+				}
 			}
-		}
 		return super.act();
 	}
 
@@ -113,10 +118,9 @@ public class Letty extends Mob {
 			PathFinder.buildDistanceMap( this.pos, BArray.not( Dungeon.level.solid, null ), 2 );
 			for (int i = 0; i < PathFinder.distance.length; i++) {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-					//avoid items and mobs, including hero
+					//avoid items and the center
 					Heap heap = Dungeon.level.heaps.get(i);
-					Char ch = Actor.findChar(i);
-					if(heap == null || ch != null){
+					if(heap == null && i != this.pos){
 						GameScene.add(Blob.seed(i, 5, Freezing.class));
 					}
 				}

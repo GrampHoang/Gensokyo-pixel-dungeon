@@ -1084,9 +1084,8 @@ public abstract class Level implements Bundlable {
 		case Terrain.SECRET_TRAP:
 			if (hard) {
 				trap = traps.get( cell );
-				if ( !( (Dungeon.hero.pos == trap.pos && Dungeon.hero.hasTalent(Talent.NIMBLE) && (Dungeon.hero.pointsInTalent(Talent.NIMBLE) > Random.Int(0,1))) 
-						|| Dungeon.hero.subClass == HeroSubClass.IMAGINARY)
-				){
+				if ( !trap.specialHeroOnTrap()){
+					//Don't print messages if you don't trigger it
 					GLog.i(Messages.get(Level.class, "hidden_trap", trap.name()));
 				}
 				
@@ -1141,11 +1140,8 @@ public abstract class Level implements Bundlable {
 					Dungeon.hero.interrupt();
 				}
 
-				if  ((Dungeon.hero.hasTalent(Talent.NIMBLE) 
-					&& Dungeon.hero.pos == trap.pos
-					&& (Dungeon.hero.pointsInTalent(Talent.NIMBLE) > Random.Int(0,1)))
-				|| Dungeon.hero.subClass == HeroSubClass.IMAGINARY){
-				return;
+				if  (trap.specialHeroOnTrap()){
+					return;
 		}
 				trap.trigger();
 

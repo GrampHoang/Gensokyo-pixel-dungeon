@@ -109,8 +109,8 @@ public enum HeroClass {
 	// 	TheWeapon we = new TheWeapon();
 	// 	we.collect();
 
-	// 	ScrollOfDebug sod = new ScrollOfDebug();
-	// 	sod.quantity(1).collect();
+		ScrollOfDebug sod = new ScrollOfDebug();
+		sod.quantity(1).collect();
 
 	// 	RingOfMight ring = new RingOfMight();
 	// 	ring.level(99);

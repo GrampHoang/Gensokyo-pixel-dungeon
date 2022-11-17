@@ -63,8 +63,56 @@ public class AboutScene extends PixelScene {
 		Component content = list.content();
 		content.clear();
 
-		//*** Shattered Pixel Dungeon Credits ***
+		//*** Gensokyo Pixel Dungeon Credits ***
+		String genPDLink = "https://github.com/GrampHoang/Gensokyo-pixel-dungeon";
 
+		CreditsBlock gpd = new CreditsBlock(true, Window.GPD_COLOR,
+				"Gensokyo Pixel Dungeon",
+				Icons.REIMU.get(),
+				"Developed by: _GrampHoang / GarryMS_\nBased on Shattered Pixel Dungeon's open source\nInspired by lots of other SPD forks",
+				"GensokyoPD Github Repo",
+				genPDLink);
+		if (landscape()){
+			gpd.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+		} else {
+			gpd.setRect((w - fullWidth)/2f, 6, 120, 0);
+		}
+		content.add(gpd);
+
+		CreditsBlock tpd = new CreditsBlock(false, Window.GPD_COLOR,
+				"Most art/sprite:",
+				Icons.MARISA.get(),
+				"From Touhou Pixel Dungeon",
+				"Touhou Pixel Dungeon",
+				"https://github.com/tpd0618/touhou-pixel-dungeon");
+				tpd.setSize(colWidth/2f, 0);
+		if (landscape()){
+			tpd.setPos(gpd.right(), gpd.top() + (gpd.height() - tpd.height()*2)/2f);
+		} else {
+			tpd.setPos(w/2f - colWidth/2f, gpd.bottom()+5);
+		}
+		content.add(tpd);
+
+		CreditsBlock paint = new CreditsBlock(false, Window.GPD_COLOR,
+				"Other art/sprite:",
+				Icons.REIMU.get(),
+				"By me, actually, with online paint.",
+				"I'm not kidding",
+				"https://jspaint.app");
+				paint.setRect(tpd.right(), tpd.top(), colWidth/2f, 0);
+		content.add(paint);
+
+		CreditsBlock zun = new CreditsBlock(false, Window.GPD_COLOR,
+				"Touhou franchise",
+				Icons.TALENT.get(),
+				"ZUN",
+				"ZUN's twitter",
+				"https://twitter.com/korindo");
+				zun.setRect(tpd.right() - colWidth/4f, tpd.bottom() + 5, colWidth/2f, 0);
+		content.add(zun);
+
+		//*** Shattered Pixel Dungeon Credits ***
+		
 		String shpxLink = "https://ShatteredPixel.com";
 		//tracking codes, so that the website knows where this pageview came from
 		shpxLink += "?utm_source=shatteredpd";
@@ -78,12 +126,13 @@ public class AboutScene extends PixelScene {
 				"ShatteredPixel.com",
 				shpxLink);
 		if (landscape()){
-			shpx.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+			shpx.setRect(gpd.left(), zun.bottom() + 8, 120, 0);
 		} else {
-			shpx.setRect((w - fullWidth)/2f, 6, 120, 0);
+			shpx.setRect(gpd.left(), zun.bottom() + 8, 120, 0);
 		}
 		content.add(shpx);
-
+		addLine(shpx.top() - 4, content);
+		
 		CreditsBlock alex = new CreditsBlock(false, Window.SHPX_COLOR,
 				"Hero Art & Design:",
 				Icons.ALEKS.get(),

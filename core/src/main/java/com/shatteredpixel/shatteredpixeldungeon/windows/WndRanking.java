@@ -63,7 +63,7 @@ import java.util.Locale;
 public class WndRanking extends WndTabbed {
 	
 	private static final int WIDTH			= 115;
-	private static final int HEIGHT			= 144;
+	private static final int HEIGHT			= 174;
 	
 	private static WndRanking INSTANCE;
 	

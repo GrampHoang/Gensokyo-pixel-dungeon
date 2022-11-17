@@ -70,8 +70,8 @@ public class Daiyosei extends Mob {
 		for (int p : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(p+ this.pos);
 			if (ch != null && ch.alignment == this.alignment){
-				ch.HP += 1;
-				Buff.affect(ch, Bless.class, 5f);
+				if (ch.HP < ch. HT) ch.HP += 1;
+				if (isLunatic()) Buff.affect(ch, Bless.class, 5f);
 			}
 		}
 		return damage;
@@ -82,8 +82,12 @@ public class Daiyosei extends Mob {
 		for (int p : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(p + this.pos);
 			if (ch != null && ch.alignment == this.alignment){
-				ch.HP += 5;
-				Buff.affect(ch, Bless.class, 10f);
+				if (ch.HP < ch. HT - 5){
+					ch.HP += 5;
+				} else {
+					ch.HP = ch.HT;
+				}
+				if (isLunatic()) Buff.affect(ch, Bless.class, 10f);
 			}
 		}
 		super.die(cause);

@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -148,6 +149,9 @@ public class Mimic extends Mob {
 		if (Dungeon.hero.invisible <= 0
 				&& Dungeon.hero.buff(Swiftthistle.TimeBubble.class) == null
 				&& Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class) == null){
+			if (isLunatic()){
+				Buff.affect(Dungeon.hero, Cripple.class, 5f);
+			}
 			return doAttack(Dungeon.hero);
 		} else {
 			sprite.idle();

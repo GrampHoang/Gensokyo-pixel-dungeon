@@ -72,7 +72,7 @@ public class Statue extends Mob {
 	private static final String WEAPON	= "weapon";
 	private static final String SKILL_COOLDOWN	= "skill_cooldown";
 
-	private static int SKILL_CD	= 60;
+	private static int SKILL_CD	= 140 - Dungeon.depth*2;
 	private int skill_cd = SKILL_CD;
 
 	

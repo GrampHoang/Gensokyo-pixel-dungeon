@@ -392,7 +392,7 @@ public class TitleScene extends PixelScene {
 
 		@Override
 		protected void onClick() {
-			ShatteredPixelDungeon.scene().add(new WndUFO());
+			// ShatteredPixelDungeon.scene().add(new WndUFO());
 		}
 	}
 }

@@ -1272,7 +1272,7 @@ public abstract class Mob extends Char {
 	}
 
 	public boolean isLunatic(){
-		return isLunatic();
+		return Dungeon.isChallenged(Challenges.LUNATIC);
 	}
 }
 

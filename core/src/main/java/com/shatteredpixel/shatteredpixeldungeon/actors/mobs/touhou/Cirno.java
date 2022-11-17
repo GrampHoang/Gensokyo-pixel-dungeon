@@ -28,6 +28,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CirnoSprite;
+import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.watabou.utils.PathFinder;
@@ -42,8 +44,6 @@ public class Cirno extends Mob {
 		maxLvl = 10;
         loot = PotionOfFrost.class;
 		lootChance = 0.3f;
-
-		
 	}
 
 
@@ -99,11 +99,16 @@ public class Cirno extends Mob {
 	@Override
 	public void die(Object cause) {
         if (this.flying || !Dungeon.level.pit[this.pos]) {
-            for (int i : PathFinder.NEIGHBOURS9) {
-                if (!Dungeon.level.solid[this.pos + i]) {
-                    GameScene.add(Blob.seed(this.pos + i, 2, Freezing.class));
-                }
-            }
+            PathFinder.buildDistanceMap( this.pos, BArray.not( Dungeon.level.solid, null ), 1 );
+			for (int i = 0; i < PathFinder.distance.length; i++) {
+				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+					//avoid items
+					Heap heap = Dungeon.level.heaps.get(i);
+					if(heap == null){
+						GameScene.add(Blob.seed(i, 2, Freezing.class));
+					}
+				}
+			}
         }
 		super.die(cause);
 	}

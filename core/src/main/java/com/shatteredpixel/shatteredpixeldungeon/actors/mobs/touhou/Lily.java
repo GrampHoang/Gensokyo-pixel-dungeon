@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfBlast;
+import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -33,9 +34,12 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.LilySprite;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class Lily extends Mob {
 	{
@@ -71,9 +75,10 @@ public class Lily extends Mob {
 	protected boolean act() {
         if (charging_skill == true){
             return lilySkill();
-        } else if(Random.IntRange(0, (isLunatic() ? 2 : 4)) == 1 && enemySeen == true){
+        } else if(Random.IntRange(0, (isLunatic() ? 4 : 8)) == 1 && enemySeen == true){
 			lilyCharge();
 			charging_skill = true;
+			return true;
 		}
 		return super.act();
 	}
@@ -83,27 +88,50 @@ public class Lily extends Mob {
 		super.die(cause);
 	}
 
-    public boolean lilySkill(){
-        for (int p : lilySkillCells){
+    private boolean lilySkill(){
+		for (int p : lilySkillCells){
 			Char ch = Actor.findChar(p);
             if (ch != null && ch != this) {
 				if(ch.alignment != this.alignment){
-					ch.damage(2, this);
+					ch.damage(3, this);
 					Buff.affect(ch, Roots.class, 1f);
 				} else {
 					Buff.prolong(ch, Stamina.class, 2f);
 					ch.HP += 3;
 				}
             }
+		}
+		//remove some cell to grow grass
+		lilySkillCells = growableCells(lilySkillCells);
+        for (int p : lilySkillCells){	
+			Level.set(p, Terrain.HIGH_GRASS);
 			Level.set(p, Terrain.FURROWED_GRASS);
 			GameScene.updateMap( p );
 		}
 		charging_skill = false;
 		lilySkillCells.clear();
+		// spend(TICK);
         return true;
     }
 
-    public void lilyCharge(){
+	//Remove cells that aren't suitable
+	public ArrayList<Integer> growableCells(ArrayList<Integer> skillCells){
+		for (Iterator<Integer> i = skillCells.iterator(); i.hasNext();) {
+			int cell = i.next();
+			int terr = Dungeon.level.map[cell];
+			if (!(terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
+					terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS)) {
+				i.remove();
+			} else if (Char.hasProp(Actor.findChar(cell), Char.Property.IMMOVABLE)) {
+				i.remove();
+			} else if (Dungeon.level.plants.get(cell) != null){
+				i.remove();
+			} 
+		}
+		return skillCells;
+	}
+
+    private void lilyCharge(){
         // Ballistica forward = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
 		// for (int p : forward.subPath(0, Dungeon.level.distance(this.pos, forward.collisionPos))){
 		// 	sprite.parent.add(new TargetedCell(p, 0xFF0000));
@@ -112,6 +140,17 @@ public class Lily extends Mob {
         for (int i : PathFinder.NEIGHBOURS8){
 			if (Random.IntRange(1, 8) == 2){
 				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.MAGIC_BOLT);
+				// MagicMissile.boltFromChar( this.sprite.parent,
+				// MagicMissile.FOLIAGE_CONE,
+				// this.sprite,
+				// rand.collisionPos,
+				// new Callback() {
+				// 	@Override
+				// 	public void call() {
+				// 		// Do nothing
+				// 	}
+				// } );
+				
 				for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
 					sprite.parent.add(new TargetedCell(p, 0xFF0000));
 					lilySkillCells.add(p);
@@ -124,7 +163,7 @@ public class Lily extends Mob {
 			sprite.parent.add(new TargetedCell(p, 0xFF0000));
 			lilySkillCells.add(p);
 		}
-
+		spend(TICK);
     }
 
     @Override

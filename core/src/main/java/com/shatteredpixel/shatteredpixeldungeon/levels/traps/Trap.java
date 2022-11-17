@@ -92,7 +92,20 @@ public abstract class Trap implements Bundlable {
 		}
 	}
 
+	public boolean specialHeroOnTrap(){
+		if ((Dungeon.hero.pos == this.pos //Only prevent trigger by hero WALK on it. All other trigger should be fine 
+		&& ((Dungeon.hero.hasTalent(Talent.NIMBLE) && (Dungeon.hero.pointsInTalent(Talent.NIMBLE) > Random.Int(0,1)))	//Marisa nimble
+			|| Dungeon.hero.subClass == HeroSubClass.IMAGINARY))){ //Or [redacted] being ####
+			return true;
+		}
+		return false;
+	}
+
 	public void trigger() {
+		if( specialHeroOnTrap()){
+			//Do nothing
+			return;
+		}
 		if (active) {
 			if (Dungeon.level.heroFOV[pos]) {
 				Sample.INSTANCE.play(Assets.Sounds.TRAP);

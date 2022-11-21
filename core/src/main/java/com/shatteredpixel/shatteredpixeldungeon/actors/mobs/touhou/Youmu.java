@@ -20,7 +20,7 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.YoumuSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.TewiSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -106,7 +107,7 @@ public class Youmu extends Mob {
 	private int skill_cd = SKILL_CD;
 	private boolean ready = false;
 	private int skill_type = 1;
-	private int dash_pos = this.pos+1;
+	private int dash_pos = 1;
 
     @Override
 	protected boolean act() {

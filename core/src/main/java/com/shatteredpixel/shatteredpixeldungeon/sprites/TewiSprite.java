@@ -26,8 +26,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.TextureFilm;
 
 public class TewiSprite extends MobSprite {
-
-	private Animation crumple;
 	
 	public TewiSprite() {
 		super();
@@ -45,26 +43,9 @@ public class TewiSprite extends MobSprite {
 		attack = new Animation( 12, false );
 		attack.frames( frames, 0 );
 
-		crumple = new Animation( 15, false);
-		crumple.frames( frames, 0 );
-
 		die = new Animation( 15, false );
 		die.frames( frames, 0 );
 		
 		play( idle );
-	}
-
-	public void crumple(){
-		hideEmo();
-		play(crumple);
-	}
-
-	@Override
-	public void die() {
-		if (curAnim == crumple){
-			//causes the sprite to not rise then fall again when dieing.
-			die.frames[0] = die.frames[1] = die.frames[2] = die.frames[3];
-		}
-		super.die();
 	}
 }

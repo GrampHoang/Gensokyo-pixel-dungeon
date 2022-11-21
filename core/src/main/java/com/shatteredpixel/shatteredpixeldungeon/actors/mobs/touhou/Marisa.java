@@ -13,7 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -38,8 +38,8 @@ public class Marisa extends Mob {
         WANDERING = new Wandering();
 		FLEEING = new Fleeing();
 
-		loot = new PotionOfHealing();
-		lootChance = 0.1667f; //by default, see lootChance()
+		loot = new PotionOfLevitation();
+		lootChance = 0.2f;
 		if (isLunatic()){
 			immunities.add(ConfusionGas.class);
 		}
@@ -74,7 +74,7 @@ public class Marisa extends Mob {
 				Buff.affect(this, Stamina.class, 10f);
 				Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 				Sample.INSTANCE.play( Assets.Sounds.GAS );
-				GameScene.add( Blob.seed( this.pos, 20*Dungeon.depth, ConfusionGas.class ) );
+				GameScene.add( Blob.seed( this.pos, 15*Dungeon.depth, ConfusionGas.class ) );
 			}
 			state = FLEEING;
 		}
@@ -121,6 +121,15 @@ public class Marisa extends Mob {
 		}
 	}
 
+	@Override
+	public void rollToDropLoot() {
+		if (item != null) {
+			Dungeon.level.drop( item, pos ).sprite.drop();
+			item = null;
+		}
+		super.rollToDropLoot();
+	}
+	
     private class Wandering extends Mob.Wandering {
 		
 		@Override

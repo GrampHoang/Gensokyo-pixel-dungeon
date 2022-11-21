@@ -1638,7 +1638,7 @@ public class Hero extends Char {
 	}
 	
 	public void earnExp( int exp, Class source ) {
-		if(this.heroClass == HeroClass.KOISHI && this.buff(KoishiHat.Koishibuff.class) != null){
+		if(this.heroClass == HeroClass.KOISHI && this.buff(KoishiHat.Koishibuff.class) != null && Dungeon.depth != 1){
 			if(Random.IntRange(0,9) > 4 + this.pointsInTalent(Talent.LEARNING)){
 				exp *= 0.5f;
 			}

@@ -91,9 +91,8 @@ public class RemiliaBoss extends Mob {
 		immunities.add(Drowsy.class);
 	}
 	private int middle_of_map = 8*17+8;
-	private int debug_summon_pos = 1*17+8;
-	
-	private final int LEVATIN_CD = (isLunatic() ? 14 : 25);
+	private int[] summon_pos = {2*17+3, 2*17+14, 14*17+3, 14*17+14};
+	private final int LEVATIN_CD = (isLunatic() ? 12 : 20);
 
 	private int levatin_cd = LEVATIN_CD;
 	// private int levatin_pos = 0;
@@ -142,7 +141,7 @@ public class RemiliaBoss extends Mob {
 			return;
 		}
 		if (beforeHitHP / hpBracket != HP / hpBracket) {
-			callSakuya(debug_summon_pos);
+			callSakuya(summon_pos[Random.IntRange(0,3)]);
 		}
 	}
 
@@ -228,10 +227,10 @@ public class RemiliaBoss extends Mob {
 		if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( middle_of_map ).burst( Speck.factory( Speck.WOOL ), 6 );
 		sprite.move( this.pos, middle_of_map );
 		move( middle_of_map );
-		if (Dungeon.level.heroFOV[debug_summon_pos]) CellEmitter.get( debug_summon_pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+		if (Dungeon.level.heroFOV[summonPos]) CellEmitter.get( summonPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 
 		//Release Smoke and set levatin_cd to 6
-		GameScene.add( Blob.seed( this.pos, 200, SmokeScreen.class ) );
+		releaseSmoke();
 		levatin_cd = 6;
 
 		//Summon Sakuya and deliver cake
@@ -320,7 +319,7 @@ public class RemiliaBoss extends Mob {
 				releaseSmoke();
 				levatin_cd = LEVATIN_CD+1;
 				MarisaBoss summoner = new MarisaBoss();
-				summoner.callHelp(debug_summon_pos, MaidSakuya.class);
+				summoner.callHelp(summon_pos[Random.IntRange(0,3)], MaidSakuya.class);
 			}
 			return true;
 		} else {
@@ -416,15 +415,16 @@ public class RemiliaBoss extends Mob {
         return true;
     }	
 
+	//Just sfx, you will still see her through smoke and invis
 	public void releaseSmoke(){
 		Buff.affect(this, Invisibility.class, 5f);
 		Sample.INSTANCE.play( Assets.Sounds.GAS );
-		int centerVolume = 1;
+		int centerVolume = 150;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[this.pos+i]){
-				GameScene.add( Blob.seed( this.pos+i, 1, SmokeScreen.class ) );
+				GameScene.add( Blob.seed( this.pos+i, centerVolume, SmokeScreen.class ) );
 			} else {
-				centerVolume += 1;
+				centerVolume += 10;
 			}
 		}
 
@@ -472,6 +472,7 @@ public class RemiliaBoss extends Mob {
 			maxLvl = -5;
 			
 			//20/25 health to start
+			lootChance = 0f;
 			viewDistance = 0;
 			HT = 10;
 			HP = 10;
@@ -518,7 +519,7 @@ public class RemiliaBoss extends Mob {
 		
 		@Override
 		public float speed() {
-			float speed = (isLunatic() ? 2 : 1);
+			float speed = (isLunatic() ? 1.5f : 1);
 			if ( buff( Cripple.class ) != null ) speed /= 2f;
 			if ( buff( Stamina.class ) != null) speed *= 1.5f;
 			if ( buff( Adrenaline.class ) != null) speed *= 2f;

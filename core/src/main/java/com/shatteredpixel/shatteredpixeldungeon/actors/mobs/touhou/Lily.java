@@ -25,7 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
-import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfBlast;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -48,8 +49,8 @@ public class Lily extends Mob {
 		defenseSkill = 1;
 		EXP = 5;
 		maxLvl = 12;
-        loot =  StoneOfBlast.class;
-		lootChance = 0.3f;
+        loot =  PotionOfHealing.class;
+		lootChance = 0.33f;
         
 	}
 
@@ -186,5 +187,16 @@ public class Lily extends Mob {
 		for (int i : bundle.getIntArray("lilyskillcells")){
 			lilySkillCells.add(i);
 		}
+	}
+
+	@Override
+	public float lootChance() {
+		return super.lootChance() * (3f - Dungeon.LimitedDrops.SWARM_HP.count) / 3f;
+	}
+	
+	@Override
+	public Item createLoot(){
+		Dungeon.LimitedDrops.SWARM_HP.count++;
+		return super.createLoot();
 	}
 }

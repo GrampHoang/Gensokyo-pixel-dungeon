@@ -68,6 +68,7 @@ public class Sunny extends Mob {
 	}
 
     public int anger = 0;
+	private int SKILL_COOLDOWN = 18;
 	private int sun_cd = 6;
     private boolean charging_skill = false;
 	private int aim = 1;
@@ -80,7 +81,7 @@ public class Sunny extends Mob {
     @Override
 	public int damageRoll() {
 		if (anger > 0) {
-			return Random.NormalIntRange( 4*anger, 16 );
+			return Random.NormalIntRange( 4*(anger+1), 8*(anger+1) );
 		} else {
 			return Random.NormalIntRange( 4,  8);
 		}
@@ -138,8 +139,16 @@ public class Sunny extends Mob {
         }
 	}
 
+	@Override
+	protected boolean canAttack( Char enemy ) {
+		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+		if (anger < 2) return !(Dungeon.level.adjacent(pos, enemy.pos)) && attack.collisionPos == enemy.pos;
+		else return Dungeon.level.adjacent(pos, enemy.pos);
+	}
+	
     @Override
 	public int attackProc(Char enemy, int damage) {
+		// if(!(Dungeon.level.adjacent(pos, enemy.pos))) spend(TICK/4);
 		if(Random.IntRange(1, 6 / ( anger + 1)) == 1){
 			// 1/6 -> 1/3 -> 1/2 chance
 			Buff.affect(enemy, Burning.class).reignite(enemy, (float)(3 + anger));
@@ -172,23 +181,6 @@ public class Sunny extends Mob {
 		}
 	}
 
-	// @Override
-	// public void damage(int dmg, Object src) {
-	// 	if (!BossHealthBar.isAssigned()){
-	// 		BossHealthBar.assignBoss( this );
-	// 		Dungeon.level.seal();
-	// 	}
-	// 	boolean bleeding = (HP*2 <= HT);
-	// 	super.damage(dmg, src);
-	// 	if ((HP*2 <= HT) && !bleeding){
-	// 		BossHealthBar.bleed(true);
-	// 		sprite.showStatus(CharSprite.NEGATIVE, Messages.get(this, "enraged"));
-	// 		((GooSprite)sprite).spray(true);
-	// 		yell(Messages.get(this, "gluuurp"));
-	// 	}
-	// 	LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-	// 	if (lock != null) lock.addTime(dmg*2);
-	// }
 
 	@Override
 	public void die( Object cause ) {
@@ -197,13 +189,12 @@ public class Sunny extends Mob {
 			GameScene.bossSlain();
 		}
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob instanceof Sunny){
-				((Sunny)mob).anger++;
-			} else if(mob instanceof Luna){
+			if(mob instanceof Luna){
 				((Luna)mob).anger++;
 			} else if(mob instanceof Star){
 				((Star)mob).anger++;
 			}
+			if (anger > 0) BossHealthBar.assignBoss(mob);
 		}
 		Badges.validateBossSlain();
 		if (Statistics.qualifiedForBossChallengeBadge){
@@ -213,19 +204,6 @@ public class Sunny extends Mob {
 		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
 
 		super.die( cause );
-	}
-	
-	@Override
-	public void notice() {
-		super.notice();
-		if (!BossHealthBar.isAssigned()) {
-			BossHealthBar.assignBoss(this);
-			for (Char ch : Actor.chars()){
-				if (ch instanceof DriedRose.GhostHero){
-					((DriedRose.GhostHero) ch).sayBoss();
-				}
-			}
-		}
 	}
     
     //////////////////////////////////////////////////////////////
@@ -274,7 +252,7 @@ public class Sunny extends Mob {
         spend( TICK );
         charging_skill = false;
         this.sprite.remove(CharSprite.State.CHARGING);
-        sun_cd = 15;
+        sun_cd = SKILL_COOLDOWN / (anger +1);
         Ballistica p = new Ballistica(this.pos, aim, Ballistica.WONT_STOP);
         for(int i : p.path){
 			if(Dungeon.level.map[i] == Terrain.EMPTY){
@@ -322,7 +300,7 @@ public class Sunny extends Mob {
 		super.restoreFromBundle( bundle );
 
 		anger = bundle.getInt( ANGER );
-		if (state != SLEEPING) BossHealthBar.assignBoss(this);
+		if (anger > 1) BossHealthBar.assignBoss(this);
 
 		sun_cd = bundle.getInt(SUN_CD);
         charging_skill = bundle.getBoolean(CHARGING_SKILL);

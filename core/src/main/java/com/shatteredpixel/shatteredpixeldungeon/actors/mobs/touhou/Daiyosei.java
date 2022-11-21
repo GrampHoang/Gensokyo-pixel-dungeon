@@ -39,7 +39,7 @@ public class Daiyosei extends Mob {
 		maxLvl = 9;
         //Maybe an item that can heal you a bit
         loot = ScrollOfLullaby.class;
-		lootChance = 0.15f;
+		lootChance = 0.2f;
 	}
 
 

@@ -24,7 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Silence;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -164,6 +166,9 @@ public class Golem extends Mob {
 			ScrollOfTeleportation.appear(enemy, bestPos);
 			if (enemy instanceof Hero){
 				((Hero) enemy).interrupt();
+				if (isLunatic()){
+					Buff.prolong(enemy, Silence.class, 3f);
+				}
 				Dungeon.observe();
 				GameScene.updateFog();
 			}

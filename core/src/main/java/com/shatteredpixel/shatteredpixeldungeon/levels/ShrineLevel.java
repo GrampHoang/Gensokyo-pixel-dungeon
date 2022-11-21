@@ -89,8 +89,8 @@ public class ShrineLevel extends RegularLevel {
 	@Override
 	protected Painter painter() {
 		return new CavesPainter()
-				.setWater(feeling == Feeling.WATER ? 0.85f : 0.30f, 6)
-				.setGrass(feeling == Feeling.GRASS ? 0.65f : 0.15f, 3)
+				.setWater(feeling == Feeling.WATER ? 0.75f : 0.30f, 6)
+				.setGrass(feeling == Feeling.GRASS ? 0.65f : 0.20f, 3)
 				.setTraps(nTraps(), trapClasses(), trapChances());
 	}
 	

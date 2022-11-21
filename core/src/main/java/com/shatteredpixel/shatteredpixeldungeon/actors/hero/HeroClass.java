@@ -76,7 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KoiKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.TheWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.GhostBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.OfudaHandheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
@@ -106,8 +106,9 @@ public enum HeroClass {
 
 	// {
 	// 	hero.lvl = 30;
-	// 	TheWeapon we = new TheWeapon();
-	// 	we.collect();
+		GhostBlade we = new GhostBlade();
+		we.level(200);
+		we.collect();
 
 		ScrollOfDebug sod = new ScrollOfDebug();
 		sod.quantity(1).collect();
@@ -341,8 +342,10 @@ public enum HeroClass {
 			((Weapon)hero.belongings.weapon).affixSeal(new YinYang());
 		}
 
-		OfudaHandheld o = new OfudaHandheld();
-		o.quantity(10).collect();
+		OfudaHandheld ofu = new OfudaHandheld();
+		ofu.quantity(10).collect();
+
+		Dungeon.quickslot.setSlot(0, ofu);
 
 		new PotionOfStrength().identify();
 		new ScrollOfUpgrade().identify();
@@ -352,14 +355,14 @@ public enum HeroClass {
 		
 		Hakkero h = new Hakkero();
 		h.identify().collect();
-		Dungeon.quickslot.setSlot(1, h);
+		
 
-		MarisaStaff staff;
-		staff = new MarisaStaff(new WandOfHakkero());
+		MarisaStaff staff = new MarisaStaff(new WandOfHakkero());
 		(hero.belongings.weapon = staff).identify();
 		hero.belongings.weapon.activate(hero);
 
 		Dungeon.quickslot.setSlot(0, staff);
+		Dungeon.quickslot.setSlot(1, h);
 
 		new ScrollOfRetribution().identify();
 		new PotionOfLevitation().identify();

@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.LunaSprite;
@@ -61,6 +62,7 @@ public class Luna extends Mob {
 	}
 
     public int anger = 0;
+	private int SKILL_COOLDOWN = 18;
 	private int moon_cd = 1;
     private boolean charging_skill = false;
 	
@@ -72,7 +74,7 @@ public class Luna extends Mob {
     @Override
 	public int damageRoll() {
 		if (anger > 0) {
-			return Random.NormalIntRange( 4*anger, 16 );
+			return Random.NormalIntRange( 4*(anger+1), 8*(anger+1) );
 		} else {
 			return Random.NormalIntRange( 4,  8);
 		}
@@ -129,20 +131,18 @@ public class Luna extends Mob {
         }
 	}
 
+	@Override
+	protected boolean canAttack( Char enemy ) {
+		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+		if (anger < 2) return !(Dungeon.level.adjacent(pos, enemy.pos)) && attack.collisionPos == enemy.pos;
+		else return Dungeon.level.adjacent(pos, enemy.pos);
+	}
+
     @Override
 	public int attackProc(Char enemy, int damage) {
         Buff.affect(enemy, Weakness.class, 5f);
 		return super.attackProc(enemy, damage);
 	}
-
-	// @Override
-	// public void updateSpriteState() {
-	// 	super.updateSpriteState();
-
-	// 	if (pumpedUp > 0){
-	// 		((GooSprite)sprite).pumpUp( pumpedUp );
-	// 	}
-	// }
 
 	@Override
 	protected boolean getCloser( int target ) {
@@ -160,24 +160,6 @@ public class Luna extends Mob {
 		}
 	}
 
-	// @Override
-	// public void damage(int dmg, Object src) {
-	// 	if (!BossHealthBar.isAssigned()){
-	// 		BossHealthBar.assignBoss( this );
-	// 		Dungeon.level.seal();
-	// 	}
-	// 	boolean bleeding = (HP*2 <= HT);
-	// 	super.damage(dmg, src);
-	// 	if ((HP*2 <= HT) && !bleeding){
-	// 		BossHealthBar.bleed(true);
-	// 		sprite.showStatus(CharSprite.NEGATIVE, Messages.get(this, "enraged"));
-	// 		((GooSprite)sprite).spray(true);
-	// 		yell(Messages.get(this, "gluuurp"));
-	// 	}
-	// 	LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-	// 	if (lock != null) lock.addTime(dmg*2);
-	// }
-
 	@Override
 	public void die( Object cause ) {
 		
@@ -189,11 +171,10 @@ public class Luna extends Mob {
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob instanceof Sunny){
 				((Sunny)mob).anger++;
-			} else if(mob instanceof Luna){
-				((Luna)mob).anger++;
 			} else if(mob instanceof Star){
 				((Star)mob).anger++;
 			}
+			if (anger > 0) BossHealthBar.assignBoss(mob);
 		}
 
 		
@@ -206,18 +187,6 @@ public class Luna extends Mob {
         super.die( cause );
 	}
 	
-	@Override
-	public void notice() {
-		super.notice();
-		if (!BossHealthBar.isAssigned()) {
-			BossHealthBar.assignBoss(this);
-			for (Char ch : Actor.chars()){
-				if (ch instanceof DriedRose.GhostHero){
-					((DriedRose.GhostHero) ch).sayBoss();
-				}
-			}
-		}
-	}
     
     //////////////////////////////////////////////////////////////
     // SKILL
@@ -258,7 +227,7 @@ public class Luna extends Mob {
         spend( TICK );
         charging_skill = false;
         this.sprite.remove(CharSprite.State.CHARGING);
-        moon_cd = 15;
+        moon_cd = SKILL_COOLDOWN/ (anger +1);
         if (Dungeon.hero != null){
             //Silence, magic immue hero, basically prevent any magic thing
             //Then delete map

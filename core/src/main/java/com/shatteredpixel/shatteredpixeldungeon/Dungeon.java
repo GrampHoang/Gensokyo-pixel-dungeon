@@ -64,6 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.MarisaBossLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.YukariBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.BambooLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CavesBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
@@ -342,6 +343,8 @@ public class Dungeon {
 		} else if (branch == 1) {
 			switch (depth) {
 				case 1:
+					// level = new YukariBossLevel();
+					// break;
 				case 2:
 				case 3:
 				case 4:

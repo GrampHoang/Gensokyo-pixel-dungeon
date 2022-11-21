@@ -129,7 +129,7 @@ public class BossHealthBar extends Component {
 			instance.visible = instance.active = true;
 		}
 	}
-	
+
 	public static boolean isAssigned(){
 		return boss != null && boss.isAlive() && Dungeon.level.mobs.contains(boss);
 	}

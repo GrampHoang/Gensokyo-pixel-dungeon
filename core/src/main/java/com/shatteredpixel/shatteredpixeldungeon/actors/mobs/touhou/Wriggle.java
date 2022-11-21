@@ -73,42 +73,6 @@ public class Wriggle extends Mob {
 		return super.act();
 	}
 
-	// public boolean jumpkick(Char kickVictim){
-	// 	int leapPos = kickVictim.pos;
-	// 	Ballistica b = new Ballistica(pos, leapPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
-	// 	//check if leap pos is not obstructed by terrain
-	// 	if (rooted || b.collisionPos != leapPos){
-	// 		leapPos = -1;
-	// 		return true;
-	// 	}
-
-	// 	final int endPos;
-	// 	sprite.visible = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[leapPos] || Dungeon.level.heroFOV[endPos];
-	// 	sprite.jump(pos, leapPos, new Callback() {
-	// 		@Override
-	// 		public void call() {
-
-	// 			if (kickVictim != null && alignment != kickVictim.alignment){
-	// 				Buff.prolong(kickVictim, Paralysis.class, 1.5f);
-	// 				kickVictim.sprite.flash();
-	// 				Sample.INSTANCE.play(Assets.Sounds.HIT);
-	// 			}
-
-	// 			if (endPos != leapPos){
-	// 				Actor.addDelayed(new Pushing(MeilingBoss.this, leapPos, endPos), -1);
-	// 			}
-
-	// 			pos = endPos;
-	// 			leapPos = -1;
-	// 			sprite.idle();
-	// 			Dungeon.level.occupyCell(Wriggle.this);
-	// 			next();
-	// 		}
-	// 	});
-	// 	return false;
-	// 	return true;
-	// }
-
 	@Override
 	public void die(Object cause) {
 		super.die(cause);

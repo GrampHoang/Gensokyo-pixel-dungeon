@@ -85,12 +85,19 @@ public class Cirno extends Mob {
 		damage = super.attackProc(enemy, damage);
 		if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
 			Buff.affect(enemy, Chill.class, 0.5f);
-			damage = damage/2;
+			spend(TICK/2);
 		}
 		Buff.affect(enemy, Chill.class, 0.5f);
 		return damage;
 	}
 
+	@Override
+	public boolean doAttack(Char enemy) {
+		if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
+			spend(TICK/2);
+		}
+		return super.doAttack(enemy);
+	}
     @Override
 	protected boolean act() {
 		return super.act();

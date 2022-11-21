@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
 
@@ -64,7 +65,8 @@ public class Fairy extends Mob {
 	@Override
 	protected boolean canAttack( Char enemy ) {
 		if (isLunatic()){
-			return Dungeon.level.distance(this.pos, enemy.pos) < 3;
+			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+			return Dungeon.level.distance(this.pos, enemy.pos) < 3 && attack.collisionPos == enemy.pos;
 		} else {
 			return super.canAttack(enemy);
 		}

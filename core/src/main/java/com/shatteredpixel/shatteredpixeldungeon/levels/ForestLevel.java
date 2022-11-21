@@ -83,7 +83,7 @@ public class ForestLevel extends RegularLevel {
 	@Override
 	protected Painter painter() {
 		return new SewerPainter()
-				.setWater(feeling == Feeling.WATER ? 0.85f : 0.50f, 5)
+				.setWater(feeling == Feeling.WATER ? 0.85f : 0.40f, 5)
 				.setGrass(feeling == Feeling.GRASS ? 0.80f : 0.50f, 4)
 				.setTraps(nTraps(), trapClasses(), trapChances());
 	}

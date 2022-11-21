@@ -90,7 +90,7 @@ public class Mystia extends Mob {
 			for (Mob mob : Dungeon.level.mobs) {
 				mob.beckon( pos );
 				if (isLunatic()){
-					Buff.affect(mob, Haste.class, 2f);
+					Buff.affect(mob, Haste.class, 3f);
 				}
 			}
 

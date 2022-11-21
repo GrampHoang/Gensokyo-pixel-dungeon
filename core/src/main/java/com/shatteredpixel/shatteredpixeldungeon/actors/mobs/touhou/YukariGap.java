@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
-package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.SpawnerSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.YukariSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -48,30 +48,27 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class DemonSpawner extends Mob {
+public class YukariGap extends Mob {
 
 	{
-		spriteClass = SpawnerSprite.class;
+		spriteClass = YukariGapSprite.class;
 
-		HP = HT = 120;
+		HP = HT = 80;
 		defenseSkill = 0;
 
-		EXP = 15;
-		maxLvl = 29;
+		maxLvl = -2;
+
+		properties.add(Property.MINIBOSS);
+		properties.add(Property.INORGANIC);
+		properties.add(Property.IMMOVABLE);
 
 		state = PASSIVE;
-
-		loot = PotionOfHealing.class;
-		lootChance = 1f;
-
-		properties.add(Property.IMMOVABLE);
-		properties.add(Property.MINIBOSS);
-		properties.add(Property.DEMONIC);
+		alignment = Alignment.NEUTRAL;
 	}
 
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 12);
+		return Random.NormalIntRange(0, 6);
 	}
 
 	@Override
@@ -86,14 +83,14 @@ public class DemonSpawner extends Mob {
 
 	private float spawnCooldown = 0;
 
-	public boolean spawnRecorded = false;
+	// public boolean spawnRecorded = false;
 
 	@Override
 	protected boolean act() {
-		if (!spawnRecorded){
-			Statistics.spawnersAlive++;
-			spawnRecorded = true;
-		}
+		// if (!spawnRecorded){
+		// 	Statistics.spawnersAlive++;
+		// 	spawnRecorded = true;
+		// }
 
 		spawnCooldown--;
 		if (spawnCooldown <= 0){
@@ -105,7 +102,12 @@ public class DemonSpawner extends Mob {
 			}
 
 			if (!candidates.isEmpty()) {
-				RipperDemon spawn = new RipperDemon();
+				Mob spawn;
+                if(Random.Int(1) == 1){
+                    spawn = new Ran();
+                } else {
+                    spawn = new Chen();
+                }
 
 				spawn.pos = Random.element( candidates );
 				spawn.state = spawn.HUNTING;
@@ -117,11 +119,7 @@ public class DemonSpawner extends Mob {
 					Actor.addDelayed(new Pushing(spawn, pos, spawn.pos), -1);
 				}
 
-				spawnCooldown += 60;
-				if (Dungeon.depth > 21){
-					//60/53.33/46.67/40 turns to spawn on floor 21/22/23/24
-					spawnCooldown -= Math.min(20, (Dungeon.depth-21)*6.67);
-				}
+				spawnCooldown += 30;
 			}
 		}
 		alerted = false;
@@ -141,19 +139,15 @@ public class DemonSpawner extends Mob {
 
 	@Override
 	public int defenseProc(Char enemy, int damage) {
-		if(isLunatic()){
-			GameScene.add(Blob.seed(pos, 30, ToxicGas.class));
-			GameScene.add(Blob.seed(pos, 30, CorrosiveGas.class));
-		}
 		return super.defenseProc(enemy, damage);
 	}
 
 
 	@Override
 	public void die(Object cause) {
-		if (spawnRecorded){
-			Statistics.spawnersAlive--;
-		}
+		// if (spawnRecorded){
+		// 	Statistics.spawnersAlive--;
+		// }
 		GLog.h(Messages.get(this, "on_death"));
 		super.die(cause);
 	}
@@ -165,14 +159,14 @@ public class DemonSpawner extends Mob {
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put(SPAWN_COOLDOWN, spawnCooldown);
-		bundle.put(SPAWN_RECORDED, spawnRecorded);
+		// bundle.put(SPAWN_RECORDED, spawnRecorded);
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		spawnCooldown = bundle.getFloat(SPAWN_COOLDOWN);
-		spawnRecorded = bundle.getBoolean(SPAWN_RECORDED);
+		// spawnRecorded = bundle.getBoolean(SPAWN_RECORDED);
 	}
 
 	{
@@ -186,6 +180,19 @@ public class DemonSpawner extends Mob {
 			immunities.add( CorrosiveGas.class );
 			immunities.add( ToxicGas.class );
 			immunities.add( Burning.class );
+		}
+	}
+
+	public class YukariGapSprite extends YukariSprite {
+		public YukariGapSprite(){
+			super();
+			brightness(0.05f);
+		}
+		
+		@Override
+		public void resetColor() {
+			super.resetColor();
+			brightness(0.05f);
 		}
 	}
 }

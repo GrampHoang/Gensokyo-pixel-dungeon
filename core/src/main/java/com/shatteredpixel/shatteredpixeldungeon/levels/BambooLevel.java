@@ -95,8 +95,8 @@ public class BambooLevel extends RegularLevel {
 	@Override
 	protected Painter painter() {
 		return new CityPainter()
-				.setWater(feeling == Feeling.WATER ? 0.90f : 0.40f, 4)
-				.setGrass(feeling == Feeling.GRASS ? 0.80f : 0.40f, 3)
+				.setWater(feeling == Feeling.WATER ? 0.75f : 0.20f, 4)
+				.setGrass(feeling == Feeling.GRASS ? 0.90f : 0.45f, 3)
 				.setTraps(nTraps(), trapClasses(), trapChances());
 	}
 	

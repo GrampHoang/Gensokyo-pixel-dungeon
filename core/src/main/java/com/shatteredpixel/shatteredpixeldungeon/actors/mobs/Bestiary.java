@@ -264,16 +264,16 @@ public class Bestiary {
 						Lily.class,
 						Cirno.class));
 			case 4: case 5:
-				//1x Mystia, 1x Lily, 2x Cirno, 2x Daiyosei
+				//1x Mystia, 2x Lily, 2x Cirno, 2x Daiyosei
 				return new ArrayList<>(Arrays.asList(Mystia.class,
-						Lily.class,
+						Lily.class, Lily.class,
 						Cirno.class, Cirno.class,
 						Daiyosei.class, Daiyosei.class));
 				
 			// Scarlet Devil Mansion
 			case 6:
-				//3x Meiling, 1x Marisa, 1x Cirno
-				return new ArrayList<>(Arrays.asList(Meiling.class, Meiling.class, Meiling.class,
+				//2x Meiling, 1x Marisa, 1x Cirno, 1x Lily,
+				return new ArrayList<>(Arrays.asList(Meiling.class, Meiling.class, Lily.class,
 						Marisa.class,
 						Cirno.class));
 			case 7:
@@ -312,7 +312,7 @@ public class Bestiary {
 						Ran.class,
 						Alice.class));
 			case 13:
-				//1x Letty, 2x Chen, 2x Ran, 2x Alice, 1x DM-200
+				//1x Letty, 2x Chen, 2x Ran, 2x Alice, 1x youmu
 				return new ArrayList<>(Arrays.asList(
 						Letty.class,
 						Chen.class, Chen.class,
@@ -320,7 +320,7 @@ public class Bestiary {
 						Alice.class, Alice.class,
 						Youmu.class));
 			case 14: case 15:
-				//1x Letty, 1x Chen, 2x Ran, 2x Alice, 2x DM-300
+				//1x Letty, 1x Chen, 2x Ran, 2x Alice, 2x DM-youmu
 				return new ArrayList<>(Arrays.asList(
 					Letty.class,
 						Chen.class,

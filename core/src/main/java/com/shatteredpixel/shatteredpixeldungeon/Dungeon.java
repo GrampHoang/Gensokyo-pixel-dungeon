@@ -343,9 +343,11 @@ public class Dungeon {
 		} else if (branch == 1) {
 			switch (depth) {
 				case 1:
-					// level = new YukariBossLevel();
-					// break;
+					level = new ForestLevel();
+					break;
 				case 2:
+					level = new YukariBossLevel();
+					break;
 				case 3:
 				case 4:
 					level = new ForestLevel();

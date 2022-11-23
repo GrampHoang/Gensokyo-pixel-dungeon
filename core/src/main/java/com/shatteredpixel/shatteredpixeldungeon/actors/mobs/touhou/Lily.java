@@ -27,7 +27,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -35,11 +34,9 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.LilySprite;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class Lily extends Mob {
@@ -69,7 +66,7 @@ public class Lily extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(3, 6);
+		return Random.NormalIntRange(2, 5);
 	}
 
     @Override

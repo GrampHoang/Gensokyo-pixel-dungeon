@@ -18,7 +18,7 @@ import com.watabou.utils.Rect;
 
 public class YukariBossLevel extends Level {
 
-    private static final int SIZE_W = 33;
+    private static final int SIZE_W = 35;
     private static final int SIZE_H = 33;
 
     {
@@ -37,13 +37,6 @@ public class YukariBossLevel extends Level {
     public String waterTex() {
         return Assets.Environment.WATER_CITY;
     }
-
-    private static final Rect emptyRoom = new Rect(0, 0, 5, 7);
-    private static final Rect emptyRoom2 = new Rect(12, 0, 17, 7);
-    private static final Rect emptyRoom3 = new Rect(0, 10, 5, 17);
-    private static final Rect emptyRoom4 = new Rect(12, 10, 17, 17);
-
-    private static final Rect midpath = new Rect(8, 1, 8, 16);
     
 	public static int[] gapPositions = new int[]{ 4 + 13*SIZE_W, 28 + 13*SIZE_W, 4 + 37*SIZE_W, 28 + 37*SIZE_W };
 
@@ -52,19 +45,26 @@ public class YukariBossLevel extends Level {
 
         setSize(SIZE_W, SIZE_H);
 
-        for (int i = 1; i < SIZE_H-2; i++) {
-            for (int j = 1; j < SIZE_W-2; j++) {
+        for (int i = 1; i < SIZE_H-1; i++) {
+            for (int j = 1; j < SIZE_W-1; j++) {
                     map[i * width() + j] = Terrain.EMPTY;
                 }
                 
         }
 
-        exit     = entrance + 1;
+		for (int i = 1; i < SIZE_H-1; i++) {
+            map[i * width() + 1] = Terrain.WALL;
+			map[i * width() + 33] = Terrain.WALL;
+        }
+
         buildEntrance();
 		buildCorners();
-		buildSides();
+		buildSidesNS();
+		buildSidesEW();
         transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
-
+		entrance = 17 + 16*width();
+		exit = 17 + 8*width();
+		Painter.set(this, exit, Terrain.EMPTY);
         return true;
     }
 
@@ -77,7 +77,7 @@ public class YukariBossLevel extends Level {
         // And move away from the entrance
         if (map[entrance] == Terrain.ENTRANCE 
             && ch == Dungeon.hero
-            // && map[exit] != Terrain.EXIT
+            && map[exit] != Terrain.EXIT
             && Dungeon.level.distance(ch.pos, entrance) > 2) {
             seal();
         }
@@ -94,7 +94,7 @@ public class YukariBossLevel extends Level {
         Dungeon.observe();
 
         YukariBoss boss = new YukariBoss();
-        boss.pos = (3 * width() + 7);;
+        boss.pos = exit;
         GameScene.add(boss);
 
         // ReimuBoss mari = new ReimuBoss();
@@ -160,43 +160,75 @@ public class YukariBossLevel extends Level {
 	private static final short e = Terrain.EMPTY;
 	private static final short s = Terrain.EMPTY_SP;
 
-	private static short[] side1 = {
-		W, W, W, W, W, W, W, W, W, W,
-		W, W, W, s, s, s, s, W, W, W,
-		W, W, e, s, s, s, s, e, W, W,
-		W, e, e, s, s, s, s, e, e, W,
-		W, e, W, W, W, W, W, W, e, W,
-		n, e, W, W, W, W, W, W, e, n,
-		n, e, e, W, W, W, W, e, e, n,
-		n, n, e, e, W, W, e, e, n, n,
-		n, n, n, e, e, e, e, n, n, n,
-		n, n, n, n, n, n, n, n, n, n,
+	private static short[] sideNS1 = {
+		W, W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, s, s, s, W, W, W, W,
+		W, e, e, e, s, s, s, e, e, e, W,
+		W, e, W, W, s, s, s, W, W, e, W,
+		W, e, e, W, W, W, W, W, e, e, W,
+		W, W, e, e, W, W, W, e, e, W, W,
+		n, W, W, e, e, e, e, e, W, W, n,
+		n, n, n, n, n, n, n, n, n, n, n,
+		n, n, n, n, n, n, n, n, n, n, n,
+		n, n, n, n, n, n, n, n, n, n, n,
 	};
 
-	private static short[][] sideVariants = {
-		side1
-};
+	private static short[] sideEW1 = {
+		W, W, W, W, W, W, n, n, n, n, 
+		W, e, e, e, W, W, n, n, n, n,
+		W, e, W, e, e, e, e, n, n, n,
+		W, e, W, W, W, e, e, n, n, n,
+		s, s, s, W, W, W, e, n, n, n,
+		s, s, s, W, W, W, e, n, n, n,
+		s, s, s, W, W, W, e, n, n, n,
+		W, e, W, W, W, e, e, n, n, n,
+		W, e, W, e, e, e, e, n, n, n,
+		W, e, e, e, W, W, n, n, n, n,
+		W, W, W, W, W, W, n, n, n, n, 
+	};
 
-	private void buildSides(){
-		int No = 11 + width();
-		int Ea = 30 + 11*width();
-		int So = 1  + 11*width();
-		int We = 11 + 30*width();
-		short[] sideTiles = Random.oneOf(sideVariants);
+	private static short[][] sideNSVariants = {
+		sideNS1
+	};
+
+	private static short[][] sideEWVariants = {
+		sideEW1
+	};
+
+	private void buildSidesNS(){
+		int No = 12 + 0*width();
+		int So = 12  + 32*width();
+		
+		
+		short[] sideTiles = Random.oneOf(sideNSVariants);
 		
 		for(int i = 0; i < sideTiles.length; i++){
-			if (i % 10 == 0 && i != 0){
-				No += (width() - 10);
-				Ea += (width() + 10);
-				So -= (width() - 10);
-				We -= (width() + 10);
+			if (i % 11 == 0 && i != 0){
+				No += (width() - 11);
+				So -= (width() + 11);
 			}
 
-			if (sideTiles[i] != n) map[No] = map[Ea] = map[So] = map[We] = sideTiles[i];
-			No++; Ea--; So++; We--;
+			if (sideTiles[i] != n) map[No] = map[So] =  sideTiles[i];
+			No++; So++;
 		}
 	}
 
+	private void buildSidesEW(){
+		int We = 1  + 11*width();
+		int Ea = 34 + 11*width();
+		
+		short[] sideTiles = Random.oneOf(sideEWVariants);
+		
+		for(int i = 0; i < sideTiles.length; i++){
+			if (i % 10 == 0 && i != 0){
+				We += (width() - 10);
+				Ea += (width() + 10);
+			}
+
+			if (sideTiles[i] != n) map[Ea] =  map[We] = sideTiles[i];
+			 Ea--; We++;
+		}
+	}
 	private static short[] corner1 = {
 		W, W, W, W, W, W, W, W, W, W,
 		W, s, s, s, e, e, e, W, W, W,
@@ -257,10 +289,10 @@ public class YukariBossLevel extends Level {
 	};
 
 	private void buildCorners(){
-		int NW = 1 + 1*width();
-		int NE = 30 + 1*width();
-		int SE = 30 + 30*width();
-		int SW = 1 + 30*width();
+		int NW = 2 + 1*width();
+		int NE = 32 + 1*width();
+		int SE = 32 + 31*width();
+		int SW = 2 + 31*width();
 
 		short[] cornerTiles = Random.oneOf(cornerVariants);
 		for(int i = 0; i < cornerTiles.length; i++){
@@ -328,7 +360,7 @@ public class YukariBossLevel extends Level {
 	};
 
 	private void buildEntrance(){
-		int entrance = 16 + 16*width();
+		int entrance = 17 + 16*width();
 
 		//entrance area
 		int NW = entrance - 7 - 7*width();

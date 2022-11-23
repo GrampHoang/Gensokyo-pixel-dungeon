@@ -41,7 +41,7 @@ public class MoveDetect extends FlavourBuff {
 
 	@Override
 	public void tintIcon(Image icon) {
-		icon.hardlight(0f, 0f, 0.2f);
+		icon.hardlight(0.4f, 0.4f, 0.8f);
 	}
 
 	@Override

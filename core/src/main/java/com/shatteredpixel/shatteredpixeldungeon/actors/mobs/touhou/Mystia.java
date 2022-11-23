@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
@@ -40,6 +39,7 @@ public class Mystia extends Mob {
 		maxLvl = 8;
 		loot = Gold.class;
 		lootChance = 0.5f;
+		Buff.affect(this, SingCounter.class);
 	}
 
 
@@ -65,28 +65,24 @@ public class Mystia extends Mob {
 
     @Override
     public void damage(int dmg, Object src) {
-        sing(20);
-		if (isLunatic()){
-			sing(20);	//roll again lmao
-		}
+		//Should be 1/15 chance
+        sing(14);
         super.damage(dmg, src);
     }
 
 	@Override
 	public int attackProc(Char enemy, int damage) {
-		damage = super.attackProc(enemy, damage);
-		if (enemy instanceof Hero) {
-            sing(10);
-			if (isLunatic()){
-				sing(10);	//roll again lmao., maybe higher chance? nah
-			}
+		this.buff(SingCounter.class).countUp(1);
+		if(this.buff(SingCounter.class).count() > (isLunatic() ? 1 : 2) && this.alignment != Alignment.ALLY){
+			sing(0);
+			this.buff(SingCounter.class).countDown(5);
 		}
-		return damage;
+		return super.attackProc(enemy, damage);
 	}
 
 	//Higher roll = less chance
 	public void sing(int roll){
-		if (Random.IntRange(0, roll) == 1 ){
+		if (Random.Int(roll) == 0 ){
 			for (Mob mob : Dungeon.level.mobs) {
 				mob.beckon( pos );
 				if (isLunatic()){
@@ -113,4 +109,6 @@ public class Mystia extends Mob {
 	public void die(Object cause) {
 		super.die(cause);
 	}
+
+	public static class SingCounter extends CounterBuff{{revivePersists = true;}};
 }

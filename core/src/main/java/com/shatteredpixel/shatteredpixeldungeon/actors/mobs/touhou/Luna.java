@@ -68,15 +68,15 @@ public class Luna extends Mob {
 	
     @Override
 	public float speed() {
-		return super.speed() * (anger > 1 ? 1f : 0.8f);
+		return super.speed();
 	}
 
     @Override
 	public int damageRoll() {
 		if (anger > 0) {
-			return Random.NormalIntRange( 4*(anger+1), 8*(anger+1) );
+			return Random.NormalIntRange( 3*(anger+1), 6*(anger+1) );
 		} else {
-			return Random.NormalIntRange( 4,  8);
+			return Random.NormalIntRange( 3,  6);
 		}
 	}
 
@@ -85,9 +85,10 @@ public class Luna extends Mob {
 		return 10;
 	}
 
+	//Luna have hige dodge
 	@Override
 	public int defenseSkill(Char enemy) {
-		return (int)(super.defenseSkill(enemy) * ((anger > 0) ? (1 + anger/2) : 1));
+		return (int)(super.defenseSkill(enemy) * ((anger > 0) ? 2 : 1.5f));
 	}
 
 	@Override
@@ -134,8 +135,15 @@ public class Luna extends Mob {
 	@Override
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		if (anger < 2) return !(Dungeon.level.adjacent(pos, enemy.pos)) && attack.collisionPos == enemy.pos;
+		// When super angry only do melee, else range attack only when no move detect
+		if (anger < 2) return !(Dungeon.level.adjacent(pos, enemy.pos)) && attack.collisionPos == enemy.pos && (Dungeon.hero.buff(MoveDetect.class) == null);
 		else return Dungeon.level.adjacent(pos, enemy.pos);
+	}
+
+	@Override
+	public boolean doAttack(Char enemy) {
+		if (!(Dungeon.level.adjacent(pos, enemy.pos))) spend(TICK/2);
+		return super.doAttack(enemy);
 	}
 
     @Override

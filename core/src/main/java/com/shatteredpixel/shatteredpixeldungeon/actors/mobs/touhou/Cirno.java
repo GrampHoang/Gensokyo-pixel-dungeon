@@ -38,10 +38,10 @@ import com.watabou.utils.Random;
 public class Cirno extends Mob {
 	{
 		spriteClass = CirnoSprite.class;
-		HP = HT = 26;
-		defenseSkill = 6;
+		HP = HT = 30;
+		defenseSkill = 5;
 		EXP = 3;
-		maxLvl = 10;
+		maxLvl = 9;
         loot = PotionOfFrost.class;
 		lootChance = 0.3f;
 	}

@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -66,6 +67,14 @@ public class Wriggle extends Mob {
 			return damage;
 		}
 		return damage;
+	}
+	
+	@Override
+	public void damage(int dmg, Object src) {
+		if(surprisedBy(Dungeon.hero)){
+			dmg = Math.round(dmg*1.5f);
+		}
+		super.damage(dmg, src);
 	}
 
     @Override

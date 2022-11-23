@@ -33,7 +33,7 @@ import com.watabou.utils.Random;
 public class Daiyosei extends Mob {
 	{
 		spriteClass = DaiyoseiSprite.class;
-		HP = HT = 20;
+		HP = HT = 25;
 		defenseSkill = 5;
 		EXP = 4;
 		maxLvl = 9;

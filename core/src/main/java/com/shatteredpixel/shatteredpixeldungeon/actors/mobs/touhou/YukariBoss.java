@@ -118,20 +118,23 @@ public class YukariBoss extends Mob {
 			return;
 		}
 		
+
 		int hpBracket = HT / 4;
 		
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
 
+		if(HP <= 0){
+			die(src);
+			return;
+		}
+
 		// cannot be hit through multiple brackets at a time
 		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
 			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
 		}
 
-		if(HP <= 0){
-			return;
-		}
 		if (beforeHitHP / hpBracket != HP / hpBracket) {
 			summonGap();
 		}
@@ -154,7 +157,7 @@ public class YukariBoss extends Mob {
 		GameScene.bossSlain();
 
 		for (Mob m : getSubjects()){
-			m.die(null);
+			if (m != null) m.die(null);
 		}
 
 		Statistics.bossScores[2] += 2000;
@@ -189,73 +192,46 @@ public class YukariBoss extends Mob {
 
 
 	public void summonGap() {
-        int tried = 0;
-        // Lunatic mode spawn 2/3/4 gap, normal spawn 1/2/3
-        int summon = (isLunatic() ? -1 : 0);
-        // will try to spawn 1/1/2 gaps 
-        while (tried < 50 || summon < (4 - this.HP*4/this.HT)){
-            tried++;
-            int sum_pos = YukariBossLevel.gapPositions[Random.IntRange(0, YukariBossLevel.gapPositions.length - 1)];
-            Char ch = Actor.findChar(sum_pos);
-            if(ch != null){
-                if(ch instanceof Hero && ch.HP != 1){
-                    //lose half max HP or reduce HP to 1
-                    // if already 1 HP then ignore, else it would be a watse gap
-                    Char hero = Dungeon.hero;
-                    Dungeon.hero.damage(Math.min(hero.HP - 1, hero.HT/2), this);
+        // int tried = 0;
+        // // Lunatic mode spawn 2/3/4 gap, normal spawn 1/2/3
+        // int summon = (isLunatic() ? -1 : 0);
+        // while (tried < 50 || summon < (4 - this.HP*4/this.HT)){
+        //     tried++;
+        //     int sum_pos = YukariBossLevel.gapPositions[Random.IntRange(0, YukariBossLevel.gapPositions.length - 1)];
+        //     Char ch = Actor.findChar(sum_pos);
+        //     if(ch != null){
+        //         if(ch instanceof Hero && ch.HP != 1){
+        //             //lose half max HP or reduce HP to 1
+        //             // if already 1 HP then ignore, else it would be a watse gap
+        //             Char hero = Dungeon.hero;
+        //             Dungeon.hero.damage(Math.min(hero.HP - 1, hero.HT/2), this);
 
-                } else if(!(ch instanceof YukariGap || ch instanceof YukariBoss)){
-                    //if a mob block spawning, kill it
-                    ch.die(null);
-                    YukariGap gap = new YukariGap();
-                    gap.pos = sum_pos;
-                    GameScene.add( gap, 1 );
-                    Dungeon.level.occupyCell(gap);
-                    summon++;
-                }   //else if it's Yukari or the Gap, try again
-            }
-        }
+        //         } else if(!(ch instanceof YukariGap || ch instanceof YukariBoss)){
+        //             //if a mob block spawning, kill it
+        //             ch.die(null);
+        //             YukariGap gap = new YukariGap();
+        //             gap.pos = sum_pos;
+        //             GameScene.add( gap, 1 );
+        //             Dungeon.level.occupyCell(gap);
+        //             summon++;
+        //         }   //else if it's Yukari or the Gap, try again
+        //     }
+        // }
 		spend(TICK);
 	}
 
     @Override
     public boolean act() {
-        if (!isCharmedBy( enemy ) && canAttack( enemy )) {
+		if (canUseReady()){
+			spend(TICK);
+			return useReady();
+		}
+		if (canUseAbility()){
+			spend(TICK);
+			return useAbility();
+		}
 
-            if (canUseReady()){
-                return useReady();
-            }
-            if (canUseAbility()){
-                return useAbility();
-            }
-            return doAttack( enemy );
-            
-        } else {
-            
-            if (enemySeen) {
-                target = Dungeon.hero.pos;
-                aggro(enemy);
-            } else {
-                sprite.showLost();
-                return true;
-            }
-            
-            //if not charmed, attempt to use an ability, even if the enemy can't be seen
-            if (canUseReady()){
-                return useReady();
-            }
-            if (canUseAbility()){
-                return useAbility();
-            }		
-            int oldPos = pos;
-            if (getCloser(enemy.pos)){
-                spend(1/speed());
-                return moveSprite( oldPos,  pos );
-            }
-            spend( TICK );
-            return true;
-            
-        }
+		return super.act();
     }
 
 	//SKILLLLLLLLL
@@ -266,7 +242,6 @@ public class YukariBoss extends Mob {
 	
 	public boolean useReady(){
 		Dungeon.hero.interrupt();
-		spend(TICK);
 		return true;
 	}
 
@@ -275,11 +250,17 @@ public class YukariBoss extends Mob {
 	}
 	
 	public boolean useAbility(){
-		spend(TICK);
         return false;
 	}
 
+	public void triNest(){
+		//Shoot 3 laser forming a triangle
+	}
 
+	public void yakumoNest(){
+		//Shoot laser forming nest, paralyze you
+	}
+	
 	// private static final String LEVATIN_COOLDOWN     = "levatin_cd";
 	// private static final String LEVATIN_CELLS     = "levatin_cells";
 	// private static final String LEVATIN_STOP_POS     = "levatin_stop_pos";

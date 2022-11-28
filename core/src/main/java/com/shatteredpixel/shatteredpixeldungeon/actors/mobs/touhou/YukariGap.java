@@ -51,7 +51,7 @@ import java.util.ArrayList;
 public class YukariGap extends Mob {
 
 	{
-		spriteClass = YukariGapSprite.class;
+		spriteClass = YukariSprite.class;
 
 		HP = HT = 80;
 		defenseSkill = 0;
@@ -63,7 +63,6 @@ public class YukariGap extends Mob {
 		properties.add(Property.IMMOVABLE);
 
 		state = PASSIVE;
-		alignment = Alignment.NEUTRAL;
 	}
 
 	@Override
@@ -81,6 +80,7 @@ public class YukariGap extends Mob {
 		return true;
 	}
 
+	private float SPAWNCD = 60;
 	private float spawnCooldown = 0;
 
 	// public boolean spawnRecorded = false;
@@ -103,10 +103,10 @@ public class YukariGap extends Mob {
 
 			if (!candidates.isEmpty()) {
 				Mob spawn;
-                if(Random.Int(1) == 1){
-                    spawn = new Ran();
+                if(Random.IntRange(0, 1) == 1){
+                    spawn = new YukariRan();
                 } else {
-                    spawn = new Chen();
+                    spawn = new YukariChen();
                 }
 
 				spawn.pos = Random.element( candidates );
@@ -119,7 +119,7 @@ public class YukariGap extends Mob {
 					Actor.addDelayed(new Pushing(spawn, pos, spawn.pos), -1);
 				}
 
-				spawnCooldown += 30;
+				spawnCooldown += SPAWNCD;
 			}
 		}
 		alerted = false;
@@ -133,7 +133,7 @@ public class YukariGap extends Mob {
 			// at   20/22/25/29/34/40/47/55/64/74/85 incoming dmg
 			dmg = 19 + (int)(Math.sqrt(8*(dmg - 19) + 1) - 1)/2;
 		}
-		spawnCooldown -= dmg;
+		spawnCooldown -= dmg/4;
 		super.damage(dmg, src);
 	}
 
@@ -183,16 +183,21 @@ public class YukariGap extends Mob {
 		}
 	}
 
-	public class YukariGapSprite extends YukariSprite {
-		public YukariGapSprite(){
-			super();
-			brightness(0.05f);
+	public static class YukariChen extends Chen {
+		{
+			EXP = 0;
+			maxLvl = 1;
+			lootChance = 0f;
+			state = HUNTING;
+			
 		}
-		
-		@Override
-		public void resetColor() {
-			super.resetColor();
-			brightness(0.05f);
+	}
+	public static class YukariRan extends Ran {
+		{	
+			EXP = 0;
+			maxLvl = 1;
+			lootChance = 0f;
+			state = HUNTING;
 		}
 	}
 }

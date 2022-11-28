@@ -38,6 +38,7 @@ public class MasterSparkBig extends Image {
 	private float timeLeft;
 	private MasterSparkBig(PointF s, PointF e, Effects.Type asset, float duration) {
 		super( Effects.get( asset ) );
+		
 		origin.set( 0, height / 2 );
 		
 		x = s.x - origin.x;

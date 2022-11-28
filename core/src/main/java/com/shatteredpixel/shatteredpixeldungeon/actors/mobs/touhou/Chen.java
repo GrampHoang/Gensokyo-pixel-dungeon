@@ -154,7 +154,7 @@ public class Chen extends Mob {
 		for (int p : b.subPath(0, Dungeon.level.distance(this.pos, stopCell))){
             Char ch = Actor.findChar(p);
 			if (ch != null && !(ch instanceof Chen)){
-				ch.damage(10, this);
+				ch.damage(18, this);
 			}
         }
 		//move

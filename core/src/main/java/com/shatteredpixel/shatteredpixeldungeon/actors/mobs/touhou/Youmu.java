@@ -118,7 +118,7 @@ public class Youmu extends Mob {
 					for (int p : b.subPath(0, Dungeon.level.distance(this.pos, dash_pos))){
 						Char ch = Actor.findChar(p);
 						if(ch != null && ch.alignment != this.alignment){
-							ch.damage(20, this);
+							ch.damage(25, this);
 						}
 					}
 					//effect
@@ -153,7 +153,7 @@ public class Youmu extends Mob {
 					for (int p : PathFinder.NEIGHBOURS8){
 						Char cha = Actor.findChar(p + this.pos);
 							if(cha != null && cha.alignment != this.alignment){
-								cha.damage(20, this);
+								cha.damage(25, this);
 							}
 					}
 					//effect

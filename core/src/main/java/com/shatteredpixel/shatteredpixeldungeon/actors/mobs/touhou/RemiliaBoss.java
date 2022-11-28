@@ -125,21 +125,26 @@ public class RemiliaBoss extends Mob {
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
-		
+		if ( Blob.volumeAt(this.pos, SmokeScreen.class) > 0){
+			sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "smoke"));
+			return;
+		}
 		int hpBracket = HT / 3;
 		
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
 
+		if(HP <= 0){
+			return;
+		}
+
 		// cannot be hit through multiple brackets at a time
 		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
 			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
 		}
 
-		if(HP <= 0){
-			return;
-		}
+
 		if (beforeHitHP / hpBracket != HP / hpBracket) {
 			callSakuya(summon_pos[Random.IntRange(0,3)]);
 		}
@@ -279,7 +284,7 @@ public class RemiliaBoss extends Mob {
 					sprite.showLost();
 					levatin_throw = false;
 					//is this even helpful at all?
-					levatin_cd += 2; 
+					levatin_cd += 2;
 					state = WANDERING;
 					return true;
 				}

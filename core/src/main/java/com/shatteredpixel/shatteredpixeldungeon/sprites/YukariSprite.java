@@ -22,9 +22,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BurstingPowerParticle;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.particles.Emitter;
 
 public class YukariSprite extends MobSprite {
+
+	private Emitter burst;
 
 	public YukariSprite() {
 		super();
@@ -45,6 +50,37 @@ public class YukariSprite extends MobSprite {
 		die = new Animation( 12, false );
 		die.frames( frames, 0, 1 );
 		
+		burst = emitter();
+		burst.autoKill = false;
+		burst.pour(BurstingPowerParticle.FACTORY, 0.1f);
+		burst.on = false;
+
 		play( idle );
 	}
+
+	@Override
+	public void link(Char ch) {
+		super.link(ch);
+		if (ch.HP*2 <= ch.HT)
+		burstfx(true);
+	}
+
+	public void burstfx(boolean on){
+		burst.on = on;
+	}
+
+	@Override
+	public void update() {
+		super.update();
+		burst.visible = visible;
+	}
+
+	@Override
+	public void onComplete( Animation anim ) {
+		super.onComplete( anim );
+		if (anim == die) {
+			burst.killAndErase();
+		}
+	}
+
 }

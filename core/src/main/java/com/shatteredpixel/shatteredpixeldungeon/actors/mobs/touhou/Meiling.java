@@ -128,7 +128,7 @@ public class Meiling extends Mob {
 	public void damage(int dmg, Object src) {
 		if ((HP*3 <= HT)){
 			((MeilingSprite)sprite).spray(true);
-			yell(Messages.get(this, "Meiling is mad!"));
+			yell(Messages.get(this, "mad"));
 		}
 		super.damage(dmg, src);
 	}

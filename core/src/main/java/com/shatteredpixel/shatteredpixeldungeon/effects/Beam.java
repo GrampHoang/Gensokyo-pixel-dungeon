@@ -74,6 +74,12 @@ public class Beam extends Image {
 		}
 	}
 
+	public static class YukariRay extends Beam{
+		public YukariRay(PointF s, PointF e){
+			super(s, e, Effects.Type.DEATH_RAY, 1.5f);
+		}
+	}
+
 	public static class HealthRay extends Beam{
 		public HealthRay(PointF s, PointF e){
 			super(s, e, Effects.Type.HEALTH_RAY, 0.75f);

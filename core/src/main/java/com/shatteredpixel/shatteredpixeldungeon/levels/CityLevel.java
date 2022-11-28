@@ -86,7 +86,7 @@ public class CityLevel extends RegularLevel {
 		return Assets.Environment.TILES_CITY;
 	}
 	
-	@Override
+@Override
 	public String waterTex() {
 		return Assets.Environment.WATER_CITY;
 	}

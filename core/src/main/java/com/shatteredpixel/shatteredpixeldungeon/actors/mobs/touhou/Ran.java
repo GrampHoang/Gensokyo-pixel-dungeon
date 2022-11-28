@@ -21,7 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -104,9 +105,12 @@ public class Ran extends Mob {
 	protected boolean doAttack(Char enemy ) {
 		charging = false;
 		this.sprite.remove(CharSprite.State.CHARGING);
-		if (Dungeon.level.adjacent( pos, enemy.pos )) {
+		CellEmitter.get(enemy.pos).burst(SmokeParticle.FACTORY, 4);
+		Buff.prolong( enemy, Hex.class, 12f );
+		Buff.prolong( enemy, Vulnerable.class, 12f );
+		// if (Dungeon.level.adjacent( pos, enemy.pos )) {
 			
-			return super.doAttack( enemy );
+			// return super.doAttack( enemy );
 			
 		// } else {
 			
@@ -117,10 +121,16 @@ public class Ran extends Mob {
 		// 		zap();
 		// 		return true;
 		// 	}
-		}
+		// }
 		return super.doAttack( enemy );
 	}
 	
+	@Override
+	public void die(Object cause) {
+        this.sprite.remove(CharSprite.State.CHARGING);
+		super.die(cause);
+	}
+
 	//used so resistances can differentiate between melee and magical attacks
 	public static class EarthenBolt{}
 	

@@ -112,7 +112,6 @@ public class Succubus extends Mob {
 	protected boolean act() {
 		if (isLunatic() && this.HP < this.HT){
 			this.HP += (this.HP < this.HT - 5 ? 5 : this.HT - this.HP);
-			enemy.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.5f, 1);
 			GameScene.add( Blob.seed( this.pos, 12, Fire.class ) );
 		}
 		return super.act();

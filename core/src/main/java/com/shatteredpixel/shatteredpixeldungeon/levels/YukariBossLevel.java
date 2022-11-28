@@ -38,7 +38,9 @@ public class YukariBossLevel extends Level {
         return Assets.Environment.WATER_CITY;
     }
     
-	public static int[] gapPositions = new int[]{ 4 + 13*SIZE_W, 28 + 13*SIZE_W, 4 + 37*SIZE_W, 28 + 37*SIZE_W };
+	public static int[] gapPositions = new int[]{109,  87,  135, 
+												562,        593,
+												1019, 1067, 1045 };
 
     @Override
     protected boolean build() {
@@ -56,6 +58,15 @@ public class YukariBossLevel extends Level {
             map[i * width() + 1] = Terrain.WALL;
 			map[i * width() + 33] = Terrain.WALL;
         }
+
+		boolean[] patch = Patch.generate( width, height, 0.45f, 1, true );
+		for (int i = 1; i < length()-1; i++) {
+			if (map[i] == Terrain.EMPTY) {
+				if (patch[i]){
+					map[i] = Terrain.WATER;
+				}
+			}
+		}
 
         buildEntrance();
 		buildCorners();

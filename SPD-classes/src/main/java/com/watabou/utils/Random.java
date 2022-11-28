@@ -108,6 +108,12 @@ public class Random {
 		return min + Int(max - min + 1);
 	}
 
+	//Get random element of a int[] array
+	public static int IntArray(int[] array) {
+			int ele = Random.IntRange(0, array.length - 1);
+			return array[ele];
+		}
+
 	//returns a triangularly distributed int in the range [min, max]
 	public static int NormalIntRange( int min, int max ) {
 		return min + (int)((Float() + Float()) * (max - min + 1) / 2f);

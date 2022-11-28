@@ -90,7 +90,10 @@ public class ScrollOfDebug extends Scroll {
                 "Allows you to attach a buff to a character in sight. This can be extremely dangerous, or it could do literally nothing."),
         SEED(Blob.class,
                 "BLOB [amount]",
-                "Seeds a blob of the specified amount to a targeted tile");
+                "Seeds a blob of the specified amount to a targeted tile"),
+                POS(null, 
+                "",
+                "Give you the current position you are standing on");
 
         final Class<?> paramClass;
         final String syntax, description;
@@ -137,7 +140,9 @@ public class ScrollOfDebug extends Scroll {
                     GLog.w("\""+input[0]+"\" is not a valid command.");
                     return;
                 }
-
+                if (command == Command.POS){
+                    GLog.w("Hero position: " + Integer.toString(Dungeon.hero.pos));
+                }
                 if(command == Command.HELP) {
                     String output = null;
                     boolean all = false;

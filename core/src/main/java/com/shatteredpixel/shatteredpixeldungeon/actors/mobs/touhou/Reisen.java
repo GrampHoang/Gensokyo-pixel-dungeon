@@ -95,7 +95,7 @@ public class Reisen extends Mob {
 				damage = super.attackProc( enemy, damage*2 );
 			}
 
-			int effect = Random.Int(10);
+			int effect = Random.Int(11);
 			if (effect > 6) {
 
 				if (effect >= 9){

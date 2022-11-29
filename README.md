@@ -7,7 +7,7 @@ Progress:
 - All new character have their own unique subclasses, no armor ability
 - A few more weapon to spice up the gameplay, spread evenly between tiers. They have lower drop rate though. Might nerf later, or change them into secret weapons. High Priority
 - New challenges: Lunatic where all enemy have additional perk and skill, doesn't affect normal boss though.
-- Alternative path (70%): Gensokyo challenge. Currently up to 4th region (19 floor) 2 bosses at 5 and 10. Not play tested, but on paper it should be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill and you should be fine. Except lots of repositioning though, and don't too rely on narrow pathway.
+- Alternative path (Up to 20 floors, last 5 still Demon Hall): Gensokyo challenge. New enemies, new bosses. Not play tested, but on paper it should be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill and you should be fine. Except lots of repositioning though, and don't too rely on narrow pathway.
 
 Plan:
 - A lot more weapons
@@ -20,7 +20,7 @@ Plan:
 - Badges/UI/About/Changelogs: A few idea, like play whole game without using melee attack or wand lol)
 - Consumeable: Some idea, but low priority.
 
-If there is any issue, just post them in the github Issue, or ping me on Discord.
+If there is any issue, you can use the feedback link inside the game.
 
 #ShatteredPD
 A Roguelike RPG, with randomly generated levels, items, enemies, and traps! Based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://www.watabou.ru).

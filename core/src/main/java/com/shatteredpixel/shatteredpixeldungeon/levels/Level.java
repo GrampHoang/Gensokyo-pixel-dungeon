@@ -60,6 +60,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Stylus;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
@@ -1303,6 +1304,15 @@ public abstract class Level implements Bundlable {
 					int p = heap.pos;
 					for (int i : PathFinder.NEIGHBOURS9) heroMindFov[p+i] = true;
 				}
+			}
+
+			for (SomeonePhone.CharAwareness a : c.buffs(SomeonePhone.CharAwareness.class)){
+				Char ch = (Char) Actor.findById(a.charID);
+				if (ch == null || !ch.isAlive()) {
+					continue;
+				}
+				int p = ch.pos;
+				heroMindFov[p] = true;
 			}
 
 			for (TalismanOfForesight.CharAwareness a : c.buffs(TalismanOfForesight.CharAwareness.class)){

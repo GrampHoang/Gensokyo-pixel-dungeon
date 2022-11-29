@@ -376,6 +376,11 @@ public enum Talent {
 			if (hero.belongings.weapon() != null) hero.belongings.weapon().identify();
 			if (hero.belongings.armor() != null)  hero.belongings.armor.identify();
 		}
+
+		if (talent == WEAPON_INTUITION && hero.pointsInTalent(WEAPON_INTUITION) == 2){
+			if (hero.belongings.weapon() != null) hero.belongings.weapon().cursedKnown = true;
+		}
+
 		if (talent == THIEFS_INTUITION && hero.pointsInTalent(THIEFS_INTUITION) == 2){
 			if (hero.belongings.ring instanceof Ring) hero.belongings.ring.identify();
 			if (hero.belongings.misc instanceof Ring) hero.belongings.misc.identify();
@@ -580,6 +585,11 @@ public enum Talent {
 		if (item instanceof MeleeWeapon || item instanceof Armor){
 			factor *= 1f + hero.pointsInTalent(ARMSMASTERS_INTUITION);
 		}
+
+		if (item instanceof MeleeWeapon){
+			factor *= 1f + 2*hero.pointsInTalent(WEAPON_INTUITION);
+		}
+
 		// 3x/instant for mage (see Wand.wandUsed())
 		if (item instanceof Wand){
 			factor *= 1f + 2*hero.pointsInTalent(SCHOLARS_INTUITION);
@@ -722,10 +732,6 @@ public enum Talent {
 			item.identify();
 		}
 
-		if (hero.hasTalent(WEAPON_INTUITION) && (item instanceof Weapon)){
-			item.identify();
-		}
-
 		if (hero.hasTalent(THIEFS_INTUITION) && item instanceof Ring){
 			if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
 				item.identify();
@@ -741,7 +747,7 @@ public enum Talent {
 		}
 
 		if (hero.pointsInTalent(WEAPON_INTUITION) == 2){
-			if (item instanceof MeleeWeapon) ((MeleeWeapon) item).identify();
+			if (item instanceof MeleeWeapon) ((MeleeWeapon) item).cursedKnown = true;
 		}
 	}
 

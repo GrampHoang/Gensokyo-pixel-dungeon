@@ -381,7 +381,7 @@ public class TitleScene extends PixelScene {
 				icon(Icons.get(Icons.LANGS));
 				icon.hardlight(1.5f, 0, 0);
 			} else {
-				icon(Icons.get(Icons.GOLD));
+				icon(Icons.get(Icons.NEWS));
 			}
 		}
 
@@ -393,6 +393,7 @@ public class TitleScene extends PixelScene {
 		@Override
 		protected void onClick() {
 			// ShatteredPixelDungeon.scene().add(new WndUFO());
+			ShatteredPixelDungeon.switchNoFade(FeedbackScene.class);
 		}
 	}
 }

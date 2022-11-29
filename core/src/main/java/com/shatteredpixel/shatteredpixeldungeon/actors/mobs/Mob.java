@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
@@ -605,6 +606,16 @@ public abstract class Mob extends Char {
 		}
 		
 		if (surprisedBy(enemy)) {
+			if (enemy instanceof Hero){
+				GLog.w("Hero");
+				SomeonePhone.telePhone phone = enemy.buff(SomeonePhone.telePhone.class);
+				if (phone != null){
+					GLog.w("Attacked");
+					phone.charge(false, 0); // boost by level
+					phone.gainExp(30);
+				}
+			}
+
 			if(Dungeon.hero.hasTalent(Talent.MIND_BREAK)){
 				int chance = Dungeon.hero.pointsInTalent(Talent.MIND_BREAK) + 1;
 				if(Dungeon.hero.buff(Invisibility.class) != null){
@@ -761,13 +772,15 @@ public abstract class Mob extends Char {
 					Buff.affect(Dungeon.hero, Barrier.class).setShield(2);
 				}
 			}
-			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
-				if(Random.Int(9) == 0){
+			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.MAIDEN){
+				if(Random.Int(9) == 1){
 					Dungeon.energy += 1;
 				}
+			}
+			if(cause == Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.EXTERMINATOR){
 				if(Dungeon.hero.buff(Exterminating.class) == null){
-					Buff.affect(Dungeon.hero, Exterminating.class, 15f);
-					Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-10);
+					Buff.affect(Dungeon.hero, Exterminating.class, 10f);
+					Buff.affect(Dungeon.hero, Hunger.class).affectHunger(-15);
 				} else {
 					Buff.affect(Dungeon.hero, Exterminating.class, Dungeon.hero.pointsInTalent(Talent.EXTENDED_EXTER)*2);
 				}

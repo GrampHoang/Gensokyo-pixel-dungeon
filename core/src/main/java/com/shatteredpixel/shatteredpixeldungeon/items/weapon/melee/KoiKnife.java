@@ -36,7 +36,7 @@ public class KoiKnife extends MeleeWeapon {
 		hitSoundPitch = 1.1f;
 
 		tier = 1;
-		unique = true;
+
 		bones = false;
 	}
 

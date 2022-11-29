@@ -92,6 +92,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat.Koishibuff;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
@@ -532,7 +533,7 @@ public class Hero extends Char {
 		if (Random.IntRange(0, 99) < 11*pointsInTalent(Talent.BACKTRACK)){
 			return INFINITE_EVASION;
 		}
-		if (Random.IntRange(0, 99) < 15*pointsInTalent(Talent.FANTASY_NATURE)){
+		if (Random.IntRange(0, 99) < 10*pointsInTalent(Talent.FANTASY_NATURE)){
 			return INFINITE_EVASION;
 		}
 		float evasion = defenseSkill;
@@ -1646,6 +1647,12 @@ public class Hero extends Char {
 		}
 		this.exp += exp;
 		float percent = exp/(float)maxExp();
+
+		SomeonePhone.telePhone phone = buff(SomeonePhone.telePhone.class);
+		if (phone != null) {
+			phone.charge(true, Math.round(percent*20)); //boost by kill
+			phone.gainExp(percent*100);
+		}
 
 		EtherealChains.chainsRecharge chains = buff(EtherealChains.chainsRecharge.class);
 		if (chains != null) chains.gainExp(percent);

@@ -106,29 +106,29 @@ public enum HeroClass {
 
 	// {
 	// 	hero.lvl = 30;
-		GhostBlade we = new GhostBlade();
-		we.level(15);
-		we.collect();
+		// GhostBlade we = new GhostBlade();
+		// we.level(15);
+		// we.collect();
 
-		ScrollOfDebug sod = new ScrollOfDebug();
-		sod.quantity(1).collect();
+		// ScrollOfDebug sod = new ScrollOfDebug();
+		// sod.quantity(1).collect();
 
-		RingOfMight ring = new RingOfMight();
-		ring.level(99);
-		ring.doEquip(hero);
+		// RingOfMight ring = new RingOfMight();
+		// ring.level(99);
+		// ring.doEquip(hero);
 
-		RingOfTenacity ring2 = new RingOfTenacity();
-		ring2.level(99);
-		ring2.doEquip(hero);
+		// RingOfTenacity ring2 = new RingOfTenacity();
+		// ring2.level(99);
+		// ring2.doEquip(hero);
 
-		PotionOfHealing.heal(hero);
+		// PotionOfHealing.heal(hero);
 
-		PlateArmor plate = new PlateArmor();
-		plate.level(200);
-		plate.collect();
+		// PlateArmor plate = new PlateArmor();
+		// plate.level(200);
+		// plate.collect();
 
-		PotionOfHealing poe = new PotionOfHealing();
-		poe.quantity(30).collect();
+		// PotionOfHealing poe = new PotionOfHealing();
+		// poe.quantity(30).collect();
 
 	// 	TengusMask tengu = new TengusMask();
 	// 	tengu.quantity(2).collect();

@@ -95,4 +95,45 @@ public class Wound extends Image {
 		w.reset( pos );
 		w.angle = angle;
 	}
+
+	public class KoishiWound extends Wound{
+
+		private static final float TIME_TO_FADE_KOISHI = 3f;
+
+		public KoishiWound() {
+			super();
+		}
+		
+		@Override
+		public void reset( int p ) {
+			revive();
+	
+			x = (p % Dungeon.level.width()) * DungeonTilemap.SIZE + (DungeonTilemap.SIZE - width) / 2;
+			// y = (p / Dungeon.level.width()) * DungeonTilemap.SIZE + (DungeonTilemap.SIZE - height) / 2;
+			
+			time = TIME_TO_FADE_KOISHI;
+		}
+
+		@Override
+		public void reset(Visual v) {
+			revive();
+	
+			point(v.center(this));
+	
+			time = TIME_TO_FADE_KOISHI;
+		}
+
+		@Override
+		public void update() {
+		super.update();
+		
+		if ((time -= Game.elapsed) <= 0) {
+			kill();
+		} else {
+			float p = time / TIME_TO_FADE_KOISHI;
+			alpha((float) Math.sqrt(p));
+			scale.x = 1 + p;
+		}
+	}
+	}
 }

@@ -349,16 +349,19 @@ public class YukariBoss extends Mob {
 		trinestpos1 = direct.collisionPos;
 		Ballistica four;
 		Ballistica corners;
+		int try_count = 0; //
 		do{
+			try_count++;
 			int ran_four = Random.IntArray(PathFinder.NEIGHBOURS4) + enemy.pos;
 			four = new Ballistica(this.pos, ran_four, Ballistica.STOP_SOLID);
 			trinestpos2 = four.collisionPos;
-		} while(trinestpos2 == trinestpos1);
+		} while(trinestpos2 == trinestpos1 && try_count < 20 && trinestpos2 != this.pos);
 		do{
+			try_count++;
 			int ran_corners = Random.IntArray(PathFinder.NEIGHBOURS4_CORNERS) + enemy.pos;
 			corners = new Ballistica(this.pos, ran_corners, Ballistica.STOP_SOLID);
 			trinestpos3 = corners.collisionPos;
-		} while(trinestpos3 == trinestpos1 || trinestpos3 == trinestpos2);
+		} while((trinestpos3 == trinestpos1 || trinestpos3 == trinestpos2) && trinestpos2 != this.pos && try_count < 50);
 
 
 		for (int p : direct.subPath(0, Dungeon.level.distance(this.pos, trinestpos1))){

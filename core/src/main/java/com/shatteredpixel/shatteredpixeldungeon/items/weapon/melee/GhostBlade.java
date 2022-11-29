@@ -41,7 +41,7 @@ public class GhostBlade extends MeleeWeapon {
     @Override
 	public int max(int lvl) {
 		return  Math.round(4f*(tier+1)) +
-				lvl*Math.round(0.75f*(tier+1));
+				lvl*Math.round(0.5f*(tier+1));
 	}
 
     @Override

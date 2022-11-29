@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
@@ -923,6 +924,13 @@ public class Dungeon {
 				BArray.or( level.visited, level.heroFOV, h.pos - 1 + level.width(), 3, level.visited );
 				GameScene.updateFog(h.pos, 2);
 			}
+		}
+
+		for (SomeonePhone.CharAwareness c : hero.buffs(SomeonePhone.CharAwareness.class)){
+			Char ch = (Char) Actor.findById(c.charID);
+			if (ch == null || !ch.isAlive()) continue;
+			BArray.or( level.visited, level.heroFOV, ch.pos, 1, level.visited );
+			GameScene.updateFog(ch.pos, 2);
 		}
 
 		for (TalismanOfForesight.CharAwareness c : hero.buffs(TalismanOfForesight.CharAwareness.class)){

@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
+import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
@@ -217,6 +218,7 @@ public class MarisaBoss extends Mob {
 	public void die( Object cause ) {
 		super.die( cause );
 		Dungeon.level.drop( new PotionOfExperience(), pos ).sprite.drop();
+		Dungeon.level.drop( new KingsCrown(), pos ).sprite.drop();
 		Dungeon.level.unseal();
 		GameScene.bossSlain();
 	}

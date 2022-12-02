@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -106,13 +106,13 @@ public enum HeroClass {
 
 	// {
 	// 	hero.lvl = 30;
-		// GhostBlade we = new GhostBlade();
-		// we.level(15);
-		// we.collect();
+		GhostBlade we = new GhostBlade();
+		we.level(21);
+		we.collect();
 
 		// ScrollOfDebug sod = new ScrollOfDebug();
 		// sod.quantity(1).collect();
-
+		// Buff.affect(hero, MagicalSight.class, 99f);
 		// RingOfMight ring = new RingOfMight();
 		// ring.level(99);
 		// ring.doEquip(hero);

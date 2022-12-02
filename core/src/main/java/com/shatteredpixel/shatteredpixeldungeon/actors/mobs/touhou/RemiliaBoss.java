@@ -424,12 +424,12 @@ public class RemiliaBoss extends Mob {
 	public void releaseSmoke(){
 		Buff.affect(this, Invisibility.class, 5f);
 		Sample.INSTANCE.play( Assets.Sounds.GAS );
-		int centerVolume = 150;
+		int centerVolume = 25;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[this.pos+i]){
 				GameScene.add( Blob.seed( this.pos+i, centerVolume, SmokeScreen.class ) );
 			} else {
-				centerVolume += 10;
+				centerVolume += 5;
 			}
 		}
 
@@ -478,7 +478,7 @@ public class RemiliaBoss extends Mob {
 			
 			//20/25 health to start
 			lootChance = 0f;
-			viewDistance = 0;
+			viewDistance = 0;	//She will never see you -> forever wander, but she can walk onto your tile
 			HT = 10;
 			HP = 10;
 			immunities.add(Fire.class);
@@ -499,9 +499,6 @@ public class RemiliaBoss extends Mob {
 				Char find = Char.findChar(this.pos + i);
 				if (find != null){
 					if (find instanceof RemiliaBoss){
-						if(isLunatic()){
-							Buff.affect(find, Stamina.class, 5f);
-						}
 						int healAmount = Math.round(30*(1-(find.HP/find.HT)));
 						if(Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
 							healAmount = 30;

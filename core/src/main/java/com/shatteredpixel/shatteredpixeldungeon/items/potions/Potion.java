@@ -323,7 +323,7 @@ public class Potion extends Item {
 			}
 
 			if(Dungeon.hero.hasTalent(Talent.POTION_WARFARE)){
-				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE) > Random.IntRange(0,2)){
+				if (Dungeon.hero.pointsInTalent(Talent.POTION_WARFARE) >= Random.IntRange(0,2)){
 					if (ExoticPotion.regToExo.get(getClass()) != null) {
 						Reflection.newInstance(ExoticPotion.regToExo.get(getClass())).shatter(cell);
 					}

@@ -67,6 +67,7 @@ public class Eye extends Mob {
 		lootChance = 1f;
 
 		properties.add(Property.DEMONIC);
+		if (isLunatic()) immunities.add( Fire.class );
 	}
 
 	@Override
@@ -271,9 +272,6 @@ public class Eye extends Mob {
 		resistances.add( WandOfDisintegration.class );
 	}
 	
-	{
-		//immunities.add( Terror.class );
-	}
 
 	private class Hunting extends Mob.Hunting{
 		@Override

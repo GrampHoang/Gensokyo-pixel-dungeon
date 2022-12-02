@@ -40,7 +40,7 @@ import com.watabou.utils.Random;
 public class MarisaBossLevel extends Level {
 
     private static final int SIZE_W = 29;
-    private static final int SIZE_H = 18;
+    private static final int SIZE_H = 21;
 
     {
         color1 = 0xeeee00;
@@ -63,11 +63,17 @@ public class MarisaBossLevel extends Level {
     protected boolean build() {
 
         setSize(31, 20);
-
+        //setup wall
         for (int i=1; i < SIZE_H-1; i++) {
+            map[i*width()] = Terrain.WALL;
+        }
+
+        //set bookshelf
+        for (int i=2; i < SIZE_H-1; i++) {
             for (int j=1; j < SIZE_W-1; j++) {
                 if (i%2==0){
                     map[i * width() + j] = Terrain.BOOKSHELF;
+                    if(Random.IntRange(0,30) == 6) map[i * width() + j] = Terrain.STATUE; //occasion statue
                 }
                 else{
                     map[i * width() + j] = Terrain.EMPTY;
@@ -75,19 +81,48 @@ public class MarisaBossLevel extends Level {
                 
             }
         }
+        //set empty tiles on the side
+        for (int i=2; i < SIZE_H-1; i=i+2) {
+            if(Random.IntRange(0,3) == 1){
+                map[i * width() +  1] = Terrain.EMPTY;
+                map[i * width() + 27] = Terrain.EMPTY;
+            }
+        }
 
-        for (int i=1; i < SIZE_W-1; i = i+Random.IntRange(3,5)) {
-                for (int j=1; j < SIZE_H-1; j++) {
+        //make empty tile between shelf
+        for (int j=2; j < SIZE_H-1; j++) {
+            for (int i = 15; i < SIZE_W-1; i = i+Random.IntRange(3, 6)) {
+                    map[j * width() + i] = Terrain.EMPTY;
+                }
+                for (int i = 15; i > 0; i = i-Random.IntRange(3, 6)) {
                     map[j * width() + i] = Terrain.EMPTY;
                 }
         }
 
+        //Middle path
         for (int i = 1; i < SIZE_H - 1; i++) {
             map[i * width() + 15] = Terrain.EMPTY_SP;
         }
 
-        entrance = 16 * width() + 15;
-        exit     = width() + 15;
+        //set and decorate entrance + exit wall
+        for (int i=1; i < SIZE_W-1; i++) {
+            map[i + width()] = Terrain.WALL;
+            map[i + 2* width()] = Terrain.BOOKSHELF;
+            map[i + 18*width()] = Terrain.BOOKSHELF;
+            map[i + 19*width()] = Terrain.WALL;
+        }
+
+        //set and decorate entrance + exit
+        entrance = (SIZE_H - 3) * width() + 15;
+        map[entrance - 2] = Terrain.WALL;
+        map[entrance - 1] = Terrain.STATUE;
+        map[entrance + 1] = Terrain.STATUE;
+        map[entrance + 2] = Terrain.WALL;
+        exit     = 2* width() + 15;
+        map[exit - 2] = Terrain.WALL;
+        map[exit - 1] = Terrain.STATUE;
+        map[exit + 1] = Terrain.STATUE;
+        map[exit + 2] = Terrain.WALL;
         map[entrance] = Terrain.ENTRANCE;
 
         transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));

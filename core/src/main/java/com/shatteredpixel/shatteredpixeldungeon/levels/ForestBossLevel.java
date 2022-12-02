@@ -129,7 +129,7 @@ public class ForestBossLevel extends Level {
         transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
         set( exit, Terrain.EXIT );
         GameScene.updateMap( exit );
-
+        
         CellEmitter.get(exit-1).burst(ShadowParticle.UP, 25);
         CellEmitter.get(exit).burst(ShadowParticle.UP, 100);
         CellEmitter.get(exit+1).burst(ShadowParticle.UP, 25);

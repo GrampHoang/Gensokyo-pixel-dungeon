@@ -149,12 +149,12 @@ public class ReisenGun extends Weapon {
 					Buff.affect(defender, Bleeding.class).set(8f);
 				}
 				else{
-					defender.HP = 1;
+					defender.damage(defender.HP-1, this);
 				}
 			}
 		}
 		if (Dungeon.hero.hasTalent(Talent.ILLUSION_SEEKER)){
-			float chance = 5 * stack;
+			float chance = 3 * stack;
 			if(Random.IntRange(0,99) < chance && Dungeon.hero.pointsInTalent(Talent.ILLUSION_SEEKER) > 0){
 				Buff.affect(defender, Burning.class).reignite(defender, 5f);
 			}

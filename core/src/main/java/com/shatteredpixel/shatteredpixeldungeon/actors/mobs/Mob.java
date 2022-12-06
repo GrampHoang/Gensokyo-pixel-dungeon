@@ -607,10 +607,8 @@ public abstract class Mob extends Char {
 		
 		if (surprisedBy(enemy)) {
 			if (enemy instanceof Hero){
-				GLog.w("Hero");
 				SomeonePhone.telePhone phone = enemy.buff(SomeonePhone.telePhone.class);
 				if (phone != null){
-					GLog.w("Attacked");
 					phone.charge(false, 0); // boost by level
 					phone.gainExp(30);
 				}

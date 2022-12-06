@@ -125,8 +125,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow.SpiritArrow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HellTorch;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -635,6 +637,11 @@ public class Hero extends Char {
 		if (belongings.armor() != null) {
 			speed = belongings.armor().speedFactor(this, speed);
 		}
+
+		MystiaVendor vendor = Dungeon.hero.belongings.getItem( MystiaVendor.class );
+		if (vendor != null && vendor.isEquipped( Dungeon.hero )) {
+			speed = speed/2f;
+		}
 		
 		Momentum momentum = buff(Momentum.class);
 		if (momentum != null){
@@ -671,6 +678,7 @@ public class Hero extends Char {
 		if (belongings.weapon() == null || !(belongings.weapon() instanceof Weapon))    return true;
 		if (STR() < ((Weapon)belongings.weapon()).STRReq())                             return false;
 		if (belongings.weapon() instanceof Flail)                                       return false;
+		if (belongings.weapon() instanceof HellTorch)                                       return false;
 
 		return true;
 	}

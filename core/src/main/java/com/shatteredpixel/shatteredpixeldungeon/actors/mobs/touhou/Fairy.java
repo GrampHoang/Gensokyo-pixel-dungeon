@@ -36,6 +36,7 @@ public class Fairy extends Mob {
 		HP = HT = 6;
 		defenseSkill = 3;
 		maxLvl = 5;
+		properties.add(Property.FAIRY);
 	}
 
 

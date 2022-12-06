@@ -40,6 +40,8 @@ public class Daiyosei extends Mob {
         //Maybe an item that can heal you a bit
         loot = ScrollOfLullaby.class;
 		lootChance = 0.2f;
+
+		properties.add(Property.FAIRY);
 	}
 
 

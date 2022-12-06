@@ -37,7 +37,7 @@ import com.watabou.utils.Random;
 
 abstract public class KindOfWeapon extends EquipableItem {
 	
-	protected static final float TIME_TO_EQUIP = 1f;
+	protected static float TIME_TO_EQUIP = 1f;
 
 	protected String hitSound = Assets.Sounds.HIT;
 	protected float hitSoundPitch = 1f;

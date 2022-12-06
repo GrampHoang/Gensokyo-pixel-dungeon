@@ -199,6 +199,27 @@ public class ItemSpriteSheet {
 	private static final int TOUHOU      =                               xy(1, 6);   //16 slots
 	public static final int YINYANG 	 = TOUHOU + 0;
 
+	
+	private static final int TOUHOU_TIER_2      = 				   xy(1, 32);  //16 slots
+	public static final int WOOD_STICK  		= TOUHOU_TIER_2+0;
+	public static final int MYSTIA_VENDOR  		= TOUHOU_TIER_2+1;
+	public static final int WRIGGLE_BUG  		= TOUHOU_TIER_2+2;
+	public static final int DAIYOSEI_FLOWER  	= TOUHOU_TIER_2+3;
+	public static final int CIRNO_ICECREAM  	= TOUHOU_TIER_2+4;
+	public static final int LILY_FLOWER  		= TOUHOU_TIER_2+5;
+	public static final int CLOWN_TORCH  		= TOUHOU_TIER_2+6;
+	public static final int ETERNITY_LEAF  		= TOUHOU_TIER_2+7;
+	static {
+		assignItemRect( WOOD_STICK,		    16, 16 );
+		assignItemRect( MYSTIA_VENDOR,		16, 16 );
+		assignItemRect( WRIGGLE_BUG,		16, 16 );
+		assignItemRect( DAIYOSEI_FLOWER,	16, 16 );
+		assignItemRect( CIRNO_ICECREAM,     16, 16 );
+		assignItemRect( LILY_FLOWER,     	16, 16 );
+		assignItemRect( CLOWN_TORCH,     	16, 16 );
+		assignItemRect( ETERNITY_LEAF,     	16, 16 );
+	}
+
 	private static final int WEP_TIER1      =                               xy(1, 7);   //8 slots
 	public static final int WORN_SHORTSWORD = WEP_TIER1+0;
 	public static final int GOHEI		    = WEP_TIER1+1;
@@ -875,9 +896,6 @@ public class ItemSpriteSheet {
 			assignIconRect( POTION_CLEANSE,     7, 7 );
 			assignIconRect( POTION_DIVINE,      7, 7 );
 		}
-
-		                                                                                //16 free slots
-
 	}
 
 }

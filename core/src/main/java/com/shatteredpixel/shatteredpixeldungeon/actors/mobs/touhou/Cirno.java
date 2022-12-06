@@ -44,6 +44,8 @@ public class Cirno extends Mob {
 		maxLvl = 9;
         loot = PotionOfFrost.class;
 		lootChance = 0.3f;
+
+		properties.add(Property.FAIRY);
 	}
 
 

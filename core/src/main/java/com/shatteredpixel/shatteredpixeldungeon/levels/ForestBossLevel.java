@@ -4,6 +4,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Sunny;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Luna;
@@ -16,7 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
-
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
 
@@ -75,8 +77,15 @@ public class ForestBossLevel extends Level {
         Painter.fill(this, mid_area, Terrain.WATER);
 
         entrance = width()+1;
-        exit     = (SIZE_H - 2) * width() + SIZE_W - 2;
         map[entrance] = Terrain.ENTRANCE;
+        map[entrance + 1] = Terrain.EMPTY_SP;
+        map[entrance + width()] = Terrain.EMPTY_SP;
+        map[entrance + width() + 1] = Terrain.EMPTY_SP;
+
+        exit     = (SIZE_H - 2) * width() + SIZE_W - 2;
+        map[exit - width()] = Terrain.EMPTY_SP;
+        map[exit - width() - 1] = Terrain.EMPTY_SP;
+        map[exit - 1] = Terrain.EMPTY_SP;
         transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 
         return true;
@@ -129,7 +138,7 @@ public class ForestBossLevel extends Level {
         transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
         set( exit, Terrain.EXIT );
         GameScene.updateMap( exit );
-        
+        Buff.affect(Dungeon.hero, MagicalSight.class, 0.01f);
         CellEmitter.get(exit-1).burst(ShadowParticle.UP, 25);
         CellEmitter.get(exit).burst(ShadowParticle.UP, 100);
         CellEmitter.get(exit+1).burst(ShadowParticle.UP, 25);
@@ -155,9 +164,15 @@ public class ForestBossLevel extends Level {
     }
 
     @Override
-    public int randomRespawnCell( Char ch ) {
-        return entrance-width();
-    }
+	public int randomRespawnCell( Char ch ) {
+		int cell;
+		do {
+			cell = entrance() + PathFinder.NEIGHBOURS8[Random.Int(8)];
+		} while (!passable[cell]
+				|| (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell])
+				|| Actor.findChar(cell) != null);
+		return cell;
+	}
 
     @Override
 	public void storeInBundle(Bundle bundle) {

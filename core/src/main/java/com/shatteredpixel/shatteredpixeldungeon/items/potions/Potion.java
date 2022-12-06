@@ -297,7 +297,7 @@ public class Potion extends Item {
 		if( (hero.subClass == HeroSubClass.REFUGEE) && (hero.pointsInTalent(Talent.POT_RESERVE) + 1 > Random.IntRange(0,9)) && (this.save == true)){
 			GLog.i("Potion reserved!");
 	 	} else{
-		detach( hero.belongings.backpack );
+			detach( hero.belongings.backpack );
 		}
 		if (hero.hasTalent(Talent.MED_MEAL)){
 			Buff.affect(curUser, Hunger.class).affectHunger(hero.pointsInTalent(Talent.MED_MEAL)*25);

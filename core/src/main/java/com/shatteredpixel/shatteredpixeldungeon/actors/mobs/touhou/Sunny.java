@@ -63,6 +63,7 @@ public class Sunny extends Mob {
         state = WANDERING;
 		viewDistance = 20;
 
+		properties.add(Property.FAIRY);
 		properties.add(Property.BOSS);
         immunities.add(Burning.class);
 	}
@@ -316,12 +317,13 @@ public class Sunny extends Mob {
 	}
 	
 	private void throwRock(){
+		Dungeon.hero.interrupt();
 		Char ch = this;
             ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
             reset( this.pos, Dungeon.hero.pos, new Bullet(), new Callback() {
                 @Override
                 public void call() {
-                    ch.onAttackComplete();
+                    // ch.onAttackComplete();
 					Dungeon.hero.damage(Random.Int(2*anger), this);
                 }
             } );

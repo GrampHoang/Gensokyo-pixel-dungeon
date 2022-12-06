@@ -95,9 +95,9 @@ public class YukariBoss extends Mob {
 
 	private int TRINEST_CD = 12; //12
 	private int trinest_cd = TRINEST_CD;
-	private int YAKUMONEST_CD = 30; //30
+	private int YAKUMONEST_CD = 18; //18
 	private int yakumonest_cd = YAKUMONEST_CD;
-	private int CEILING_CD = 18;	//18
+	private int CEILING_CD = 25;	//25
 	private int ceiling_cd = CEILING_CD;
 
 	private int charging_skill = 0;	//0: free 1:trinest, 2:yakumonest_corner, 3:yakumonest_stars, 4:chen, 5:ceiling
@@ -276,7 +276,7 @@ public class YukariBoss extends Mob {
 	//SKILLLLLLLLL
 
 	public boolean canUseReady(){
-		if(yakumonest_cd < 1 && enemySeen){
+		if(yakumonest_cd < 1 && enemySeen && (Dungeon.level.distance(this.pos, Dungeon.hero.pos) < 3)){
 			charging_skill = 2;
 			return true;
 		} else if(trinest_cd < 1 && enemySeen){
@@ -390,7 +390,7 @@ public class YukariBoss extends Mob {
 
 
 	public void yakumoNest_damage(int from, int to){
-		Ballistica laser = new Ballistica(from, to, Ballistica.STOP_TARGET);
+		Ballistica laser = new Ballistica(this.pos + from, this.pos + to, Ballistica.STOP_TARGET);
 		sprite.parent.add(new Beam.DeathRay(DungeonTilemap.raisedTileCenterToWorld(this.pos + from), DungeonTilemap.raisedTileCenterToWorld(this.pos + to)));
 		for (int p : laser.subPath(0, Dungeon.level.distance(this.pos + from, this.pos + to))){
             Char ch = Actor.findChar(p);
@@ -407,7 +407,7 @@ public class YukariBoss extends Mob {
 
 	public void yakumoNest(){
 		yakumonest_cd = YAKUMONEST_CD;
-		Buff.affect(this, Paralysis.class, 1f);
+		// Buff.affect(this, Paralysis.class, 1f);
 		//Shoot laser forming nest, paralyze you
 		int p[];
 		charging_skill = Random.IntRange(2,3);
@@ -544,16 +544,14 @@ public class YukariBoss extends Mob {
 			if (count == 6){
 				detach();
 			}
-			GLog.w(Integer.toString(count));
 			if (count % 2 == 1){
-				GLog.w("set rock");
 				for (int i : PathFinder.NEIGHBOURS8){
 					if(Random.IntRange(0,2) == 1) rockPositions.add(target.pos+i);
 				}
 				rockPositions.add(target.pos);
+				Dungeon.hero.interrupt();
 				fx(true);
 			} else {
-				GLog.w("drop rock");
 				for (int i : rockPositions){
 					CellEmitter.get( i ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
 					Char ch = Actor.findChar(i);

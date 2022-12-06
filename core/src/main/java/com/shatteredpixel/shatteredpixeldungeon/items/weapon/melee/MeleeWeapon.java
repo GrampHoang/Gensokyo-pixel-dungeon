@@ -33,6 +33,7 @@ import com.watabou.utils.Random;
 public class MeleeWeapon extends Weapon {
 	
 	public int tier;
+	public boolean have_skill = false;
 
 	@Override
 	public int min(int lvl) {
@@ -77,7 +78,9 @@ public class MeleeWeapon extends Weapon {
 	public String info() {
 
 		String info = desc();
-
+		if(have_skill){
+			info += "\n\n" + Messages.get(this, "skill_desc");
+		}
 		if (levelKnown) {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
 			if (STRReq() > Dungeon.hero.STR()) {

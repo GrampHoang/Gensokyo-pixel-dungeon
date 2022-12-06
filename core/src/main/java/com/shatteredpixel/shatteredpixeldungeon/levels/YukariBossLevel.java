@@ -12,7 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Bundle;
-
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
 
@@ -147,10 +147,16 @@ public class YukariBossLevel extends Level {
     protected void createItems() {
     }
 
-    @Override
-    public int randomRespawnCell( Char ch ) {
-        return entrance-width();
-    }
+	@Override
+	public int randomRespawnCell( Char ch ) {
+		int cell;
+		do {
+			cell = gapPositions[Random.Int(7)] + PathFinder.NEIGHBOURS8[Random.Int(8)];
+		} while (!passable[cell]
+				|| (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell])
+				|| Actor.findChar(cell) != null);
+		return cell;
+	}
 
     @Override
 	public void storeInBundle(Bundle bundle) {

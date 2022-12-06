@@ -110,25 +110,25 @@ public enum HeroClass {
 		we.level(21);
 		we.collect();
 
-		// ScrollOfDebug sod = new ScrollOfDebug();
-		// sod.quantity(1).collect();
-		// Buff.affect(hero, MagicalSight.class, 99f);
-		// RingOfMight ring = new RingOfMight();
-		// ring.level(99);
-		// ring.doEquip(hero);
+		ScrollOfDebug sod = new ScrollOfDebug();
+		sod.quantity(1).collect();
+		Buff.affect(hero, MagicalSight.class, 99f);
+		RingOfMight ring = new RingOfMight();
+		ring.level(99);
+		ring.doEquip(hero);
 
-		// RingOfTenacity ring2 = new RingOfTenacity();
-		// ring2.level(99);
-		// ring2.doEquip(hero);
+		RingOfTenacity ring2 = new RingOfTenacity();
+		ring2.level(99);
+		ring2.doEquip(hero);
 
-		// PotionOfHealing.heal(hero);
+		PotionOfHealing.heal(hero);
 
-		// PlateArmor plate = new PlateArmor();
-		// plate.level(200);
-		// plate.collect();
+		PlateArmor plate = new PlateArmor();
+		plate.level(200);
+		plate.collect();
 
-		// PotionOfHealing poe = new PotionOfHealing();
-		// poe.quantity(30).collect();
+		PotionOfHealing poe = new PotionOfHealing();
+		poe.quantity(30).collect();
 
 	// 	TengusMask tengu = new TengusMask();
 	// 	tengu.quantity(2).collect();

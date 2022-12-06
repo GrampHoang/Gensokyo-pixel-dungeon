@@ -490,7 +490,8 @@ public class RemiliaBoss extends Mob {
 		}
 
 		private void deliverCake(int remPos){
-			beckon(remPos);
+			// beckon(remPos);
+			// beckon make it a bit too hard so disable this for now
 		}
 
 		@Override

@@ -462,6 +462,8 @@ public class ItemSpriteSheet {
 	public static final int ARTIFACT_ROSE2      = ARTIFACTS+21;
 	public static final int ARTIFACT_ROSE3      = ARTIFACTS+22;
 	public static final int ARTIFACT_KOISHIHAT  = ARTIFACTS+23;
+	public static final int ARTIFACt_SOMEONEPHONE= ARTIFACTS+24;
+	public static final int ARTIFACt_KOISHIPHONE= ARTIFACTS+25;
 	static{
 		assignItemRect(ARTIFACT_CLOAK,      9,  15);
 		assignItemRect(ARTIFACT_ARMBAND,    16, 13);
@@ -487,6 +489,8 @@ public class ItemSpriteSheet {
 		assignItemRect(ARTIFACT_ROSE2,      14, 14);
 		assignItemRect(ARTIFACT_ROSE3,      14, 14);
 		assignItemRect(ARTIFACT_KOISHIHAT,	15, 15);
+		assignItemRect(ARTIFACt_SOMEONEPHONE,	15, 15);
+		assignItemRect(ARTIFACt_KOISHIPHONE,	15, 15);
 	}
 
 	                                                                                    //16 free slots

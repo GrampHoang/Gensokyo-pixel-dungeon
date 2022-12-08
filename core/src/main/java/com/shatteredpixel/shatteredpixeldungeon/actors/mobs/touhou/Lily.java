@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.LilyFlower;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -83,6 +84,9 @@ public class Lily extends Mob {
 
 	@Override
 	public void die(Object cause) {
+		if(Random.Int(500) == 1){
+			Dungeon.level.drop( new LilyFlower(), pos ).sprite.drop();
+		}
 		super.die(cause);
 	}
 

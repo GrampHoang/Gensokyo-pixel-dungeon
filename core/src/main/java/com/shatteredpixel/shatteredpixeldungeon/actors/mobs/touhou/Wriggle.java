@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WriggleBug;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WriggleSprite;
@@ -84,6 +85,9 @@ public class Wriggle extends Mob {
 
 	@Override
 	public void die(Object cause) {
+		if(Random.Int(500) == 1){
+			Dungeon.level.drop( new WriggleBug(), pos ).sprite.drop();
+		}
 		super.die(cause);
 	}
 }

@@ -125,7 +125,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow.SpiritArrow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HellTorch;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ClownTorch;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
@@ -678,7 +678,7 @@ public class Hero extends Char {
 		if (belongings.weapon() == null || !(belongings.weapon() instanceof Weapon))    return true;
 		if (STR() < ((Weapon)belongings.weapon()).STRReq())                             return false;
 		if (belongings.weapon() instanceof Flail)                                       return false;
-		if (belongings.weapon() instanceof HellTorch)                                       return false;
+		if (belongings.weapon() instanceof ClownTorch)                                       return false;
 
 		return true;
 	}

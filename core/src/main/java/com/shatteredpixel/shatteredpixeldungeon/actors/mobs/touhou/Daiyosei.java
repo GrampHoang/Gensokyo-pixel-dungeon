@@ -22,10 +22,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.DaiyoseiFlower;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DaiyoseiSprite;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -91,6 +93,9 @@ public class Daiyosei extends Mob {
 				}
 				if (isLunatic()) Buff.affect(ch, Bless.class, 10f);
 			}
+		}
+		if(Random.Int(500) == 1){
+			Dungeon.level.drop( new DaiyoseiFlower(), pos ).sprite.drop();
 		}
 		super.die(cause);
 	}

@@ -31,6 +31,8 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CirnoSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Icecream;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.CirnoIcecream;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -42,8 +44,8 @@ public class Cirno extends Mob {
 		defenseSkill = 5;
 		EXP = 3;
 		maxLvl = 9;
-        loot = PotionOfFrost.class;
-		lootChance = 0.3f;
+        loot = Icecream.class;
+		lootChance = 0.1666f;
 
 		properties.add(Property.FAIRY);
 	}
@@ -119,6 +121,10 @@ public class Cirno extends Mob {
 				}
 			}
         }
+
+		if(Random.Int(500) == 1){
+			Dungeon.level.drop( new CirnoIcecream(), pos ).sprite.drop();
+		}
 		super.die(cause);
 	}
 }

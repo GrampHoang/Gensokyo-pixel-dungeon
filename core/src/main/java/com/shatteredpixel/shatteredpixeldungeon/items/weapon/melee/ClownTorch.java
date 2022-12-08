@@ -12,7 +12,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 
-public class HellTorch extends WeaponWithSP {
+public class ClownTorch extends WeaponWithSP {
 
 	{
 		image = ItemSpriteSheet.CLOWN_TORCH;
@@ -41,7 +41,7 @@ public class HellTorch extends WeaponWithSP {
 
     @Override
 	protected boolean useSkill(){
-		new Flare( 5, 32 ).color( 0xFF0000, true ).show( curUser.sprite, 2f );
+		new Flare( 10, 64 ).color( 0xFF0000, true ).show( curUser.sprite, 4f );
 		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
@@ -50,4 +50,5 @@ public class HellTorch extends WeaponWithSP {
 		}
         return true;
 	}
+	
 }

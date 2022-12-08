@@ -54,7 +54,7 @@ import java.util.ArrayList;
 public class SomeonePhone extends Artifact {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_HOLDER;
+		image = ItemSpriteSheet.ARTIFACt_SOMEONEPHONE;
 
 		exp = 0;
 		levelCap = 10;

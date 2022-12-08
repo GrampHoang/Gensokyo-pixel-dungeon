@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MystiaSprite;
@@ -107,8 +108,11 @@ public class Mystia extends Mob {
 
 	@Override
 	public void die(Object cause) {
+		if(Random.Int(500) == 1){
+			Dungeon.level.drop( new MystiaVendor(), pos ).sprite.drop();
+		}
 		super.die(cause);
 	}
-
+	
 	public static class SingCounter extends CounterBuff{{revivePersists = true;}};
 }

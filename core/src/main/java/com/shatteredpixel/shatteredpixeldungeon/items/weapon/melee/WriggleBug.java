@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.watabou.utils.Random;
@@ -40,6 +41,7 @@ public class WriggleBug extends WeaponWithSP {
     @Override
 	protected boolean useSkill(){
 		new Flare( 8, 128 ).color( 0xFFFF55, true ).show( curUser.sprite, 0.5f );
+		Buff.affect( Dungeon.hero, Light.class, 10f );
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
 				Buff.affect( mob, Blindness.class, 3f );

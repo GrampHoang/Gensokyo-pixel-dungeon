@@ -356,10 +356,17 @@ public class Generator {
 					Spear.class,
 					Quarterstaff.class,
 					Dirk.class,
-					GhostAnchor.class,
-					BerserkerBlade.class
+
+					WoodStick.class,
+					MystiaVendor.class,
+					WriggleBug.class,
+					DaiyoseiFlower.class,
+					CirnoIcecream.class,
+					LilyFlower.class,
+					ClownTorch.class,
+					EternityLeaf.class
 			};
-			WEP_T2.probs = new float[]{ 6, 5, 5, 4, 4, 4, 4 };
+			WEP_T2.probs = new float[]{ 6, 5, 5, 4, 4,  3, 3, 3, 3, 3, 3, 3, 3};
 			
 			WEP_T3.classes = new Class<?>[]{
 					Sword.class,

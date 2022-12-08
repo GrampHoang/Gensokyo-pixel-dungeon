@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WoodStick;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RatSprite;
@@ -60,6 +61,9 @@ public class Fairy extends Mob {
         if (Random.IntRange(0, 10) == 8){
             Dungeon.level.drop( new EnergyCrystal().dropOne(), pos );
         }
+		if(Random.Int(500) == 1){
+			Dungeon.level.drop( new WoodStick(), pos ).sprite.drop();
+		}
 		super.die(cause);
 	}
 

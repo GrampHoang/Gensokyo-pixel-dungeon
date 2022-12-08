@@ -57,7 +57,7 @@ import java.util.ArrayList;
 public class KoishiPhone extends SomeonePhone {
 
 	{
-		image = ItemSpriteSheet.ARTIFACT_HOLDER;
+		image = ItemSpriteSheet.ARTIFACt_KOISHIPHONE;
 
 		exp = 0;
 		levelCap = 10;
@@ -69,12 +69,12 @@ public class KoishiPhone extends SomeonePhone {
         unique = true;
 	}
 
-	public static final String AC_CALL_STAB = "CALL AND STAB";
+	public static final String AC_STAB = "STAB";
 
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && !cursed) actions.add(AC_CALL_STAB);
+		if (isEquipped( hero ) && !cursed) actions.add(AC_STAB);
 		return actions;
 	}
 
@@ -82,9 +82,9 @@ public class KoishiPhone extends SomeonePhone {
 	public void execute( Hero hero, String action ) {
 		super.execute(hero, action);
 
-		if (action.equals(AC_CALL_STAB)){
+		if (action.equals(AC_STAB)){
 			if (!isEquipped(hero))  GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-			else if (charge < 100)  GLog.i( Messages.get(this, "low_charge") );
+			else if (charge < 100)  GLog.i( Messages.get(this, "stab_low_charge") );
 			else                    call_stab();
 		}
 	}

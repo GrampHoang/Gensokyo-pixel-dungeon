@@ -34,16 +34,16 @@ public class LettySprite extends MobSprite {
 		TextureFilm frames = new TextureFilm( texture, 14, 14 );
 		
 		idle = new Animation( 8, true );
-		idle.frames( frames, 0, 1 );
+		idle.frames( frames, 0, 0 );
 		
 		run = new Animation( 12, true );
-		run.frames( frames, 0, 1 );
+		run.frames( frames, 0, 0 );
 		
 		attack = new Animation( 12, false );
-		attack.frames( frames, 2, 3, 0, 1 );
+		attack.frames( frames, 0, 0);
 		
 		die = new Animation( 12, false );
-		die.frames( frames, 4, 5, 6 );
+		die.frames( frames, 0, 0);
 		
 		play( idle );
 	}

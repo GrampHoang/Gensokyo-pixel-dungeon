@@ -46,7 +46,7 @@ public class Letty extends Mob {
 		EXP = 7;
 		maxLvl = 15;
         loot = AquaBlast.class;
-		lootChance = 0.75f;
+		lootChance = 0.4f;
 
 		immunities.add(Freezing.class);
 		immunities.add(Chill.class);

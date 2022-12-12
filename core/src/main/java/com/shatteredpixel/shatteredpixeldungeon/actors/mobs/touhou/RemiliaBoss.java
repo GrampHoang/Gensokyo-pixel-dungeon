@@ -381,7 +381,7 @@ public class RemiliaBoss extends Mob {
 			if (isLunatic()){
 				GameScene.add(Blob.seed(i, 60, Fire.class));
 			}else {
-				Blob.seed(i, 10, Fire.class);
+				GameScene.add(Blob.seed(i, 10, Fire.class));
 			}
 			Char ch = Actor.findChar(i);
 			if(ch != null && (!(ch instanceof RemiliaBoss))){

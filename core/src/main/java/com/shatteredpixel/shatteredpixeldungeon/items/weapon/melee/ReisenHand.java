@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Random;
@@ -43,6 +44,15 @@ public class ReisenHand extends MeleeWeapon {
 		
 		bones = false;
 	}
+
+	@Override
+	public ItemSprite.Glowing glowing() {
+		return enchantment != null && (cursedKnown || !enchantment.curse()) ?
+				new ItemSprite.Glowing(enchantment.glowing().color, 0.33f*enchantment.glowing().period) : PURPLE;
+	}
+
+	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0xa020f0, 0.33f );
+
 
 	@Override
 	public int max(int lvl) {

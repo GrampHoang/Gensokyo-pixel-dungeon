@@ -33,10 +33,10 @@ public class CirnoIcecream extends WeaponWithSP {
 	@Override
 	public ItemSprite.Glowing glowing() {
 		return enchantment != null && (cursedKnown || !enchantment.curse()) ?
-				new ItemSprite.Glowing(enchantment.glowing().color, 0.33f*enchantment.glowing().period) : WHITE;
+				new ItemSprite.Glowing(enchantment.glowing().color, 0.33f*enchantment.glowing().period) : LIGHT_BLUE;
 	}
 
-	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xadd8e6, 0.33f );
+	private static ItemSprite.Glowing LIGHT_BLUE = new ItemSprite.Glowing( 0xadd8e6, 0.33f );
 
 	@Override
 	public int max(int lvl) {

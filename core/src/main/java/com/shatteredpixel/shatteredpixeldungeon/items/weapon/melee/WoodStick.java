@@ -18,7 +18,7 @@ public class WoodStick extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(5f*(tier+1)) + //15 base
+		return  Math.round(4f*(tier+1)) + //12 base
 				lvl*Math.round(1f*(tier+1)); // no change scale
 	}
 

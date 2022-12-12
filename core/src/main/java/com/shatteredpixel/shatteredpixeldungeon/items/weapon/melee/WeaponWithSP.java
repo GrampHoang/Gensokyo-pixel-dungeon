@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMagic;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -26,7 +27,7 @@ public class WeaponWithSP extends MeleeWeapon{
         defaultAction = AC_SKILL;
     }
 
-    protected int charge = 0;
+    protected int charge = 100;
     protected int chargeCap = 100;      //always cap at 100%
     protected int chargeNeed = 100;    //charge needed to use skill
 
@@ -64,6 +65,7 @@ public class WeaponWithSP extends MeleeWeapon{
     protected boolean useSkill(){
         //do nothing by default
         //Only the hero can use skill
+		Dungeon.hero.spend(1f); //Should scale with speed, but oh well. We haven't call this as super yet so still take 0 turn
         return false;
     }
 
@@ -89,7 +91,7 @@ public class WeaponWithSP extends MeleeWeapon{
 
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-        charge += chargeGain;
+        charge += chargeGain * RingOfMagic.weaponSPChargeMultiplier(attacker);;
         if (charge > chargeCap) charge = chargeCap;
         updateQuickslot();
 		return super.proc(attacker, defender, damage);

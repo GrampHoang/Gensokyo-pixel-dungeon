@@ -25,11 +25,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -69,6 +71,7 @@ public class SakuyaKnife extends WeaponWithSP {
 
     @Override
 	protected boolean useSkill(){
+		refundSP();
 		GameScene.selectCell(targeter);
         return true;
 	}
@@ -80,35 +83,20 @@ public class SakuyaKnife extends WeaponWithSP {
 			if (cell == null){
 				return;
 			}
+			Char ch = Actor.findChar(cell);
 
-            Ballistica attack = new Ballistica(Dungeon.hero.pos, cell, Ballistica.STOP_TARGET);
-			Mob target = null;
-
-			if (cell != null && attack.collisionPos == cell){
-				Char ch = Actor.findChar(cell);
-				if (ch != null && ch.alignment != Char.Alignment.ALLY && ch instanceof Mob){
-					target = (Mob)ch;
-				}
-			}
-
-            final Mob targetDamage = target;
-
-			if (target == null){
-				GLog.w(Messages.get(this, "cancel"));
-				return;
-
+			if (ch != null){
+				((HeroSprite)Dungeon.hero.sprite).punch(Dungeon.hero.pos, ch.pos);
+				int damage = Random.IntRange(min()*2, max());
+				ch.damage(damage , Dungeon.hero);
+				ch.sprite.bloodBurstA(ch.sprite.center(), damage);
+				Sample.INSTANCE.play(Assets.Sounds.MISS, 0.6f, 0.6f, 1.5f);
+				spendSP();
 			} else {
-				//throw knife
-                ((MissileSprite)Dungeon.hero.sprite.parent.recycle( MissileSprite.class )).
-                reset(Dungeon.hero.pos, cell, new ThrowKnife(), new Callback() {
-                    @Override
-                    public void call() {
-                        // ch.onAttackComplete();
-                        targetDamage.damage(min()*2, max());
-                    }
-                } );
-
+				GLog.w(Messages.get(this, "no_target"));
+				return;
 			}
+			updateQuickslot();
 		}
 
 		@Override
@@ -123,4 +111,9 @@ public class SakuyaKnife extends WeaponWithSP {
 			image = ItemSpriteSheet.KNIFE;
 		}
 	}
+
+	public String skillInfo(){
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, min()*2, max());
+	}
+
 }

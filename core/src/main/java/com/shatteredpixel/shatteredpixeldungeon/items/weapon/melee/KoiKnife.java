@@ -31,7 +31,7 @@ import com.watabou.utils.Random;
 public class KoiKnife extends MeleeWeapon {
 	
 	{
-		image = ItemSpriteSheet.KNIFE;
+		image = ItemSpriteSheet.KOIKNIFE;
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 1.1f;
 

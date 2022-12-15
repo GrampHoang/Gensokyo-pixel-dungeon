@@ -48,6 +48,7 @@ public class HeroSprite extends CharSprite {
 	
 	private static TextureFilm tiers;
 	
+	private Animation punch;
 	private Animation fly;
 	private Animation read;
 
@@ -81,6 +82,9 @@ public class HeroSprite extends CharSprite {
 		attack = new Animation( 15, false );
 		attack.frames( film, 13, 14, 15, 0 );
 		
+		punch = new Animation( 15, false );
+		punch.frames( film, 13, 15, 15, 0 );
+
 		zap = attack.clone();
 		
 		operate = new Animation( 8, false );
@@ -136,6 +140,12 @@ public class HeroSprite extends CharSprite {
 			}
 		};
 		play( read );
+	}
+
+	public void punch(int from, int to) {
+		turnTo( from, to );
+		play( punch );
+
 	}
 
 	@Override

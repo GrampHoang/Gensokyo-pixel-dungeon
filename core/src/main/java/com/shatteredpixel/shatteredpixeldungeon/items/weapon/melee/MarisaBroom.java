@@ -37,6 +37,7 @@ public class MarisaBroom extends WeaponWithSP {
 
     @Override
 	protected boolean useSkill(){
+		Buff.prolong( Dungeon.hero, Blindness.class, 3);
 		for (int i : PathFinder.NEIGHBOURS8){
             Char ch = Actor.findChar(i + Dungeon.hero.pos);
             if (ch != null){

@@ -78,9 +78,10 @@ public class MeleeWeapon extends Weapon {
 	public String info() {
 
 		String info = desc();
-		if(have_skill){
-			info += "\n\n" + Messages.get(this, "skill_desc");
-		}
+
+		String skillInfo = skillInfo();
+		if (have_skill) info += "\n\n" + skillInfo;
+
 		if (levelKnown) {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
 			if (STRReq() > Dungeon.hero.STR()) {
@@ -126,6 +127,10 @@ public class MeleeWeapon extends Weapon {
 		return info;
 	}
 	
+	public String skillInfo(){
+		return Messages.get(this, "skill_desc");
+	}
+
 	public String statsInfo(){
 		return Messages.get(this, "stats_desc");
 	}

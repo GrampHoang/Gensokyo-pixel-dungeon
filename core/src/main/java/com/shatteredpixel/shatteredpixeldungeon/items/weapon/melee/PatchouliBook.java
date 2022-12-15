@@ -55,7 +55,7 @@ public class PatchouliBook extends WeaponWithSP {
 		DLY = 1;
 
 		ACC = 99;
-        RCH = 99;    //extra reach
+        RCH = 6;    //extra reach
 		chargeGain = 10;
 	}
 

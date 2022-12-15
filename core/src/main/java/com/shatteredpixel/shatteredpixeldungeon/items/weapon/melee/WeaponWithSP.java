@@ -2,21 +2,11 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMagic;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -54,7 +44,9 @@ public class WeaponWithSP extends MeleeWeapon{
 		super.execute(hero, action);
 		if (action.equals(AC_SKILL)){
             if (charge >= chargeNeed){
+				// Dungeon.hero.busy();
                 if (useSkill()) charge = charge - chargeNeed;
+				// Dungeon.hero.next();
                 updateQuickslot();
             } else {
 				GLog.w( Messages.get(this,"need_charge") );
@@ -68,6 +60,17 @@ public class WeaponWithSP extends MeleeWeapon{
 		Dungeon.hero.spend(1f); //Should scale with speed, but oh well. We haven't call this as super yet so still take 0 turn
         return false;
     }
+
+	//These 2 are for cell-selecting skill. By default you use skill immediatly and spend SP
+	//However, for cell selecting, you will not spend SP until you actually use skill
+	//To do that we spend SP by default, then refund SP when select cell and spend SP again if a cell is picked successfully.
+	protected void refundSP(){
+		charge = charge + chargeNeed;
+	}
+
+	protected void spendSP(){
+		charge = charge - chargeNeed;
+	}
 
     @Override
 	public String status() {
@@ -97,11 +100,9 @@ public class WeaponWithSP extends MeleeWeapon{
 		return super.proc(attacker, defender, damage);
 	}
 
-    // @Override
-	// public String info() {
-    //     String info = super.info();
-
-    // }
+	public String skillInfo(){
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed);
+	}
 
     private static final String CHARGE = "skill_charge";
 

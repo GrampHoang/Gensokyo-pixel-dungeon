@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -77,14 +78,19 @@ public class CirnoIcecream extends WeaponWithSP {
             if(cursed && cursedKnown){
                 GLog.w("Don't eat cursed ice-cream");
             } else {
+				Buff.affect(Dungeon.hero, Hunger.class).satisfy( 100 + charge/2);
                 new Flare( 10, 32 ).color( 0xadd8e6, true ).show( curUser.sprite, 0.3f );
-                hero.belongings.weapon = null;
 				Dungeon.quickslot.clearItem(curItem);
                 updateQuickslot();
                 Buff.affect(Dungeon.hero, Frost.class, 8f);
                 if(cursed) MysteryMeat.effect(Dungeon.hero);
+				curItem = null;
             }
 		}
+	}
+	@Override
+	public String skillInfo(){
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, (100 + charge/2));
 	}
 
 }

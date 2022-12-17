@@ -30,11 +30,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -106,6 +108,7 @@ public class MeilingHand extends WeaponWithSP {
 			
 			if (cell != Dungeon.hero.pos){
 				spendSP();
+				((HeroSprite)Dungeon.hero.sprite).punch(Dungeon.hero.pos, cell);
 				Ballistica aim = new Ballistica(Dungeon.hero.pos, cell, Ballistica.STOP_SOLID);
 				for (int i : aim.subPath(1, Math.min(6, Dungeon.level.distance(Dungeon.hero.pos, aim.collisionPos)))){
 					Char ch = Actor.findChar(i);
@@ -119,6 +122,7 @@ public class MeilingHand extends WeaponWithSP {
 				}
 			} else {
 				spendSP();
+				((HeroSprite)Dungeon.hero.sprite).punch(Dungeon.hero.pos, Dungeon.hero.pos);
 				WandOfBlastWave.BlastWave.blast(Dungeon.hero.pos);
 				for (int i : PathFinder.NEIGHBOURS8){
 					Char ch = Actor.findChar(i + Dungeon.hero.pos);

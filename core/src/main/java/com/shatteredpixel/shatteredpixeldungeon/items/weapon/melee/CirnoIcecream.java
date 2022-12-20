@@ -58,6 +58,7 @@ public class CirnoIcecream extends WeaponWithSP {
         Buff.affect(Dungeon.hero, Hunger.class).satisfy(50);
 		// new Flare( 5, 32 ).color( 0xFF0000, true ).show( curUser.sprite, 2f );
 		Buff.affect( Dungeon.hero, Chill.class, 6f );
+		Dungeon.hero.spendAndNext(1f);
         return true;
 	}
 

@@ -47,6 +47,7 @@ public class WriggleBug extends WeaponWithSP {
 				Buff.affect( mob, Blindness.class, 3f );
 			}
 		}
+		Dungeon.hero.spendAndNext(1f);
         return true;
 	}
 }

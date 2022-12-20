@@ -28,7 +28,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PointF;
 
-public class Beam extends Image {
+public class ThrowRay extends Image {
 	
 	private static final double A = 180 / Math.PI;
 	
@@ -36,7 +36,8 @@ public class Beam extends Image {
 	
 	private float timeLeft;
 
-	private Beam(PointF s, PointF e, Effects.Type asset, float duration) {
+    //end first, then start because when they will srink to the start point
+	private ThrowRay(PointF e, PointF s, Effects.Type asset, float duration) {
 		super( Effects.get( asset ) );
 		
 		origin.set( 0, height / 2 );
@@ -48,56 +49,58 @@ public class Beam extends Image {
 		float dy = e.y - s.y;
 		angle = (float)(Math.atan2( dy, dx ) * A);
 		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width;
-		
+        scale.y = scale.y * 0.8f;
 		// Sample.INSTANCE.play( Assets.Sounds.RAY );
 		
 		timeLeft = this.duration = duration;
 	}
 
-	public static class DeathRay extends Beam{
+	public static class DeathRay extends ThrowRay{
 		public DeathRay(PointF s, PointF e){
-			super(s, e, Effects.Type.DEATH_RAY, 0.5f);
+			super(s, e, Effects.Type.DEATH_RAY, 0.25f);
 			Sample.INSTANCE.play( Assets.Sounds.RAY );
 		}
 	}
 
-	public static class LightRay extends Beam{
+	public static class LightRay extends ThrowRay{
 		public LightRay(PointF s, PointF e){
 			super(s, e, Effects.Type.LIGHT_RAY, 1f);
 			Sample.INSTANCE.play( Assets.Sounds.RAY );
 		}
 	}
 
-	public static class YoumuSlash extends Beam{
+	public static class YoumuSlash extends ThrowRay{
 		public YoumuSlash(PointF s, PointF e){
 			super(s, e, Effects.Type.DEATH_RAY, 0.2f);
 		}
 	}
 
-	public static class YukariRay extends Beam{
+	public static class YukariRay extends ThrowRay{
 		public YukariRay(PointF s, PointF e){
-			super(s, e, Effects.Type.DEATH_RAY, 1.5f);
+			super(s, e, Effects.Type.DEATH_RAY, 0.5f);
 		}
 	}
 
-	public static class HealthRay extends Beam{
+	public static class HealthRay extends ThrowRay{
 		public HealthRay(PointF s, PointF e){
 			super(s, e, Effects.Type.HEALTH_RAY, 0.75f);
 			Sample.INSTANCE.play( Assets.Sounds.RAY );
 		}
 	}
 	
-	public static class Gust extends Beam{
+	public static class Gust extends ThrowRay{
 		public Gust(PointF s, PointF e){
 			super(s, e, Effects.Type.GUST, 0.2f);
 			Sample.INSTANCE.play( Assets.Sounds.MISS );
 		}
 
-		@Override
-		public void update() {
-		super.update();
-		alpha(0.2f);
-		}
+		// @Override
+		// public void update() {
+        //     super.update();
+        //     alpha(0.3f);
+        //     scale.x = scale.x*0.9f;
+        //     scale.y = scale.y*0.9f;
+		// }
 
 	}
 
@@ -107,8 +110,9 @@ public class Beam extends Image {
 		
 		float p = timeLeft / duration;
 		alpha( p );
-		scale.set( scale.x, p );
-		
+        // scale.set( scale.x, 1f );
+        // scale.y = p;
+        scale.x = height*p*0.8f;
 		if ((timeLeft -= Game.elapsed) <= 0) {
 			killAndErase();
 		}

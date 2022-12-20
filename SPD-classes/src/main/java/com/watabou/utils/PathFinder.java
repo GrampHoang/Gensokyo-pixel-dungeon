@@ -49,6 +49,9 @@ public class PathFinder {
 	public static int NEIGHBOURS_BOTRIGHT;
 
 	public static int[] NEIGHBOURS4_CORNERS;
+	public static int[] NEIGHBOURS4_CORNERS_FAR;
+	public static int[] TWOTILES_X;
+	
 	public static int[] NEIGHBOURS4;
 	public static int[] NEIGHBOURS8;
 	public static int[] NEIGHBOURS9;
@@ -83,6 +86,8 @@ public class PathFinder {
 		NEIGHBOURS_BOTRIGHT = +width+1;
 
 		NEIGHBOURS4_CORNERS = new int[]{-width-1, -width+1, +width-1, +width+1};
+		NEIGHBOURS4_CORNERS_FAR = new int[]{-width-width-2, -width-width+2, +width+width-1, +width+width+1};
+		TWOTILES_X = new int[]{-width-width-2, -width-width+2, -width-1, -width+1, 0, +width-1, +width+1, +width+width-2, +width+width+2};
 
 		NEIGHBOURS4 = new int[]{-width, -1, +1, +width};
 		NEIGHBOURS8 = new int[]{-width-1, -width, -width+1, -1, +1, +width-1, +width, +width+1};
@@ -91,6 +96,7 @@ public class PathFinder {
 		NEIGHBOURS_TWOTILES_EIGHTDIR = new int[]{-width-width-2, -width-width, -width-width+2, -2, +2, +width+width-2, +width+width, +width+width+2};
 		CIRCLE4 = new int[]{-width, +1, +width, -1};
 		CIRCLE8 = new int[]{-width-1, -width, -width+1, +1, +width+1, +width, +width-1, -1};
+		
 	}
 
 	public static Path find( int from, int to, boolean[] passable ) {

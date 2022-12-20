@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -47,13 +48,16 @@ import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.Callback;
+import com.watabou.utils.Reflection;
+import com.shatteredpixel.shatteredpixeldungeon.effects.ThrowRay;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 
-public class RemiliaSpear extends WeaponWithSP {
+public class FlandreSpear extends WeaponWithSP {
 
     {
         image = ItemSpriteSheet.WOOD_STICK;
@@ -61,18 +65,18 @@ public class RemiliaSpear extends WeaponWithSP {
         hitSoundPitch = 1f;
 
         tier = 3;
-        ACC = 99f; // lots of boost to accuracy
+        ACC = 1.4f; // lots of boost to accuracy
         RCH = 2; // extra reach
 
         chargeGain = 2;
-        chargeNeed = 100;
+        chargeNeed = 1;
     }
 
-    @Override
-    public int max(int lvl) {
-        return 12 + // 14 base
-                lvl * (tier); // +3 per level instead of 4
-    }
+	@Override
+	public int max(int lvl) {
+		return  12 +    //14 base, down from 20
+				lvl*(tier);     //+3 per level, down from +4
+	}
 
     @Override
 	protected boolean useSkill(){
@@ -90,67 +94,35 @@ public class RemiliaSpear extends WeaponWithSP {
 			}
 			// Char ch = Actor.findChar(cell);
 
-			Ballistica attack = new Ballistica( Dungeon.hero.pos, cell, Ballistica.STOP_SOLID);
-
-			if (attack.collisionPos == Dungeon.hero.pos){
-				GLog.w(Messages.get(RemiliaSpear.class, "cannot_throw"));
+			if (cell.intValue() == Dungeon.hero.pos){
+				GLog.w(Messages.get(FlandreSpear.class, "cannot_throw"));
 				return;
 			}
 
-            Camera.main.shake(0.5f, 0.25f);
-            WandOfBlastWave.BlastWave.blast(Dungeon.hero.pos);
-            Ballistica b = new Ballistica(Dungeon.hero.pos, cell, Ballistica.MASTERSPARK);
-            // levatin_pos = Dungeon.hero.pos; This should act like throwing projectile but
-            // not sure how to lol
-            Dungeon.hero.sprite.parent.add(
-                    new Beam.DeathRay(Dungeon.hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(b.collisionPos)));
+            if (Dungeon.hero.fieldOfView[cell] == false){
+				GLog.w(Messages.get(FlandreSpear.class, "out_vision"));
+				return;
+			}
 
-            for (int i : b.subPath(1, Dungeon.level.distance(Dungeon.hero.pos, b.collisionPos))) {
-                CellEmitter.get(i).start(Speck.factory(Speck.STEAM), 0.07f, 10);
-                if (Dungeon.level.pit[i]) GameScene.add(Blob.seed(i, 1, Fire.class));
-                    else GameScene.add(Blob.seed(i, 10, Fire.class));
-
-                Char ch = Actor.findChar(i);
-                if (ch != null) {
-                    Buff.affect(ch, Paralysis.class, 1f);
-                    ch.damage(Random.IntRange(min() * 2, max()), Dungeon.hero);
-
-                    // Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos), 1);
-                    Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos, new Callback() {
-                        public void call() {
-                            ch.pos = b.collisionPos;
-                            Dungeon.level.occupyCell(ch);
-                            Dungeon.observe();
+            Dungeon.hero.sprite.zap(cell, new Callback(){
+                @Override
+                public void call(){
+                    throwUp();
+                    Dungeon.hero.sprite.zap(cell, new Callback(){
+                        @Override
+                        public void call(){
+                            fallDown(cell);
+                            Dungeon.hero.sprite.zap(cell, new Callback(){
+                                @Override
+                                public void call(){
+                                Dungeon.hero.spendAndNext(1f);
+                                }
+                            });
                         }
-                    }), 0);
-
-                   
+                    });
                 }
-            }
-            // Dungeon.hero.sprite.zap(cell, new Callback(){
-            //     @Override
-            //     public void call(){
-            //         Dungeon.hero.spendAndNext(1f);
-            //     }
-            // });
-            
-            CellEmitter.center(b.collisionPos).burst(BlastParticle.FACTORY, 30);
-            PathFinder.buildDistanceMap(b.collisionPos, BArray.not(Dungeon.level.solid, null), 1);
-            for (int i = 0; i < PathFinder.distance.length; i++) {
-                if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-                    if (Dungeon.level.pit[i]) GameScene.add(Blob.seed(i, 1, Fire.class));
-                    else GameScene.add(Blob.seed(i, 10, Fire.class));
-                    CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
-                    CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
-                    Char ch = Actor.findChar(i);
-                    if (ch != null) {
-                        ch.damage(max()*2, this);
-                        Buff.affect(ch, Paralysis.class, 2f);
-                    }
-                }
-            }
+            });
             spendSP();
-            Dungeon.hero.spendAndNext(1f);
         }
 
         @Override
@@ -159,4 +131,46 @@ public class RemiliaSpear extends WeaponWithSP {
         }
 
 	};
+
+    public void throwUp(){
+        Camera.main.shake(0.5f, 0.25f);
+        WandOfBlastWave.BlastWave.blast(Dungeon.hero.pos);
+        PointF start = Dungeon.hero.sprite.center();
+        PointF end = Dungeon.hero.sprite.center();
+        end.y -= 100;
+        Dungeon.hero.sprite.parent.add(new ThrowRay.DeathRay(start, end));
+    }
+
+    public void fallDown(int cell){
+        PointF start = DungeonTilemap.raisedTileCenterToWorld(cell);
+        PointF end = DungeonTilemap.raisedTileCenterToWorld(cell);
+        start.y -= 100;
+        Dungeon.hero.sprite.parent.add(new ThrowRay.DeathRay(start, end));
+
+        CellEmitter.center(cell).burst(BlastParticle.FACTORY, 30);
+
+        for (int i : PathFinder.TWOTILES_X) {
+            if (!Dungeon.level.solid[cell+i]){
+                if (Dungeon.level.pit[cell + i]) GameScene.add(Blob.seed(cell + i, 1, Fire.class));
+                else GameScene.add(Blob.seed(cell + i, 5, Fire.class));
+                CellEmitter.get(cell + i).burst(SmokeParticle.FACTORY, 4);
+                CellEmitter.get(cell + i).burst(FlameParticle.FACTORY, 5);
+                Char ch = Actor.findChar(cell + i);
+                if (ch != null) {
+                    ch.damage(max()*2, this);
+                    Buff.affect(ch, Paralysis.class, 2f);
+                }
+            }
+        }
+
+        for (int i : PathFinder.NEIGHBOURS4_CORNERS_FAR){
+			((MagicMissile)curUser.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.FIRE_CONE,
+				DungeonTilemap.tileCenterToWorld(cell),
+				DungeonTilemap.tileCenterToWorld(cell + i),
+				null
+			);
+		}
+
+    }
 }

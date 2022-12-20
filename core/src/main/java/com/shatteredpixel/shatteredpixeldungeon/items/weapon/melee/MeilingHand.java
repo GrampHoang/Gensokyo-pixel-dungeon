@@ -139,7 +139,7 @@ public class MeilingHand extends WeaponWithSP {
 
 		@Override
 		public String prompt() {
-			return Messages.get(this, "prompt");
+			return Messages.get(MeilingHand.class, "prompt");
 		}
 
 	};

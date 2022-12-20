@@ -76,7 +76,7 @@ public class PatchouliBook extends WeaponWithSP {
 		ACC = 99;
         RCH = 6;    //extra reach
 		chargeGain = 5;
-		chargeNeed = 1;
+		chargeNeed = 50;
 	}
 
 	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
@@ -131,8 +131,13 @@ public class PatchouliBook extends WeaponWithSP {
 				return;
 			}
 
+			if (Dungeon.hero.fieldOfView[cell] == false){
+				GLog.w(Messages.get(PatchouliBook.class, "out_vision"));
+				return;
+			}
+			
 			Char ch = Actor.findChar(cell);
-
+	
 			//CAll LIGHTING
 			if (cell != Dungeon.hero.pos && ch != null){
 				Dungeon.hero.busy();
@@ -197,13 +202,13 @@ public class PatchouliBook extends WeaponWithSP {
 				Dungeon.hero.spendAndNext(1f);
 				spendSP();
 			} else {
-				GLog.w(Messages.get(this, "cancel"));
+				GLog.w(Messages.get(PatchouliBook.class, "cancel"));
 			}
 		}
 
 		@Override
 		public String prompt() {
-			return Messages.get(this, "prompt");
+			return Messages.get(PatchouliBook.class, "prompt");
 		}
 
 	};

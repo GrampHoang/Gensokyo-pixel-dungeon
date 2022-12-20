@@ -32,6 +32,7 @@ public class DaiyoseiFlower extends WeaponWithSP {
 		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 3 );
 		hero.HP += hero.HT/5;
         if(hero.HP > hero.HT) hero.HP = hero.HT;
+		Dungeon.hero.spendAndNext(1f);
         return true;
 	}
 }

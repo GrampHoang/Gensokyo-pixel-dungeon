@@ -46,6 +46,7 @@ public class MarisaBroom extends WeaponWithSP {
             CellEmitter.get(i + Dungeon.hero.pos).burst(SmokeParticle.FACTORY, 4);
         }
         CellEmitter.center(Dungeon.hero.pos).burst(BlastParticle.FACTORY, 5);
+		Dungeon.hero.spendAndNext(1f);
         return true;
 	}
 }

@@ -48,6 +48,7 @@ public class ClownTorch extends WeaponWithSP {
 				Buff.affect( mob, Amok.class, 4f );
 			}
 		}
+		Dungeon.hero.spendAndNext(1f);
         return true;
 	}
 	

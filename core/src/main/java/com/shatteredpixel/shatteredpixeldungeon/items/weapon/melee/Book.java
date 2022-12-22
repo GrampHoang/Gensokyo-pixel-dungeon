@@ -59,7 +59,7 @@ import com.watabou.utils.PointF;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class PatchouliBook extends WeaponWithSP {
+public class Book extends WeaponWithSP {
 
 	{
 		image = ItemSpriteSheet.PATCHOULI_BOOK;
@@ -157,8 +157,20 @@ public class PatchouliBook extends WeaponWithSP {
 			//CAll LIGHTING
 			if (cell != Dungeon.hero.pos && ch != null){
 				Dungeon.hero.busy();
-				callLighting(cell);
-				// Dungeon.hero.sprite.zap(cell, null);
+				callLightingFall(cell);
+				//The delay between lightingfall and aniamtion is just about right for the explosion
+				Dungeon.hero.sprite.zap(cell, new Callback(){
+					@Override
+					public void call() {
+						callLightingAoE(cell);
+						Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, new Callback(){
+							@Override
+							public void call() {
+								Dungeon.hero.spendAndNext(1f);
+							}
+						}));
+					}
+				});
 				spendSP();
 
 			//CALL ICE
@@ -217,26 +229,6 @@ public class PatchouliBook extends WeaponWithSP {
 		}
 
 	};
-	//
-	//	CALL LIGHTING
-	//
-
-	void callLighting(int cell){
-		callLightingFall(cell);
-		Dungeon.hero.sprite.zap(cell, new Callback(){
-			@Override
-			public void call() {
-				callLightingAoE(cell);
-				Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, new Callback(){
-					@Override
-					public void call() {
-						Dungeon.hero.spendAndNext(1f);
-					}
-				}));
-				
-			}
-		});
-	}
 
 	void callLightingFall(int cell){
 		//effect
@@ -247,27 +239,26 @@ public class PatchouliBook extends WeaponWithSP {
 		to.y -= 4;
 		arcs.add(new Lightning.Arc(from, to));
 		//Another lighting for a thicker looking hit
-		// from.y += 16;
-		// arcs.add(new Lightning.Arc(from, to));
+		from.y += 16;
+		arcs.add(new Lightning.Arc(from, to));
 		Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, null ) );
-
 		CellEmitter.center(cell).burst(BlastParticle.FACTORY, 25);
 		CellEmitter.get(cell).burst(SmokeParticle.FACTORY, 8);
 		//damage
 		Char ch = Actor.findChar(cell);
 		if (ch!=null) ch.damage(max(), Dungeon.hero);
-		// from.y += 96;
-		// ((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
-		// 	MagicMissile.BEACON, 
-		// 	from, 
-		// 	to, 
-		// 	new Callback(){
-		// 		@Override
-		// 		public void call(){
-		// 			callLightingAoE(cell, callback);
-		// 		}
-		// 	}
-		// );
+		from.y += 64;
+		((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+			MagicMissile.BEACON, 
+			from, 
+			to, 
+			new Callback(){
+				@Override
+				public void call(){
+					callLightingAoE(cell);
+				}
+			}
+		);
 	}
 	
 	void callLightingAoE(int cell){
@@ -282,9 +273,6 @@ public class PatchouliBook extends WeaponWithSP {
 		Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, null ) );
 	}
 
-	//
-	// CALL METEOR
-	//
 	void callMeteor(int cell){
 		callMeteorFall(cell, new Callback(){
 			@Override
@@ -357,77 +345,74 @@ public class PatchouliBook extends WeaponWithSP {
 		Dungeon.hero.sprite.zap(cell, callback);
 	}
 
-	//
-	//
-	//
 	private int aa_count = 0;
 	private PointF aa_from;	
 	private PointF aa_to;
 
 	void animaAnimusphere_Fire(){
-		// aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 64;}
-		// aa_to   = Dungeon.hero.sprite.center();
-		// GLog.w(Integer.toString(aa_count));
-		// aa_count++;
-		// int cell;
-		// do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
-		// while (cell < 0 && cell > Dungeon.level.map.length);
-		// GLog.w("cell:" + Integer.toString(cell));
-		// callMeteor(cell);
-		// if (aa_count < 10){
-		// 	((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
-		// 		MagicMissile.FIRE, 
-		// 		aa_from, 
-		// 		aa_to, 
-		// 		new Callback(){
-		// 			@Override
-		// 			public void call(){
-		// 				animaAnimusphere_Fire();
-		// 			}
-		// 		}
-		// 	);
-		// 	// Dungeon.hero.sprite.zap(cell, null);
-		// } else {
-		// 	Dungeon.hero.spendAndNext(0.5f);
-		// 	aa_count = 0;
-		// 	animaAnimusphere_Thunder();
-		// 	GLog.w("Done");
-		// }
+		aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 64;}
+		aa_to   = Dungeon.hero.sprite.center();
+		GLog.w(Integer.toString(aa_count));
+		aa_count++;
+		int cell;
+		do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
+		while (cell < 0 && cell > Dungeon.level.map.length);
+		GLog.w("cell:" + Integer.toString(cell));
+		callMeteor(cell);
+		if (aa_count < 10){
+			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.FIRE, 
+				aa_from, 
+				aa_to, 
+				new Callback(){
+					@Override
+					public void call(){
+						animaAnimusphere_Fire();
+					}
+				}
+			);
+			// Dungeon.hero.sprite.zap(cell, null);
+		} else {
+			Dungeon.hero.spendAndNext(0.5f);
+			aa_count = 0;
+			animaAnimusphere_Thunder();
+			GLog.w("Done");
+		}
 		
 		return;
 	}
 
-	// void animaAnimusphere_Thunder(){
-	// 	aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 32;}
-	// 	aa_to   = Dungeon.hero.sprite.center();
-	// 	GLog.w(Integer.toString(aa_count));
-	// 	aa_count++;
-	// 	int cell;
-	// 	do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
-	// 	while (cell < 0 && cell > Dungeon.level.map.length);
-	// 	GLog.w("cell:" + Integer.toString(cell));
-	// 	callLightingFall(cell);
-	// 	if (aa_count < 10){
-	// 		((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
-	// 			MagicMissile.FIRE, 
-	// 			aa_from, 
-	// 			aa_to, 
-	// 			new Callback(){
-	// 				@Override
-	// 				public void call(){
-	// 					animaAnimusphere_Thunder();
-	// 				}
-	// 			}
-	// 		);
-	// 		// Dungeon.hero.sprite.zap(cell, null);
-	// 	} else {
-	// 		Dungeon.hero.spendAndNext(0.5f);
-	// 		aa_count = 0;
-	// 		GLog.w("Done");
-	// 	}
-	// 	Dungeon.hero.spendAndNext(0.5f);
-	// 	return;
-	// }
+	void animaAnimusphere_Thunder(){
+		aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 32;}
+		aa_to   = Dungeon.hero.sprite.center();
+		GLog.w(Integer.toString(aa_count));
+		aa_count++;
+		int cell;
+		do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
+		while (cell < 0 && cell > Dungeon.level.map.length);
+		GLog.w("cell:" + Integer.toString(cell));
+		callLightingFall(cell);
+		if (aa_count < 10){
+			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.FIRE, 
+				aa_from, 
+				aa_to, 
+				new Callback(){
+					@Override
+					public void call(){
+						animaAnimusphere_Thunder();
+					}
+				}
+			);
+			// Dungeon.hero.sprite.zap(cell, null);
+		} else {
+			Dungeon.hero.spendAndNext(0.5f);
+			aa_count = 0;
+			GLog.w("Done");
+		}
+		Dungeon.hero.spendAndNext(0.5f);
+		return;
+	}
 
 	
 	public String skillInfo(){

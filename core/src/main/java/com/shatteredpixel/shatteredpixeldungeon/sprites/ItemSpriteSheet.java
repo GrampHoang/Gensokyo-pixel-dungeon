@@ -220,6 +220,26 @@ public class ItemSpriteSheet {
 		assignItemRect( ETERNITY_LEAF,     	16, 16 );
 	}
 
+	private static final int TOUHOU_TIER_3     = 				   xy(1, 33);  //16 slots
+	public static final int MEILING_HAND  		= TOUHOU_TIER_3+0;
+	public static final int MARISA_BROOM  		= TOUHOU_TIER_3+1;
+	public static final int RUMIA_RIBBON  		= TOUHOU_TIER_3+2;
+	public static final int SAKUYA_KNIFE  		= TOUHOU_TIER_3+3;
+	public static final int PATCHOULI_BOOK  	= TOUHOU_TIER_3+4;
+	public static final int REMILIA_SPEAR  		= TOUHOU_TIER_3+5;
+	public static final int FLANDRE_SPEAR  		= TOUHOU_TIER_3+6;
+	// public static final int ETERNITY_LEAF  		= TOUHOU_TIER_2+7;
+	static {
+		assignItemRect( MEILING_HAND,		    16, 16 );
+		assignItemRect( MARISA_BROOM,		16, 16 );
+		assignItemRect( RUMIA_RIBBON,		16, 17 );
+		assignItemRect( SAKUYA_KNIFE,	16, 16 );
+		assignItemRect( PATCHOULI_BOOK,     16, 16 );
+		assignItemRect( REMILIA_SPEAR,     	16, 16 );
+		assignItemRect( FLANDRE_SPEAR,     	16, 16 );
+		// assignItemRect( ETERNITY_LEAF,     	16, 16 );
+	}
+
 	private static final int WEP_TIER1      =                               xy(1, 7);   //8 slots
 	public static final int WORN_SHORTSWORD = WEP_TIER1+0;
 	public static final int GOHEI		    = WEP_TIER1+1;

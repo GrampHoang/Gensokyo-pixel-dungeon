@@ -7,19 +7,15 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.watabou.utils.PathFinder;
-import com.watabou.utils.Random;
 
 public class MarisaBroom extends WeaponWithSP {
 
 	{
-		image = ItemSpriteSheet.WOOD_STICK;
+		image = ItemSpriteSheet.MARISA_BROOM;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 

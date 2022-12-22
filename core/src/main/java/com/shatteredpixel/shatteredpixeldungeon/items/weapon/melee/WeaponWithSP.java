@@ -54,6 +54,10 @@ public class WeaponWithSP extends MeleeWeapon{
 		}
 	}
 
+	public int charge(){
+        return charge;
+    }
+
     protected boolean useSkill(){
         //do nothing by default
         //Only the hero can use skill
@@ -64,6 +68,18 @@ public class WeaponWithSP extends MeleeWeapon{
 	//These 2 are for cell-selecting skill. By default you use skill immediatly and spend SP
 	//However, for cell selecting, you will not spend SP until you actually use skill
 	//To do that we spend SP by default, then refund SP when select cell and spend SP again if a cell is picked successfully.
+
+	public boolean refundSP(int refund){
+		if (charge < 1000){
+			charge = charge + refund;
+			if (charge > 1000) charge = 1000;
+			return true;
+		} else {
+			GLog.w("Your weapon have too much charge!");
+			return false;
+		}
+	}
+
 	protected void refundSP(){
 		charge = charge + chargeNeed;
 	}
@@ -94,8 +110,12 @@ public class WeaponWithSP extends MeleeWeapon{
 
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-        charge += chargeGain * RingOfMagic.weaponSPChargeMultiplier(attacker);;
-        if (charge > chargeCap) charge = chargeCap;
+		//Only charge if not full
+		if (charge < chargeCap){
+			charge += chargeGain * RingOfMagic.weaponSPChargeMultiplier(attacker);;
+        	if (charge > chargeCap) charge = chargeCap;
+		}
+		//So that when you overflow after drink wine it won't reset
         updateQuickslot();
 		return super.proc(attacker, defender, damage);
 	}
@@ -115,7 +135,6 @@ public class WeaponWithSP extends MeleeWeapon{
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		if (chargeCap > 0)  charge = Math.min( chargeCap, bundle.getInt( CHARGE ));
-		else                charge = bundle.getInt( CHARGE );
+		charge = bundle.getInt( CHARGE );
 	}
 }

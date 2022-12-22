@@ -27,10 +27,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
@@ -38,14 +39,10 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.watabou.noosa.Camera;
-import com.watabou.utils.Bundle;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Callback;
@@ -56,7 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 public class RemiliaSpear extends WeaponWithSP {
 
     {
-        image = ItemSpriteSheet.WOOD_STICK;
+        image = ItemSpriteSheet.REMILIA_SPEAR;
         hitSound = Assets.Sounds.HIT_CRUSH;
         hitSoundPitch = 1f;
 
@@ -113,7 +110,7 @@ public class RemiliaSpear extends WeaponWithSP {
                 Char ch = Actor.findChar(i);
                 if (ch != null) {
                     Buff.affect(ch, Paralysis.class, 1f);
-                    ch.damage(Random.IntRange(min() * 2, max()), Dungeon.hero);
+                    ch.damage(max(), Dungeon.hero);
 
                     // Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos), 1);
                     Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos, new Callback() {
@@ -127,28 +124,38 @@ public class RemiliaSpear extends WeaponWithSP {
                    
                 }
             }
-            // Dungeon.hero.sprite.zap(cell, new Callback(){
-            //     @Override
-            //     public void call(){
-            //         Dungeon.hero.spendAndNext(1f);
-            //     }
-            // });
             
             CellEmitter.center(b.collisionPos).burst(BlastParticle.FACTORY, 30);
             PathFinder.buildDistanceMap(b.collisionPos, BArray.not(Dungeon.level.solid, null), 1);
             for (int i = 0; i < PathFinder.distance.length; i++) {
                 if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+                    if (Dungeon.level.flamable[i]) {
+                        Dungeon.level.destroy(i);
+                        GameScene.updateMap(i);
+                    }
+
+                    Trap t = Dungeon.level.traps.get(i);
+					if (t != null && t.active){
+						t.reveal();
+                        t.disarm();
+					}
+                    //destroys items / triggers bombs caught in the blast.
+					Heap heap = Dungeon.level.heaps.get(i);
+					if (heap != null)
+						heap.explode();
+					
                     if (Dungeon.level.pit[i]) GameScene.add(Blob.seed(i, 1, Fire.class));
                     else GameScene.add(Blob.seed(i, 10, Fire.class));
                     CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
                     CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
                     Char ch = Actor.findChar(i);
                     if (ch != null) {
-                        ch.damage(max()*2, this);
+                        ch.damage(Random.IntRange(min() * 2, max()), this);
                         Buff.affect(ch, Paralysis.class, 2f);
                     }
                 }
             }
+            Dungeon.observe();
             spendSP();
             Dungeon.hero.spendAndNext(1f);
         }
@@ -159,4 +166,8 @@ public class RemiliaSpear extends WeaponWithSP {
         }
 
 	};
+
+    public String skillInfo(){
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, min()*2, max());
+	}
 }

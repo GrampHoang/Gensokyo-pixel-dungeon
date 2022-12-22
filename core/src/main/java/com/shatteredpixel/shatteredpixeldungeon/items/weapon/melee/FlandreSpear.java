@@ -27,40 +27,32 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.watabou.noosa.Camera;
-import com.watabou.utils.Bundle;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.Callback;
-import com.watabou.utils.Reflection;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ThrowRay;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 
 public class FlandreSpear extends WeaponWithSP {
 
     {
-        image = ItemSpriteSheet.WOOD_STICK;
+        image = ItemSpriteSheet.FLANDRE_SPEAR;
         hitSound = Assets.Sounds.HIT_CRUSH;
         hitSoundPitch = 1f;
 
@@ -94,7 +86,7 @@ public class FlandreSpear extends WeaponWithSP {
 			}
 			// Char ch = Actor.findChar(cell);
 
-			if (cell.intValue() == Dungeon.hero.pos){
+			if (cell.intValue() == Dungeon.hero.pos || Dungeon.level.solid[cell] == false){
 				GLog.w(Messages.get(FlandreSpear.class, "cannot_throw"));
 				return;
 			}
@@ -107,7 +99,7 @@ public class FlandreSpear extends WeaponWithSP {
             Dungeon.hero.sprite.zap(cell, new Callback(){
                 @Override
                 public void call(){
-                    throwUp();
+                    throwUp(cell);
                     Dungeon.hero.sprite.zap(cell, new Callback(){
                         @Override
                         public void call(){
@@ -132,45 +124,79 @@ public class FlandreSpear extends WeaponWithSP {
 
 	};
 
-    public void throwUp(){
+    public void throwUp(int cell){
         Camera.main.shake(0.5f, 0.25f);
         WandOfBlastWave.BlastWave.blast(Dungeon.hero.pos);
         PointF start = Dungeon.hero.sprite.center();
         PointF end = Dungeon.hero.sprite.center();
+        PointF target = DungeonTilemap.raisedTileCenterToWorld(cell);
         end.y -= 100;
+        end.x = (end.x*3 + target.x)/4;
         Dungeon.hero.sprite.parent.add(new ThrowRay.DeathRay(start, end));
     }
 
     public void fallDown(int cell){
         PointF start = DungeonTilemap.raisedTileCenterToWorld(cell);
         PointF end = DungeonTilemap.raisedTileCenterToWorld(cell);
+        PointF from = Dungeon.hero.sprite.center();
         start.y -= 100;
+        start.x = (from.x + end.x*3)/4;
         Dungeon.hero.sprite.parent.add(new ThrowRay.DeathRay(start, end));
 
         CellEmitter.center(cell).burst(BlastParticle.FACTORY, 30);
 
+        Char cha = Actor.findChar(cell);
+                if (cha != null) {
+                    cha.damage(max(), this);
+                    Buff.affect(cha, Paralysis.class, 2f);
+                }
+
         for (int i : PathFinder.TWOTILES_X) {
+            if (Dungeon.level.flamable[cell + i]) {
+                Dungeon.level.destroy(cell + i);
+                GameScene.updateMap(cell + i);
+            }
+
             if (!Dungeon.level.solid[cell+i]){
+                //Disarm trap
+                Trap t = Dungeon.level.traps.get(cell + i);
+					if (t != null && t.active){
+						t.reveal();
+                        t.disarm();
+					}
+                //destroys items / triggers bombs caught in the blast.
+                Heap heap = Dungeon.level.heaps.get(cell + i);
+                if (heap != null)
+                    heap.explode();
+                
+                //Fire + Damage
                 if (Dungeon.level.pit[cell + i]) GameScene.add(Blob.seed(cell + i, 1, Fire.class));
                 else GameScene.add(Blob.seed(cell + i, 5, Fire.class));
                 CellEmitter.get(cell + i).burst(SmokeParticle.FACTORY, 4);
                 CellEmitter.get(cell + i).burst(FlameParticle.FACTORY, 5);
                 Char ch = Actor.findChar(cell + i);
                 if (ch != null) {
-                    ch.damage(max()*2, this);
-                    Buff.affect(ch, Paralysis.class, 2f);
+                    ch.damage(Random.IntRange(min() * 2, max()), this);
+                    Buff.affect(ch, Paralysis.class, 1f);
                 }
             }
         }
-
-        for (int i : PathFinder.NEIGHBOURS4_CORNERS_FAR){
-			((MagicMissile)curUser.sprite.parent.recycle( MagicMissile.class )).reset(
-				MagicMissile.FIRE_CONE,
-				DungeonTilemap.tileCenterToWorld(cell),
-				DungeonTilemap.tileCenterToWorld(cell + i),
-				null
-			);
-		}
-
+        Dungeon.observe();
+        //Just some effect
+        int[] i =  PathFinder.NEIGHBOURS4_CORNERS_FAR;
+        PointF topleft = DungeonTilemap.raisedTileCenterToWorld(cell + i[0]);
+        PointF topright = DungeonTilemap.raisedTileCenterToWorld(cell + i[1]);
+        PointF botleft = DungeonTilemap.raisedTileCenterToWorld(cell + i[2]);
+        PointF botright = DungeonTilemap.raisedTileCenterToWorld(cell + i[3]);
+        topleft.y  += 4; topleft.x  -= 2;
+        topright.y += 4; topright.x += 2;
+        botleft.y  += 8; botleft.x  -= 2;
+        botright.y += 8; botright.x += 2;
+        Dungeon.hero.sprite.parent.add(new Beam.LightRay(topleft,  botright));
+        Dungeon.hero.sprite.parent.add(new Beam.LightRay(topright, botleft));
     }
+
+    public String skillInfo(){
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, min()*2, max());
+	}
 }

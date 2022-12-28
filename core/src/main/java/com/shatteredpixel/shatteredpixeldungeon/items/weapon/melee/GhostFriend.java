@@ -28,13 +28,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class GhostBlade extends MeleeWeapon {
+public class GhostFriend extends MeleeWeapon {
 	
 	{
 		image = ItemSpriteSheet.GHOSTBLADE;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 2f;
-		ACC = 999;
+		ACC = 1.2f;
 		tier = 4;
 	}
 

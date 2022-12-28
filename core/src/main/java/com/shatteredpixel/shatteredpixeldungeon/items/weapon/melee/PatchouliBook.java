@@ -30,6 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 
@@ -45,7 +47,9 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.IcyCloudParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
@@ -92,6 +96,10 @@ public class PatchouliBook extends WeaponWithSP {
 	public void execute(Hero hero, String action ) {
 		super.execute(hero, action);
 		if (action.equals(AC_ULT)){
+			Dungeon.hero.busy();
+			spendSP(1000);
+			Buff.affect(Dungeon.hero, MagicalSight.class, 10f);
+			Dungeon.observe();
 			animaAnimusphere_Fire();
 		}
 	}
@@ -107,6 +115,7 @@ public class PatchouliBook extends WeaponWithSP {
 		return  6 +    //6 base,
 				lvl*2; //+2 per levl instead of 3
 	}
+	
 	@Override
 	public boolean canReach( Char owner, int target){
 		Ballistica attack = new Ballistica( owner.pos, target, Ballistica.PROJECTILE);
@@ -157,7 +166,12 @@ public class PatchouliBook extends WeaponWithSP {
 			//CAll LIGHTING
 			if (cell != Dungeon.hero.pos && ch != null){
 				Dungeon.hero.busy();
-				callLighting(cell);
+				callLighting(cell, new Callback(){
+					@Override
+					public void call() {
+						Dungeon.hero.spendAndNext(1f);
+					}
+				});
 				// Dungeon.hero.sprite.zap(cell, null);
 				spendSP();
 
@@ -165,9 +179,9 @@ public class PatchouliBook extends WeaponWithSP {
 			} else if (cell != Dungeon.hero.pos && Dungeon.level.water[cell] == true){
 				Dungeon.hero.busy();
 				Dungeon.hero.sprite.zap(cell, null);
-
-				CellEmitter.get(cell).burst(SmokeParticle.FACTORY, 8);
+				Splash.atExplode(cell, 0x368BC1, 12);
 				for (int i  : PathFinder.NEIGHBOURS9){
+					CellEmitter.get(cell + i).burst(IcyCloudParticle.FACTORY, 5);
 					Char cha = Actor.findChar(cell + i);
 					if (cha != null) Buff.prolong(cha, Frost.class, 2f);
 					GameScene.add(Blob.seed(i + cell, 1, Freezing.class));
@@ -180,8 +194,12 @@ public class PatchouliBook extends WeaponWithSP {
 			//CALL METEOR
 			} else if (cell != Dungeon.hero.pos && Dungeon.level.flamable[cell] == true){
 				Dungeon.hero.busy();
-				callMeteor(cell);
-				Dungeon.hero.sprite.zap(cell, null);
+				callMeteor(cell, new Callback(){
+					@Override
+					public void call(){
+						Dungeon.hero.spendAndNext(1f);
+					}
+				});
 				// Dungeon.hero.spendAndNext(1f);
 				spendSP();
 
@@ -217,25 +235,24 @@ public class PatchouliBook extends WeaponWithSP {
 		}
 
 	};
-	//
-	//	CALL LIGHTING
-	//
 
-	void callLighting(int cell){
+	void callLighting(int cell, Callback callback){
 		callLightingFall(cell);
-		Dungeon.hero.sprite.zap(cell, new Callback(){
-			@Override
-			public void call() {
-				callLightingAoE(cell);
-				Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, new Callback(){
-					@Override
-					public void call() {
-						Dungeon.hero.spendAndNext(1f);
-					}
-				}));
-				
-			}
-		});
+		PointF from = DungeonTilemap.tileCenterToWorld(cell);
+		PointF to   = DungeonTilemap.tileCenterToWorld(cell);
+		from.y -= 16;
+		//This is to time the Fall into AoE
+		((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+			MagicMissile.BEACON, 
+			from, 
+			to, 
+			new Callback(){
+				@Override
+				public void call() {
+					callLightingAoE(cell);
+					Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, callback));
+				}
+			});
 	}
 
 	void callLightingFall(int cell){
@@ -250,7 +267,7 @@ public class PatchouliBook extends WeaponWithSP {
 		// from.y += 16;
 		// arcs.add(new Lightning.Arc(from, to));
 		Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, null ) );
-
+		BlastWave.blast(cell);
 		CellEmitter.center(cell).burst(BlastParticle.FACTORY, 25);
 		CellEmitter.get(cell).burst(SmokeParticle.FACTORY, 8);
 		//damage
@@ -276,8 +293,10 @@ public class PatchouliBook extends WeaponWithSP {
 		for (int i : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(cell + i);
 			if (ch != null) ch.damage(max()/2, Dungeon.hero);
-			PointF to = DungeonTilemap.tileCenterToWorld(cell + i);
-			arcs.add(new Lightning.Arc(from, to));
+			if(!Dungeon.level.solid[cell + i]){
+				PointF to = DungeonTilemap.tileCenterToWorld(cell + i);
+				arcs.add(new Lightning.Arc(from, to));
+			}
 		}
 		Dungeon.hero.sprite.parent.addToFront( new Lightning( arcs, null ) );
 	}
@@ -285,16 +304,11 @@ public class PatchouliBook extends WeaponWithSP {
 	//
 	// CALL METEOR
 	//
-	void callMeteor(int cell){
+	void callMeteor(int cell, Callback callback){
 		callMeteorFall(cell, new Callback(){
 			@Override
 			public void call() {
-				callMeteorExplode(cell, new Callback(){
-					@Override
-					public void call(){
-						Dungeon.hero.spendAndNext(1f);
-					}
-				});
+				callMeteorExplode(cell, callback);
 			}
 		});
 	}
@@ -303,7 +317,7 @@ public class PatchouliBook extends WeaponWithSP {
 		PointF from = DungeonTilemap.tileCenterToWorld(cell);
 		PointF to   = DungeonTilemap.tileCenterToWorld(cell);
 		from.y -= 80;
-		from.x -= Random.Float(1f, 2)*48;
+		from.x += Random.Float(1f, 2)*16;
 		to.y -= 4;
 		//Three calls so the meteor look more CHONKY
 		((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
@@ -334,7 +348,7 @@ public class PatchouliBook extends WeaponWithSP {
 			ch.damage(max()/4, Dungeon.hero);
 			Buff.affect(ch, Burning.class).reignite(ch, 4f);
 		}
-		
+		BlastWave.blast(cell);
 		GameScene.add(Blob.seed(cell, 4, Fire.class));
 		CellEmitter.center(cell).burst(BlastParticle.FACTORY, 25);
 		CellEmitter.get(cell).burst(SmokeParticle.FACTORY, 8);
@@ -346,13 +360,16 @@ public class PatchouliBook extends WeaponWithSP {
 				cha.damage(max()/4, Dungeon.hero);
 				Buff.affect(cha, Burning.class).reignite(cha, 3f);
 			}
-			GameScene.add(Blob.seed(i + cell, 2, Fire.class));
-			((MagicMissile)curUser.sprite.parent.recycle( MagicMissile.class )).reset(
-				MagicMissile.FIRE_CONE,
-				DungeonTilemap.tileCenterToWorld(cell),
-				DungeonTilemap.tileCenterToWorld(cell + i),
-				null
-			);
+			CellEmitter.get(cell + i).burst(SmokeParticle.FACTORY, 3);
+			if(!Dungeon.level.solid[cell + i]){
+				GameScene.add(Blob.seed(i + cell, 2, Fire.class));
+				((MagicMissile)curUser.sprite.parent.recycle( MagicMissile.class )).reset(
+					MagicMissile.FIRE_CONE,
+					DungeonTilemap.tileCenterToWorld(cell),
+					DungeonTilemap.tileCenterToWorld(cell + i),
+					null
+				);
+			}
 		}
 		Dungeon.hero.sprite.zap(cell, callback);
 	}
@@ -363,71 +380,71 @@ public class PatchouliBook extends WeaponWithSP {
 	private int aa_count = 0;
 	private PointF aa_from;	
 	private PointF aa_to;
+	private int AA_METEOR_COUNT = 10;
+	private int AA_THUNDER_COUNT = 20;
 
 	void animaAnimusphere_Fire(){
-		// aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 64;}
-		// aa_to   = Dungeon.hero.sprite.center();
-		// GLog.w(Integer.toString(aa_count));
-		// aa_count++;
-		// int cell;
-		// do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
-		// while (cell < 0 && cell > Dungeon.level.map.length);
-		// GLog.w("cell:" + Integer.toString(cell));
-		// callMeteor(cell);
-		// if (aa_count < 10){
-		// 	((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
-		// 		MagicMissile.FIRE, 
-		// 		aa_from, 
-		// 		aa_to, 
-		// 		new Callback(){
-		// 			@Override
-		// 			public void call(){
-		// 				animaAnimusphere_Fire();
-		// 			}
-		// 		}
-		// 	);
-		// 	// Dungeon.hero.sprite.zap(cell, null);
-		// } else {
-		// 	Dungeon.hero.spendAndNext(0.5f);
-		// 	aa_count = 0;
-		// 	animaAnimusphere_Thunder();
-		// 	GLog.w("Done");
-		// }
+		aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 64;}
+		aa_to   = Dungeon.hero.sprite.center();
+		GLog.w(Integer.toString(aa_count));
+		aa_count++;
+		int cell;
+		do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
+		while (cell < 0 || cell > Dungeon.level.map.length || Dungeon.level.solid[cell] == true);
+		GLog.w("cell:" + Integer.toString(cell));
+		callMeteor(cell, null);
+		if (aa_count < AA_METEOR_COUNT){
+			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.FIRE, 
+				aa_from, 
+				aa_to, 
+				new Callback(){
+					@Override
+					public void call(){
+						animaAnimusphere_Fire();
+					}
+				}
+			);
+			// Dungeon.hero.sprite.zap(cell, null);
+		} else {
+			aa_count = 0;
+			animaAnimusphere_Thunder();
+			GLog.w("Done");
+		}
 		
 		return;
 	}
 
-	// void animaAnimusphere_Thunder(){
-	// 	aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 32;}
-	// 	aa_to   = Dungeon.hero.sprite.center();
-	// 	GLog.w(Integer.toString(aa_count));
-	// 	aa_count++;
-	// 	int cell;
-	// 	do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
-	// 	while (cell < 0 && cell > Dungeon.level.map.length);
-	// 	GLog.w("cell:" + Integer.toString(cell));
-	// 	callLightingFall(cell);
-	// 	if (aa_count < 10){
-	// 		((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
-	// 			MagicMissile.FIRE, 
-	// 			aa_from, 
-	// 			aa_to, 
-	// 			new Callback(){
-	// 				@Override
-	// 				public void call(){
-	// 					animaAnimusphere_Thunder();
-	// 				}
-	// 			}
-	// 		);
-	// 		// Dungeon.hero.sprite.zap(cell, null);
-	// 	} else {
-	// 		Dungeon.hero.spendAndNext(0.5f);
-	// 		aa_count = 0;
-	// 		GLog.w("Done");
-	// 	}
-	// 	Dungeon.hero.spendAndNext(0.5f);
-	// 	return;
-	// }
+	void animaAnimusphere_Thunder(){
+		aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 32;}
+		aa_to   = Dungeon.hero.sprite.center();
+		GLog.w(Integer.toString(aa_count));
+		aa_count++;
+		int cell;
+		do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
+		while (cell < 0 || cell > Dungeon.level.map.length || Dungeon.level.solid[cell] == true);
+		GLog.w("cell:" + Integer.toString(cell));
+		callLighting(cell, null);
+		if (aa_count < AA_THUNDER_COUNT){
+			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.BEACON, 
+				aa_from, 
+				aa_to, 
+				new Callback(){
+					@Override
+					public void call(){
+						animaAnimusphere_Thunder();
+					}
+				}
+			);
+			// Dungeon.hero.sprite.zap(cell, null);
+		} else {
+			aa_count = 0;
+			GLog.w("Done");
+			Dungeon.hero.spendAndNext(0.5f);
+		}
+		return;
+	}
 
 	
 	public String skillInfo(){

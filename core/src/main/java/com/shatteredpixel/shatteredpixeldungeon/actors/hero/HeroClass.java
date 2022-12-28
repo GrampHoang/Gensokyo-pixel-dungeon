@@ -51,6 +51,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
@@ -75,6 +76,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Knife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.KoiKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.PatchouliBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.GhostBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.OfudaHandheld;
@@ -105,21 +107,31 @@ public enum HeroClass {
 	public void initHero( Hero hero ) {
 
 	// {
-	// 	hero.lvl = 30;
+		hero.lvl = 99;
+		hero.HT = 99*5;
 		GhostBlade we = new GhostBlade();
 		we.level(21);
 		we.collect();
 
 		ScrollOfDebug sod = new ScrollOfDebug();
-		sod.quantity(1).collect();
-		Buff.affect(hero, MagicalSight.class, 99f);
-		RingOfMight ring = new RingOfMight();
-		ring.level(99);
-		ring.doEquip(hero);
+		sod.quantity(69).collect();
+
+		Buff.affect(hero, MagicalSight.class, 9999f);
+		// RingOfMight ring = new RingOfMight();
+		// ring.level(99);
+		// ring.doEquip(hero);
 
 		RingOfTenacity ring2 = new RingOfTenacity();
-		ring2.level(99);
+		ring2.level(99);	
 		ring2.doEquip(hero);
+
+		UnstableSpellbook usb = new UnstableSpellbook();
+		usb.level(10);
+		usb.collect();
+
+		PatchouliBook pb = new PatchouliBook();
+		pb.level(21);
+		pb.collect();
 
 		PotionOfHealing.heal(hero);
 
@@ -130,6 +142,8 @@ public enum HeroClass {
 		PotionOfHealing poe = new PotionOfHealing();
 		poe.quantity(30).collect();
 
+
+		
 	// 	TengusMask tengu = new TengusMask();
 	// 	tengu.quantity(2).collect();
 	// 	KingsCrown crown = new KingsCrown();

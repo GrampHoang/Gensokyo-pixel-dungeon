@@ -56,10 +56,4 @@ public class ChenSprite extends MobSprite {
     public void spinning(){
 		play( spin );
 	}
-
-    // @Override
-	// public void onComplete( Animation anim ) {
-	// 	super.onComplete( anim == spin ? attack : anim );
-	// }
-
 }   

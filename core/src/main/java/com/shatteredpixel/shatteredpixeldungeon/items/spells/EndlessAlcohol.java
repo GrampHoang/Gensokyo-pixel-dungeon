@@ -55,9 +55,12 @@ public class EndlessAlcohol extends Spell {
 				hero.spend( 1f );
 				detach( curUser.belongings.backpack );
 				updateQuickslot();
+			} else {
+				hero.next();
 			}
 		}  else {
             GLog.p("Your weapon don't have skill");
+			hero.next();
 		// GLog.p(Messages.get(this, "not_suitable"));
         }
         

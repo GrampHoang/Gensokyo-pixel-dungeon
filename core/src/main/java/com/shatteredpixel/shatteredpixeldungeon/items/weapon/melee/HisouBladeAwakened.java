@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2022 Evan Debenham
+ * Copyright (C) 2014-2021 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,43 +23,37 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.watabou.utils.Random;
 
-public class GhostBlade extends MeleeWeapon {
-	
+import java.util.ArrayList;
+
+public class HisouBladeAwakened extends MeleeWeapon {
+
 	{
-		image = ItemSpriteSheet.GHOSTBLADE;
+		image = ItemSpriteSheet.HISOUBLADE_FIRE;
 		hitSound = Assets.Sounds.HIT_SLASH;
-		hitSoundPitch = 2f;
-		ACC = 999;
-		tier = 4;
+		hitSoundPitch = 0.5f;
+
+		tier = 5;
+		DLY = 0.5f;
+		RCH = 2;
 	}
 
-    @Override
+	@Override
 	public int max(int lvl) {
-		return  Math.round(3f*(tier+1)) +			//base 15
-				lvl*(tier-1);						//3 per level
-	}
-
-    @Override
-	public int damageRoll(Char owner) {
-        return 0;
+		return  3*(tier+1) +
+				lvl/3*(tier+1);
 	}
 
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-		//Check damage augment then add strenght
-        int real_damage = augment.damageFactor(Random.NormalIntRange( min(), max()));
-		if (attacker instanceof Hero){
-            int exStr = Dungeon.hero.STR() - STRReq();
-            if (exStr > 0) {
-                real_damage += Random.IntRange(0, exStr);
-            }
-        }
-		defender.damage(real_damage, attacker);
-        return super.proc(attacker, defender, 0);
+		Buff.affect(defender, Burning.class).reignite(defender);
+		return super.proc(attacker, defender, damage);
 	}
+
+
 }
+

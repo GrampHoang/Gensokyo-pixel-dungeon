@@ -315,6 +315,7 @@ public class ItemSpriteSheet {
 	public static final int GREATSHIELD     = WEP_TIER5+4;
 	public static final int GAUNTLETS       = WEP_TIER5+5;
 	public static final int HISOUBLADE      = WEP_TIER5+6;
+	public static final int HISOUBLADE_FIRE = WEP_TIER5+7;
 	static{
 		assignItemRect(GREATSWORD,  16, 16);
 		assignItemRect(WAR_HAMMER,  16, 16);

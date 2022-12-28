@@ -366,7 +366,7 @@ public class Generator {
 					ClownTorch.class,
 					EternityLeaf.class
 			};
-			WEP_T2.probs = new float[]{ 6, 5, 5, 4, 4,  3, 3, 3, 3, 3, 3, 3, 3};
+			WEP_T2.probs = new float[]{ 6, 5, 5, 4, 4,   3, 3, 3, 3, 3, 3, 3, 3};
 			
 			WEP_T3.classes = new Class<?>[]{
 					Sword.class,
@@ -375,10 +375,19 @@ public class Generator {
 					RoundShield.class,
 					Sai.class,
 					Whip.class,
+
 					SharpteethGauntlet.class,
-					GluttonyFan.class
+					GluttonyFan.class,
+
+					MeilingHand.class,
+					MarisaBroom.class,
+					RumiaRibbon.class,
+					SakuyaKnife.class,
+					PatchouliBook.class,
+					RemiliaSpear.class,
+					FlandreSpear.class
 			};
-			WEP_T3.probs = new float[]{ 6, 5, 5, 4, 4, 4, 3, 3 };
+			WEP_T3.probs = new float[]{ 6, 5, 5, 4, 4, 4,   3, 3,    3, 3, 3, 3, 3, 2, 2};
 			
 			WEP_T4.classes = new Class<?>[]{
 					Longsword.class,

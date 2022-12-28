@@ -80,6 +80,16 @@ public class WeaponWithSP extends MeleeWeapon{
 		}
 	}
 
+	protected boolean spendSP(int spend){
+		if (charge > spend){
+			charge = charge - spend;
+			return true;
+		} else {
+			GLog.w("You don't have enough charge!");
+			return false;
+		}
+	}
+
 	protected void refundSP(){
 		charge = charge + chargeNeed;
 	}

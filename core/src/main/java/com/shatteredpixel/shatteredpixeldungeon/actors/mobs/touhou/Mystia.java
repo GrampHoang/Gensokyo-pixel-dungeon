@@ -85,7 +85,8 @@ public class Mystia extends Mob {
 	public void sing(int roll){
 		if (Random.Int(roll) == 0 ){
 			for (Mob mob : Dungeon.level.mobs) {
-				mob.beckon( pos );
+				//Wake them up basically
+				mob.beckon( mob.pos );
 				if (isLunatic()){
 					Buff.affect(mob, Haste.class, 3f);
 				}

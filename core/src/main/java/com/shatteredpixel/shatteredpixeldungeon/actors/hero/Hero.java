@@ -129,6 +129,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ClownTorch;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.PatchouliBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -678,7 +679,8 @@ public class Hero extends Char {
 		if (belongings.weapon() == null || !(belongings.weapon() instanceof Weapon))    return true;
 		if (STR() < ((Weapon)belongings.weapon()).STRReq())                             return false;
 		if (belongings.weapon() instanceof Flail)                                       return false;
-		if (belongings.weapon() instanceof ClownTorch)                                       return false;
+		if (belongings.weapon() instanceof ClownTorch)                                  return false;
+		if (belongings.weapon() instanceof PatchouliBook)                               return false;
 
 		return true;
 	}

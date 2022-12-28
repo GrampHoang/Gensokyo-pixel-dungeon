@@ -87,7 +87,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER, SHRINK
 	}
 	private int stunStates = 0;
 	
@@ -445,6 +445,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				// bursting_power.pos(0, 0);
 				bursting_power.pour(BurstingPowerParticle.FACTORY, 0.1f);
 				break;
+			case SHRINK:
+				scale.x = 0.7f;
+				scale.y = 0.7f;
+				break;
 		}
 	}
 	
@@ -541,6 +545,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					bursting_power.on = false;
 					bursting_power = null;
 				}
+				break;
+			case SHRINK:
+				scale.x = 1f;
+				scale.y = 1f;
 				break;
 		}
 	}

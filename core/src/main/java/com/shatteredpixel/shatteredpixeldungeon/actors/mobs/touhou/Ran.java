@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.RanSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
@@ -104,6 +105,7 @@ public class Ran extends Mob {
 
 	protected boolean doAttack(Char enemy ) {
 		charging = false;
+		if(Dungeon.level.water[this.pos] == true && Random.IntRange(0, 1) == 1) Dungeon.level.map[this.pos] = Terrain.EMPTY;
 		this.sprite.remove(CharSprite.State.CHARGING);
 		CellEmitter.get(enemy.pos).burst(SmokeParticle.FACTORY, 4);
 		Buff.prolong( enemy, Hex.class, 12f );

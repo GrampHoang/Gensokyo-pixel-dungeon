@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.ArcaneCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FeatherFall;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.MagicalInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.MagicalPorter;
@@ -200,6 +201,7 @@ public abstract class Recipe {
 		new BeaconOfReturning.Recipe(),
 		new CurseInfusion.Recipe(),
 		new FeatherFall.Recipe(),
+		new EndlessAlcohol.Recipe(),
 		new MagicalInfusion.Recipe(),
 		new MagicalPorter.Recipe(),
 		new PhaseShift.Recipe(),

@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class GhostBlade extends MeleeWeapon {
+public class GardenerBlade extends MeleeWeapon {
 	
 	{
 		image = ItemSpriteSheet.GHOSTBLADE;
@@ -52,14 +52,17 @@ public class GhostBlade extends MeleeWeapon {
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
 		//Check damage augment then add strenght
-        int real_damage = augment.damageFactor(Random.NormalIntRange( min(), max()));
+        int pierce_damage = augment.damageFactor(Random.NormalIntRange( min(), max()));
 		if (attacker instanceof Hero){
             int exStr = Dungeon.hero.STR() - STRReq();
             if (exStr > 0) {
-                real_damage += Random.IntRange(0, exStr);
+                pierce_damage += Random.IntRange(0, exStr);
             }
         }
-		defender.damage(real_damage, attacker);
-        return super.proc(attacker, defender, 0);
+        //25% pierce damage, the rest is normal damage
+        pierce_damage = pierce_damage/4;
+        damage = damage - pierce_damage;
+		defender.damage(pierce_damage, attacker);
+        return super.proc(attacker, defender, damage);
 	}
 }

@@ -31,7 +31,7 @@ import com.watabou.utils.Random;
 public class RumiaRibbon extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.WOOD_STICK;
+		image = ItemSpriteSheet.RUMIA_RIBBON;
 		hitSound = Assets.Sounds.HIT_CRUSH;
 		hitSoundPitch = 1f;
 

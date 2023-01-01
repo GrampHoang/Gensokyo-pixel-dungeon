@@ -29,9 +29,11 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
 public class GhostFriend extends MeleeWeapon {
-	
+
+	// TODO: CHANGE NAME
+
 	{
-		image = ItemSpriteSheet.GHOSTBLADE;
+		image = ItemSpriteSheet.GHOST_FRIEND;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 2f;
 		ACC = 1.2f;

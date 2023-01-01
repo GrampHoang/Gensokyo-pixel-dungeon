@@ -17,7 +17,7 @@ import com.watabou.utils.Random;
 public class ChenTail extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.CLOWN_TORCH;
+		image = ItemSpriteSheet.CHEN_TAIL;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 

@@ -415,7 +415,10 @@ public enum Talent {
 
 		if (talent == PREPARED_PIE){
 			MeatPie pie = new MeatPie();
-			pie.quantity(1).collect();
+			pie.quantity(1);
+			if (!pie.collect()){
+				Dungeon.level.drop(pie, Dungeon.hero.pos);
+			}
 		}
 
 		if(talent == EIRIN_BOOK){
@@ -436,14 +439,20 @@ public enum Talent {
 		if (talent == GAP_GIFT){
 			if (Dungeon.hero.pointsInTalent(GAP_GIFT) == 1){
 				PotionOfCleansing poc = new PotionOfCleansing();
-				poc.quantity(1).collect();
-				poc.identify();
+				poc.quantity(1);
+				poc.identify();				
+				if (!poc.collect()){
+					Dungeon.level.drop(poc, Dungeon.hero.pos);
+				}
 			}
 
 			if (Dungeon.hero.pointsInTalent(GAP_GIFT) == 2){
 				PotionOfHealing poh = new PotionOfHealing();
-				poh.quantity(1).collect();
+				poh.quantity(1);
 				poh.identify();
+				if (!poh.collect()){
+					Dungeon.level.drop(poh, Dungeon.hero.pos);
+				}
 			}
 		}
 

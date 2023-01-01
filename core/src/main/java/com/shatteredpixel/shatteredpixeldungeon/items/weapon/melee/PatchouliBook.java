@@ -100,6 +100,7 @@ public class PatchouliBook extends WeaponWithSP {
 			spendSP(1000);
 			Buff.affect(Dungeon.hero, MagicalSight.class, 10f);
 			Dungeon.observe();
+			//AnimaAnimusphere is old name, current real name is Elemental Storm, oh well.
 			animaAnimusphere_Fire();
 		}
 	}
@@ -386,12 +387,12 @@ public class PatchouliBook extends WeaponWithSP {
 	void animaAnimusphere_Fire(){
 		aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 64;}
 		aa_to   = Dungeon.hero.sprite.center();
-		GLog.w(Integer.toString(aa_count));
+		// GLog.w(Integer.toString(aa_count));
 		aa_count++;
 		int cell;
-		do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
+		do {cell = PathFinder.NEIGHBOURS24[Random.Int(0, 23)] + Dungeon.hero.pos;}
 		while (cell < 0 || cell > Dungeon.level.map.length || Dungeon.level.solid[cell] == true);
-		GLog.w("cell:" + Integer.toString(cell));
+		// GLog.w("cell:" + Integer.toString(cell));
 		callMeteor(cell, null);
 		if (aa_count < AA_METEOR_COUNT){
 			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
@@ -409,7 +410,7 @@ public class PatchouliBook extends WeaponWithSP {
 		} else {
 			aa_count = 0;
 			animaAnimusphere_Thunder();
-			GLog.w("Done");
+			// GLog.w("Done");
 		}
 		
 		return;
@@ -418,12 +419,12 @@ public class PatchouliBook extends WeaponWithSP {
 	void animaAnimusphere_Thunder(){
 		aa_from = Dungeon.hero.sprite.center();	{aa_from.y -= 32;}
 		aa_to   = Dungeon.hero.sprite.center();
-		GLog.w(Integer.toString(aa_count));
+		// GLog.w(Integer.toString(aa_count));
 		aa_count++;
 		int cell;
-		do {cell = PathFinder.NEIGHTBOURS_24[Random.Int(0, 23)] + Dungeon.hero.pos;}
+		do {cell = PathFinder.NEIGHBOURS24[Random.Int(0, 23)] + Dungeon.hero.pos;}
 		while (cell < 0 || cell > Dungeon.level.map.length || Dungeon.level.solid[cell] == true);
-		GLog.w("cell:" + Integer.toString(cell));
+		// GLog.w("cell:" + Integer.toString(cell));
 		callLighting(cell, null);
 		if (aa_count < AA_THUNDER_COUNT){
 			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
@@ -440,7 +441,7 @@ public class PatchouliBook extends WeaponWithSP {
 			// Dungeon.hero.sprite.zap(cell, null);
 		} else {
 			aa_count = 0;
-			GLog.w("Done");
+			// GLog.w("Done");
 			Dungeon.hero.spendAndNext(0.5f);
 		}
 		return;

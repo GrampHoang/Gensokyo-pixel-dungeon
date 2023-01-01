@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -54,7 +55,7 @@ import com.watabou.utils.Random;
 public class LettySnowball extends WeaponWithSP {
 
 	{
-		image = ItemSpriteSheet.AQUA_BLAST;
+		image = ItemSpriteSheet.LETTY_SNOWBALL;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 
@@ -74,14 +75,6 @@ public class LettySnowball extends WeaponWithSP {
 
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-        // ((MissileSprite)Dungeon.hero.sprite.parent.recycle( MissileSprite.class )).
-        //     reset( attacker.pos, defender.pos, new Orb(), new Callback() {
-        //         @Override
-        //         public void call() {
-        //             return super.proc(attacker, defender, damage);
-        //         }
-        //     } );
-		// Splash.atExplode(defender.pos, 0x368BC1, 12);
 		Buff.affect(defender, Chill.class, 3f);
         return super.proc(attacker, defender, damage);
 	}
@@ -120,6 +113,7 @@ public class LettySnowball extends WeaponWithSP {
                             snowballExplode(cell);
 		                    CellEmitter.get(cell).burst(IcyCloudParticle.FACTORY, 5);
                             ch.damage(Random.Int(2), this);
+							Buff.prolong(ch, Frost.class, 4f);
 							Dungeon.hero.spendAndNext(1f);
                         }
                     } );

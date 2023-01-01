@@ -58,7 +58,7 @@ public class FlandreSpear extends WeaponWithSP {
 
         tier = 3;
         ACC = 1.4f; // lots of boost to accuracy
-        RCH = 2; // extra reach
+        RCH = 3; // extra reach
 
         chargeGain = 2;
         chargeNeed = 1;
@@ -86,7 +86,7 @@ public class FlandreSpear extends WeaponWithSP {
 			}
 			// Char ch = Actor.findChar(cell);
 
-			if (cell.intValue() == Dungeon.hero.pos || Dungeon.level.solid[cell] == false){
+			if (cell.intValue() == Dungeon.hero.pos || Dungeon.level.solid[cell] == true){
 				GLog.w(Messages.get(FlandreSpear.class, "cannot_throw"));
 				return;
 			}

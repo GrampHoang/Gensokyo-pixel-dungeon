@@ -43,13 +43,15 @@ import com.watabou.utils.Random;
 public class RanTalisman extends WeaponWithSP {
 
 	{
-		image = ItemSpriteSheet.OFUDA;
+		image = ItemSpriteSheet.RAN_TALISMAN;
 		hitSound = Assets.Sounds.HIT_STRONG;
 		hitSoundPitch = 0.5f;
 
 		tier = 4;
 		DLY = 1f; 
 		RCH = 99;    //extra reach
+
+		chargeGain = 8;
 	}
 
 	@Override

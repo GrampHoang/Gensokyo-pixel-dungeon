@@ -12,8 +12,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
@@ -27,7 +29,7 @@ import com.watabou.utils.Random;
 public class MerlinTrumpet extends WeaponWithSP {
 
 	{
-		image = ItemSpriteSheet.CLOWN_TORCH;
+		image = ItemSpriteSheet.MERLIN_TRUMPET;
 		hitSound = Assets.Sounds.HIT;
 		hitSoundPitch = 1f;
 
@@ -39,7 +41,7 @@ public class MerlinTrumpet extends WeaponWithSP {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(3f*(tier+1)) + //15 base
+		return  Math.round(3f*(tier+1)) + 2 + //17 base
 				lvl*Math.round(0.6f*(tier+1)); // 3 instead of 5 per level
 	}
 
@@ -57,6 +59,7 @@ public class MerlinTrumpet extends WeaponWithSP {
             }
 		}
         //Return 3 tiles on the opposite side, already align to world cell so use them directly (unlike PathFinder)
+        //TODO NEED FIX
         int[] damagePos = Circle8Utils.opposite3(PathFinder.NEIGHBOURS8, collisionPos, defender.pos);
         int count = 0;
         for (int i : damagePos){
@@ -101,6 +104,7 @@ public class MerlinTrumpet extends WeaponWithSP {
 				return;
 			}
 			if (ch != null){
+                Dungeon.hero.busy();
                 int collisionPos = ch.pos;
                 if (Dungeon.level.distance(ch.pos, Dungeon.hero.pos) > 1){
                     Ballistica b = new Ballistica(Dungeon.hero.pos, ch.pos, Ballistica.WONT_STOP );
@@ -113,18 +117,23 @@ public class MerlinTrumpet extends WeaponWithSP {
                 }
 				int damageDo = max()/2;
                 //Return 3 tiles on the opposite side, already align to world cell so use them directly (unlike PathFinder)
+                //TODO NEED FIX
                 int[] damagePos = Circle8Utils.opposite3(PathFinder.NEIGHBOURS8, collisionPos, ch.pos);
+                
                 for (int i : damagePos){
+                    GLog.w(Integer.toString(i));
                     Char cha = Actor.findChar(i);
                     //Exist and not same alignment
                     if (cha != null && cha.alignment != Alignment.ALLY){
                         cha.damage(damageDo, Dungeon.hero);
                         cha.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ),  0.3f, 5 );
+                        Dungeon.hero.sprite.parent.add(
+                    new Beam.DeathRay(Dungeon.hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(i)));
                     }
                 }
                 ch.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
 				spendSP();
-
+                Dungeon.hero.spendAndNext(1f);
 			} else {
 				GLog.w(Messages.get(MerlinTrumpet.class, "no_target"));
 				return;
@@ -141,5 +150,11 @@ public class MerlinTrumpet extends WeaponWithSP {
 
     public String skillInfo(){
 		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max()/2);
+	}
+
+    public class Note extends Item {
+		{
+			image = ItemSpriteSheet.NOTE_TEAL;
+		}
 	}
 }

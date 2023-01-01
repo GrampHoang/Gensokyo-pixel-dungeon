@@ -7,6 +7,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMagic;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 
 import java.util.ArrayList;
 
@@ -18,8 +19,9 @@ public class WeaponWithSP extends MeleeWeapon{
     }
 
     protected int charge = 100;
-    protected int chargeCap = 100;      //always cap at 100%
-    protected int chargeNeed = 100;    //charge needed to use skill
+    protected int chargeCap = 100;      //always cap at 100%, except for drinking wine.
+	protected int chargeHardCap = 1000;
+    protected int chargeNeed = (DeviceCompat.isDebug() ? 0 : 100);    //charge needed to use skill
 
     protected int chargeGain = 1;  //charge gain per hit
 
@@ -43,13 +45,13 @@ public class WeaponWithSP extends MeleeWeapon{
 	public void execute(Hero hero, String action ) {
 		super.execute(hero, action);
 		if (action.equals(AC_SKILL)){
-            if (charge >= chargeNeed){
-				// Dungeon.hero.busy();
+			if (!isEquipped( hero )) {
+				GLog.i( Messages.get(WeaponWithSP.class, "need_to_equip") );
+			} else if (charge >= chargeNeed){
                 if (useSkill()) charge = charge - chargeNeed;
-				// Dungeon.hero.next();
                 updateQuickslot();
             } else {
-				GLog.w( Messages.get(this,"need_charge") );
+				GLog.w( Messages.get(WeaponWithSP.class,"need_charge") );
 			}
 		}
 	}
@@ -70,9 +72,9 @@ public class WeaponWithSP extends MeleeWeapon{
 	//To do that we spend SP by default, then refund SP when select cell and spend SP again if a cell is picked successfully.
 
 	public boolean refundSP(int refund){
-		if (charge < 1000){
+		if (charge < chargeHardCap){
 			charge = charge + refund;
-			if (charge > 1000) charge = 1000;
+			if (charge > chargeHardCap) charge = chargeHardCap;
 			return true;
 		} else {
 			GLog.w("Your weapon have too much charge!");
@@ -131,7 +133,7 @@ public class WeaponWithSP extends MeleeWeapon{
 	}
 
 	public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed);
+		return Messages.get(WeaponWithSP.class, "skill_desc", chargeGain, chargeNeed);
 	}
 
     private static final String CHARGE = "skill_charge";

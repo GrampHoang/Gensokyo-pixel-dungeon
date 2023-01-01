@@ -30,8 +30,10 @@ import com.watabou.utils.Random;
 
 public class GardenerBlade extends MeleeWeapon {
 	
+	// TODO: CHANGE THE NAME
+
 	{
-		image = ItemSpriteSheet.GHOSTBLADE;
+		image = ItemSpriteSheet.GARDENDER_BLADE;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 2f;
 		ACC = 999;

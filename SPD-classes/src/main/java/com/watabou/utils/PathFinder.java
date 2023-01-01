@@ -58,7 +58,7 @@ public class PathFinder {
 	public static int[] NEIGHBOURS_HORSEMOVES;
 	public static int[] NEIGHBOURS_TWOTILES_EIGHTDIR;
 
-	public static int[] NEIGHTBOURS_24;
+	public static int[] NEIGHBOURS24;
 	//similar to their equivalent neighbour arrays, but the order is clockwise.
 	//Useful for some logic functions, but is slower due to lack of array-access order.
 	public static int[] CIRCLE4;
@@ -97,7 +97,7 @@ public class PathFinder {
 		NEIGHBOURS_HORSEMOVES = new int[]{-width-width-1, -width-width+1, -width-2, -width+2, +width-2, +width+2,  +width+width-1, +width+width+1};
 		NEIGHBOURS_TWOTILES_EIGHTDIR = new int[]{-width-width-2, -width-width, -width-width+2, -2, +2, +width+width-2, +width+width, +width+width+2};
 		
-		NEIGHTBOURS_24 = new int[]{-width-width-2, -width-width-1, -width-width, -width-width+1, -width-width+2,
+		NEIGHBOURS24 = new int[]{-width-width-2, -width-width-1, -width-width, -width-width+1, -width-width+2,
 									     -width-2,       -width-1,       -width, 	   -width+1,       -width+2,  
 											   -2, 		       -1,							 +1, 			 +2,
 										 +width-2,       +width-1,       +width, 	   +width+1,       +width+2, 

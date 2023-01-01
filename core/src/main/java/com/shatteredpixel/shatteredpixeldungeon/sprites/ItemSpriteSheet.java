@@ -232,11 +232,35 @@ public class ItemSpriteSheet {
 	static {
 		assignItemRect( MEILING_HAND,		    16, 16 );
 		assignItemRect( MARISA_BROOM,		16, 16 );
-		assignItemRect( RUMIA_RIBBON,		16, 17 );
+		assignItemRect( RUMIA_RIBBON,		16, 16 );
 		assignItemRect( SAKUYA_KNIFE,	16, 16 );
 		assignItemRect( PATCHOULI_BOOK,     16, 16 );
 		assignItemRect( REMILIA_SPEAR,     	16, 16 );
 		assignItemRect( FLANDRE_SPEAR,     	16, 16 );
+		// assignItemRect( ETERNITY_LEAF,     	16, 16 );
+	}
+
+	private static final int TOUHOU_TIER_4     = 				   xy(1, 34);  //16 slots
+	public static final int LETTY_SNOWBALL 		= TOUHOU_TIER_4+0;
+	public static final int CHEN_TAIL	  		= TOUHOU_TIER_4+1;
+	public static final int RAN_TALISMAN  		= TOUHOU_TIER_4+2;
+	public static final int GARDENDER_BLADE		= TOUHOU_TIER_4+3;
+	public static final int GHOST_FRIEND	  	= TOUHOU_TIER_4+4;
+	public static final int LUSANA_VIOLIN  		= TOUHOU_TIER_4+5;
+	public static final int MERLIN_TRUMPET 		= TOUHOU_TIER_4+6;
+	public static final int LYRICA_PIANO 		= TOUHOU_TIER_4+7;
+	public static final int RAIKO_DRUM	 		= TOUHOU_TIER_4+8;
+	// public static final int ETERNITY_LEAF  		= TOUHOU_TIER_2+7;
+	static {
+		assignItemRect( LETTY_SNOWBALL, 16, 16 );
+		assignItemRect( CHEN_TAIL,	 	16, 16 );
+		assignItemRect( RAN_TALISMAN,	16, 16 );
+		assignItemRect( GARDENDER_BLADE,16, 16 );
+		assignItemRect( GHOST_FRIEND,   16, 16 );
+		assignItemRect( LUSANA_VIOLIN,  16, 16 );
+		assignItemRect( MERLIN_TRUMPET, 16, 16 );
+		assignItemRect( LYRICA_PIANO,   16, 16 );
+		assignItemRect( RAIKO_DRUM,  	16, 16 );
 		// assignItemRect( ETERNITY_LEAF,     	16, 16 );
 	}
 
@@ -390,11 +414,15 @@ public class ItemSpriteSheet {
 	public static final int REISENGUN  		= TIPPED_DARTS+12;
 	public static final int BULLET			= TIPPED_DARTS+13;
 	public static final int OFUDA			= TIPPED_DARTS+14;
+
+	public static final int NOTE_TEAL        = TIPPED_DARTS+15;
 	static {
-		for (int i = TIPPED_DARTS; i < TIPPED_DARTS+16; i++)
+		for (int i = TIPPED_DARTS; i < TIPPED_DARTS+16; i++){
 			assignItemRect(i, 15, 15);
+		}
+		assignItemRect(NOTE_TEAL,     	16, 5);
 	}
-	
+
 	private static final int ARMOR          =                               xy(1, 12);  //16 slots
 	public static final int ARMOR_CLOTH     = ARMOR+0;
 	public static final int ARMOR_LEATHER   = ARMOR+1;

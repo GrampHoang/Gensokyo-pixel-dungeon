@@ -42,11 +42,11 @@ public class LyricaPiano extends WeaponWithSP {
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
         if (attacker.buff(MusicFlow.class) == null){
-            Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION).flowstack++;
+            Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION).increaseFlow(1);
         }
         else{
             MusicFlow flow = attacker.buff(MusicFlow.class);
-            flow.flowstack++;
+            flow.increaseFlow(1);
             Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION );
         }
         attacker.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 4 );
@@ -57,11 +57,11 @@ public class LyricaPiano extends WeaponWithSP {
 	protected boolean useSkill(){
         Dungeon.hero.busy();
 		if (Dungeon.hero.buff(MusicFlow.class) == null){
-            Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION).flowstack++;
+            Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION).increaseFlow(5);
         }
         else{
             MusicFlow flow = Dungeon.hero.buff(MusicFlow.class);
-            flow.flowstack += 5;
+            flow.increaseFlow(5);
             Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION );
         }
         Dungeon.hero.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 4 );
@@ -69,6 +69,7 @@ public class LyricaPiano extends WeaponWithSP {
         return true;
     }
 
+    @Override
     public String skillInfo(){
 		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max()/2);
 	}

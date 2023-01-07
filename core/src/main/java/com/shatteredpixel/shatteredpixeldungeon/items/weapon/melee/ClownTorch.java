@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
@@ -25,6 +26,8 @@ public class ClownTorch extends WeaponWithSP {
         chargeGain = 4;
     }
 
+	public static float AMOK_DUR = 4f;
+
 	@Override
 	public int max(int lvl) {
 		return  Math.round(4f*(tier+1)) + //12 base
@@ -34,7 +37,7 @@ public class ClownTorch extends WeaponWithSP {
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
         if ( Random.IntRange(0, 9) == 1){
-            Buff.affect(defender, Amok.class, 4f );
+            Buff.affect(defender, Amok.class, AMOK_DUR );
         }
         return super.proc(attacker, defender, damage);
 	}
@@ -45,11 +48,15 @@ public class ClownTorch extends WeaponWithSP {
 		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
-				Buff.affect( mob, Amok.class, 4f );
+				Buff.affect( mob, Amok.class, AMOK_DUR );
 			}
 		}
 		Dungeon.hero.spendAndNext(1f);
         return true;
 	}
 	
+	@Override
+	public String skillInfo(){
+		return Messages.get(ClownTorch.class, "skill_desc", chargeGain, chargeNeed, (int)AMOK_DUR);
+	}
 }

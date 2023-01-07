@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
 public class DaiyoseiFlower extends WeaponWithSP {
 
@@ -17,8 +18,9 @@ public class DaiyoseiFlower extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 8;
-        // skill_type = NO_TARGET;
     }
+
+	public static int HEAL_PERCENTAGE = 20;
 
 	@Override
 	public int max(int lvl) {
@@ -30,9 +32,14 @@ public class DaiyoseiFlower extends WeaponWithSP {
 	protected boolean useSkill(){
         Hero hero = Dungeon.hero;
 		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 3 );
-		hero.HP += hero.HT/5;
+		hero.HP += Math.round(hero.HT * HEAL_PERCENTAGE / 100);
         if(hero.HP > hero.HT) hero.HP = hero.HT;
 		Dungeon.hero.spendAndNext(1f);
         return true;
+	}
+
+	@Override
+	public String skillInfo(){
+		return Messages.get(DaiyoseiFlower.class, "skill_desc", chargeGain, chargeNeed, HEAL_PERCENTAGE);
 	}
 }

@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfMagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -174,6 +175,7 @@ public class Star extends Mob {
 		if(anger > 1){
 			Dungeon.level.unseal();
 			GameScene.bossSlain();
+			Dungeon.level.drop( new PotionOfMagicalSight(), pos ).sprite.drop();
 		}
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob instanceof Sunny){

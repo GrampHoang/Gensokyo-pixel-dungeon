@@ -53,6 +53,10 @@ public class SakuyaKnife extends WeaponWithSP {
         chargeNeed = 30;
 	}
 
+	public int skilldmg_min(){	return min()*2;}
+
+	public int skilldmg_max(){	return max();	}
+
 	@Override
 	public int max(int lvl) {
 		return  Math.round(2f*(tier+1)) +     //8 base, down from 20
@@ -84,7 +88,7 @@ public class SakuyaKnife extends WeaponWithSP {
 			if (ch != null){
 				Dungeon.hero.sprite.parent.add(new Beam.Gust(Dungeon.hero.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(cell)));
 				((HeroSprite)Dungeon.hero.sprite).punch(Dungeon.hero.pos, ch.pos);
-				int damage = Random.IntRange(min()*2, max());
+				int damage = Random.IntRange(skilldmg_min(), skilldmg_max());
 				ch.damage(damage , Dungeon.hero);
 				ch.sprite.bloodBurstA(ch.sprite.center(), damage);
 				Sample.INSTANCE.play(Assets.Sounds.MISS, 0.6f, 0.6f, 1.5f);
@@ -103,14 +107,14 @@ public class SakuyaKnife extends WeaponWithSP {
 
 	};
 
-    public class ThrowKnife extends Item {
-		{
-			image = ItemSpriteSheet.KNIFE;
-		}
-	}
+    // public class ThrowKnife extends Item {
+	// 	{
+	// 		image = ItemSpriteSheet.KNIFE;
+	// 	}
+	// }
 
 	public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, min()*2, max());
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, skilldmg_min(), skilldmg_max());
 	}
 
 }

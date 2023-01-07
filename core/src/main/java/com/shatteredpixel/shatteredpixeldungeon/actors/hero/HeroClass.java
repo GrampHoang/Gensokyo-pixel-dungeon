@@ -121,26 +121,26 @@ public enum HeroClass {
 		// ring.level(99);
 		// ring.doEquip(hero);
 
-		RingOfTenacity ring2 = new RingOfTenacity();
-		ring2.level(99);	
-		ring2.doEquip(hero);
+		// RingOfTenacity ring2 = new RingOfTenacity();
+		// ring2.level(99);	
+		// ring2.doEquip(hero);
 
-		UnstableSpellbook usb = new UnstableSpellbook();
-		usb.level(10);
-		usb.collect();
+		// UnstableSpellbook usb = new UnstableSpellbook();
+		// usb.level(10);
+		// usb.collect();
 
-		PatchouliBook pb = new PatchouliBook();
-		pb.level(21);
-		pb.collect();
+		// PatchouliBook pb = new PatchouliBook();
+		// pb.level(21);
+		// pb.collect();
 
-		PotionOfHealing.heal(hero);
+		// PotionOfHealing.heal(hero);
 
-		PlateArmor plate = new PlateArmor();
-		plate.level(200);
-		plate.collect();
+		// PlateArmor plate = new PlateArmor();
+		// plate.level(200);
+		// plate.collect();
 
-		PotionOfHealing poe = new PotionOfHealing();
-		poe.quantity(30).collect();
+		// PotionOfHealing poe = new PotionOfHealing();
+		// poe.quantity(30).collect();
 
 
 		

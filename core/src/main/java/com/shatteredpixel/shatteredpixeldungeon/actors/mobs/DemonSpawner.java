@@ -144,7 +144,7 @@ public class DemonSpawner extends Mob {
 		if(isLunatic()){
 			GameScene.add(Blob.seed(pos, 30 + (10* Dungeon.depth - 21), ToxicGas.class));
 			CorrosiveGas corrosiveGas = Blob.seed(pos, 30 + (10* Dungeon.depth - 21), CorrosiveGas.class);
-			corrosiveGas.setStrength(5 + (10* Dungeon.depth - 21));
+			corrosiveGas.setStrength(Dungeon.depth/2);
 			GameScene.add(corrosiveGas);
 		}
 		return super.defenseProc(enemy, damage);

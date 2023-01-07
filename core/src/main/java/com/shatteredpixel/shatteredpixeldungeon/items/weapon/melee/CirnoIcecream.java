@@ -13,6 +13,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Chilling;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Random;
 
@@ -29,12 +31,17 @@ public class CirnoIcecream extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 5;
+
+		Chilling chill = new Chilling();
+		enchant((Weapon.Enchantment)chill);
     }
+
+	// public int HUNGER_FILL = 100 + charge/2 ;
 
 	@Override
 	public ItemSprite.Glowing glowing() {
 		return enchantment != null && (cursedKnown || !enchantment.curse()) ?
-				new ItemSprite.Glowing(enchantment.glowing().color, 0.33f*enchantment.glowing().period) : LIGHT_BLUE;
+				new ItemSprite.Glowing(enchantment.glowing().color, 0.66f*enchantment.glowing().period) : LIGHT_BLUE;
 	}
 
 	private static ItemSprite.Glowing LIGHT_BLUE = new ItemSprite.Glowing( 0xadd8e6, 0.33f );
@@ -79,7 +86,7 @@ public class CirnoIcecream extends WeaponWithSP {
             if(cursed && cursedKnown){
                 GLog.w("Don't eat cursed ice-cream");
             } else {
-				Buff.affect(Dungeon.hero, Hunger.class).satisfy( 100 + charge/2);
+				Buff.affect(Dungeon.hero, Hunger.class).satisfy( 100 + charge/2 );
                 new Flare( 10, 32 ).color( 0xadd8e6, true ).show( curUser.sprite, 0.3f );
 				Dungeon.quickslot.clearItem(curItem);
                 updateQuickslot();
@@ -89,9 +96,10 @@ public class CirnoIcecream extends WeaponWithSP {
             }
 		}
 	}
+	
 	@Override
 	public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, (100 + charge/2));
+		return Messages.get(CirnoIcecream.class, "skill_desc", chargeGain, chargeNeed, 100 + charge/2);
 	}
 
 }

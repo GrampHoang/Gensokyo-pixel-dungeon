@@ -211,22 +211,28 @@ public class Patchouli extends Mob {
 		switch(Random.IntRange(0, 2)){
 			case 0:
 				for (int i : PathFinder.NEIGHBOURS8){
-					pacthyCells.add(enemy.pos + i);
-					sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+					if (Dungeon.level.solid[enemy.pos + i] == false){
+						pacthyCells.add(enemy.pos + i);
+						sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+					}
 				}
 				break;
 			case 1:
 				for (int i : PathFinder.NEIGHBOURS4){
-					pacthyCells.add(enemy.pos + i);
-					sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+					if (Dungeon.level.solid[enemy.pos + i] == false) {
+						pacthyCells.add(enemy.pos + i);
+						sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+					}
 				}
 				pacthyCells.add(enemy.pos);
 				sprite.parent.add(new TargetedCell(enemy.pos, 0xFF0000));
 				break;
 			default:
 				for (int i : PathFinder.NEIGHBOURS4_CORNERS){
-					pacthyCells.add(enemy.pos + i);
-					sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+					if (Dungeon.level.solid[enemy.pos + i] == false) {
+						pacthyCells.add(enemy.pos + i);
+						sprite.parent.add(new TargetedCell(enemy.pos + i, 0xFF0000));
+					}
 				}
 				pacthyCells.add(enemy.pos);
 				sprite.parent.add(new TargetedCell(enemy.pos, 0xFF0000));

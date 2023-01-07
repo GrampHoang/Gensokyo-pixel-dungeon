@@ -420,6 +420,7 @@ public class ItemSpriteSheet {
 		for (int i = TIPPED_DARTS; i < TIPPED_DARTS+16; i++){
 			assignItemRect(i, 15, 15);
 		}
+		assignItemRect(OFUDA,     	13, 15);
 		assignItemRect(NOTE_TEAL,     	16, 5);
 	}
 

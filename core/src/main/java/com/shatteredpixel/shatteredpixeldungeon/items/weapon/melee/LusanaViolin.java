@@ -78,6 +78,7 @@ public class LusanaViolin extends WeaponWithSP {
         return true;
     }
 
+    @Override
     public String skillInfo(){
 		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max());
 	}

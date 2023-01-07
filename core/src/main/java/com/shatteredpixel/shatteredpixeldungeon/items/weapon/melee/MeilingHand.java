@@ -61,6 +61,10 @@ public class MeilingHand extends WeaponWithSP {
 		chargeNeed = 100;
 	}
 
+	public int skilldmg_min(){ return max()/3; }
+	
+	public int skilldmg_max(){ return max(); }
+	
 	@Override
 	public ItemSprite.Glowing glowing() {
 		return enchantment != null && (cursedKnown || !enchantment.curse()) ?
@@ -107,7 +111,7 @@ public class MeilingHand extends WeaponWithSP {
 					Char ch = Actor.findChar(i);
 					if (ch != null && !(ch instanceof Hero)){
 						Buff.prolong( ch, Paralysis.class, 1);
-						ch.damage(Random.Int(max()/3, max()), Dungeon.hero);
+						ch.damage(Random.Int(skilldmg_min(), skilldmg_max()), Dungeon.hero);
 					}
 					Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 					PunchWave.blast(i);
@@ -121,7 +125,7 @@ public class MeilingHand extends WeaponWithSP {
 					Char ch = Actor.findChar(i + Dungeon.hero.pos);
 					if (ch != null){
 						Buff.prolong( ch, Paralysis.class, 1);
-						ch.damage(Random.Int(max()/3, max()), Dungeon.hero);
+						ch.damage(Random.Int(skilldmg_min(), skilldmg_max()), Dungeon.hero);
 					}
 					Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 					CellEmitter.get( i + Dungeon.hero.pos ).start( Speck.factory( Speck.ROCK ), 0.07f, 5 );
@@ -134,8 +138,12 @@ public class MeilingHand extends WeaponWithSP {
 		public String prompt() {
 			return Messages.get(MeilingHand.class, "prompt");
 		}
-
 	};
+
+	@Override
+	public String skillInfo(){
+		return Messages.get(MeilingHand.class, "skill_desc", chargeGain, chargeNeed, skilldmg_min(), skilldmg_max());
+	}
 
 	public static class PunchWave extends Image {
 

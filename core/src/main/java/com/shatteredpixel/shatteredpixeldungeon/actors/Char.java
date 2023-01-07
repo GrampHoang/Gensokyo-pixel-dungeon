@@ -60,6 +60,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MusicFlow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Madden;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -556,6 +557,7 @@ public abstract class Char extends Actor {
 		if ( buff( Haste.class ) != null) speed *= 3f;
 		if ( buff( Exterminating.class ) != null) speed *= 1.2f;
 		if ( buff( Dread.class ) != null) speed *= 2f;
+		if ( buff( MusicFlow.class ) != null) speed *=  buff( MusicFlow.class ).getSpeedBuff();
 		return speed;
 	}
 	

@@ -45,6 +45,14 @@ public class RaikoDrum extends WeaponWithSP {
 
     protected int drum_count = 0;
 
+    //For MusicFlow on Mob, chec Mob.attackdelay
+    @Override
+    public float delayFactor(Char user) {
+        if (user instanceof Hero && Dungeon.hero.buff(MusicFlow.class) != null)
+            return 1/(Dungeon.hero.buff(MusicFlow.class).getSpeedBuff());
+        return 1;
+    }
+    
 	@Override
 	public int max(int lvl) {
 		return  Math.round(4f*(tier+1)) + //20 base
@@ -55,11 +63,11 @@ public class RaikoDrum extends WeaponWithSP {
 	public int proc(Char attacker, Char defender, int damage) {
         //Stack speed
         if (attacker.buff(MusicFlow.class) == null){
-            Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION).flowstack++;
+            Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION).increaseFlow(1);
         }
         else{
             MusicFlow flow = attacker.buff(MusicFlow.class);
-            flow.flowstack++;
+            flow.increaseFlow(1);
             Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION );
         }
         attacker.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 4 );
@@ -91,11 +99,11 @@ public class RaikoDrum extends WeaponWithSP {
         Dungeon.hero.busy();
         //Stack speed
 		if (Dungeon.hero.buff(MusicFlow.class) == null){
-            Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION).flowstack++;
+            Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION).increaseFlow(5);
         }
         else{
             MusicFlow flow = Dungeon.hero.buff(MusicFlow.class);
-            flow.flowstack += 5;
+            flow.increaseFlow(5);
             Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION );
         }
         Dungeon.hero.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 4 );
@@ -105,6 +113,7 @@ public class RaikoDrum extends WeaponWithSP {
         return true;
     }
 
+    @Override
     public String skillInfo(){
 		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max());
 	}

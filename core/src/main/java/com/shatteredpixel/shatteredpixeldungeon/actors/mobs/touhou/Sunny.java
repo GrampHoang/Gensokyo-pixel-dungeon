@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MoveDetect;
+import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -196,6 +197,7 @@ public class Sunny extends Mob {
 		if(anger > 1){
 			Dungeon.level.unseal();
 			GameScene.bossSlain();
+			Dungeon.level.drop( new FireOath(), pos ).sprite.drop();
 		}
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if(mob instanceof Luna){

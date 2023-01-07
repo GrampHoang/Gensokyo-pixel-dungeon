@@ -710,7 +710,10 @@ public class Hero extends Char {
 			buff(Talent.LethalMomentumTracker.class).detach();
 			return 0;
 		}
-			
+		
+		// if ( buff( MusicFlow.class ) != null) delay /=  buff( MusicFlow.class ).getSpeedBuff();
+		//Trying to get attack speed buff speed
+
 		if (belongings.weapon() != null) {
 			if (buff(Exterminating.class) != null){
 				return belongings.weapon().delayFactor( this ) * 0.8f;

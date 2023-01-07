@@ -10,18 +10,22 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MusicFlow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeilingHand.PunchWave;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Circle8Utils;
+import com.watabou.utils.PathFinderUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -37,6 +41,14 @@ public class MerlinTrumpet extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 10;
+    }
+
+    //For MusicFlow on Mob, chec Mob.attackdelay
+    @Override
+    public float delayFactor(Char user) {
+        if (user instanceof Hero && Dungeon.hero.buff(MusicFlow.class) != null)
+            return 1/(Dungeon.hero.buff(MusicFlow.class).getSpeedBuff());
+        return 1;
     }
 
 	@Override
@@ -60,9 +72,11 @@ public class MerlinTrumpet extends WeaponWithSP {
 		}
         //Return 3 tiles on the opposite side, already align to world cell so use them directly (unlike PathFinder)
         //TODO NEED FIX
-        int[] damagePos = Circle8Utils.opposite3(PathFinder.NEIGHBOURS8, collisionPos, defender.pos);
+        int[] damagePos = PathFinderUtils.opposite3(PathFinder.CIRCLE8, collisionPos, defender.pos);
         int count = 0;
         for (int i : damagePos){
+            CellEmitter.get(i).start( Speck.factory( Speck.NOTE ), 0.2f, 3 );
+            PunchWave.blast(i);
             Char ch = Actor.findChar(i);
             //Exist and not same alignment
             if (ch != null && ch.alignment != attacker.alignment){
@@ -105,7 +119,7 @@ public class MerlinTrumpet extends WeaponWithSP {
 			}
 			if (ch != null){
                 Dungeon.hero.busy();
-                int collisionPos = ch.pos;
+                int collisionPos = Dungeon.hero.pos;
                 if (Dungeon.level.distance(ch.pos, Dungeon.hero.pos) > 1){
                     Ballistica b = new Ballistica(Dungeon.hero.pos, ch.pos, Ballistica.WONT_STOP );
                     for (int i = 0; i < b.path.size(); i++){
@@ -118,10 +132,11 @@ public class MerlinTrumpet extends WeaponWithSP {
 				int damageDo = max()/2;
                 //Return 3 tiles on the opposite side, already align to world cell so use them directly (unlike PathFinder)
                 //TODO NEED FIX
-                int[] damagePos = Circle8Utils.opposite3(PathFinder.NEIGHBOURS8, collisionPos, ch.pos);
+                int[] damagePos = PathFinderUtils.opposite3(PathFinder.CIRCLE8, collisionPos, ch.pos);
                 
                 for (int i : damagePos){
-                    GLog.w(Integer.toString(i));
+                    CellEmitter.get(i).start( Speck.factory( Speck.NOTE ), 0.2f, 3 );
+                    PunchWave.blast(i);
                     Char cha = Actor.findChar(i);
                     //Exist and not same alignment
                     if (cha != null && cha.alignment != Alignment.ALLY){
@@ -148,6 +163,7 @@ public class MerlinTrumpet extends WeaponWithSP {
 
 	};
 
+    @Override
     public String skillInfo(){
 		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max()/2);
 	}

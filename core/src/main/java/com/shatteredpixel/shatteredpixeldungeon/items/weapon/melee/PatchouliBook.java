@@ -79,6 +79,10 @@ public class PatchouliBook extends WeaponWithSP {
 		chargeNeed = 50;
 	}
 
+	public int skilldmg_fire()		 { return max()/4; }
+	public int skilldmg_thunder()	 { return max();   }
+	public int skilldmg_thunder_aoe(){ return max()/2; }
+
 	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 
 	public static final String AC_ULT = "ULT";
@@ -273,7 +277,7 @@ public class PatchouliBook extends WeaponWithSP {
 		CellEmitter.get(cell).burst(SmokeParticle.FACTORY, 8);
 		//damage
 		Char ch = Actor.findChar(cell);
-		if (ch!=null) ch.damage(max(), Dungeon.hero);
+		if (ch!=null) ch.damage(skilldmg_thunder(), Dungeon.hero);
 		// from.y += 96;
 		// ((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
 		// 	MagicMissile.BEACON, 
@@ -293,7 +297,7 @@ public class PatchouliBook extends WeaponWithSP {
 		PointF from = DungeonTilemap.tileCenterToWorld(cell);
 		for (int i : PathFinder.NEIGHBOURS8){
 			Char ch = Actor.findChar(cell + i);
-			if (ch != null) ch.damage(max()/2, Dungeon.hero);
+			if (ch != null) ch.damage(skilldmg_thunder_aoe(), Dungeon.hero);
 			if(!Dungeon.level.solid[cell + i]){
 				PointF to = DungeonTilemap.tileCenterToWorld(cell + i);
 				arcs.add(new Lightning.Arc(from, to));
@@ -346,7 +350,7 @@ public class PatchouliBook extends WeaponWithSP {
 		//Center
 		Char ch = Actor.findChar(cell);
 		if (ch!= null){
-			ch.damage(max()/4, Dungeon.hero);
+			ch.damage(skilldmg_fire(), Dungeon.hero);
 			Buff.affect(ch, Burning.class).reignite(ch, 4f);
 		}
 		BlastWave.blast(cell);
@@ -358,7 +362,7 @@ public class PatchouliBook extends WeaponWithSP {
 		for (int i : PathFinder.NEIGHBOURS8){
 			Char cha = Actor.findChar(cell + i);
 			if (cha!= null){
-				cha.damage(max()/4, Dungeon.hero);
+				cha.damage(skilldmg_fire(), Dungeon.hero);
 				Buff.affect(cha, Burning.class).reignite(cha, 3f);
 			}
 			CellEmitter.get(cell + i).burst(SmokeParticle.FACTORY, 3);
@@ -447,8 +451,8 @@ public class PatchouliBook extends WeaponWithSP {
 		return;
 	}
 
-	
+	@Override
 	public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max(), max()/4);
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, skilldmg_thunder(), skilldmg_thunder_aoe(), skilldmg_fire());
 	}
 }

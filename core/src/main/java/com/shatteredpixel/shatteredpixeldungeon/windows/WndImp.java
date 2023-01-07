@@ -23,8 +23,10 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -62,8 +64,18 @@ public class WndImp extends Window {
 		};
 		btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
 		add( btnReward );
+
+		RedButton btnReward_special = new RedButton( Messages.get(this, "reward_special") ) {
+			@Override
+			protected void onClick() {
+				FireOath ea = new FireOath();
+				takeReward( imp, tokens, ea );
+			}
+		};
+		btnReward_special.setRect( 0, (int)btnReward.bottom() + GAP, WIDTH, BTN_HEIGHT );
+		add( btnReward_special );
 		
-		resize( WIDTH, (int)btnReward.bottom() );
+		resize( WIDTH, (int)btnReward_special.bottom() );
 	}
 	
 	private void takeReward( Imp imp, DwarfToken tokens, Item reward ) {

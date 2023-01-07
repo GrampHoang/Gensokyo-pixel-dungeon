@@ -21,6 +21,14 @@ public class MusicFlow extends FlavourBuff {
         return flowstack;
     }
 
+    public float getSpeedBuff(){
+        return 1 + flowstack*2/100;
+    }
+
+    public void increaseFlow(int count){
+        if (flowstack < 25) flowstack += count;
+        if (flowstack > 25) flowstack = 25;
+    }
     @Override
     public void storeInBundle(Bundle bundle) {
         super.storeInBundle(bundle);

@@ -217,6 +217,7 @@ public class Imp extends NPC {
 						!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
 						!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
 				level.mobs.add( npc );
+				
 				if(UFOSettings.blue_Quest()){
 					boolean extra = false;
 					for (int i : PathFinder.NEIGHBOURS8){

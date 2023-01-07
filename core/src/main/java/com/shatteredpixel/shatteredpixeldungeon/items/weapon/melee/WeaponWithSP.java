@@ -20,16 +20,10 @@ public class WeaponWithSP extends MeleeWeapon{
 
     protected int charge = 100;
     protected int chargeCap = 100;      //always cap at 100%, except for drinking wine.
-	protected int chargeHardCap = 1000;
-    protected int chargeNeed = (DeviceCompat.isDebug() ? 0 : 100);    //charge needed to use skill
+	protected int chargeHardCap = 1000; //Hardcap for endless alcohol
+    protected int chargeNeed = 100;     //charge needed to use skill, default 100
 
     protected int chargeGain = 1;  //charge gain per hit
-
-    // protected int skill_type = 0;   // 0: No target needed,   1: Select a cell,   2: Select a target
-
-    // protected int NO_TARGET  = 0;
-    // protected int TARGET = 1;
-    // protected int CELL = 2;
 
     public static final String AC_SKILL = "SKILL";
 
@@ -61,7 +55,7 @@ public class WeaponWithSP extends MeleeWeapon{
     }
 
     protected boolean useSkill(){
-        //do nothing by default
+        //do nothing by default, weapon will override this
         //Only the hero can use skill
 		Dungeon.hero.spend(1f); //Should scale with speed, but oh well. We haven't call this as super yet so still take 0 turn
         return false;

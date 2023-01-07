@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.EtherealChains;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HornOfPlenty;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SandalsOfNature;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
@@ -91,6 +92,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPrismaticLight
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTransfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.AssassinsBlade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.BattleAxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
@@ -152,34 +154,74 @@ public enum Catalog {
 	}
 	
 	static {
+		//T1
 		WEAPONS.seen.put( WornShortsword.class,             false);
 		WEAPONS.seen.put( Gloves.class,                     false);
 		WEAPONS.seen.put( Dagger.class,                     false);
 		WEAPONS.seen.put( MagesStaff.class,                 false);
+		WEAPONS.seen.put( Gohei.class,                 		false);
+		WEAPONS.seen.put( MarisaStaff.class,                false);
+		WEAPONS.seen.put( Knife.class,                 		false);
+		WEAPONS.seen.put( KoiKnife.class,                 	false);
+		WEAPONS.seen.put( ReisenHand.class,                 false);
+		//T2
 		WEAPONS.seen.put( Shortsword.class,                 false);
 		WEAPONS.seen.put( HandAxe.class,                    false);
 		WEAPONS.seen.put( Spear.class,                      false);
 		WEAPONS.seen.put( Quarterstaff.class,               false);
 		WEAPONS.seen.put( Dirk.class,                       false);
+		WEAPONS.seen.put( WoodStick.class,                  false);
+		WEAPONS.seen.put( MystiaVendor.class,               false);
+		WEAPONS.seen.put( WriggleBug.class,                 false);
+		WEAPONS.seen.put( DaiyoseiFlower.class,             false);
+		WEAPONS.seen.put( CirnoIcecream.class,              false);
+		WEAPONS.seen.put( LilyFlower.class,                 false);
+		WEAPONS.seen.put( ClownTorch.class,                 false);
+		WEAPONS.seen.put( EternityLeaf.class,               false);
+		WEAPONS.seen.put( GhostAnchor.class,                false);
+		WEAPONS.seen.put( BerserkerBlade.class,             false);
+		//T3
 		WEAPONS.seen.put( Sword.class,                      false);
 		WEAPONS.seen.put( Mace.class,                       false);
 		WEAPONS.seen.put( Scimitar.class,                   false);
 		WEAPONS.seen.put( RoundShield.class,                false);
 		WEAPONS.seen.put( Sai.class,                        false);
 		WEAPONS.seen.put( Whip.class,                       false);
+		WEAPONS.seen.put( MeilingHand.class,                false);
+		WEAPONS.seen.put( MarisaBroom.class,                false);
+		WEAPONS.seen.put( RumiaRibbon.class,                false);
+		WEAPONS.seen.put( SakuyaKnife.class,                false);
+		WEAPONS.seen.put( PatchouliBook.class,              false);
+		WEAPONS.seen.put( RemiliaSpear.class,               false);
+		WEAPONS.seen.put( FlandreSpear.class,               false);
+		WEAPONS.seen.put( GluttonyFan.class,                false);
+		WEAPONS.seen.put( SharpteethGauntlet.class,         false);
+		//T4
 		WEAPONS.seen.put( Longsword.class,                  false);
 		WEAPONS.seen.put( BattleAxe.class,                  false);
 		WEAPONS.seen.put( Flail.class,                      false);
 		WEAPONS.seen.put( RunicBlade.class,                 false);
 		WEAPONS.seen.put( AssassinsBlade.class,             false);
 		WEAPONS.seen.put( Crossbow.class,                   false);
+		WEAPONS.seen.put( LettySnowball.class,              false);
+		WEAPONS.seen.put( ChenTail.class,      			 false);
+		WEAPONS.seen.put( RanTalisman.class,                false);
+		WEAPONS.seen.put( GardenerBlade.class,              false);
+		WEAPONS.seen.put( GhostFriend.class,                false);
+		WEAPONS.seen.put( LusanaViolin.class,               false);
+		WEAPONS.seen.put( MerlinTrumpet.class,              false);
+		WEAPONS.seen.put( LyricaPiano.class,                false);
+		WEAPONS.seen.put( GhostBlade.class,                 false);
+		//T5
 		WEAPONS.seen.put( Greatsword.class,                 false);
 		WEAPONS.seen.put( WarHammer.class,                  false);
 		WEAPONS.seen.put( Glaive.class,                     false);
 		WEAPONS.seen.put( Greataxe.class,                   false);
 		WEAPONS.seen.put( Greatshield.class,                false);
 		WEAPONS.seen.put( Gauntlet.class,                   false);
-	
+		WEAPONS.seen.put( HisouBlade.class,                 false);
+		WEAPONS.seen.put( HisouBladeAwakened.class,         false);
+
 		ARMOR.seen.put( ClothArmor.class,                   false);
 		ARMOR.seen.put( LeatherArmor.class,                 false);
 		ARMOR.seen.put( MailArmor.class,                    false);
@@ -229,6 +271,7 @@ public enum Catalog {
 		ARTIFACTS.seen.put( TalismanOfForesight.class,      false);
 		ARTIFACTS.seen.put( TimekeepersHourglass.class,     false);
 		ARTIFACTS.seen.put( UnstableSpellbook.class,        false);
+		ARTIFACTS.seen.put( SomeonePhone.class,        		false);
 	
 		POTIONS.seen.put( PotionOfHealing.class,            false);
 		POTIONS.seen.put( PotionOfStrength.class,           false);

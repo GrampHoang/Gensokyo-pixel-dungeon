@@ -40,8 +40,6 @@ public class PathFinder {
 
 	//performance-light shortcuts for some common pathfinder cases
 	//they are in arrzy-access order for increased memory performance
-	public static int FIVE_ABOVE;
-	public static int ABOVE;
 
 	public static int NEIGHBOURS_TOPLEFT;
 	public static int NEIGHBOURS_TOPRIGHT;
@@ -78,9 +76,6 @@ public class PathFinder {
 
 		dir = new int[]{-1, +1, -width, +width, -width-1, -width+1, +width-1, +width+1};
 		dirLR = new int[]{-1-width, -1, -1+width, -width, +width, +1-width, +1, +1+width};
-
-		FIVE_ABOVE = -width-width-width-width-width;
-		ABOVE = -width;
 		
 		NEIGHBOURS_TOPLEFT = -width-1;
 		NEIGHBOURS_TOPRIGHT = -width+1;

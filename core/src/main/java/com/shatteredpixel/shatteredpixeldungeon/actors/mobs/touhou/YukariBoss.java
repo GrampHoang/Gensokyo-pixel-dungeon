@@ -72,6 +72,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.text.ParagraphView;
+
 public class YukariBoss extends Mob {
 
 	{
@@ -541,6 +543,10 @@ public class YukariBoss extends Mob {
 		@Override
 		public boolean act() {
 			count++;
+			if (Dungeon.hero.buff(Paralysis.class) != null){
+				count--;
+				return true;
+			}
 			if (count == 6){
 				detach();
 			}
@@ -557,7 +563,7 @@ public class YukariBoss extends Mob {
 					Char ch = Actor.findChar(i);
 					if (ch != null && !(ch instanceof YukariBoss)){
 						ch.damage(5, this);
-						Buff.prolong( ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 5 : 3 );
+						Buff.affect( ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 3 : 1 );
 						if (ch == Dungeon.hero){
 							Statistics.bossScores[2] -= 100;
 						}

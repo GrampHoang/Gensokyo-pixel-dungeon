@@ -64,7 +64,7 @@ public class LettySnowball extends WeaponWithSP {
         RCH = 2;
 
         chargeGain = 6;
-		chargeNeed = 1;
+		chargeNeed = 100;
     }
 
 	@Override

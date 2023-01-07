@@ -61,8 +61,11 @@ public class FlandreSpear extends WeaponWithSP {
         RCH = 3; // extra reach
 
         chargeGain = 2;
-        chargeNeed = 1;
+        chargeNeed = 100;
     }
+
+    public int skilldmg_min() { return min()*2; }
+	public int skilldmg_max() { return max(); }
 
 	@Override
 	public int max(int lvl) {
@@ -147,7 +150,7 @@ public class FlandreSpear extends WeaponWithSP {
 
         Char cha = Actor.findChar(cell);
                 if (cha != null) {
-                    cha.damage(max(), this);
+                    cha.damage(skilldmg_max(), this);
                     Buff.affect(cha, Paralysis.class, 2f);
                 }
 
@@ -176,7 +179,7 @@ public class FlandreSpear extends WeaponWithSP {
                 CellEmitter.get(cell + i).burst(FlameParticle.FACTORY, 5);
                 Char ch = Actor.findChar(cell + i);
                 if (ch != null) {
-                    ch.damage(Random.IntRange(min() * 2, max()), this);
+                    ch.damage(Random.IntRange(skilldmg_min(), skilldmg_max()), this);
                     Buff.affect(ch, Paralysis.class, 1f);
                 }
             }
@@ -196,7 +199,8 @@ public class FlandreSpear extends WeaponWithSP {
         Dungeon.hero.sprite.parent.add(new Beam.LightRay(topright, botleft));
     }
 
+    @Override
     public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, min()*2, max());
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, skilldmg_min(), skilldmg_max());
 	}
 }

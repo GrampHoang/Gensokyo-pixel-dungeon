@@ -65,6 +65,9 @@ public class RemiliaSpear extends WeaponWithSP {
         chargeNeed = 100;
     }
 
+    public int skilldmg_min() { return min()*2; }
+	public int skilldmg_max() { return max();   }
+
     @Override
     public int max(int lvl) {
         return 12 + // 14 base
@@ -110,7 +113,7 @@ public class RemiliaSpear extends WeaponWithSP {
                 Char ch = Actor.findChar(i);
                 if (ch != null) {
                     Buff.affect(ch, Paralysis.class, 1f);
-                    ch.damage(max(), Dungeon.hero);
+                    ch.damage(skilldmg_max(), Dungeon.hero);
 
                     // Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos), 1);
                     Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos, new Callback() {
@@ -150,7 +153,7 @@ public class RemiliaSpear extends WeaponWithSP {
                     CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
                     Char ch = Actor.findChar(i);
                     if (ch != null) {
-                        ch.damage(Random.IntRange(min() * 2, max()), this);
+                        ch.damage(Random.IntRange(skilldmg_min(), skilldmg_max()), this);
                         Buff.affect(ch, Paralysis.class, 2f);
                     }
                 }
@@ -167,7 +170,8 @@ public class RemiliaSpear extends WeaponWithSP {
 
 	};
 
+    @Override
     public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, min()*2, max());
+		return Messages.get(RemiliaSpear.class, "skill_desc", chargeGain, chargeNeed, skilldmg_min(), skilldmg_max());
 	}
 }

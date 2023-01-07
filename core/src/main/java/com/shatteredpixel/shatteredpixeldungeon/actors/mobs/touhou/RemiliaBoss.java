@@ -52,6 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
@@ -187,6 +188,9 @@ public class RemiliaBoss extends Mob {
 			m.die(null);
 		}
 
+		for (int i : Dungeon.level.map){
+			GameScene.add( Blob.seed( i, 1, Freezing.class ) );
+		}
 		Statistics.bossScores[1] += 2000;
 		super.die( cause );
 	}

@@ -100,6 +100,12 @@ public class RemiliaBoss extends Mob {
 	private int levatin_stop_pos = 0;
 	private boolean levatin_throw = false;
 
+
+	private int FIRE_DUR = (isLunatic() ? 30 : 10);
+
+	private int HP_BRACKET = 40;	//every 40 damage the trigger happen
+	private int bracket_count = 1;
+
 	private ArrayList<Integer> levatinCells = new ArrayList<>();
 	@Override
 	protected void onAdd() {
@@ -140,15 +146,20 @@ public class RemiliaBoss extends Mob {
 			return;
 		}
 
-		// cannot be hit through multiple brackets at a time
-		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
-			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
-		}
-
-
-		if (beforeHitHP / hpBracket != HP / hpBracket) {
+		if (HP < HT - HP_BRACKET * bracket_count){
+			bracket_count++;
+			HP = HT - HP_BRACKET * bracket_count;
 			callSakuya(summon_pos[Random.IntRange(0,3)]);
 		}
+		// // cannot be hit through multiple brackets at a time
+		// if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
+		// 	HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
+		// }
+
+
+		// if (beforeHitHP / hpBracket != HP / hpBracket) {
+		// 	callSakuya(summon_pos[Random.IntRange(0,3)]);
+		// }
 	}
 
 	@Override
@@ -188,9 +199,6 @@ public class RemiliaBoss extends Mob {
 			m.die(null);
 		}
 
-		for (int i : Dungeon.level.map){
-			GameScene.add( Blob.seed( i, 1, Freezing.class ) );
-		}
 		Statistics.bossScores[1] += 2000;
 		super.die( cause );
 	}
@@ -382,11 +390,7 @@ public class RemiliaBoss extends Mob {
 		sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(levatin_stop_pos)));
         for (int i :levatinCells){
 			CellEmitter.get(i).start(Speck.factory(Speck.STEAM), 0.07f, 10);
-			if (isLunatic()){
-				GameScene.add(Blob.seed(i, 60, Fire.class));
-			}else {
-				GameScene.add(Blob.seed(i, 10, Fire.class));
-			}
+			GameScene.add(Blob.seed(i, FIRE_DUR, Fire.class));
 			Char ch = Actor.findChar(i);
 			if(ch != null && (!(ch instanceof RemiliaBoss))){
 				Buff.affect(ch, Paralysis.class, 1f);
@@ -403,14 +407,7 @@ public class RemiliaBoss extends Mob {
 		PathFinder.buildDistanceMap( levatin_stop_pos, BArray.not( Dungeon.level.solid, null ), 1 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				// if (Dungeon.level.pit[i])
-				// 	GameScene.add(Blob.seed(i, 1, Fire.class));
-				// else 
-				if (isLunatic())
-					GameScene.add(Blob.seed(i, 60, Fire.class));
-				else{
-					GameScene.add(Blob.seed(i, 10, Fire.class));
-				}
+				GameScene.add(Blob.seed(i, FIRE_DUR, Fire.class));
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 				CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
 				Char ch = Actor.findChar(i);
@@ -444,7 +441,7 @@ public class RemiliaBoss extends Mob {
 	private static final String LEVATIN_CELLS     = "levatin_cells";
 	private static final String LEVATIN_STOP_POS     = "levatin_stop_pos";
 	private static final String LEVATIN_THROW		= "levatin_throw";
-
+	private static final String BRACKET_COUNT		= "bracket_count";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
@@ -452,6 +449,7 @@ public class RemiliaBoss extends Mob {
 		bundle.put( LEVATIN_COOLDOWN, levatin_cd );
 		bundle.put( LEVATIN_STOP_POS, levatin_stop_pos );
 		bundle.put( LEVATIN_THROW, levatin_throw );
+		bundle.put( BRACKET_COUNT, bracket_count );
 
 		int[] bundleArr = new int[levatinCells.size()];
 		for (int i = 0; i < levatinCells.size(); i++){
@@ -466,6 +464,7 @@ public class RemiliaBoss extends Mob {
 		levatin_cd = bundle.getInt( LEVATIN_COOLDOWN );
 		levatin_stop_pos = bundle.getInt( LEVATIN_STOP_POS );
 		levatin_throw = bundle.getBoolean( LEVATIN_THROW );
+		bracket_count = bundle.getInt( BRACKET_COUNT );
 
 		for (int i : bundle.getIntArray(LEVATIN_CELLS)){
 			levatinCells.add(i);

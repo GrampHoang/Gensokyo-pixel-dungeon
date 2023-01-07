@@ -155,7 +155,7 @@ public class YukariBoss extends Mob {
 		if (beforeHitHP / hpBracket != HP / hpBracket) {
 			GameScene.add( Blob.seed( this.pos, 1, SmokeScreen.class ) );
 			GameScene.add( Blob.seed( Dungeon.hero.pos, 1, SmokeScreen.class ) );
-			int telepos = Dungeon.level.randomRespawnCell(this);
+			int telepos = ((YukariBossLevel)Dungeon.level).randomTeleportCell(this);
 			this.sprite.place( telepos );
 			this.move(telepos, false);
 			Dungeon.level.occupyCell(this);
@@ -545,14 +545,13 @@ public class YukariBoss extends Mob {
 			count++;
 			if (Dungeon.hero.buff(Paralysis.class) != null){
 				count--;
-				return true;
 			}
-			if (count == 6){
+			else if (count == 7){
 				detach();
 			}
-			if (count % 2 == 1){
+			else if (count % 2 == 1){
 				for (int i : PathFinder.NEIGHBOURS8){
-					if(Random.IntRange(0,2) == 1) rockPositions.add(target.pos+i);
+					if(Random.IntRange(0,2) == 1 && Dungeon.level.passable[target.pos+i]) rockPositions.add(target.pos+i);
 				}
 				rockPositions.add(target.pos);
 				Dungeon.hero.interrupt();
@@ -563,7 +562,7 @@ public class YukariBoss extends Mob {
 					Char ch = Actor.findChar(i);
 					if (ch != null && !(ch instanceof YukariBoss)){
 						ch.damage(5, this);
-						Buff.affect( ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 3 : 1 );
+						Buff.prolong( ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 3 : 1 );
 						if (ch == Dungeon.hero){
 							Statistics.bossScores[2] -= 100;
 						}

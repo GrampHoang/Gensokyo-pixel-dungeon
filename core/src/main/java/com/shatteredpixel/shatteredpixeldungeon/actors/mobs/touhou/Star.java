@@ -64,7 +64,7 @@ public class Star extends Mob {
 
     public int anger = 0;
 	private int SKILL_COOLDOWN = 18;
-	private int star_cd = 11;
+	private int star_cd = 13;
     private boolean charging_skill = false;
 	
     @Override
@@ -74,11 +74,7 @@ public class Star extends Mob {
 
     @Override
 	public int damageRoll() {
-		if (anger > 0) {
-			return Random.NormalIntRange( 4*(anger+1), 8*(anger+1) );
-		} else {
-			return Random.NormalIntRange( 4,  8);
-		}
+		return Random.NormalIntRange( 2*(anger+1), 4*(anger+1) );
 	}
 
 	@Override

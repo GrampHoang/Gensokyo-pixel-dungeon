@@ -71,7 +71,7 @@ public class Sunny extends Mob {
 
     public int anger = 0;
 	private int SKILL_COOLDOWN = 18;
-	private int sun_cd = 6;
+	private int sun_cd = 7;
     private boolean charging_skill = false;
 	private int aim = 1;
 	
@@ -83,11 +83,7 @@ public class Sunny extends Mob {
 	//Sunny deal more damage
     @Override
 	public int damageRoll() {
-		if (anger > 0) {
-			return Random.NormalIntRange( 4*(anger+1), 8*(anger+1) );
-		} else {
-			return Random.NormalIntRange( 4,  8);
-		}
+		return Random.NormalIntRange( 3*(anger+1), 6*(anger+1) );
 	}
 
 	@Override
@@ -320,7 +316,7 @@ public class Sunny extends Mob {
 	
 	private void throwRock(){
 		Dungeon.hero.interrupt();
-		Char ch = this;
+		// Char ch = this;
             ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
             reset( this.pos, Dungeon.hero.pos, new Bullet(), new Callback() {
                 @Override

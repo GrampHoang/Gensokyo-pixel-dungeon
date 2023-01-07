@@ -75,11 +75,7 @@ public class Luna extends Mob {
 
     @Override
 	public int damageRoll() {
-		if (anger > 0) {
-			return Random.NormalIntRange( 3*(anger+1), 6*(anger+1) );
-		} else {
-			return Random.NormalIntRange( 3,  6);
-		}
+		return Random.NormalIntRange( 2*(anger+1), 4*(anger+1) );
 	}
 
 	@Override

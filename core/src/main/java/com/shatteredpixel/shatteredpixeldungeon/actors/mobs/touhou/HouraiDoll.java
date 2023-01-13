@@ -22,13 +22,18 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WarlockSprite;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Random;
 
 public class HouraiDoll extends Mob {
@@ -40,11 +45,7 @@ public class HouraiDoll extends Mob {
 		defenseSkill = 15;
 	}
 	
-	
-	@Override
-	public int attackSkill( Char target ) {
-		return 30;
-	}
+	private static final float SPAWN_DELAY	= 2f;
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
@@ -53,7 +54,24 @@ public class HouraiDoll extends Mob {
 	}
 
 	@Override
+	public int damageRoll() {
+		return Random.NormalIntRange( 5, 8 );
+	}
+	
+	@Override
+	public int attackSkill( Char target ) {
+		return 18;
+	}
+	
+	@Override
+	public int drRoll() {
+		return Random.NormalIntRange(0, 6);
+	}
+
+
+	@Override
 	public int attackProc( Char enemy, int damage ) {
+		sprite.parent.add(new Beam.YoumuSlash(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(enemy.pos)));
 		damage = super.attackProc( enemy, damage );
         switch(Random.IntRange(1,4)){
             case 1:
@@ -90,5 +108,37 @@ public class HouraiDoll extends Mob {
 		super.die( cause );
 	}
 
+	public static HouraiDoll spawnAt( int pos ) {
+		if ((!Dungeon.level.solid[pos] || Dungeon.level.passable[pos]) && Actor.findChar( pos ) == null) {
+			
+			HouraiDoll w = new HouraiDoll();
+			w.pos = pos;
+			w.state = w.HUNTING;
+			GameScene.add( w, SPAWN_DELAY );
+			Dungeon.level.occupyCell(w);
+
+			w.sprite.alpha( 0 );
+			w.sprite.parent.add( new AlphaTweener( w.sprite, 1, 0.5f ) );
+			
+			// w.sprite.emitter().burst( ShadowParticle.CURSE, 5 );
+			
+			return w;
+		} else {
+			return null;
+		}
+	}
+
+	public class HouraiDollMob extends HouraiDoll {
+		{
+			spriteClass = WarlockSprite.class;
+			HP = HT = 35;
+			defenseSkill = 15;
+			
+			EXP = 0;
+			maxLvl = 0;
+		
+			lootChance = 0;
+		}
+	}
 }
 

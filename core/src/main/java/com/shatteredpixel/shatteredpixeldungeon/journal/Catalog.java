@@ -44,6 +44,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
+
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
+
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHaste;
@@ -136,7 +139,8 @@ public enum Catalog {
 	RINGS,
 	ARTIFACTS,
 	POTIONS,
-	SCROLLS;
+	SCROLLS,
+	ENCOUNTERS;
 	
 	private LinkedHashMap<Class<? extends Item>, Boolean> seen = new LinkedHashMap<>();
 	
@@ -298,6 +302,8 @@ public enum Catalog {
 		SCROLLS.seen.put( ScrollOfRage.class,               false);
 		SCROLLS.seen.put( ScrollOfRetribution.class,        false);
 		SCROLLS.seen.put( ScrollOfTransmutation.class,      false);
+
+		ENCOUNTERS.seen.put( SuikaEnc.class,     			 false);
 	}
 	
 	public static LinkedHashMap<Catalog, Badges.Badge> catalogBadges = new LinkedHashMap<>();

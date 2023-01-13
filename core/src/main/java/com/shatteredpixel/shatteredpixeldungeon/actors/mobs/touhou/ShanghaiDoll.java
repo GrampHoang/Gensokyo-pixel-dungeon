@@ -21,11 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MonkSprite;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.utils.Random;
 
 public class ShanghaiDoll extends Mob {
@@ -37,22 +41,24 @@ public class ShanghaiDoll extends Mob {
 		defenseSkill = 30;
 	
 	}
+
+	private static final float SPAWN_DELAY	= 2f;
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 8, 10 );
+		return Random.NormalIntRange( 4, 6 );
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 10;
+		return 18;
 	}
 	
     @Override
 	public int attackProc( Char enemy, int damage ) {
 	    damage = super.attackProc( enemy, damage );
-        Buff.affect(enemy, Cripple.class, 2f);
-        Buff.affect(enemy, Bleeding.class).set(3f);
+        Buff.affect(enemy, Cripple.class, 1f);
+        Buff.affect(enemy, Bleeding.class).set(2f);
         return damage;
     }
 
@@ -60,4 +66,38 @@ public class ShanghaiDoll extends Mob {
 	public int drRoll() {
 		return Random.NormalIntRange(0, 2);
 	}
+
+	public static ShanghaiDoll spawnAt( int pos ) {
+		if ((!Dungeon.level.solid[pos] || Dungeon.level.passable[pos]) && Actor.findChar( pos ) == null) {
+			
+			ShanghaiDoll w = new ShanghaiDoll();
+			w.pos = pos;
+			w.state = w.HUNTING;
+			GameScene.add( w, SPAWN_DELAY );
+			Dungeon.level.occupyCell(w);
+
+			w.sprite.alpha( 0 );
+			w.sprite.parent.add( new AlphaTweener( w.sprite, 1, 0.5f ) );
+			
+			// w.sprite.emitter().burst( ShadowParticle.CURSE, 5 );
+			
+			return w;
+		} else {
+			return null;
+		}
+	}
+
+	public class ShanghaiDollMob extends ShanghaiDoll {
+		{
+			spriteClass = MonkSprite.class;
+			HP = HT = 45;
+			defenseSkill = 16;
+			
+			EXP = 0;
+			maxLvl = 0;
+		
+			lootChance = 0;
+		}
+	}
+
 }

@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.ShanghaiDoll;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.HouraiDoll;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -60,7 +62,7 @@ public class Alice extends Mob {
 	}
 
 	private float SUMMON_CD = 30f;
-    private float summon_cd = SUMMON_CD;
+    private float summon_cd = 5f;
 
 	@Override
 	public int damageRoll() {
@@ -117,13 +119,24 @@ public class Alice extends Mob {
 		return super.act();
 	}
     protected void summonDolls(){
-        summon_cd = 15;
+        summon_cd = SUMMON_CD;
+		boolean hourai_not_spawned = true;
+		boolean shanghai_not_spawned = true;
         for (int c : PathFinder.NEIGHBOURS8) {
             if (Actor.findChar(this.pos + c) == null
 						&& Dungeon.level.passable[this.pos + c]
 						&& (Dungeon.level.openSpace[this.pos + c] || !hasProp(Actor.findChar(this.pos), Property.LARGE))){
-            Wraith wraith = Wraith.spawnAt(this.pos + c);
-		    Dungeon.level.occupyCell( wraith );
+				if (hourai_not_spawned){
+					HouraiDoll hourai = HouraiDoll.spawnAt(this.pos + c);
+					Dungeon.level.occupyCell( hourai );
+					hourai_not_spawned = false;
+				} else if (shanghai_not_spawned){
+					ShanghaiDoll shanghai = ShanghaiDoll.spawnAt(this.pos + c);
+					Dungeon.level.occupyCell( shanghai );
+					shanghai_not_spawned = false;
+				} else{
+					break;
+				}
             }
         }
     }

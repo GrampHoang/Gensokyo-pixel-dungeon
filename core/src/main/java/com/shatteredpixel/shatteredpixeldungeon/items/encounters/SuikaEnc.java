@@ -1,0 +1,21 @@
+package com.shatteredpixel.shatteredpixeldungeon.items.encounters;
+
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.noosa.audio.Sample;
+
+public class SuikaEnc extends EncounterNotes {
+    {
+		image = ItemSpriteSheet.VIAL;
+	}
+
+    // @Override
+	// public final boolean doPickUp(Hero hero, int pos) {
+    //     super.doPickUp(hero, pos);
+	// 	return true;
+	// }
+
+}

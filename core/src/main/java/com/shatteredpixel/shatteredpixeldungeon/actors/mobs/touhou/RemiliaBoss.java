@@ -143,6 +143,7 @@ public class RemiliaBoss extends Mob {
 		dmg = beforeHitHP - HP;
 
 		if(HP <= 0){
+			die(src);
 			return;
 		}
 

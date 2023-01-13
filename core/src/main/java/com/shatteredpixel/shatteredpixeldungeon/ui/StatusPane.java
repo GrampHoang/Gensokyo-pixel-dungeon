@@ -41,9 +41,11 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
+import com.watabou.noosa.RenderedText;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.ColorMath;
+import com.watabou.utils.getBGM;
 
 import java.util.ArrayList;
 
@@ -81,6 +83,8 @@ public class StatusPane extends Component {
 	private static String asset = Assets.Interfaces.STATUS;
 
 	private boolean large;
+
+	private BitmapText curBGM;
 
 	public StatusPane( boolean large ){
 		super();
@@ -134,6 +138,10 @@ public class StatusPane extends Component {
 		hpText = new BitmapText(PixelScene.pixelFont);
 		hpText.alpha(0.6f);
 		add(hpText);
+
+		curBGM = new BitmapText(PixelScene.pixelFont);
+		curBGM.alpha(0.8f);
+		add(curBGM);
 
 		heroInfoOnBar = new Button(){
 			@Override
@@ -201,6 +209,12 @@ public class StatusPane extends Component {
 			hpText.y = hp.y + 1;
 			PixelScene.align(hpText);
 
+			curBGM.scale.set(PixelScene.align(0.5f));
+			curBGM.x = 3;
+			curBGM.y = 4;
+			curBGM.y -= 0.001f; //prefer to be slightly higher
+			PixelScene.align(curBGM);
+			
 			expText.x = exp.x + (128 - expText.width())/2f;
 			expText.y = exp.y;
 			PixelScene.align(expText);
@@ -225,6 +239,12 @@ public class StatusPane extends Component {
 			PixelScene.align(hpText);
 
 			heroInfoOnBar.setRect(heroInfo.right(), y, 50, 9);
+
+			curBGM.scale.set(PixelScene.align(0.5f));
+			curBGM.x = 3;
+			curBGM.y = heroInfo.bottom() + 5;
+			curBGM.y -= 0.001f; //prefer to be slightly higher
+			PixelScene.align(curBGM);
 
 			buffs.setPos( x + 31, y + 9 );
 
@@ -272,6 +292,15 @@ public class StatusPane extends Component {
 		} else {
 			hpText.text(health + "+" + shield +  "/" + max);
 		}
+		if (large) {
+			curBGM.scale.y = 1.5f;
+			curBGM.scale.x = 1.5f;
+		} else {
+			curBGM.scale.y = 1.2f;
+			curBGM.scale.x = 1.2f;
+		} 
+
+		curBGM.text(getBGM.getDepth(Dungeon.branch, Dungeon.depth));
 
 		if (large) {
 			exp.scale.x = (128 / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();

@@ -107,16 +107,18 @@ public enum HeroClass {
 	public void initHero( Hero hero ) {
 
 	// {
-		hero.lvl = 99;
-		hero.HT = 99*5;
 		GhostBlade we = new GhostBlade();
 		we.level(21);
 		we.collect();
 
+		// hero.lvl = 99;
+		// hero.HT = 99*5;
+		
+
 		ScrollOfDebug sod = new ScrollOfDebug();
 		sod.quantity(69).collect();
 
-		Buff.affect(hero, MagicalSight.class, 9999f);
+		// Buff.affect(hero, MagicalSight.class, 9999f);
 		// RingOfMight ring = new RingOfMight();
 		// ring.level(99);
 		// ring.doEquip(hero);

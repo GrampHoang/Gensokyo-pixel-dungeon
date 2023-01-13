@@ -592,7 +592,7 @@ public class WndJournal extends WndTabbed {
 	private static class CatalogTab extends Component{
 		
 		private RedButton[] itemButtons;
-		private static final int NUM_BUTTONS = 7;
+		private static final int NUM_BUTTONS = 8;
 		
 		private static int currentItemIdx   = 0;
 		
@@ -604,8 +604,9 @@ public class WndJournal extends WndTabbed {
 		private static final int ARTIF_IDX  = 4;
 		private static final int POTION_IDX = 5;
 		private static final int SCROLL_IDX = 6;
+		private static final int ENCOUNTER_IDX = 7;
 		
-		private static final int spriteIndexes[] = {1, 2, 4, 5, 6, 9, 11};
+		private static final int spriteIndexes[] = {1, 2, 4, 5, 6, 9, 11, 0};
 		
 		private ScrollPane list;
 		
@@ -696,6 +697,9 @@ public class WndJournal extends WndTabbed {
 				for (Class<? extends Item> cls : itemClasses) known.put(cls, Potion.getKnown().contains(cls));
 			} else if (currentItemIdx == SCROLL_IDX) {
 				itemClasses = new ArrayList<>(Catalog.SCROLLS.items());
+				for (Class<? extends Item> cls : itemClasses) known.put(cls, Scroll.getKnown().contains(cls));
+			} else if (currentItemIdx == ENCOUNTER_IDX) {
+				itemClasses = new ArrayList<>(Catalog.ENCOUNTERS.items());
 				for (Class<? extends Item> cls : itemClasses) known.put(cls, Scroll.getKnown().contains(cls));
 			} else {
 				itemClasses = new ArrayList<>();

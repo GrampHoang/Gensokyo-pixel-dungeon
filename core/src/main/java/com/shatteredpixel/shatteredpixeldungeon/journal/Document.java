@@ -32,8 +32,9 @@ import java.util.LinkedHashMap;
 public enum Document {
 	
 	ADVENTURERS_GUIDE(ItemSpriteSheet.GUIDE_PAGE),
-	ALCHEMY_GUIDE(ItemSpriteSheet.ALCH_PAGE);
-	
+	ALCHEMY_GUIDE(ItemSpriteSheet.ALCH_PAGE),
+	ENCOUNTER(ItemSpriteSheet.GUIDE_PAGE);
+
 	Document( int sprite ){
 		pageSprite = sprite;
 	}
@@ -133,6 +134,7 @@ public enum Document {
 	public static final String GUIDE_DIEING         = "Dieing";
 	public static final String GUIDE_SEARCHING      = "Searching";
 
+	public static final String SUIKA      			= "Suika";
 	//pages and default states
 	static {
 		boolean debug = DeviceCompat.isDebug();
@@ -164,6 +166,9 @@ public enum Document {
 		ALCHEMY_GUIDE.pagesStates.put("Catalysts",            debug ? READ : NOT_FOUND);
 		ALCHEMY_GUIDE.pagesStates.put("Brews_Elixirs",        debug ? READ : NOT_FOUND);
 		ALCHEMY_GUIDE.pagesStates.put("Spells",               debug ? READ : NOT_FOUND);
+
+		ENCOUNTER.pagesStates.put(SUIKA,					   debug ? READ : NOT_FOUND);
+		//ENCOUNTER.pagesStates.put("", debug ? READ : NOT_FOUND);
 	}
 	
 	private static final String DOCUMENTS = "documents";

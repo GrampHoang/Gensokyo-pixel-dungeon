@@ -105,7 +105,8 @@ public class Suika extends NPC {
 			}
 			
 		} else {
-			tell(Messages.get(this, "quest_1"));
+			if (Document.ENCOUNTER.isPageFound(Document.SUIKA)) tell(Messages.get(this, "quest_1"));
+			else tell(Messages.get(this, "quest_1_firsttime"));
 			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.SUIKA );
@@ -184,7 +185,7 @@ public class Suika extends NPC {
 		}
 		
 		public static void spawn( ForestLevel level ) {
-			if (!spawned && Dungeon.depth > 1 && Random.Int( 5 - Dungeon.depth ) == 0) {
+			if (!spawned && Dungeon.depth > 1 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
 				Suika npc = new Suika();
 				do {

@@ -368,7 +368,8 @@ public class Dungeon {
 					level = new ShrineLevel();
 					break;
 				case 15:
-					level = new YukariBossLevel();
+					// level = new YukariBossLevel();
+					level = new CavesBossLevel();
 					break;
 				case 16:
 				case 17:

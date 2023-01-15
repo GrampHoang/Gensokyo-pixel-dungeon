@@ -27,13 +27,13 @@ import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WoodStick;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.FairySprite;
 
 import com.watabou.utils.Random;
 
 public class Fairy extends Mob {
 	{
-		spriteClass = ElementalSprite.Chaos.class;
+		spriteClass = FairySprite.class;
 		HP = HT = 6;
 		defenseSkill = 3;
 		maxLvl = 5;

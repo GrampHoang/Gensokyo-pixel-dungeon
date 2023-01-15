@@ -242,7 +242,7 @@ public class StatusPane extends Component {
 
 			curBGM.scale.set(PixelScene.align(0.5f));
 			curBGM.x = 3;
-			curBGM.y = heroInfo.bottom() + 5;
+			curBGM.y = heroInfo.bottom() + 16;
 			curBGM.y -= 0.001f; //prefer to be slightly higher
 			PixelScene.align(curBGM);
 

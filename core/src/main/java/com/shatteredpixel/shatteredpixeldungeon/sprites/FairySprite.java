@@ -24,27 +24,28 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
 
-public class DaiyoseiSprite extends MobSprite {
-	
-	public DaiyoseiSprite() {
+public class FairySprite extends MobSprite {
+
+	public FairySprite() {
 		super();
 		
-		texture( Assets.Sprites.DAIYOSEI );
+		texture( Assets.Sprites.RAT );
 		
-		TextureFilm frames = new TextureFilm( texture, 13, 16 );
+		TextureFilm frames = new TextureFilm( texture, 16, 15 );	// 15 16
 		
-		idle = new Animation( 5, true );
+		idle = new Animation( 1, true );
 		idle.frames( frames, 0, 1 );
 		
-		run = new Animation( 10, true );
+		run = new Animation( 12, false );
 		run.frames( frames, 0, 1 );
 
-		attack = new Animation( 10, false );
-		attack.frames( frames, 0, 2, 3 );
-
-		die = new Animation( 8, false );
-		die.frames( frames, 0, 4, 5, 6, 7 );
+		attack = new Animation( 24, false );
+		attack.frames( frames, 0, 1 );
 		
-		play( idle );
+		die = new Animation( 10, false );
+		die.frames( frames, 0, 1 );
+		
+		play(idle);
 	}
+
 }

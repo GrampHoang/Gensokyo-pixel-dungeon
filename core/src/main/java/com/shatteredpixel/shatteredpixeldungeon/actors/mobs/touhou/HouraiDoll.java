@@ -40,9 +40,16 @@ public class HouraiDoll extends Mob {
 	
 	{
 		spriteClass = WarlockSprite.class;
-		
-		HP = HT = 90;
+		HP = HT = 35;
 		defenseSkill = 15;
+		
+		EXP = 0;
+		maxLvl = 0;
+	
+		lootChance = 0;
+
+		// HP = HT = 90;
+		// defenseSkill = 15;
 	}
 	
 	private static final float SPAWN_DELAY	= 2f;

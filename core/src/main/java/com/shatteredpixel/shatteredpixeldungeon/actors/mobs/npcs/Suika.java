@@ -82,7 +82,7 @@ public class Suika extends NPC {
 
 		if (Quest.given) {
 			PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
-			if (poh != null && (poh.quantity() >= 2)) {
+			if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
@@ -185,7 +185,8 @@ public class Suika extends NPC {
 		}
 		
 		public static void spawn( ForestLevel level ) {
-			if (!spawned && Dungeon.depth > 1 && Random.Int( 4 - Dungeon.depth ) == 0) {
+			//TODO Dungeon.depth > 99 to disable her spawn
+			if (!spawned && Dungeon.depth > 99 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
 				Suika npc = new Suika();
 				do {

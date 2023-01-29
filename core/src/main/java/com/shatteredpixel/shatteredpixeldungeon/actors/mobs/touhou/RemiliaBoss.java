@@ -64,7 +64,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-
+import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,6 +79,7 @@ public class RemiliaBoss extends Mob {
 
 		defenseSkill = 15;
         flying = true;
+		baseSpeed = 1.25f;
 		EXP = 20;
 
 		state = WANDERING;
@@ -230,6 +231,13 @@ public class RemiliaBoss extends Mob {
 		}
 	}
 
+	@Override
+	public void notice() {
+		super.notice();
+		if (!BossHealthBar.isAssigned()) {
+			BossHealthBar.assignBoss(this);
+		}
+	}
 
 	public void callSakuya(int summonPos) {
 		//Make sure mid map is empty
@@ -425,6 +433,7 @@ public class RemiliaBoss extends Mob {
 	//Just sfx, you will still see her through smoke and invis
 	public void releaseSmoke(){
 		Buff.affect(this, Invisibility.class, 5f);
+		Buff.affect(this, Roots.class, 5f);
 		Sample.INSTANCE.play( Assets.Sounds.GAS );
 		int centerVolume = 25;
 		for (int i : PathFinder.NEIGHBOURS8){
@@ -466,7 +475,7 @@ public class RemiliaBoss extends Mob {
 		levatin_stop_pos = bundle.getInt( LEVATIN_STOP_POS );
 		levatin_throw = bundle.getBoolean( LEVATIN_THROW );
 		bracket_count = bundle.getInt( BRACKET_COUNT );
-
+		BossHealthBar.assignBoss(this);
 		for (int i : bundle.getIntArray(LEVATIN_CELLS)){
 			levatinCells.add(i);
 		}
@@ -494,7 +503,7 @@ public class RemiliaBoss extends Mob {
 		}
 
 		private void deliverCake(int remPos){
-			// beckon(remPos);
+			beckon(remPos);
 			// beckon make it a bit too hard so disable this for now
 		}
 

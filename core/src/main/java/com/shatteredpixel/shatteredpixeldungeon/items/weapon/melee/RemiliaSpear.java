@@ -61,12 +61,12 @@ public class RemiliaSpear extends WeaponWithSP {
         ACC = 99f; // lots of boost to accuracy
         RCH = 2; // extra reach
 
-        chargeGain = 2;
+        chargeGain = 3;
         chargeNeed = 100;
     }
 
-    public int skilldmg_min() { return min()*2; }
-	public int skilldmg_max() { return max();   }
+    public int skilldmg_min() { return max(); }
+	public int skilldmg_max() { return max()*2;   }
 
     @Override
     public int max(int lvl) {

@@ -74,7 +74,7 @@ public class Mystia extends Mob {
 	@Override
 	public int attackProc(Char enemy, int damage) {
 		this.buff(SingCounter.class).countUp(1);
-		if(this.buff(SingCounter.class).count() > (isLunatic() ? 1 : 2) && this.alignment != Alignment.ALLY){
+		if(this.buff(SingCounter.class).count() > (isLunatic() ? 2 : 3) && this.alignment != Alignment.ALLY){
 			sing(0);
 			this.buff(SingCounter.class).countDown(5);
 		}

@@ -36,9 +36,17 @@ public class ShanghaiDoll extends Mob {
 	
 	{
 		spriteClass = MonkSprite.class;
+
+		HP = HT = 45;
+		defenseSkill = 16;
 		
-		HP = HT = 120;
-		defenseSkill = 30;
+		EXP = 0;
+		maxLvl = 0;
+	
+		lootChance = 0;
+		
+		// HP = HT = 120;
+		// defenseSkill = 30;
 	
 	}
 
@@ -98,6 +106,7 @@ public class ShanghaiDoll extends Mob {
 		
 			lootChance = 0;
 		}
+	
 	}
 
 }

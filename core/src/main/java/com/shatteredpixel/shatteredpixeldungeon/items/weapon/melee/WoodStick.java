@@ -1,5 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Crab;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Slime;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Goo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -24,7 +27,7 @@ public class WoodStick extends MeleeWeapon {
 
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-        if (defender.properties().contains(Char.Property.FAIRY)){
+        if (defender.properties().contains(Char.Property.FAIRY) || defender instanceof Crab || defender instanceof Slime || defender instanceof Goo){
             damage += 5;
         }
         return super.proc(attacker, defender, damage);

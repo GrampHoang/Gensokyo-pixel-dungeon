@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -110,6 +111,7 @@ public class Ran extends Mob {
 		CellEmitter.get(enemy.pos).burst(SmokeParticle.FACTORY, 4);
 		Buff.prolong( enemy, Hex.class, 12f );
 		Buff.prolong( enemy, Vulnerable.class, 12f );
+		Dungeon.hero.sprite.parent.add(new Beam.Gust(this.sprite.center(), enemy.sprite.center()));
 		// if (Dungeon.level.adjacent( pos, enemy.pos )) {
 			
 			// return super.doAttack( enemy );

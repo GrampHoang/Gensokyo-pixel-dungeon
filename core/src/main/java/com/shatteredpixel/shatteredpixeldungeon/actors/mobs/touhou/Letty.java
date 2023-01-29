@@ -103,7 +103,7 @@ public class Letty extends Mob {
 					//avoid items and allies
 					Char ch = Actor.findChar(i);
 					Heap heap = Dungeon.level.heaps.get(i);
-					if(heap == null || (ch != null && ch.alignment != this.alignment)){
+					if( !(heap != null && (ch != null && (ch.alignment == this.alignment || ch.alignment == Alignment.NEUTRAL)))){
 						GameScene.add(Blob.seed(i, 2, Freezing.class));
 					}
 				}

@@ -72,7 +72,7 @@ public class Wriggle extends Mob {
 	
 	@Override
 	public void damage(int dmg, Object src) {
-		if(surprisedBy(Dungeon.hero)){
+		if(surprisedBy(Dungeon.hero) && (!isLunatic())){
 			dmg = Math.round(dmg*1.5f);
 		}
 		super.damage(dmg, src);

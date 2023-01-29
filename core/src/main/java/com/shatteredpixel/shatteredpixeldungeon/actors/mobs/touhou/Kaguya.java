@@ -92,7 +92,7 @@ public class Kaguya extends Mob {
 	}
 	
 	//used so resistances can differentiate between melee and magical attacks
-	public static class EirinBolt{}
+	public static class KaguyaBolt{}
 	
 	private void zap() {
 		spend( 1f );
@@ -129,7 +129,7 @@ public class Kaguya extends Mob {
 			
 			int dmg = Random.NormalIntRange( 20, 30 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-			enemy.damage( dmg, new EirinBolt() );
+			enemy.damage( dmg, new KaguyaBolt() );
 			
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
 				Badges.validateDeathFromEnemyMagic();

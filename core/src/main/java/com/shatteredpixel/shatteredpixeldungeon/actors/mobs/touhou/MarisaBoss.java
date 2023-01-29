@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaBossSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -66,7 +67,7 @@ public class MarisaBoss extends Mob {
 	{
 		spriteClass = MarisaBossSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 325 : 250;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 500 : 375;
 
 		defenseSkill = 20;
 
@@ -77,6 +78,7 @@ public class MarisaBoss extends Mob {
 		viewDistance = 20;
 
 		properties.add(Property.BOSS);
+		if(Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) immunities.add(Fire.class);
 		immunities.add(Paralysis.class);
 		immunities.add( Slow.class );
 	}
@@ -88,6 +90,8 @@ public class MarisaBoss extends Mob {
 	private int dash_cd = DASH_CD - 3;
 	private int masterspark_cd = MS_CD - 3;
 	private int phase = 1;
+
+	private int count_before_tele = 0;
 
 	private int summonpos1 = 479; 
 	private int summonpos2 = 481; //left + right of entrance
@@ -151,13 +155,26 @@ public class MarisaBoss extends Mob {
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
+
+		//Use hero for now, it will be janky if we just allies
+		Ballistica attack = new Ballistica( pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
+		if (attack.collisionPos != Dungeon.hero.pos){	
+			count_before_tele++;
+		} else {
+			count_before_tele = 0;
+		}
+
 		
+		if (count_before_tele > 3){
+			toSafety();
+		}
 		int hpBracket = HT / 3;
 		
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
 		if (phase == 1 && HP < HT*2/3){
+			toSafety();
 			callPachouli();
 			phase++;
 			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
@@ -166,6 +183,7 @@ public class MarisaBoss extends Mob {
 		}
 
 		if (phase == 2 && HP < HT*1/3){
+			toSafety();
 			callAlice();
 			phase++;
 			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
@@ -180,6 +198,14 @@ public class MarisaBoss extends Mob {
 		// if (beforeHitHP / hpBracket != HP / hpBracket) {
 		// 	shootTheFloor();
 		// }
+	}
+
+	public void toSafety(){
+		int telepos = Dungeon.level.randomRespawnCell(this);
+		this.sprite.place( telepos );
+		this.move(telepos, false);
+		if (masterspark_cd > 5) masterspark_cd = 5;
+		Dungeon.level.occupyCell(this);
 	}
 
 	@Override
@@ -233,6 +259,14 @@ public class MarisaBoss extends Mob {
 		return damage;
 	}
 
+	@Override
+	public void notice() {
+		super.notice();
+		if (!BossHealthBar.isAssigned()) {
+			BossHealthBar.assignBoss(this);
+		}
+	}
+	
 	// public void shootTheFloor() {
 	// 	damage = super.attackProc(enemy, damage);
 	// 	if (hero instanceof Hero) {
@@ -545,7 +579,7 @@ public class MarisaBoss extends Mob {
 	private static final String CHARING_SKILL     = "charging_skill";
 	private static final String STOP_CELL     = "stop_Cell";
 	private static final String MARISA_PHASE     = "marisa_phase";
-
+	private static final String TELE_COUNT     = "telecount";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
@@ -555,6 +589,7 @@ public class MarisaBoss extends Mob {
 		bundle.put( MS_COOLDOWN, masterspark_cd );
 		bundle.put( STOP_CELL, stopCell);
 		bundle.put( MARISA_PHASE, phase);
+		bundle.put( TELE_COUNT, count_before_tele);
 		int[] bundleArr = new int[targetedCells_MS.size()];
 		for (int i = 0; i < targetedCells_MS.size(); i++){
 			bundleArr[i] = targetedCells_MS.get(i);
@@ -577,11 +612,14 @@ public class MarisaBoss extends Mob {
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
+		BossHealthBar.assignBoss(this);
 		charging_skill = bundle.getBoolean( CHARING_SKILL );
 		dash_cd = bundle.getInt( DASH_COOLDOWN );
 		masterspark_cd = bundle.getInt( MS_COOLDOWN );
 		stopCell = bundle.getInt( STOP_CELL);
 		phase = bundle.getInt(MARISA_PHASE);
+		count_before_tele = bundle.getInt(TELE_COUNT);
+
 		for (int i : bundle.getIntArray(DASH_TARGETED_CELLS)){
 			targetedCells_MS.add(i);
 		}

@@ -32,8 +32,22 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.FairySprite;
 import com.watabou.utils.Random;
 
 public class Fairy extends Mob {
-	{
-		spriteClass = FairySprite.class;
+	{	
+		switch( Random.IntRange(0, 2) ){
+			// case 0:
+			// 	spriteClass = FairySprite.Blue.class;
+			// 	break;
+			// case 1:
+			// 	spriteClass = FairySprite.Red.class;
+			// 	break;
+			// case 2:
+			// 	spriteClass = FairySprite.Yellow.class;
+			// 	break;
+			default:
+				spriteClass = FairySprite.Blue.class;
+				break;
+		}
+		
 		HP = HT = 6;
 		defenseSkill = 3;
 		maxLvl = 5;

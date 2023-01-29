@@ -22,30 +22,103 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.particles.Emitter;
 
-public class FairySprite extends MobSprite {
+public abstract class FairySprite extends MobSprite {
+
+	protected abstract int texOffset();
+	
+	private Emitter particles;
 
 	public FairySprite() {
 		super();
 		
-		texture( Assets.Sprites.RAT );
+		int c = texOffset();
+
+		texture( Assets.Sprites.FAIRY );
 		
-		TextureFilm frames = new TextureFilm( texture, 16, 15 );	// 15 16
+		TextureFilm frames = new TextureFilm( texture, 13, 14 );	// 13 14
 		
 		idle = new Animation( 1, true );
-		idle.frames( frames, 0, 1 );
+		idle.frames( frames, c+0, c+1 );
 		
-		run = new Animation( 12, false );
-		run.frames( frames, 0, 1 );
+		run = new Animation( 1, true );
+		run.frames( frames, c+0, c+1 );
 
-		attack = new Animation( 24, false );
-		attack.frames( frames, 0, 1 );
+		attack = new Animation( 8, false );
+		attack.frames( frames, c+0, c+1);
 		
 		die = new Animation( 10, false );
-		die.frames( frames, 0, 1 );
+		die.frames( frames, c+0, c+1 );
 		
 		play(idle);
 	}
+
+	protected Emitter createEmitter() {
+		Emitter emitter = emitter();
+		emitter.pour( MagicMissile.MagicParticle.FACTORY, 0.2f );
+		return emitter;
+	}
+	
+	@Override
+	public void link( Char ch ) {
+		super.link( ch );
+		
+		if (particles == null) {
+			particles = createEmitter();
+		}
+	}
+	@Override
+	public void update() {
+		super.update();
+		
+		if (particles != null){
+			particles.visible = visible;
+		}
+	}
+	
+	@Override
+	public void die() {
+		super.die();
+		if (particles != null){
+			particles.on = false;
+		}
+	}
+	
+	@Override
+	public void kill() {
+		super.kill();
+		if (particles != null){
+			particles.killAndErase();
+		}
+	}
+
+	public static class Blue extends FairySprite{
+
+		@Override
+		protected int texOffset() {
+			return 0;
+		}
+	}
+
+	public static class Red extends FairySprite{
+
+		@Override
+		protected int texOffset() {
+			return 3;
+		}
+	}
+
+	public static class Yellow extends FairySprite{
+
+		@Override
+		protected int texOffset() {
+			return 6;
+		}
+	}
+
 
 }

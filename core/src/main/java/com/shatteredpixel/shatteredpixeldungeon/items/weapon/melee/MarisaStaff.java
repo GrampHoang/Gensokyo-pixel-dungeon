@@ -64,7 +64,7 @@ public class MarisaStaff extends MeleeWeapon {
 
 	@Override
 	public int max(int lvl) {
-		return  Math.round(3f*(tier+1)) +   //6 base damage
+		return  Math.round(4f*(tier+1)) +   //8 base damage
 				lvl*(tier+2);               //scaling slightly better
 	}
 

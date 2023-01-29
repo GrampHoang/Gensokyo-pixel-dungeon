@@ -187,8 +187,8 @@ public class Star extends Mob {
 		if (Statistics.qualifiedForBossChallengeBadge){
 			Badges.validateBossChallengeCompleted();
 		}
-		Statistics.bossScores[0] += 350; //Goo has a 50 point gimme
-		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
+		// Statistics.bossScores[0] += 350; //Goo has a 50 point gimme
+		// Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
 
         super.die( cause );
 	}

@@ -438,7 +438,7 @@ public class Dungeon {
 	}
 	
 	public static boolean shopOnLevel() {
-		return depth == 6 || depth == 11 || depth == 16;
+		return depth == 6 || depth == 11 || depth == 16 || (depth == 21 && Dungeon.isChallenged(Challenges.LUNATIC));
 	}
 	
 	public static boolean bossLevel() {

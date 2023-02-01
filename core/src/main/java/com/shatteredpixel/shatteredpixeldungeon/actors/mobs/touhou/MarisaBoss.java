@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -635,5 +634,14 @@ public class MarisaBoss extends Mob {
 		for (int i : bundle.getIntArray(DASH_TARGETED_CELLS)){
 			targetedCells.add(i);
 		}
+	}
+
+	@Override
+	public String description() {
+		String descript = super.description();
+		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
+			descript = descript + "\n\n_Badder Bosses:\n" + Messages.get(this, "stronger_bosses");
+		}
+		return descript;
 	}
 }

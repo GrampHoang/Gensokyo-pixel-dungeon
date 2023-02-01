@@ -30,7 +30,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CirnoSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Icecream;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.CirnoIcecream;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -126,5 +125,18 @@ public class Cirno extends Mob {
 			Dungeon.level.drop( new CirnoIcecream(), pos ).sprite.drop();
 		}
 		super.die(cause);
+	}
+
+	protected boolean canGetFurther( int target ) {
+		if (rooted || target == pos) {
+			return false;
+		}
+		
+		int step = Dungeon.flee( this, target, Dungeon.level.passable, fieldOfView, true );
+		if (step != -1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

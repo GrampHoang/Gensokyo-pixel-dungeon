@@ -558,7 +558,8 @@ public class ScrollOfDebug extends Scroll {
 
                     if (connection instanceof JarURLConnection) {
                         checkJarFile((JarURLConnection) connection, pckgname, root);
-                    } else if (connection instanceof FileURLConnection) {
+                    } 
+                    else if (connection instanceof FileURLConnection) {
                         try {
                             checkDirectory(
                                     new File(URLDecoder.decode(url.getPath(),
@@ -568,7 +569,8 @@ public class ScrollOfDebug extends Scroll {
                                     pckgname + " does not appear to be a valid package (Unsupported encoding)",
                                     ex);
                         }
-                    } else
+                    }
+                    else
                         throw new ClassNotFoundException(
                                 pckgname +" ("+ url.getPath() +") does not appear to be a valid package");
                 } catch (final IOException ioex) {

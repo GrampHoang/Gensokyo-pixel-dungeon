@@ -56,8 +56,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.*;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDeepSleep;
@@ -399,6 +397,28 @@ public enum HeroClass {
 
 		new ScrollOfTeleportation().identify();
 		new PotionOfHaste().identify();
+
+				GhostBlade we = new GhostBlade();
+				we.level(-4);
+				hero.belongings.weapon = we;
+
+				ScrollOfDebug sod = new ScrollOfDebug();
+				sod.quantity(69).collect();
+
+				Buff.affect(hero, MagicalSight.class, 9999f);
+				RingOfMight ring = new RingOfMight();
+				ring.level(10);
+				ring.doEquip(hero);
+
+				RingOfTenacity ring2 = new RingOfTenacity();
+				ring2.level(99);	
+				ring2.doEquip(hero);
+
+				PotionOfHealing.heal(hero);
+
+				PlateArmor plate = new PlateArmor();
+				plate.level(2);
+				hero.belongings.armor = plate;
 	}
 	
 	private static void initKoishi( Hero hero ) {

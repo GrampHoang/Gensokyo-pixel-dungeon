@@ -25,7 +25,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -37,8 +36,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave.BlastWave;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ExplosiveTrap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
@@ -46,28 +43,22 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-import com.watabou.utils.Reflection;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class RemiliaBoss extends Mob {
@@ -137,7 +128,7 @@ public class RemiliaBoss extends Mob {
 			sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "smoke"));
 			return;
 		}
-		int hpBracket = HT / 3;
+		// int hpBracket = HT / 3;
 		
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
@@ -479,6 +470,15 @@ public class RemiliaBoss extends Mob {
 		for (int i : bundle.getIntArray(LEVATIN_CELLS)){
 			levatinCells.add(i);
 		}
+	}
+
+	@Override
+	public String description() {
+		String descript = super.description();
+		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
+			descript = descript + "\n\n_Badder Bosses:\n" + Messages.get(this, "stronger_bosses");
+		}
+		return descript;
 	}
 
 	public static class MaidSakuya extends Sakuya {

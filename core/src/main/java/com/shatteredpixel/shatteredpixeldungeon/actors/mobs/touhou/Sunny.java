@@ -22,25 +22,20 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MoveDetect;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SunnySprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -51,44 +46,22 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
-import com.watabou.utils.Callback;
 
-public class Sunny extends Mob {
+public class Sunny extends ThreeFairiesOfLight {
 
 	{
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 50 : 40;
-		EXP = 4;
-		defenseSkill = 8;
 		spriteClass = SunnySprite.class;
-
-        state = WANDERING;
-		viewDistance = 20;
-
-		properties.add(Property.FAIRY);
-		properties.add(Property.BOSS);
-        immunities.add(Burning.class);
 	}
 
     public int anger = 0;
 	private int SKILL_COOLDOWN = 18;
-	private int sun_cd = 7;
-    private boolean charging_skill = false;
+	public int sun_cd = 7;
 	private int aim = 1;
 	
-    @Override
-	public float speed() {
-		return super.speed();
-	}
-
 	//Sunny deal more damage
     @Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 3*(anger+1), 6*(anger+1) );
-	}
-
-	@Override
-	public int attackSkill( Char target ) {
-		return 10;
+		return Random.NormalIntRange( 2*(anger+1), 5*(anger+1) );
 	}
 
 	@Override
@@ -99,51 +72,6 @@ public class Sunny extends Mob {
 	@Override
 	public int drRoll() {
 		return Random.NormalIntRange(0, 2);
-	}
-
-	@Override
-	public boolean act() {
-		if(Dungeon.hero != null && Dungeon.hero.buff(MoveDetect.class) != null && Dungeon.hero.justMoved){
-			throwRock();
-        }
-
-        if (enemySeen && !isCharmedBy( enemy ) && canAttack( enemy )) {
-
-            if (canUseReady()){
-                return useReady();
-            }
-            if (canUseAbility()){
-                return useAbility();
-            }
-            return doAttack( enemy );
-            
-        } else {
-            if (canUseReady()){
-                return useReady();
-            }
-            if (canUseAbility()){
-                return useAbility();
-            }
-
-            if (enemySeen || charging_skill) {
-                target = Dungeon.hero.pos;
-            } else {
-                sprite.showLost();
-                charging_skill = false;
-                state = WANDERING;
-                return super.act();
-            }
-            
-		    return super.act();
-        }
-	}
-
-	@Override
-	protected boolean canAttack( Char enemy ) {
-		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		// When super angry only do melee, else range attack only when no move detect
-		if (anger < 2) return !(Dungeon.level.adjacent(pos, enemy.pos)) && attack.collisionPos == enemy.pos && (Dungeon.hero.buff(MoveDetect.class) == null);
-		else return Dungeon.level.adjacent(pos, enemy.pos);
 	}
 	
 	@Override
@@ -162,61 +90,30 @@ public class Sunny extends Mob {
 		return super.attackProc(enemy, damage);
 	}
 
-	// @Override
-	// public void updateSpriteState() {
-	// 	super.updateSpriteState();
-
-	// 	if (pumpedUp > 0){
-	// 		((GooSprite)sprite).pumpUp( pumpedUp );
-	// 	}
-	// }
-
-	@Override
-	protected boolean getCloser( int target ) {
-		if (state == HUNTING && anger < 2) {
-			return enemySeen && getFurther( target );
-		} else {
-			return super.getCloser( target );
-		}
-	}
-
-	@Override
-	public void aggro(Char ch) {
-		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
-			super.aggro(ch);
-		}
-	}
-
-
 	@Override
 	public void die( Object cause ) {
 		if(anger > 1){
-			Dungeon.level.unseal();
-			GameScene.bossSlain();
 			Dungeon.level.drop( new FireOath(), pos ).sprite.drop();
 		}
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if(mob instanceof Luna){
 				((Luna)mob).anger++;
+				((Luna)mob).moon_cd = 7;
 			} else if(mob instanceof Star){
 				((Star)mob).anger++;
+				((Star)mob).star_cd = 1;
 			}
 			if (anger > 0) BossHealthBar.assignBoss(mob);
 		}
-		Badges.validateBossSlain();
-		if (Statistics.qualifiedForBossChallengeBadge){
-			Badges.validateBossChallengeCompleted();
-		}
-		// Statistics.bossScores[0] += 350;
-		// Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
-
 		super.die( cause );
 	}
     
     //////////////////////////////////////////////////////////////
     // SKILL
     //
-    private boolean canUseReady(){
+
+	@Override
+    protected boolean canUseReady(){
         sun_cd--;
         if ((sun_cd <= 0 && (enemySeen || Dungeon.hero != null) && charging_skill == false)){
             return true;
@@ -224,7 +121,9 @@ public class Sunny extends Mob {
             return false;
         }
     }
-    private boolean useReady(){
+
+	@Override
+    protected boolean useReady(){
 		GLog.n(Messages.get(this, "charging_skill"));
         spend(TICK);
         if (Dungeon.hero != null){
@@ -242,7 +141,8 @@ public class Sunny extends Mob {
         return true;
     }
 
-    private boolean canUseAbility(){
+	@Override
+    protected boolean canUseAbility(){
         if(charging_skill == true){
             spend( TICK );
             return true;
@@ -251,7 +151,8 @@ public class Sunny extends Mob {
         }
     }
 
-    private boolean useAbility(){      
+	@Override
+    protected boolean useAbility(){      
         return sunBeam();
     }
 
@@ -274,9 +175,9 @@ public class Sunny extends Mob {
             Char ch = Actor.findChar(i);
             if (ch != null && ch.alignment != this.alignment){
 				if(isLunatic()){
-					ch.damage(15,this);
-				} else{
 					ch.damage(10,this);
+				} else{
+					ch.damage(6,this);
 				}
                 Buff.affect(ch, Burning.class).reignite(ch, 4f);
             }
@@ -314,17 +215,13 @@ public class Sunny extends Mob {
         aim = bundle.getInt(AIM);
 	}
 	
-	private void throwRock(){
-		Dungeon.hero.interrupt();
-		// Char ch = this;
-            ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
-            reset( this.pos, Dungeon.hero.pos, new Bullet(), new Callback() {
-                @Override
-                public void call() {
-                    // ch.onAttackComplete();
-					Dungeon.hero.damage(Random.Int(2*anger), this);
-                }
-            } );
+	@Override
+	public String description() {
+		String descript = super.description();
+		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
+			descript = descript + "\n\n_Badder Bosses:_\n" + Messages.get(this, "stronger_bosses");
+		}
+		return descript;
 	}
 
 	public class Bullet extends Item {

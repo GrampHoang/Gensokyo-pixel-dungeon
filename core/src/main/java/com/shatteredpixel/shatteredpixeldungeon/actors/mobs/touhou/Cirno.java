@@ -78,7 +78,8 @@ public class Cirno extends Mob {
 	protected boolean canAttack( Char enemy ) {
 		if (isLunatic()){
 			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-			return (!Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4);
+			return ((!Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4)
+					|| canGetFurther(enemy.pos) == false);
 		}
 		return super.canAttack(enemy);
 	}

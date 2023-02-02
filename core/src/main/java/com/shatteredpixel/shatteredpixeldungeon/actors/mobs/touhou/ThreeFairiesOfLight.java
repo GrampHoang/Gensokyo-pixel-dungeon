@@ -10,10 +10,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MoveDetect;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.watabou.utils.Random;
-import com.watabou.utils.Callback;
+
 public class ThreeFairiesOfLight extends Mob {
     {
         HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 50 : 40;
@@ -136,17 +134,8 @@ public class ThreeFairiesOfLight extends Mob {
 		super.die( cause );
 	}
 
-    private void throwRock(){
-		Dungeon.hero.interrupt();
-		// Char ch = this;
-            ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
-            reset( this.pos, Dungeon.hero.pos, new Bullet(), new Callback() {
-                @Override
-                public void call() {
-                    // ch.onAttackComplete();
-					Dungeon.hero.damage(Random.Int(2*anger), this);
-                }
-            } );
+    protected void throwRock(){
+		//Override
 	}
 
     protected boolean canUseReady(){

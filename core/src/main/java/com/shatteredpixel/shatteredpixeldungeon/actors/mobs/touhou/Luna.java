@@ -32,11 +32,13 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfAnt
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.LunaSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+import com.watabou.utils.Callback;
 
 public class Luna extends ThreeFairiesOfLight {
 
@@ -71,6 +73,16 @@ public class Luna extends ThreeFairiesOfLight {
 		return super.attackProc(enemy, damage);
 	}
 
+    @Override
+	public void damage( int dmg, Object src ) {
+		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				mob.beckon( this.pos );
+			}
+		}
+		super.damage( dmg, src );
+	}
+    
 	@Override
 	public void die( Object cause ) {
         if(anger > 1){
@@ -182,5 +194,19 @@ public class Luna extends ThreeFairiesOfLight {
 			descript = descript + "\n\n_Badder Bosses:\n" + Messages.get(this, "stronger_bosses");
 		}
 		return descript;
+	}
+
+    @Override
+	protected void throwRock(){
+		Dungeon.hero.interrupt();
+		// Char ch = this;
+            ((MissileSprite)this.sprite.parent.recycle( MissileSprite.class )).
+            reset( this.pos, Dungeon.hero.pos, new Bullet(), new Callback() {
+                @Override
+                public void call() {
+                    // ch.onAttackComplete();
+					Dungeon.hero.damage( (isLunatic() ? Random.IntRange(1, anger*2+1) : anger*2+2), this);
+                }
+            } );
 	}
 }

@@ -399,7 +399,7 @@ public enum HeroClass {
 		new PotionOfHaste().identify();
 
 				GhostBlade we = new GhostBlade();
-				we.level(-4);
+				we.level(5);
 				hero.belongings.weapon = we;
 
 				ScrollOfDebug sod = new ScrollOfDebug();

@@ -22,7 +22,11 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.utils.Callback;
 
 public class CirnoSprite extends MobSprite {
 
@@ -41,11 +45,38 @@ public class CirnoSprite extends MobSprite {
 
 		attack = new Animation( 10, false );
 		attack.frames( frames, 0, 1 );
-		
+
 		die = new Animation( 10, false );
 		die.frames( frames, 0, 3 );
 		
 		play(idle);
 	}
 
+	@Override
+	public void attack( int cell ) {
+		if (!Dungeon.level.adjacent(cell, ch.pos)) {
+
+			((MissileSprite)parent.recycle( MissileSprite.class )).
+					reset( this, cell, new Bullet(), new Callback() {
+						@Override
+						public void call() {
+							ch.onAttackComplete();
+						}
+					} );
+
+			play( attack );
+			turnTo( ch.pos , cell );
+
+		} else {
+
+			super.attack( cell );
+
+		}
+	}
+
+	public class Bullet extends Item {
+		{
+			image = ItemSpriteSheet.CIRNO_ICECREAM;
+		}
+	}
 }

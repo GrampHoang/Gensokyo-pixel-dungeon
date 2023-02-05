@@ -22,12 +22,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.LilyFlower;
+import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -35,8 +37,11 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.LilySprite;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -54,7 +59,7 @@ public class Lily extends Mob {
 
     protected boolean charging_skill = false;
     private ArrayList<Integer> lilySkillCells = new ArrayList<>();
-
+	
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange(2, 5);
@@ -72,7 +77,7 @@ public class Lily extends Mob {
 
     @Override
 	protected boolean act() {
-        if (charging_skill == true){
+        if (charging_skill == true && !lilySkillCells.isEmpty()){
             return lilySkill();
         } else if(Random.IntRange(0, (isLunatic() ? 4 : 8)) == 1 && enemySeen == true){
 			lilyCharge();
@@ -91,6 +96,46 @@ public class Lily extends Mob {
 	}
 
     private boolean lilySkill(){
+		int[] ret = new int[lilySkillCells.size()];
+		for (int i=0; i < ret.length; i++)
+		{
+			ret[i] = lilySkillCells.get(i).intValue();
+		}
+		for (int p : ret){
+			((MagicMissile)this.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.FOLIAGE,
+				this.sprite.center(),
+				DungeonTilemap.tileCenterToWorld(p),
+				new Callback() {
+					@Override
+					public void call() {
+						Ballistica rand = new Ballistica(pos, p, Ballistica.MAGIC_BOLT);
+						for (int cell : rand.subPath(1, Dungeon.level.distance(pos, rand.collisionPos))){
+							//Deal with Char
+							Char ch = Actor.findChar(cell);
+							if (ch != null) {
+								if(ch.alignment != alignment){
+									ch.damage(3, this);
+									Buff.affect(ch, Roots.class, 1f);
+								} else {
+									Buff.prolong(ch, Stamina.class, 2f);
+									ch.HP += 3;
+								}
+							}
+							//Effect
+							if (growableCell(cell)){
+								Level.set(cell, Terrain.HIGH_GRASS);
+								Level.set(cell, Terrain.FURROWED_GRASS);
+								GameScene.updateMap( cell );
+							};
+						}
+					}
+				} );
+
+			charging_skill = false;
+			lilySkillCells.clear();
+		}
+
 		for (int p : lilySkillCells){
 			Char ch = Actor.findChar(p);
             if (ch != null && ch != this) {
@@ -103,20 +148,23 @@ public class Lily extends Mob {
 				}
             }
 		}
-		//remove some cell to grow grass
-		lilySkillCells = growableCells(lilySkillCells);
-        for (int p : lilySkillCells){	
-			Level.set(p, Terrain.HIGH_GRASS);
-			Level.set(p, Terrain.FURROWED_GRASS);
-			GameScene.updateMap( p );
-		}
-		charging_skill = false;
-		lilySkillCells.clear();
-		// spend(TICK);
-        return true;
+		return true;
     }
 
-	//Remove cells that aren't suitable
+	public boolean growableCell(int cell){
+		int terr = Dungeon.level.map[cell];
+		if (!(terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
+				terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS)) {
+			return false;
+		} else if (Char.hasProp(Actor.findChar(cell), Char.Property.IMMOVABLE)) {
+			return false;
+		} else if (Dungeon.level.plants.get(cell) != null){
+			return false;
+		} 
+		return true;
+	}
+
+	//Remove cells that aren't suitable to grow grasses
 	public ArrayList<Integer> growableCells(ArrayList<Integer> skillCells){
 		for (Iterator<Integer> i = skillCells.iterator(); i.hasNext();) {
 			int cell = i.next();
@@ -134,36 +182,20 @@ public class Lily extends Mob {
 	}
 
     private void lilyCharge(){
-        // Ballistica forward = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
-		// for (int p : forward.subPath(0, Dungeon.level.distance(this.pos, forward.collisionPos))){
-		// 	sprite.parent.add(new TargetedCell(p, 0xFF0000));
-		// 	lilySkillCells.add(p);
-		// }
         for (int i : PathFinder.NEIGHBOURS8){
 			if (Random.IntRange(1, 8) == 2){
 				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.MAGIC_BOLT);
-				// MagicMissile.boltFromChar( this.sprite.parent,
-				// MagicMissile.FOLIAGE_CONE,
-				// this.sprite,
-				// rand.collisionPos,
-				// new Callback() {
-				// 	@Override
-				// 	public void call() {
-				// 		// Do nothing
-				// 	}
-				// } );
-				
+				lilySkillCells.add(rand.collisionPos);
 				for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
-					sprite.parent.add(new TargetedCell(p, 0xFF0000));
-					lilySkillCells.add(p);
+					sprite.parent.add(new TargetedCell(p, 0x457462));
 				}
 			}
 		}
-
-		Ballistica aim = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.MAGIC_BOLT);
-		for (int p : aim.subPath(0, Dungeon.level.distance(this.pos, aim.collisionPos))){
-			sprite.parent.add(new TargetedCell(p, 0xFF0000));
-			lilySkillCells.add(p);
+		lilySkillCells.add(Dungeon.hero.pos);
+		Ballistica rand = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.MAGIC_BOLT);
+		lilySkillCells.add(rand.collisionPos);
+		for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
+			sprite.parent.add(new TargetedCell(p, 0x457462));
 		}
 		spend(TICK);
     }

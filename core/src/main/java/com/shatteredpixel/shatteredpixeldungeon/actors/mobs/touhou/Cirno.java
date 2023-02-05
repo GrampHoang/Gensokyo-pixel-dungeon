@@ -95,13 +95,14 @@ public class Cirno extends Mob {
 		return damage;
 	}
 
-	@Override
-	public boolean doAttack(Char enemy) {
-		if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
-			spend(TICK/2);
-		}
-		return super.doAttack(enemy);
-	}
+	// @Override
+	// public boolean doAttack(Char enemy) {
+	// 	if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
+	// 		spend(TICK/2);
+	// 	}
+	// 	return super.doAttack(enemy);
+	// }
+	
     @Override
 	protected boolean act() {
 		return super.act();
@@ -140,4 +141,6 @@ public class Cirno extends Mob {
 			return false;
 		}
 	}
+
+	
 }

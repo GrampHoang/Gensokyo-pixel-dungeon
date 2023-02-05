@@ -1,7 +1,5 @@
 package com.watabou.utils;
 
-import java.io.Console;
-
 public class PathFinderUtils {
 
     //Return the 3 opposite tile of a circle 8 Pathfinder, mimick piercing AoE shot
@@ -24,6 +22,14 @@ public class PathFinderUtils {
         return 1;
     }
 
+    public static int[] random_two_opposite_cell(int center){
+        int i = Random.IntRange(0, 7);
+        int[] cell = {1, 1, 1};
+        cell[0] = center + PathFinder.NEIGHBOURS8[i];
+        cell[1] = center;
+        cell[2] = center + PathFinder.NEIGHBOURS8[7-i];
+        return cell;
+    }
 
     public static int[] opposite3(int[] pathfinder, int collisionPos, int center){
         int collision_i = collision_i(pathfinder, collisionPos, center);

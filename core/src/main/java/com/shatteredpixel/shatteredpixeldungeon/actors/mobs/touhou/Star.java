@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -32,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfMag
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StarSprite;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
@@ -85,6 +87,8 @@ public class Star extends ThreeFairiesOfLight {
 	public void die( Object cause ) {
 		if(anger > 1){
 			Dungeon.level.drop( new PotionOfMagicalSight(), pos ).sprite.drop();
+			Dungeon.level.unseal();
+			GameScene.bossSlain();
 		}
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob instanceof Sunny){
@@ -96,7 +100,10 @@ public class Star extends ThreeFairiesOfLight {
 			}
 			if (anger > 0) BossHealthBar.assignBoss(mob);
 		}
-        super.die( cause );
+        Statistics.bossScores[0] += 350;
+		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
+
+		super.die( cause );
 	}
 	
     

@@ -3,13 +3,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MoveDetect;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class ThreeFairiesOfLight extends Mob {
@@ -116,22 +114,6 @@ public class ThreeFairiesOfLight extends Mob {
 		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
 			super.aggro(ch);
 		}
-	}
-
-    @Override
-	public void die( Object cause ) {
-		if(anger > 1){
-			Dungeon.level.unseal();
-			GameScene.bossSlain();
-		}
-		// Badges.validateBossSlain();
-		// if (Statistics.qualifiedForBossChallengeBadge){
-		// 	Badges.validateBossChallengeCompleted();
-		// }
-		Statistics.bossScores[0] += 350;
-		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
-
-		super.die( cause );
 	}
 
     protected void throwRock(){

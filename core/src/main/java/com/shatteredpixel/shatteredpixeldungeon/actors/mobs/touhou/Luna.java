@@ -24,6 +24,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -87,6 +88,8 @@ public class Luna extends ThreeFairiesOfLight {
 	public void die( Object cause ) {
         if(anger > 1){
 			Dungeon.level.drop( new ScrollOfAntiMagic(), pos ).sprite.drop();
+			Dungeon.level.unseal();
+			GameScene.bossSlain();
 		}
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			if (mob instanceof Sunny){
@@ -98,7 +101,10 @@ public class Luna extends ThreeFairiesOfLight {
 			}
 			if (anger > 0) BossHealthBar.assignBoss(mob);
 		}
-        super.die( cause );
+        Statistics.bossScores[0] += 350;
+		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
+
+		super.die( cause );
 	}
 	
     

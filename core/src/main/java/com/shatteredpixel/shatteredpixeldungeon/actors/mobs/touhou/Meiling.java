@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.MeilingSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeilingHand.PunchWave;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -84,19 +85,12 @@ public class Meiling extends Mob {
 	private float PUNCH_COOLDOWN = (isLunatic() ? 10 : 20); 
     private float rock_cd = 30;
 	private float punch_cd = 5;
-	private ArrayList<Integer> punchCells = new ArrayList<>();
-    public boolean mad(){
-        return (HP*3 < HT); // Below 33% HP she will turn mad
-    }
+	private int[] aim_pos = {-1,-1,-1};
+	private boolean near = false;
 
 	@Override
 	public int damageRoll() {
-        if (mad()) {
-            return Random.NormalIntRange( 4, 10 );
-        }
-        else {
-		    return Random.NormalIntRange( 2, 8 );
-        }
+		return Random.NormalIntRange( 3, 8 );
 	}
 
 	@Override
@@ -104,38 +98,26 @@ public class Meiling extends Mob {
 		return 12;
 	}
 
-	@Override
-	public float attackDelay() {
-        if (mad()) {
-            return super.attackDelay();
-        }
-        else{
-		    return super.attackDelay()*1.5f;
-        }
-	}
+	// @Override
+	// public float attackDelay() {
+	// 	return super.attackDelay();
+	// }
 
 	@Override
 	public int drRoll() {
 		return Random.NormalIntRange(0, 2);
 	}
 
-    @Override
-	public void damage(int dmg, Object src) {
-		if ((HP*3 <= HT)){
-			((MeilingSprite)sprite).spray(true);
-			yell(Messages.get(this, "mad"));
-		}
-		super.damage(dmg, src);
-	}
-
     private static final String ROCK_CD = "rock_cd";
     private static final String PUNCH_CD = "punch_cd";
-
+	private static final String AIMPOS = "aimpos";
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
         bundle.put(ROCK_CD, rock_cd);
         bundle.put(PUNCH_CD, punch_cd);
+		bundle.put(AIMPOS, aim_pos);
+		bundle.put("NEAR", near);
 	}
 
 	@Override
@@ -143,24 +125,31 @@ public class Meiling extends Mob {
 		super.restoreFromBundle(bundle);
         punch_cd = bundle.getFloat(PUNCH_CD);
         rock_cd = bundle.getFloat(ROCK_CD);
+		aim_pos = bundle.getIntArray(AIMPOS);
+		near = bundle.getBoolean("NEAR");
 	}
 
 	@Override
 	protected boolean act() {
 		if (canUseAbility()){
+			spend(1f);
 			return useAbility();
-		} 
+		}
 		return super.act();
 	}
 
     //SKILL
 
 	public boolean canUseAbility(){
+		if(enemySeen == false){
+			return false;
+		}
+		GLog.w(Float.toString(punch_cd));
+		GLog.w(Float.toString(rock_cd));
         if(Dungeon.hero.buff(Paralysis.class) != null){
             return false;
         }
-        if (punch_cd < 2 && Dungeon.level.distance(this.pos, Dungeon.hero.pos) < 4){
-			punch_cd--;
+        if (punch_cd < 2){
             return true;
         } else if (rock_cd < 1){
             return true;
@@ -172,11 +161,14 @@ public class Meiling extends Mob {
 	}
 
 	public boolean useAbility(){
+		if(enemySeen == false){
+			return false;
+		}
 		if(rock_cd < 1){
             rock_cd = ROCK_COOLDOWN;
-            GLog.w("Meiling is aiming upward!");
 			return dropRocks(Dungeon.hero);
-		} else if (punch_cd == 2){
+		} else if (punch_cd == 1){
+			punch_cd--;
 			return punchAim(Dungeon.hero);
 		}else {
             punch_cd = PUNCH_COOLDOWN;
@@ -186,20 +178,16 @@ public class Meiling extends Mob {
 
 	public boolean punchAim( Char target ) {
         if (Dungeon.level.distance(pos, target.pos) < 2){
+			near = true;
 			for (int i : PathFinder.NEIGHBOURS8){
 				this.sprite.parent.addToBack(new TargetedCell(i + this.pos, 0xFF0000));
-				punchCells.add(i + this.pos);
 			}
 		} else {
-			int[] aim_pos = PathFinderUtils.random_two_opposite_cell(target.pos);
+			aim_pos = PathFinderUtils.random_two_opposite_cell(target.pos);
 			for (int aim : aim_pos){
 				Ballistica aim_path = new Ballistica(this.pos, aim, Ballistica.STOP_SOLID);
-				for (int c : aim_path.subPath(1, 8)) {
-					if( ! Dungeon.level.solid[c]) {
-						punchCells.add(c);
-					} else {
-						break;
-					}
+				for (int cel : aim_path.subPath(1, 5)) {
+					this.sprite.parent.addToBack(new TargetedCell(cel, 0xFF0000));
 				}
 			}
 		}
@@ -207,18 +195,35 @@ public class Meiling extends Mob {
     }
 
     public boolean punchShot(){
-        for (int i : punchCells) {
-			Char ch = Actor.findChar(i);
-			if (ch != null && !(ch instanceof Meiling)){
-				Buff.prolong( ch, Paralysis.class, 2);
-				if(ch.alignment != this.alignment) ch.damage((mad() ? 10 : 6), this);
+		if (near == true){
+			near = false;
+			for (int i : PathFinder.NEIGHBOURS8){
+				punchImpact(i + this.pos);
 			}
-        }
+		} else {
+			for (int aim : aim_pos) {
+				if(aim == -1) break; //Just in case
+				Ballistica aim_path = new Ballistica(this.pos, aim, Ballistica.STOP_SOLID);
+				for (int c : aim_path.subPath(1, 5)) {
+					punchImpact(c);
+				}
+			}
+		}
         return true;
     }
 
-    public boolean dropRocks( Char target ) {
+	public void punchImpact(int cell){
+		PunchWave.blast(cell);
+		CellEmitter.get(cell).start( Speck.factory( Speck.ROCK ), 0.1f, 10 );
+		Char ch = Actor.findChar(cell);
+		if (ch != null && !(ch instanceof Meiling)){
+			Buff.prolong( ch, Paralysis.class, 2);
+			if(ch.alignment != this.alignment) ch.damage(6, this);
+		}
+	}
 
+    public boolean dropRocks( Char target ) {
+		WandOfBlastWave.BlastWave.blast(this.pos);
 		Dungeon.hero.interrupt();
 		final int rockCenter;
         if (Dungeon.level.adjacent(pos, target.pos)){

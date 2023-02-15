@@ -23,6 +23,7 @@ public class PathFinderUtils {
     }
 
     public static int[] random_two_opposite_cell(int center){
+        //return the center + two random cell around the center that is on the opposite side
         int i = Random.IntRange(0, 7);
         int[] cell = {1, 1, 1};
         cell[0] = center + PathFinder.NEIGHBOURS8[i];

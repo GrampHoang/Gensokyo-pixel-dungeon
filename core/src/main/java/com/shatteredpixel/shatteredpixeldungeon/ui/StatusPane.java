@@ -293,14 +293,14 @@ public class StatusPane extends Component {
 			hpText.text(health + "+" + shield +  "/" + max);
 		}
 		if (large) {
-			curBGM.scale.y = 1.5f;
-			curBGM.scale.x = 1.5f;
-		} else {
 			curBGM.scale.y = 1.2f;
 			curBGM.scale.x = 1.2f;
+		} else {
+			curBGM.scale.y = 1f;
+			curBGM.scale.x = 1f;
 		} 
 
-		curBGM.text(getBGM.getDepth(Dungeon.branch, Dungeon.depth));
+		curBGM.text(Messages.format("%s",getBGM.getDepth(Dungeon.branch, Dungeon.depth)));
 
 		if (large) {
 			exp.scale.x = (128 / exp.width) * Dungeon.hero.exp / Dungeon.hero.maxExp();

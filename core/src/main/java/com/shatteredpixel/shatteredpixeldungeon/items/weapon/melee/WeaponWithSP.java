@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class WeaponWithSP extends MeleeWeapon{
     {
         have_skill = true;
-
+		usesTargeting = true;
         defaultAction = AC_SKILL;
     }
 
@@ -104,7 +104,8 @@ public class WeaponWithSP extends MeleeWeapon{
 
 		//display as percent
 		if (chargeCap == 100)
-			return Messages.format( "%d%%", charge );
+			// return Messages.format( "%d%%", charge );
+			return Integer.toString(charge);
 
 		//otherwise, if there's no charge, return null.
 		return null;

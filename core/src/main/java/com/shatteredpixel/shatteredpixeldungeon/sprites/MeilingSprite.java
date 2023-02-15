@@ -24,14 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.Random;
 
 public class MeilingSprite extends MobSprite {
 	
 	private Animation kick;
-	private Emitter spray;
 
 	public MeilingSprite() {
 		super();
@@ -54,51 +52,7 @@ public class MeilingSprite extends MobSprite {
 		
 		die = new Animation( 15, false );
 		die.frames( frames, 1, 7, 8, 8, 9, 10 );
-		
-		spray = centerEmitter();
-		spray.autoKill = false;
-		spray.pour( Speck.factory(Speck.STEAM),0.3f);
-		spray.on = false;
 
 		play( idle );
-	}
-
-	public void leapPrep( int cell ){
-		turnTo( ch.pos, cell );
-		play( kick );
-	}
-
-	@Override
-	public void link(Char ch) {
-		super.link(ch);
-		if (ch.HP*3 <= ch.HT)
-			spray(true);
-	}
-
-	public void spray(boolean on){
-		spray.on = on;
-	}
-
-	@Override
-	public void update() {
-		super.update();
-		spray.pos(center());
-		spray.visible = visible;
-	}
-
-	@Override
-	public void attack( int cell ) {
-		super.attack( cell );
-		if (Random.Float() < 0.5f) {
-			play( kick );
-		}
-	}
-	
-	@Override
-	public void onComplete( Animation anim ) {
-		super.onComplete( anim == kick ? attack : anim );
-		if (anim == die) {
-			spray.killAndErase();
-		}
 	}
 }

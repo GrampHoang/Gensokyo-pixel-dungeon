@@ -56,6 +56,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MusicFlow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
@@ -711,24 +712,19 @@ public class Hero extends Char {
 			return 0;
 		}
 		
-		// if ( buff( MusicFlow.class ) != null) delay /=  buff( MusicFlow.class ).getSpeedBuff();
+		float delay = 1f;
+
+		if ( buff( MusicFlow.class ) != null) delay /= buff( MusicFlow.class ).getSpeedBuff();
 		//Trying to get attack speed buff speed
+		if (buff(Exterminating.class) != null) delay /= 0.8f;
 
 		if (belongings.weapon() != null) {
-			if (buff(Exterminating.class) != null){
-				return belongings.weapon().delayFactor( this ) * 0.8f;
-			} else{
-				return belongings.weapon().delayFactor( this );
-			}
+			return belongings.weapon().delayFactor( this ) * delay;
 		} else {
 			//Normally putting furor speed on unarmed attacks would be unnecessary
 			//But there's going to be that one guy who gets a furor+force ring combo
 			//This is for that one guy, you shall get your fists of fury!
-			if (buff(Exterminating.class) != null){
-				return 0.8f/RingOfFuror.attackSpeedMultiplier(this);
-			} else{
-				return 1f/RingOfFuror.attackSpeedMultiplier(this);
-			}
+			return 1f/RingOfFuror.attackSpeedMultiplier(this) * delay;
 		}
 	}
 

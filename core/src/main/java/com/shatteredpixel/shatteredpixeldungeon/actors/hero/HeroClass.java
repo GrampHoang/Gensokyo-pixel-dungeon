@@ -398,27 +398,36 @@ public enum HeroClass {
 		new ScrollOfTeleportation().identify();
 		new PotionOfHaste().identify();
 
-				GhostBlade we = new GhostBlade();
-				we.level(5);
-				hero.belongings.weapon = we;
+				// GhostBlade we = new GhostBlade();
+				// we.level(5);
+				// hero.belongings.weapon = we;
 
-				ScrollOfDebug sod = new ScrollOfDebug();
-				sod.quantity(69).collect();
+				// ScrollOfDebug sod = new ScrollOfDebug();
+				// sod.quantity(69).collect();
+				// Dungeon.quickslot.setSlot(2, sod);
 
-				Buff.affect(hero, MagicalSight.class, 9999f);
-				RingOfMight ring = new RingOfMight();
-				ring.level(10);
-				ring.doEquip(hero);
+				// Buff.affect(hero, MagicalSight.class, 9999f);
+				// RingOfMight ring = new RingOfMight();
+				// ring.level(40);
+				// ring.doEquip(hero);
 
-				RingOfTenacity ring2 = new RingOfTenacity();
-				ring2.level(99);	
-				ring2.doEquip(hero);
+				// RingOfTenacity ring2 = new RingOfTenacity();
+				// ring2.level(99);	
+				// ring2.doEquip(hero);
 
-				PotionOfHealing.heal(hero);
+				// PotionOfHealing.heal(hero);
 
-				PlateArmor plate = new PlateArmor();
-				plate.level(2);
-				hero.belongings.armor = plate;
+				// PlateArmor plate = new PlateArmor();
+				// plate.level(2);
+				// hero.belongings.armor = plate;
+
+				// SpiritBow bow = new SpiritBow();
+				// bow.collect();
+				// Dungeon.quickslot.setSlot(4, bow);
+
+				// PotionOfHealing poh = new PotionOfHealing();
+				// poh.quantity(99).collect();
+				// Dungeon.quickslot.setSlot(3, poh);
 	}
 	
 	private static void initKoishi( Hero hero ) {

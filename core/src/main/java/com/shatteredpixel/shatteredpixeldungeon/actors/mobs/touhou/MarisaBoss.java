@@ -92,12 +92,12 @@ public class MarisaBoss extends Mob {
 
 	private int count_before_tele = 0;
 
-	private int summonpos1 = 479; 
-	private int summonpos2 = 481; //left + right of entrance
-	private int summonpos3 = 45;
-	private int summonpos4 = 47; //left + right of exit
-	private int summonpos5 = 280;
-	private int summonpos6 = 306;	// left + right side of map
+	private int summonpos1 = 538; 
+	private int summonpos2 = 540; //left + right of entrance
+	private int summonpos3 = 103;
+	private int summonpos4 = 105; //left + right of exit
+	private int summonpos5 = 308;
+	private int summonpos6 = 310;	// left + right side of map
 
 
 	@Override
@@ -158,13 +158,13 @@ public class MarisaBoss extends Mob {
 		//Use hero for now, it will be janky if we just allies
 		Ballistica attack = new Ballistica( pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
 		if (attack.collisionPos != Dungeon.hero.pos){	
-			count_before_tele++;
+			count_before_tele+=6;
 		} else {
-			count_before_tele = 0;
+			count_before_tele = 1;
 		}
 
 		
-		if (count_before_tele > 3){
+		if (count_before_tele > 15){
 			toSafety();
 		}
 		int hpBracket = HT / 3;
@@ -201,6 +201,7 @@ public class MarisaBoss extends Mob {
 
 	public void toSafety(){
 		int telepos = Dungeon.level.randomRespawnCell(this);
+		CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 10);
 		this.sprite.place( telepos );
 		this.move(telepos, false);
 		if (masterspark_cd > 5) masterspark_cd = 5;
@@ -414,7 +415,7 @@ public class MarisaBoss extends Mob {
 	}
 
     private ArrayList<Integer> targetedCells = new ArrayList<>();
-    private int stopCell;
+    private int stopCell = 60;
 
     private boolean dash_ready(){
 		Dungeon.hero.interrupt();

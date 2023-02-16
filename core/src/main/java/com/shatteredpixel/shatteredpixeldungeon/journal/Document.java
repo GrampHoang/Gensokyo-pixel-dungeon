@@ -135,6 +135,7 @@ public enum Document {
 	public static final String GUIDE_SEARCHING      = "Searching";
 
 	public static final String SUIKA      			= "Suika";
+	public static final String MARISA      			= "Marisa";
 	//pages and default states
 	static {
 		boolean debug = DeviceCompat.isDebug();
@@ -168,6 +169,7 @@ public enum Document {
 		ALCHEMY_GUIDE.pagesStates.put("Spells",               debug ? READ : NOT_FOUND);
 
 		ENCOUNTER.pagesStates.put(SUIKA,					   debug ? READ : NOT_FOUND);
+		ENCOUNTER.pagesStates.put(MARISA,					   debug ? READ : NOT_FOUND);
 		//ENCOUNTER.pagesStates.put("", debug ? READ : NOT_FOUND);
 	}
 	

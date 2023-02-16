@@ -77,6 +77,7 @@ public class Notes {
 		TROLL,
 		IMP,
 
+		MARISA,
 		SUIKA;
 		
 		public String desc() {

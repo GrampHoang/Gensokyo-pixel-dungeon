@@ -25,11 +25,15 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.tweeners.AlphaTweener;
+import com.watabou.utils.PointF;
 
 public class WardSprite extends MobSprite {
 
@@ -70,6 +74,18 @@ public class WardSprite extends MobSprite {
 		} else {
 			parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 		}
+		((WandOfWarding.Ward)ch).onZapComplete();
+	}
+
+	public void zap15( int pos ) {
+		idle();
+		flash();
+		emitter().burst(MagicMissile.WardParticle.UP, 2);
+		PointF sky = center();
+		sky.y -= 300;
+		parent.add(new Beam.Gust(sky, DungeonTilemap.raisedTileCenterToWorld(pos)));
+		CellEmitter.center(pos).burst(BlastParticle.FACTORY, 20);
+		CellEmitter.center(pos).burst(SmokeParticle.FACTORY, 4);
 		((WandOfWarding.Ward)ch).onZapComplete();
 	}
 	

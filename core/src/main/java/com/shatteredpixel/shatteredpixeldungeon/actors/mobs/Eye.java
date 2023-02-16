@@ -169,7 +169,7 @@ public class Eye extends Mob {
 
 		if(isLunatic()){
 			for (int p : PathFinder.NEIGHBOURS9){
-				GameScene.add( Blob.seed( p + this.pos, 12, Fire.class ) );
+				if ( ! (Dungeon.level.solid[p+this.pos])) GameScene.add( Blob.seed( p + this.pos, 12, Fire.class ) );
 			}
 		}
 		

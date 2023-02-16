@@ -10,7 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -34,7 +34,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class Suika extends NPC {
+public class MarisaNPC extends NPC {
 
 	{
 		spriteClass = ImpSprite.class;
@@ -48,7 +48,7 @@ public class Suika extends NPC {
 	@Override
 	protected boolean act() {
 		if (!Quest.given && Dungeon.level.heroFOV[pos]) {
-			Notes.add( Notes.Landmark.SUIKA );
+			Notes.add( Notes.Landmark.MARISA );
 		} 
 		return super.act();
 	}
@@ -88,14 +88,14 @@ public class Suika extends NPC {
 					public void call() {
 						poh.detach(Dungeon.hero.belongings.backpack);
 						poh.detach(Dungeon.hero.belongings.backpack);
-						Suika.Quest.complete();
+						MarisaNPC.Quest.complete();
 						sprite.showStatus(CharSprite.POSITIVE, "Take these!");
 
 						EndlessAlcohol alcohol = new EndlessAlcohol();
 						alcohol.quantity(3).collect();
 
-						if (!(Document.ENCOUNTER.isPageFound(Document.SUIKA)) ) {
-							SuikaEnc encounter = new SuikaEnc();
+						if (!(Document.ENCOUNTER.isPageFound(Document.MARISA)) ) {
+							MarisaEnc encounter = new MarisaEnc();
 							encounter.collect();
 						}
 					}
@@ -105,11 +105,11 @@ public class Suika extends NPC {
 			}
 			
 		} else {
-			if (Document.ENCOUNTER.isPageFound(Document.SUIKA)) tell(Messages.get(this, "quest_1"));
+			if (Document.ENCOUNTER.isPageFound(Document.MARISA)) tell(Messages.get(this, "quest_1"));
 			else tell(Messages.get(this, "quest_1_firsttime"));
 			Quest.given = true;
 			Quest.completed = false;
-			Notes.add( Notes.Landmark.SUIKA );
+			Notes.add( Notes.Landmark.MARISA );
 		}
 
 		return true;
@@ -119,7 +119,7 @@ public class Suika extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( Suika.this, text ));
+				GameScene.show( new WndQuest( MarisaNPC.this, text ));
 			}
 		});
 	}
@@ -185,10 +185,11 @@ public class Suika extends NPC {
 		}
 		
 		public static void spawn( ForestLevel level ) {
-			//TODO Dungeon.depth > 99 to disable her spawn
+			// TODO Dungeon.depth > 99 to disable her spawn
+            // Will try to spawn her inside a library
 			if (!spawned && Dungeon.depth > 99 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
-				Suika npc = new Suika();
+				MarisaNPC npc = new MarisaNPC();
 				do {
 					npc.pos = level.randomRespawnCell( npc );
 				} while (
@@ -196,7 +197,7 @@ public class Suika extends NPC {
 						level.heaps.get( npc.pos ) != null ||
 						level.traps.get( npc.pos) != null ||
 						level.findMob( npc.pos ) != null ||
-						//Suika doesn't move, so she cannot obstruct a passageway
+						//Marisa doesn't move, so she cannot obstruct a passageway
 						!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
 						!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
 				level.mobs.add( npc );
@@ -226,7 +227,7 @@ public class Suika extends NPC {
 			completed = true;
 
 			Statistics.questScores[3] = 500;
-			Notes.remove( Notes.Landmark.SUIKA );
+			Notes.remove( Notes.Landmark.MARISA );
 		}
 		
 		public static boolean isCompleted() {

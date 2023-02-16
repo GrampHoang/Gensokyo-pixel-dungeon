@@ -1,6 +1,8 @@
+I'm doing Graduation Thesis so this game will have even slower update. I know that very few people follow this project, but I would still apologize xP
+
 # Gensokyo Pixel Dungeon
 
-This is heavily inspired by Shattered PD v1.3.1 (obviously), (old) TouhouPD and Tommorow's RougeNights. The game also borrow idea from some other forks (usually from TrashBox stuffs though). So check out TouhouPD, Summoning PD, RKPD2-DLC (now RK-Adventure), Too Cruel PD, RougeNights, etc.
+This is heavily inspired by Shattered PD v1.3.1 (obviously), (old) TouhouPD and Tommorow's RougeNights. The game also borrow idea from some other forks.
 
 # Progress 
 (The source code, not the release beta/alpha/main game so some of this may not be in the apk you downloaded):
@@ -11,30 +13,24 @@ This is heavily inspired by Shattered PD v1.3.1 (obviously), (old) TouhouPD and 
 ![Weapons](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/weaponlist.PNG)
 ![Skill demo](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/weaponskill.png)
 - New challenges: Lunatic - where all enemy have additional perk and skill, doesn't affect normal boss though. It require constant kiting and re-positioning so becareful.
-- Alternative path (Currently up to 20 floors, last 5 are still Demon Hall): Gensokyo challenge. New enemies, new bosses. Not play tested enough, but on paper it should be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill and you should be fine. Except lots of repositioning though, and don't too rely on narrow pathway. I expect the first boss to be good enough (may need slight nerf), 2nd might be too hard (on Lunatic) and may take a few try to figure her out, third boss fight might take too long and 4th one can be a bit overwhelming. Medium Priority
-- Ascension Run: Nothing, Gensokyo monster doesn't get buff by ascension, but killing them doesn't seem to reduce the curse down so it is still a challenge, albeit a bit different. Low priority
+- Alternative path (Currently up to 20 floors, last 5 are still Demon Hall) - aka Gensokyo challenge. New enemies, new bosses. Not play tested enough, but on paper it should be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill and you should be fine. Except lots of repositioning though, and don't too rely on narrow pathway.
 
 # Plan:
-- Finish the first 4 reagion: mobs, bosses and items for now.
-- Draw more stuffs, need to re-draw lots sprite from TouhouPD too.
-- A lot more weapons, Currently doing T4, I'll start adding secret weapon after this.
-- A few artifact (recycle useless gear into alchemy, bomb maker, recycle scroll into guarantee PoFlame or something lol). Some might have hidden upgrade
-- A few more spell that can sygnergy with weapon skill and help adapt with new challenges.
-- Maybe set effect (Like RougeNight), just maybe, to encourage keeping rings and artifact instead of just throw them away.
+- Finish the first 4 regions. Outside of very sepecific situation where dungeon mobs behave a bit weird, only the 3rd boss is unfinished.
+- Draw more stuffs, need to re-draw lots sprite from TouhouPD.
+- More weapons, Currently doing T4, I'll start adding secret weapon after this.
+- Introducing "Encounters", if you meet some NPC and meet their requirement, they will unlock something new permanently. For replayability purpose.
+- 
+- A few artifact
+- A few more spell/items that can sygnergy with weapon skill and help adapt with new challenges.
 - NPCs and Description that hint the above things.
 - Music (will compressed) and SFX, medium priority
 - No new armor, I'm considering it but not sure what to implement.
-- Rouge-like shop: On planning, doesn't seem feasible, very low priority.
-- Collectible: seperated bag slot for these kind of items, they will be used to slightly buff stats, special effect for special occasion, consumable and hidden recipe. Though I need to somehow make the game scale harder to counter this power up, or make secret boss/hard side quest to get them, mhm... very low priority
-- Badges/UI/About/Changelogs: A few idea, low priority
-- Last 5 floors will be developed later.
+- Badges: For the new stuff
+- Last 5 floors will be developed later on.
 
-# Problem with the game:
-- It's unfinished, obviously
-- I intended for this game to be slightly harder than SPD, this game focus a lot more on positioning because Gensokyo mobs wil try to make your position as bad as possible, kinda goes against SPD but we will have to see if it's too obnoxious or not
-- Harder game also mean less player, if there is any at all xD 
-- I also wanted the fun to come with exploration and figuring out hidden thing, but the difficulty might be a fun blocker in this aspect.
-
+# My goal:
+- Is to make SPD but with different approach, more option and playstyle to go for and have more re-playability.
 
 If there is any issue, you can use the feedback link inside the game.
 

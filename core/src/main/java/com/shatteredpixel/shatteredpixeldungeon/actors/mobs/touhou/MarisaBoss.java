@@ -92,12 +92,14 @@ public class MarisaBoss extends Mob {
 
 	private int count_before_tele = 0;
 
-	private int summonpos1 = 538; 
-	private int summonpos2 = 540; //left + right of entrance
-	private int summonpos3 = 103;
-	private int summonpos4 = 105; //left + right of exit
-	private int summonpos5 = 308;
-	private int summonpos6 = 310;	// left + right side of map
+	private int summonpos1 = 541; 
+	private int summonpos2 = 543; //left + right of entrance
+
+	private int summonpos3 = 106;
+	private int summonpos4 = 108; //left + right of exit
+
+	private int summonpos5 = 304;
+	private int summonpos6 = 306;	// left + right side of map
 
 
 	@Override
@@ -155,9 +157,10 @@ public class MarisaBoss extends Mob {
 			return;
 		}
 
-		//Use hero for now, it will be janky if we just allies
+		//Use hero for now, it will be janky if we use allies
 		Ballistica attack = new Ballistica( pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
 		if (attack.collisionPos != Dungeon.hero.pos){	
+			getCloser(Dungeon.hero.pos);
 			count_before_tele+=6;
 		} else {
 			count_before_tele = 1;
@@ -405,6 +408,10 @@ public class MarisaBoss extends Mob {
         } 
 		else if (dash_cd < 1){
 			dash_cd = DASH_CD;
+			if (masterspark_cd < 2){
+				masterspark_cd = 4;
+				targetedCells_MS.clear();
+			}
             return dash();
         }
         return false;
@@ -414,18 +421,17 @@ public class MarisaBoss extends Mob {
 		// }
 	}
 
-    private ArrayList<Integer> targetedCells = new ArrayList<>();
-    private int stopCell = 60;
+    // private ArrayList<Integer> targetedCells = new ArrayList<>();
+    private int stopCell = 69;
 
     private boolean dash_ready(){
 		Dungeon.hero.interrupt();
-		targetedCells.clear();
+		// targetedCells.clear();
 		CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 20);
-        Ballistica b = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.MASTERSPARK);
-
+        Ballistica b = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
         for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
             sprite.parent.add(new TargetedCell(p, 0xFF0000));
-            targetedCells.add(p);
+            // targetedCells.add(p);
         }
         stopCell = b.collisionPos;
         GLog.w("Marisa is about to dash, get out of her way!");
@@ -435,7 +441,7 @@ public class MarisaBoss extends Mob {
     private boolean dash() {
         HashSet<Char> affected = new HashSet<>();
         boolean terrainAffected = false;
-
+		if (stopCell == 69) stopCell = Dungeon.hero.pos;
         sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(stopCell)));
         this.move( stopCell);
         this.moveSprite(this.pos, stopCell);
@@ -450,7 +456,9 @@ public class MarisaBoss extends Mob {
 				Buff.affect(ch, Paralysis.class, 1.5f);
 			}
 		}
-        for (int p : targetedCells) {
+
+		Ballistica b = new Ballistica(this.pos, stopCell, Ballistica.STOP_SOLID);
+		for (int p : b.subPath(0, Dungeon.level.distance(this.pos, stopCell))){
 			CellEmitter.get(p).start(Speck.factory(Speck.JET), 0.05f, 10);
 			CellEmitter.get(p).start(RainbowParticle.BURST, 0.05f, 10);
             Char ch = Actor.findChar(p);
@@ -462,7 +470,7 @@ public class MarisaBoss extends Mob {
                 GameScene.updateMap(p);
                 terrainAffected = true;
             }
-        }
+		}
         if (terrainAffected) {
             Dungeon.observe();
         }
@@ -483,20 +491,34 @@ public class MarisaBoss extends Mob {
                 GLog.n(Messages.get(Char.class, "kill", name()));
             }
         }
+		stopCell = 69;
         return true;
     }
 
 	private ArrayList<Integer> targetedCells_MS = new ArrayList<>();
 	private ArrayList<Integer> stopCells_MS = new ArrayList<>();
 
+
+	private int ms_getphase(){
+		switch(this.phase){
+			case 1:
+			default:
+				return Ballistica.STOP_SOLID;
+			case 2:
+				return Ballistica.MASTERSPARK;
+			case 3:
+				return Ballistica.WONT_STOP;
+		}
+	}
+
     private boolean masterspark_ready(){
 		Dungeon.hero.interrupt();
 		this.sprite.add(CharSprite.State.CHARGING);
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!(Actor.findChar(this.pos+i) instanceof MarisaBoss)){
-				Ballistica p = new Ballistica(this.pos, Dungeon.hero.pos + i, Ballistica.MASTERSPARK);
+				Ballistica p = new Ballistica(this.pos, Dungeon.hero.pos + i, ms_getphase());
 				stopCells_MS.add(p.collisionPos);
-				for(int j : p.subPath(0, Dungeon.level.distance(this.pos, p.collisionPos))){
+				for(int j : p.subPath(0, Dungeon.level.distance(this.pos, p.collisionPos + ( (this.phase == 2) ? 1 : 0)))){
 					targetedCells_MS.add(j);
 					sprite.parent.add(new TargetedCell(j, 0xFF0000));
 				}
@@ -602,11 +624,11 @@ public class MarisaBoss extends Mob {
 		}
 		bundle.put(MS_STOP_CELLS, bundleArr_2);
 
-		int[] bundleArr_3 = new int[targetedCells.size()];
-		for (int i = 0; i < targetedCells.size(); i++){
-			bundleArr_3[i] = targetedCells.get(i);
-		}
-		bundle.put(DASH_TARGETED_CELLS, bundleArr_3);
+		// int[] bundleArr_3 = new int[targetedCells.size()];
+		// for (int i = 0; i < targetedCells.size(); i++){
+		// 	bundleArr_3[i] = targetedCells.get(i);
+		// }
+		// bundle.put(DASH_TARGETED_CELLS, bundleArr_3);
 	}
 	
 	@Override
@@ -620,10 +642,6 @@ public class MarisaBoss extends Mob {
 		phase = bundle.getInt(MARISA_PHASE);
 		count_before_tele = bundle.getInt(TELE_COUNT);
 
-		for (int i : bundle.getIntArray(DASH_TARGETED_CELLS)){
-			targetedCells_MS.add(i);
-		}
-
 		for (int i : bundle.getIntArray(MS_STOP_CELLS)){
 			stopCells_MS.add(i);
 		}
@@ -632,9 +650,9 @@ public class MarisaBoss extends Mob {
 			targetedCells_MS.add(i);
 		}
 
-		for (int i : bundle.getIntArray(DASH_TARGETED_CELLS)){
-			targetedCells.add(i);
-		}
+		// for (int i : bundle.getIntArray(DASH_TARGETED_CELLS)){
+		// 	targetedCells.add(i);
+		// }
 	}
 
 	@Override

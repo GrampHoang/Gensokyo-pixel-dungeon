@@ -107,9 +107,9 @@ public class MarisaNPC extends NPC {
 			// 			}
 			// 		}
 			// 	});
-			} else {
-				tell(Messages.get(this, "quest_2", Dungeon.hero.name()));
-			}
+			// } else {
+			// 	tell(Messages.get(this, "quest_2", Dungeon.hero.name()));
+			// }
 			
 		} else {
 			// if (Document.ENCOUNTER.isPageFound(Document.MARISA)) tell(Messages.get(this, "quest_1"));
@@ -194,11 +194,11 @@ public class MarisaNPC extends NPC {
 		public static void spawn( ForestLevel level ) {
 			// TODO Dungeon.depth > 99 to disable her spawn
             // Will try to spawn her inside a library
-			if (!spawned && Dungeon.depth > 99 && Random.Int( 4 - Dungeon.depth ) == 0) {
+			if (!spawned && Dungeon.depth == 20 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
 				MarisaNPC npc = new MarisaNPC();
 				do {
-					npc.pos = (MArisaBossLevel)level.randomRespawnCell( npc );
+					npc.pos = level.randomRespawnCell( npc );
 				} while (
 						npc.pos == -1 ||
 						level.heaps.get( npc.pos ) != null ||

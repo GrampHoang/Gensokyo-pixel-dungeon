@@ -47,7 +47,7 @@ public class MarisaBossLevel extends Level {
         color1 = 0xeeee00;
         color2 = 0x000000;
 
-        viewDistance = 69;
+        viewDistance = 8;
     }
 
     @Override

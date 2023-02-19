@@ -50,16 +50,11 @@ public class PatchouliSprite extends MobSprite {
 		play( idle );
 	}
 	
-	@Override
-	public void die() {
-		super.die();
-		if (Dungeon.level.heroFOV[ch.pos]) {
-			emitter().burst( Speck.factory( Speck.BONE ), 6 );
-		}
-	}
-	
-	@Override
-	public int blood() {
-		return 0xFFcccccc;
-	}
+	// @Override
+	// public void die() {
+	// 	super.die();
+	// 	if (Dungeon.level.heroFOV[ch.pos]) {
+	// 		emitter().burst( Speck.factory( Speck.BONE ), 6 );
+	// 	}
+	// }
 }

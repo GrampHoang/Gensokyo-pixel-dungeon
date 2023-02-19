@@ -44,7 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
-
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
@@ -70,6 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
@@ -261,7 +262,8 @@ public enum Catalog {
 		RINGS.seen.put( RingOfSharpshooting.class,          false);
 		RINGS.seen.put( RingOfTenacity.class,               false);
 		RINGS.seen.put( RingOfWealth.class,                 false);
-	
+		RINGS.seen.put( RingOfMagic.class,                 false);
+		
 		ARTIFACTS.seen.put( AlchemistsToolkit.class,        false);
 		//ARTIFACTS.seen.put( CapeOfThorns.class,             false);
 		ARTIFACTS.seen.put( ChaliceOfBlood.class,           false);
@@ -304,6 +306,7 @@ public enum Catalog {
 		SCROLLS.seen.put( ScrollOfTransmutation.class,      false);
 
 		ENCOUNTERS.seen.put( SuikaEnc.class,     			 false);
+		ENCOUNTERS.seen.put( MarisaEnc.class,     			 false);
 	}
 	
 	public static LinkedHashMap<Catalog, Badges.Badge> catalogBadges = new LinkedHashMap<>();

@@ -107,6 +107,10 @@ public class RemiliaSpear extends WeaponWithSP {
 
             for (int i : b.subPath(1, Dungeon.level.distance(Dungeon.hero.pos, b.collisionPos))) {
                 CellEmitter.get(i).start(Speck.factory(Speck.STEAM), 0.07f, 10);
+                if (Dungeon.level.flamable[i]) {
+                    Dungeon.level.destroy(i);
+                    GameScene.updateMap(i);
+                }
                 if (Dungeon.level.pit[i]) GameScene.add(Blob.seed(i, 1, Fire.class));
                     else GameScene.add(Blob.seed(i, 10, Fire.class));
 

@@ -1,5 +1,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import java.util.ArrayList;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
@@ -10,11 +12,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
@@ -71,6 +75,8 @@ public class MarisaNPC extends NPC {
 		return true;
 	}
 	
+
+	private ArrayList<Wand> wandls = new ArrayList<>();
 	@Override
 	public boolean interact(Char c) {
 		
@@ -81,35 +87,36 @@ public class MarisaNPC extends NPC {
 		}
 
 		if (Quest.given) {
-			PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
-			if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						poh.detach(Dungeon.hero.belongings.backpack);
-						poh.detach(Dungeon.hero.belongings.backpack);
-						MarisaNPC.Quest.complete();
-						sprite.showStatus(CharSprite.POSITIVE, "Take these!");
+			wandls = Dungeon.hero.belongings.getAllItems( Wand.class );
+			// PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
+			// if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
+			// 	Game.runOnRenderThread(new Callback() {
+			// 		@Override
+			// 		public void call() {
+			// 			poh.detach(Dungeon.hero.belongings.backpack);
+			// 			poh.detach(Dungeon.hero.belongings.backpack);
+			// 			MarisaNPC.Quest.complete();
+			// 			sprite.showStatus(CharSprite.POSITIVE, "Take these!");
 
-						EndlessAlcohol alcohol = new EndlessAlcohol();
-						alcohol.quantity(3).collect();
+			// 			EndlessAlcohol alcohol = new EndlessAlcohol();
+			// 			alcohol.quantity(3).collect();
 
-						if (!(Document.ENCOUNTER.isPageFound(Document.MARISA)) ) {
-							MarisaEnc encounter = new MarisaEnc();
-							encounter.collect();
-						}
-					}
-				});
+			// 			if (!(Document.ENCOUNTER.isPageFound(Document.MARISA)) ) {
+			// 				MarisaEnc encounter = new MarisaEnc();
+			// 				encounter.collect();
+			// 			}
+			// 		}
+			// 	});
 			} else {
 				tell(Messages.get(this, "quest_2", Dungeon.hero.name()));
 			}
 			
 		} else {
-			if (Document.ENCOUNTER.isPageFound(Document.MARISA)) tell(Messages.get(this, "quest_1"));
-			else tell(Messages.get(this, "quest_1_firsttime"));
-			Quest.given = true;
-			Quest.completed = false;
-			Notes.add( Notes.Landmark.MARISA );
+			// if (Document.ENCOUNTER.isPageFound(Document.MARISA)) tell(Messages.get(this, "quest_1"));
+			// else tell(Messages.get(this, "quest_1_firsttime"));
+			// Quest.given = true;
+			// Quest.completed = false;
+			// Notes.add( Notes.Landmark.MARISA );
 		}
 
 		return true;
@@ -191,7 +198,7 @@ public class MarisaNPC extends NPC {
 				
 				MarisaNPC npc = new MarisaNPC();
 				do {
-					npc.pos = level.randomRespawnCell( npc );
+					npc.pos = (MArisaBossLevel)level.randomRespawnCell( npc );
 				} while (
 						npc.pos == -1 ||
 						level.heaps.get( npc.pos ) != null ||

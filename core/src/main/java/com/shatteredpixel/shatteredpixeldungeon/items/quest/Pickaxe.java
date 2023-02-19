@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Letty;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -151,7 +152,7 @@ public class Pickaxe extends Weapon {
 	
 	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
-		if (!bloodStained && defender instanceof Bat) {
+		if (!bloodStained && (defender instanceof Bat || defender instanceof Letty)) {
 			Actor.add(new Actor() {
 
 				{

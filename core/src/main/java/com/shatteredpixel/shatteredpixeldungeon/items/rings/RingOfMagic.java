@@ -33,7 +33,7 @@ import java.text.DecimalFormat;
 public class RingOfMagic extends Ring {
 
 	{
-		icon = ItemSpriteSheet.Icons.RING_ENERGY;
+		icon = ItemSpriteSheet.Icons.RING_MAGIC;
 	}
 
 	public String statsInfo() {

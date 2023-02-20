@@ -56,9 +56,9 @@ public class MarisaRoom extends SecretRoom {
 		}
 		entrance.set( Door.Type.HIDDEN );
 
-		// MarisaNPC marisa = new MarisaNPC();
-		// marisa.pos = level.pointToCell(random( 2 ));
-		// level.mobs.add( marisa );
+		MarisaNPC marisa = new MarisaNPC();
+		marisa.pos = level.pointToCell(random( 2 ));
+		level.mobs.add( marisa );
     }
 }
 	

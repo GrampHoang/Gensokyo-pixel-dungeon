@@ -167,10 +167,6 @@ public enum Document {
 		ALCHEMY_GUIDE.pagesStates.put("Catalysts",            debug ? READ : NOT_FOUND);
 		ALCHEMY_GUIDE.pagesStates.put("Brews_Elixirs",        debug ? READ : NOT_FOUND);
 		ALCHEMY_GUIDE.pagesStates.put("Spells",               debug ? READ : NOT_FOUND);
-
-		ENCOUNTER.pagesStates.put(SUIKA,					   debug ? READ : NOT_FOUND);
-		ENCOUNTER.pagesStates.put(MARISA,					   debug ? READ : NOT_FOUND);
-		//ENCOUNTER.pagesStates.put("", debug ? READ : NOT_FOUND);
 	}
 	
 	private static final String DOCUMENTS = "documents";

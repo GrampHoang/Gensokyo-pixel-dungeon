@@ -21,18 +21,19 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
+import java.util.ArrayList;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WeaponWithSP;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
@@ -85,5 +86,31 @@ public class EndlessAlcohol extends Spell {
 			outQuantity = 1;
 		}
 		
+		@Override
+		public final boolean testIngredients(ArrayList<Item> ingredients) {
+			
+			int[] needed = inQuantity.clone();
+
+			if (!Catalog.isSeen(SuikaEnc.class)){
+				return false;
+			}
+			for (Item ingredient : ingredients){
+				if (!ingredient.isIdentified()) return false;
+				for (int i = 0; i < inputs.length; i++){
+					if (ingredient.getClass() == inputs[i]){
+						needed[i] -= ingredient.quantity();
+						break;
+					}
+				}
+			}
+			
+			for (int i : needed){
+				if (i > 0){
+					return false;
+				}
+			}
+			
+			return true;
+		}
 	}
 }

@@ -11,10 +11,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
@@ -41,8 +43,6 @@ public class SuikaNPC extends NPC {
 
 		properties.add(Property.IMMOVABLE);
 	}
-	
-	private boolean interacted = false;
 	
 
 	@Override
@@ -80,33 +80,53 @@ public class SuikaNPC extends NPC {
 			return true;
 		}
 
+		//Have quest
 		if (Quest.given) {
 			PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
-			if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
+			//Finished
+			if (Quest.completed){
+				switch(Random.IntRange(1,4)){
+					default:
+					case 1:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "quest_finished1"));
+						break;
+					case 2:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "quest_finished2"));
+						break;
+					case 3:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "quest_finished3"));
+						break;
+					case 4:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "quest_finished4"));
+						break;
+				}
+			//Just fnished
+			}else if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
 						poh.detach(Dungeon.hero.belongings.backpack);
 						poh.detach(Dungeon.hero.belongings.backpack);
 						SuikaNPC.Quest.complete();
-						sprite.showStatus(CharSprite.POSITIVE, "Take these!");
-
+						tell(Messages.get(SuikaNPC.class, "quest_3"));
 						EndlessAlcohol alcohol = new EndlessAlcohol();
 						alcohol.quantity(3).collect();
 
-						if (!(Document.ENCOUNTER.isPageFound(Document.SUIKA)) ) {
+						if (!Catalog.isSeen(SuikaEnc.class)) {
+							Catalog.setSeen(SuikaEnc.class);
 							SuikaEnc encounter = new SuikaEnc();
 							encounter.collect();
 						}
 					}
 				});
+			//Not finish
 			} else {
 				tell(Messages.get(this, "quest_2", Dungeon.hero.name()));
 			}
-			
+		//No quest
 		} else {
-			if (Document.ENCOUNTER.isPageFound(Document.SUIKA)) tell(Messages.get(this, "quest_1"));
-			else tell(Messages.get(this, "quest_1_firsttime"));
+			if (Catalog.isSeen(SuikaEnc.class)) tell(Messages.get(this, "quest_1", Dungeon.hero.name()));
+			else tell(Messages.get(this, "quest_1_firsttime", Dungeon.hero.name()));
 			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.SUIKA );
@@ -141,18 +161,18 @@ public class SuikaNPC extends NPC {
 		// public static Ring reward;
 		
 		public static void reset() {
-			spawned = false;
-
-			// reward = null;
+			spawned		= false;
+			given		= false;
+			completed	= false;
+			alternative	= false;
 		}
 		
-		private static final String NODE		= "demon";
+		private static final String NODE		= "suika";
 		
-		private static final String ALTERNATIVE	= "alternative";
-		private static final String SPAWNED		= "spawned";
-		private static final String GIVEN		= "given";
-		private static final String COMPLETED	= "completed";
-		// private static final String REWARD		= "reward";
+		private static final String ALTERNATIVE	= "suika_a";
+		private static final String SPAWNED		= "suika_s";
+		private static final String GIVEN		= "suika_g";
+		private static final String COMPLETED	= "suika_c";
 		
 		public static void storeInBundle( Bundle bundle ) {
 			
@@ -165,7 +185,6 @@ public class SuikaNPC extends NPC {
 				
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
-				// node.put( REWARD, reward );
 			}
 			
 			bundle.put( NODE, node );
@@ -180,7 +199,6 @@ public class SuikaNPC extends NPC {
 				
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
-				// reward = (Ring)node.get( REWARD );
 			}
 		}
 		
@@ -203,25 +221,8 @@ public class SuikaNPC extends NPC {
 				level.mobs.add( npc );
 				spawned = true;
 				given = false;
-				
-				// do {
-				// 	reward = (Ring)Generator.random( Generator.Category.RING );
-				// } while (reward.cursed);
-				// reward.upgrade( 2 );
-				// reward.cursed = true;
 			}
 		}
-		
-		// public static void process( Mob mob ) {
-		// 	if (spawned && given && !completed && Dungeon.depth != 20) {
-		// 		if ((alternative && mob instanceof Monk) ||
-		// 			(!alternative && mob instanceof Golem)) {
-					
-		// 			Dungeon.level.drop( new DwarfToken(), mob.pos ).sprite.drop();
-		// 		}
-		// 	}
-		// }
-		
 		public static void complete() {
 			// reward = null;
 			completed = true;

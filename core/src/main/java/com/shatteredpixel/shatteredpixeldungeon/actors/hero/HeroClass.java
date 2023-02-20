@@ -428,6 +428,10 @@ public enum HeroClass {
 				PotionOfHealing poh = new PotionOfHealing();
 				poh.quantity(99).collect();
 				Dungeon.quickslot.setSlot(3, poh);
+
+				ScrollOfMagicMapping som = new ScrollOfMagicMapping();
+				som.quantity(99).collect();
+				Dungeon.quickslot.setSlot(5, som);
 	}
 	
 	private static void initKoishi( Hero hero ) {

@@ -159,11 +159,13 @@ public class Kaguya extends Mob {
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
+		bundle.put("REV", revived);
 		super.storeInBundle(bundle);
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
+		revived = bundle.getBoolean("REV");
 		super.restoreFromBundle(bundle);
 	}
 

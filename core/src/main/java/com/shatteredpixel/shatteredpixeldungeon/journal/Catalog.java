@@ -339,6 +339,17 @@ public enum Catalog {
 		Badges.validateItemsIdentified();
 	}
 	
+	//for Debug
+	public static void setUnSeen(Class<? extends Item> itemClass){
+		for (Catalog cat : values()) {
+			if (cat.seen.containsKey(itemClass)) {
+				cat.seen.put(itemClass, false);
+				Journal.saveNeeded = true;
+			}
+		}
+		Badges.validateItemsIdentified();
+	}
+
 	private static final String CATALOG_ITEMS = "catalog_items";
 	
 	public static void store( Bundle bundle ){

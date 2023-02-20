@@ -11,11 +11,4 @@ public class MarisaEnc extends EncounterNotes {
     {
 		image = ItemSpriteSheet.HAKKERO;
 	}
-
-    // @Override
-	// public final boolean doPickUp(Hero hero, int pos) {
-    //     super.doPickUp(hero, pos);
-	// 	return true;
-	// }
-
 }

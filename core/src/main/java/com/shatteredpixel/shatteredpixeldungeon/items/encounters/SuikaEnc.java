@@ -11,11 +11,4 @@ public class SuikaEnc extends EncounterNotes {
     {
 		image = ItemSpriteSheet.VIAL;
 	}
-
-    // @Override
-	// public final boolean doPickUp(Hero hero, int pos) {
-    //     super.doPickUp(hero, pos);
-	// 	return true;
-	// }
-
 }

@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.HallsPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.MarisaRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.DemonSpawnerRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.CorrosionTrap;
@@ -81,7 +82,9 @@ public class HallsLevel extends RegularLevel {
 		ArrayList<Room> rooms = super.initRooms();
 
 		rooms.add(new DemonSpawnerRoom());
-
+		if(Dungeon.branch == 1){
+			rooms.add(new MarisaRoom());
+		}
 		return rooms;
 	}
 

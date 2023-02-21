@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -95,7 +96,12 @@ public class RipperDemon extends Mob {
 	public int drRoll() {
 		return Random.NormalIntRange(0, 4);
 	}
-
+	@Override
+	public void rollToDropLoot() {
+		MarisaNPC.Quest.process( this );
+		super.rollToDropLoot();
+	}
+	
 	private static final String LAST_ENEMY_POS = "last_enemy_pos";
 	private static final String LEAP_POS = "leap_pos";
 	private static final String LEAP_CD = "leap_cd";

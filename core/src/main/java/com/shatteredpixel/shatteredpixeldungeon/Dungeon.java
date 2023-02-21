@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SuikaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
@@ -242,7 +243,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 16;
+		depth = 21;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -260,7 +261,8 @@ public class Dungeon {
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
 		SuikaNPC.Quest.reset();
-
+		MarisaNPC.appeared = false;
+		MarisaNPC.Quest.reset(); //Just in case?
 		hero = new Hero();
 		hero.live();
 		
@@ -637,6 +639,7 @@ public class Dungeon {
 			Blacksmith	.Quest.storeInBundle( quests );
 			Imp			.Quest.storeInBundle( quests );
 			SuikaNPC	.Quest.storeInBundle( quests );
+			MarisaNPC	.Quest.storeInBundle( quests );
 			bundle.put( QUESTS, quests );
 			
 			SpecialRoom.storeRoomsInBundle( bundle );
@@ -743,12 +746,14 @@ public class Dungeon {
 				Blacksmith.Quest.restoreFromBundle( quests );
 				Imp.Quest.restoreFromBundle( quests );
 				SuikaNPC.Quest.restoreFromBundle( quests );
+				MarisaNPC.Quest.restoreFromBundle( quests );
 			} else {
 				Ghost.Quest.reset();
 				Wandmaker.Quest.reset();
 				Blacksmith.Quest.reset();
 				Imp.Quest.reset();
 				SuikaNPC.Quest.reset();
+				MarisaNPC.Quest.reset();
 			}
 			
 			SpecialRoom.restoreRoomsFromBundle(bundle);

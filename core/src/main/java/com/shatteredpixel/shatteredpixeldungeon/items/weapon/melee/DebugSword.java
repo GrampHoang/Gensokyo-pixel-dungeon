@@ -42,14 +42,14 @@ public class DebugSword extends WeaponWithSP {
 
     @Override
 	protected boolean useSkill(){
-		SuikaEnc encounter = new SuikaEnc();
-
         if (!Catalog.isSeen(SuikaEnc.class)) {
 			GLog.w("Seen");
-            Catalog.setSeen(SuikaEnc.class);
+            Catalog.setSeen(MarisaEnc.class);
+			Catalog.setSeen(SuikaEnc.class);
         } else {
 			GLog.w("Unseen");
 			Catalog.setUnSeen(SuikaEnc.class);
+			Catalog.setUnSeen(MarisaEnc.class);
 		}
 		Dungeon.hero.spendAndNext(1f);
         return true;

@@ -21,12 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss.SewerBossEntranceRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.HallwayRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -35,8 +37,14 @@ import com.watabou.utils.Reflection;
 
 public class MarisaRoom extends SecretRoom {
 	
-	//reduced max size to limit chest numbers.
-	// normally would gen with 8-28, this limits it to 8-16
+	static MarisaNPC marisa = new MarisaNPC();
+
+	@Override
+	public boolean canConnect(Room r) {
+		//never connects at the entrance
+		return !(r instanceof HallwayRoom) && super.canConnect(r);
+	}
+
 	@Override
 	public int maxHeight() { return 7; }
 	public int maxWidth() { return 7; }
@@ -55,10 +63,11 @@ public class MarisaRoom extends SecretRoom {
 			Painter.drawInside(level, this, entrance, (height() - 3) / 2, Terrain.EMPTY_SP);
 		}
 		entrance.set( Door.Type.HIDDEN );
-
-		MarisaNPC marisa = new MarisaNPC();
-		marisa.pos = level.pointToCell(random( 2 ));
-		level.mobs.add( marisa );
+		if (MarisaNPC.appeared == false && Random.Int(24 - Dungeon.depth) == 0){
+			MarisaNPC.appeared = true;
+			marisa.pos = level.pointToCell(random( 2 ));
+			level.mobs.add( marisa );
+		}
     }
 }
 	

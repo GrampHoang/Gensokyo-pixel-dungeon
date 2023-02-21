@@ -8,17 +8,21 @@ import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
@@ -46,8 +50,7 @@ public class MarisaNPC extends NPC {
 		properties.add(Property.IMMOVABLE);
 	}
 	
-	private boolean interacted = false;
-	
+	public static boolean appeared = false;
 
 	@Override
 	protected boolean act() {
@@ -70,12 +73,6 @@ public class MarisaNPC extends NPC {
 	public void add( Buff buff ) {
 	}
 	
-	@Override
-	public boolean reset() {
-		return true;
-	}
-	
-
 	private ArrayList<Wand> wandls = new ArrayList<>();
 	@Override
 	public boolean interact(Char c) {
@@ -86,37 +83,61 @@ public class MarisaNPC extends NPC {
 			return true;
 		}
 
+		//Have quest
 		if (Quest.given) {
 			wandls = Dungeon.hero.belongings.getAllItems( Wand.class );
-			// PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
-			// if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
-			// 	Game.runOnRenderThread(new Callback() {
-			// 		@Override
-			// 		public void call() {
-			// 			poh.detach(Dungeon.hero.belongings.backpack);
-			// 			poh.detach(Dungeon.hero.belongings.backpack);
-			// 			MarisaNPC.Quest.complete();
-			// 			sprite.showStatus(CharSprite.POSITIVE, "Take these!");
-
-			// 			EndlessAlcohol alcohol = new EndlessAlcohol();
-			// 			alcohol.quantity(3).collect();
-
-			// 			if (!(Document.ENCOUNTER.isPageFound(Document.MARISA)) ) {
-			// 				MarisaEnc encounter = new MarisaEnc();
-			// 				encounter.collect();
-			// 			}
-			// 		}
-			// 	});
-			// } else {
-			// 	tell(Messages.get(this, "quest_2", Dungeon.hero.name()));
-			// }
+			DemonCore tokens = Dungeon.hero.belongings.getItem( DemonCore.class );
+			int tokenNeed = (25 - Dungeon.depth)*2 + 4;
+			// Finished
+			if (Quest.completed){
+				switch(Random.IntRange(1,4)){
+					default:
+					case 1:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished1"));
+						break;
+					case 2:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished2"));
+						break;
+					case 3:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished3"));
+						break;
+					case 4:
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished4"));
+						break;
+				}
+			// Finish now
+			} else if (tokens != null && tokens.quantity() >= tokenNeed && !Quest.completed) {
+				int tokensHave = tokens.quantity();
+				Game.runOnRenderThread(new Callback() {
+					@Override
+					public void call() {
+						tokens.detachAll(Dungeon.hero.belongings.backpack);
+						MarisaNPC.Quest.complete();
+						//Normal finish
+						if( tokensHave <= tokenNeed*2 ){
+							tell(Messages.get(MarisaNPC.class, "quest_3_normal", tokensHave));
+						// Good finish, double what she tell you to get
+						} else {
+							tell(Messages.get(MarisaNPC.class, "quest_3_good"));
+							if (!Catalog.isSeen(MarisaEnc.class)) {
+								Catalog.setSeen(MarisaEnc.class);
+								MarisaEnc encounter = new MarisaEnc();
+								encounter.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+							}
+						}
+					}
+				});
+			// Not finish
+			} else {
+				tell(Messages.get(this, "quest_2", tokenNeed));
+			}
 			
 		} else {
-			// if (Document.ENCOUNTER.isPageFound(Document.MARISA)) tell(Messages.get(this, "quest_1"));
-			// else tell(Messages.get(this, "quest_1_firsttime"));
-			// Quest.given = true;
-			// Quest.completed = false;
-			// Notes.add( Notes.Landmark.MARISA );
+			if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(this, "quest_1"));
+			else tell(Messages.get(this, "quest_1_notimpress"));
+			Quest.given = true;
+			Quest.completed = false;
+			Notes.add( Notes.Landmark.MARISA );
 		}
 
 		return true;
@@ -137,10 +158,19 @@ public class MarisaNPC extends NPC {
 		sprite.die();
 	}
 
+	@Override
+	public void storeInBundle( Bundle bundle ) {
+		super.storeInBundle(bundle);
+		bundle.put( "APPEARED", appeared );
+	}
+	
+	@Override
+	public void restoreFromBundle( Bundle bundle ) {
+		super.restoreFromBundle(bundle);
+		appeared = bundle.getBoolean("APPEARED");
+	}
+
 	public static class Quest {
-		
-		private static boolean alternative;
-		
 		private static boolean spawned;
 		private static boolean given;
 		private static boolean completed;
@@ -149,16 +179,16 @@ public class MarisaNPC extends NPC {
 		
 		public static void reset() {
 			spawned = false;
-
+			given = false;
+			completed = false;
 			// reward = null;
 		}
 		
-		private static final String NODE		= "demon";
+		private static final String NODE		= "mari_Quest";
 		
-		private static final String ALTERNATIVE	= "alternative";
-		private static final String SPAWNED		= "spawned";
-		private static final String GIVEN		= "given";
-		private static final String COMPLETED	= "completed";
+		private static final String SPAWNED		= "m_spawned";
+		private static final String GIVEN		= "m_given";
+		private static final String COMPLETED	= "m_completed";
 		// private static final String REWARD		= "reward";
 		
 		public static void storeInBundle( Bundle bundle ) {
@@ -168,7 +198,6 @@ public class MarisaNPC extends NPC {
 			node.put( SPAWNED, spawned );
 			
 			if (spawned) {
-				node.put( ALTERNATIVE, alternative );
 				
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
@@ -183,7 +212,6 @@ public class MarisaNPC extends NPC {
 			Bundle node = bundle.getBundle( NODE );
 			
 			if (!node.isNull() && (spawned = node.getBoolean( SPAWNED ))) {
-				alternative	= node.getBoolean( ALTERNATIVE );
 				
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
@@ -194,40 +222,38 @@ public class MarisaNPC extends NPC {
 		public static void spawn( ForestLevel level ) {
 			// TODO Dungeon.depth > 99 to disable her spawn
             // Will try to spawn her inside a library
-			if (!spawned && Dungeon.depth == 20 && Random.Int( 4 - Dungeon.depth ) == 0) {
+			// Irrelevant for now, she spawn in her room
+			// if (!spawned && Dungeon.depth == 20 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
-				MarisaNPC npc = new MarisaNPC();
-				do {
-					npc.pos = level.randomRespawnCell( npc );
-				} while (
-						npc.pos == -1 ||
-						level.heaps.get( npc.pos ) != null ||
-						level.traps.get( npc.pos) != null ||
-						level.findMob( npc.pos ) != null ||
-						//Marisa doesn't move, so she cannot obstruct a passageway
-						!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
-						!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
-				level.mobs.add( npc );
-				spawned = true;
-				given = false;
-				
-				// do {
-				// 	reward = (Ring)Generator.random( Generator.Category.RING );
-				// } while (reward.cursed);
-				// reward.upgrade( 2 );
-				// reward.cursed = true;
-			}
+			// 	MarisaNPC npc = new MarisaNPC();
+			// 	do {
+			// 		npc.pos = level.randomRespawnCell( npc );
+			// 	} while (
+			// 			npc.pos == -1 ||
+			// 			level.heaps.get( npc.pos ) != null ||
+			// 			level.traps.get( npc.pos) != null ||
+			// 			level.findMob( npc.pos ) != null ||
+			// 			//Marisa doesn't move, so she cannot obstruct a passageway
+			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
+			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
+			// 	level.mobs.add( npc );
+			// 	spawned = true;
+			// 	given = false;
+			// }
 		}
 		
-		// public static void process( Mob mob ) {
-		// 	if (spawned && given && !completed && Dungeon.depth != 20) {
-		// 		if ((alternative && mob instanceof Monk) ||
-		// 			(!alternative && mob instanceof Golem)) {
-					
-		// 			Dungeon.level.drop( new DwarfToken(), mob.pos ).sprite.drop();
-		// 		}
-		// 	}
-		// }
+		public static void process( Mob mob ) {
+			if (given && !completed && Dungeon.depth < 25) {
+				// if ((mob instanceof Succubus) ||
+				// 	(mob instanceof Eye) ||
+				// 	(mob instanceof Scorpio)) {
+				// 	Dungeon.level.drop( new DemonCore().quantity(3), mob.pos ).sprite.drop();
+				// }
+				if ((mob instanceof RipperDemon)) {
+					Dungeon.level.drop( new DemonCore(), mob.pos ).sprite.drop();
+				}
+			}
+		}
 		
 		public static void complete() {
 			// reward = null;

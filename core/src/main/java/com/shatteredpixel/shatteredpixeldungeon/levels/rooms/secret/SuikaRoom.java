@@ -54,7 +54,7 @@ public class SuikaRoom extends SecretRoom {
 			well = new Point(door.x, top+2);
 		}
 		
-		Painter.fill(level, well.x-1, well.y-1, 3, 3, Terrain.CHASM);
+		Painter.fill(level, well.x-1, well.y-1, 3, 3, Terrain.HIGH_GRASS);
 		Painter.drawLine(level, door, well, Terrain.EMPTY);
 		
 		SuikaNPC suika = new SuikaNPC();

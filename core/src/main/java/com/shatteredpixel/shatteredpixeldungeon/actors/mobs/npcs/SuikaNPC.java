@@ -100,7 +100,7 @@ public class SuikaNPC extends NPC {
 						sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "quest_finished4"));
 						break;
 				}
-			//Just fnished
+			// fnished now
 			}else if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
@@ -205,23 +205,24 @@ public class SuikaNPC extends NPC {
 		public static void spawn( ForestLevel level ) {
 			// TODO Dungeon.depth > 99 to disable her spawn
 			// Will try to spawn her lying somewhere between tree
-			if (!spawned && Dungeon.depth > 99 && Random.Int( 4 - Dungeon.depth ) == 0) {
+			// She doesn't spawn outside so these are irrelevant for now, she spawn in her room
+			// if (!spawned && Dungeon.depth > 99 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
-				SuikaNPC npc = new SuikaNPC();
-				do {
-					npc.pos = level.randomRespawnCell( npc );
-				} while (
-						npc.pos == -1 ||
-						level.heaps.get( npc.pos ) != null ||
-						level.traps.get( npc.pos) != null ||
-						level.findMob( npc.pos ) != null ||
-						//Suika doesn't move, so she cannot obstruct a passageway
-						!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
-						!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
-				level.mobs.add( npc );
-				spawned = true;
-				given = false;
-			}
+			// 	SuikaNPC npc = new SuikaNPC();
+			// 	do {
+			// 		npc.pos = level.randomRespawnCell( npc );
+			// 	} while (
+			// 			npc.pos == -1 ||
+			// 			level.heaps.get( npc.pos ) != null ||
+			// 			level.traps.get( npc.pos) != null ||
+			// 			level.findMob( npc.pos ) != null ||
+			// 			//Suika doesn't move, so she cannot obstruct a passageway
+			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
+			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
+			// 	level.mobs.add( npc );
+			// 	spawned = true;
+			// 	given = false;
+			// }
 		}
 		public static void complete() {
 			// reward = null;

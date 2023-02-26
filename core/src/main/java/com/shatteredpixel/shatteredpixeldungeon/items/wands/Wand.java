@@ -45,9 +45,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -274,7 +276,15 @@ public abstract class Wand extends Item {
 			
 		}
 
+		if(this.trueLevel() >= 12 && Catalog.isSeen(MarisaEnc.class)){
+			desc += "\n\n_Potential unlocked_: " + mariUnlock();
+		}
+
 		return desc;
+	}
+
+	public String mariUnlock(){
+		return Messages.get(this, "mari_unlock");
 	}
 
 	public String statsDesc(){
@@ -738,5 +748,9 @@ public abstract class Wand extends Item {
 		private void setScaleFactor(float value){
 			this.scalingFactor = value;
 		}
+	}
+
+	public boolean potUnlocked(){
+		return Catalog.isSeen(MarisaEnc.class) && trueLevel() >= 12;
 	}
 }

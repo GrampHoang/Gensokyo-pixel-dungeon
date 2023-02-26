@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char.Alignment;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -36,8 +37,10 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Door;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
@@ -65,6 +68,7 @@ public class WandOfBlastWave extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica bolt) {
+		GLog.w("Test:");
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 		BlastWave.blast(bolt.collisionPos);
 
@@ -199,6 +203,11 @@ public class WandOfBlastWave extends DamageWand {
 		particle.speed.polar(Random.Float(PointF.PI2), 0.3f);
 		particle.setSize( 1f, 2f);
 		particle.radiateXY(2.5f);
+	}
+
+	@Override
+	public String mariUnlock(){
+		return Messages.get(this, "mari_unlock");
 	}
 
 	public static class BlastWave extends Image {

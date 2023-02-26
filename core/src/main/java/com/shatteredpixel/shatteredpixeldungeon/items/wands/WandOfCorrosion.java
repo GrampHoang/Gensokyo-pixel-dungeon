@@ -26,10 +26,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char.Alignment;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -61,10 +63,21 @@ public class WandOfCorrosion extends Wand {
 		gas.setStrength(2 + buffedLvl(), getClass());
 		GameScene.add(gas);
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
-
+		if (potUnlocked()){
+			Char ch = Actor.findChar(bolt.collisionPos);
+			if (ch != null && ch.alignment != Alignment.ALLY) {
+				Buff.affect(ch, Slow.class, 2.5f);
+				CellEmitter.center(ch.pos).burst( CorrosionParticle.SPLASH, 10 );
+			}
+		}
+		//Slow center for 2 turns, around that for 1 turn
 		for (int i : PathFinder.NEIGHBOURS9) {
 			Char ch = Actor.findChar(bolt.collisionPos + i);
 			if (ch != null) {
+				if (potUnlocked() && ch.alignment != Alignment.ALLY){
+					Buff.affect(ch, Slow.class, 1.5f);
+					CellEmitter.center(ch.pos).burst( CorrosionParticle.SPLASH, 5 );
+				}
 				wandProc(ch, chargesPerCast());
 
 				if (i == 0 && ch instanceof DwarfKing){

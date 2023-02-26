@@ -77,13 +77,13 @@ public class WardSprite extends MobSprite {
 		((WandOfWarding.Ward)ch).onZapComplete();
 	}
 
-	public void zap15( int pos ) {
+	public void zapUP( int pos ) {
 		idle();
 		flash();
 		emitter().burst(MagicMissile.WardParticle.UP, 2);
 		PointF sky = center();
-		sky.y -= 300;
-		parent.add(new Beam.Gust(sky, DungeonTilemap.raisedTileCenterToWorld(pos)));
+		sky.y -= 144;
+		parent.add(new Beam.DeathRay(sky, DungeonTilemap.raisedTileCenterToWorld(pos)));
 		CellEmitter.center(pos).burst(BlastParticle.FACTORY, 20);
 		CellEmitter.center(pos).burst(SmokeParticle.FACTORY, 4);
 		((WandOfWarding.Ward)ch).onZapComplete();

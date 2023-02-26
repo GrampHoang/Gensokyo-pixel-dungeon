@@ -12,13 +12,16 @@ public abstract class EncounterNotes extends Item {
 		image = ItemSpriteSheet.MASTERY;
 	}
 	
-	// @Override
-	// public final boolean doPickUp(Hero hero, int pos) {
-	// 	GameScene.pickUpJournal(this, pos);
-	// 	Sample.INSTANCE.play( Assets.Sounds.ITEM );
-	// 	hero.spendAndNext( TIME_TO_PICK_UP );
-	// 	return true;
-	// }
+	@Override
+	public final boolean doPickUp(Hero hero, int pos) {
+		GameScene.pickUpJournal(this, pos);
+		Sample.INSTANCE.play( Assets.Sounds.ITEM );
+		hero.spendAndNext( TIME_TO_PICK_UP );
+		setSeen();
+		return true;
+	}
+
+	public abstract void setSeen();
 
 	@Override
 	public boolean isUpgradable() {

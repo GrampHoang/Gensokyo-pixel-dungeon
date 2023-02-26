@@ -36,7 +36,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -49,6 +51,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -198,6 +201,11 @@ public class WandOfWarding extends Wand {
 			return Messages.get(this, "stats_desc", 2);
 	}
 
+	@Override
+	public String mariUnlock(){
+		return Messages.get(this, "mari_unlock");
+	}
+
 	public static class Ward extends NPC {
 
 		public int tier = 1;
@@ -314,7 +322,8 @@ public class WandOfWarding extends Wand {
 		protected boolean doAttack(Char enemy) {
 			boolean visible = fieldOfView[pos] || fieldOfView[enemy.pos];
 			if (visible) {
-				sprite.zap( enemy.pos );
+				if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class)) ((WardSprite)sprite).zapUP( enemy.pos );
+				else sprite.zap( enemy.pos );
 			} else {
 				zap();
 			}
@@ -336,7 +345,12 @@ public class WandOfWarding extends Wand {
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail( getClass() );
 			}
-
+			if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class)){
+				for(int i : PathFinder.NEIGHBOURS8){
+					Char ch = Actor.findChar(enemy.pos + i);
+					if(ch!=null && ch.alignment != Alignment.ALLY) ch.damage( dmg/2,this);
+				}
+			}
 			totalZaps++;
 			switch(tier){
 				case 1: case 2: case 3: default:
@@ -425,6 +439,7 @@ public class WandOfWarding extends Wand {
 		@Override
 		public String description() {
 			return Messages.get(this, "desc_" + tier, 2+wandLevel, 8 + 4*wandLevel, tier );
+			// if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class))
 		}
 		
 		{

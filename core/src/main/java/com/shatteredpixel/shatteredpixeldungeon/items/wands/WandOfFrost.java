@@ -83,10 +83,10 @@ public class WandOfFrost extends DamageWand {
 
 			int damage = damageRoll();
 
-			if (ch.buff(Frost.class) != null){
+			if (ch.buff(Frost.class) != null && !(potUnlocked())){
 				return; //do nothing, can't affect a frozen target
 			}
-			if (ch.buff(Chill.class) != null){
+			if (ch.buff(Chill.class) != null && !(potUnlocked())){
 				//6.67% less damage per turn of chill remaining, to a max of 10 turns (50% dmg)
 				float chillturns = Math.min(10, ch.buff(Chill.class).cooldown());
 				damage = (int)Math.round(damage * Math.pow(0.9333f, chillturns));

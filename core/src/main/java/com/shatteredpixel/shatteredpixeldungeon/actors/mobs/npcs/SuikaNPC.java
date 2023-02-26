@@ -113,9 +113,8 @@ public class SuikaNPC extends NPC {
 						alcohol.quantity(3).collect();
 
 						if (!Catalog.isSeen(SuikaEnc.class)) {
-							Catalog.setSeen(SuikaEnc.class);
-							SuikaEnc encounter = new SuikaEnc();
-							encounter.collect();
+							// Catalog.setSeen(SuikaEnc.class);
+							Dungeon.level.drop(new MarisaEnc(), Dungeon.hero.pos ).sprite.drop();
 						}
 					}
 				});

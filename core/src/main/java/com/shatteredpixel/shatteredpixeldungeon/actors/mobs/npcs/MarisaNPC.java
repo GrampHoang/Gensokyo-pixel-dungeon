@@ -120,9 +120,8 @@ public class MarisaNPC extends NPC {
 						} else {
 							tell(Messages.get(MarisaNPC.class, "quest_3_good"));
 							if (!Catalog.isSeen(MarisaEnc.class)) {
-								Catalog.setSeen(MarisaEnc.class);
-								MarisaEnc encounter = new MarisaEnc();
-								encounter.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+								// Catalog.setSeen(MarisaEnc.class);
+								Dungeon.level.drop(new MarisaEnc(), Dungeon.hero.pos ).sprite.drop();
 							}
 						}
 					}
@@ -151,6 +150,7 @@ public class MarisaNPC extends NPC {
 			}
 		});
 	}
+	
 	
 	public void flee() {
 		yell( Messages.get(this, "cya", Dungeon.hero.name()) );

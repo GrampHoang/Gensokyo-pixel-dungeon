@@ -27,9 +27,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
@@ -43,6 +47,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -81,11 +86,20 @@ public class WandOfLightning extends DamageWand {
 			if (ch != curUser && ch.alignment == curUser.alignment && ch.pos != bolt.collisionPos){
 				continue;
 			}
+
+			if(potUnlocked() && ch == curUser){
+				continue;
+			}
+
 			wandProc(ch, chargesPerCast());
 			if (ch == curUser) {
 				ch.damage(Math.round(damageRoll() * multipler * 0.5f), this);
 			} else {
 				ch.damage(Math.round(damageRoll() * multipler), this);
+				Buff.affect(ch, Paralysis.class, 3f);
+				CellEmitter.center( ch.pos ).burst(SparkParticle.FACTORY, 3);
+				CellEmitter.center( ch.pos ).burst(SmokeParticle.FACTORY, 4);
+				CellEmitter.center(ch.pos).burst(BlastParticle.FACTORY, 10);
 			}
 		}
 
@@ -105,6 +119,7 @@ public class WandOfLightning extends DamageWand {
 	private void arc( Char ch ) {
 
 		int dist = (Dungeon.level.water[ch.pos] && !ch.flying) ? 2 : 1;
+		if(potUnlocked()) dist = 5;
 
 		ArrayList<Char> hitThisArc = new ArrayList<>();
 		PathFinder.buildDistanceMap( ch.pos, BArray.not( Dungeon.level.solid, null ), dist );
@@ -122,7 +137,9 @@ public class WandOfLightning extends DamageWand {
 		
 		affected.addAll(hitThisArc);
 		for (Char hit : hitThisArc){
-			arcs.add(new Lightning.Arc(ch.sprite.center(), hit.sprite.center()));
+			PointF tar = hit.sprite.center();
+			tar.y -= 96;
+			arcs.add(new Lightning.Arc(tar, hit.sprite.center()));
 			arc(hit);
 		}
 	}
@@ -136,19 +153,36 @@ public class WandOfLightning extends DamageWand {
 		int cell = bolt.collisionPos;
 
 		Char ch = Actor.findChar( cell );
-		if (ch != null) {
-			if (ch instanceof DwarfKing){
-				Statistics.qualifiedForBossChallengeBadge = false;
+		if (potUnlocked()){
+			if (ch != null) {
+				if (ch instanceof DwarfKing){
+					Statistics.qualifiedForBossChallengeBadge = false;
+				}
+				affected.add( ch );
+				PointF tar = ch.sprite.center();
+				tar.y -= 96;
+				arcs.add( new Lightning.Arc(tar, ch.sprite.center()));
+				arc(ch);
+			} else {
+				PointF tar = DungeonTilemap.raisedTileCenterToWorld(bolt.collisionPos);
+				tar.y -= 96;
+				arcs.add( new Lightning.Arc(tar, DungeonTilemap.raisedTileCenterToWorld(bolt.collisionPos)));
+				CellEmitter.center( cell ).burst( SparkParticle.FACTORY, 3 );
 			}
+		} else{
+			if (ch != null) {
+				if (ch instanceof DwarfKing){
+					Statistics.qualifiedForBossChallengeBadge = false;
+				}
 
-			affected.add( ch );
-			arcs.add( new Lightning.Arc(curUser.sprite.center(), ch.sprite.center()));
-			arc(ch);
-		} else {
-			arcs.add( new Lightning.Arc(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(bolt.collisionPos)));
-			CellEmitter.center( cell ).burst( SparkParticle.FACTORY, 3 );
+				affected.add( ch );
+				arcs.add( new Lightning.Arc(curUser.sprite.center(), ch.sprite.center()));
+				arc(ch);
+			} else {
+				arcs.add( new Lightning.Arc(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(bolt.collisionPos)));
+				CellEmitter.center( cell ).burst( SparkParticle.FACTORY, 3 );
+			}
 		}
-
 		//don't want to wait for the effect before processing damage.
 		curUser.sprite.parent.addToFront( new Lightning( arcs, null ) );
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );

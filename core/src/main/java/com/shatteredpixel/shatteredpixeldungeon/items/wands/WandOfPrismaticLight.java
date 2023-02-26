@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import java.util.ArrayList;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -53,7 +55,7 @@ public class WandOfPrismaticLight extends DamageWand {
 	{
 		image = ItemSpriteSheet.WAND_PRISMATIC_LIGHT;
 
-		collisionProperties = Ballistica.MAGIC_BOLT;
+		collisionProperties = potUnlocked() ? Ballistica.WONT_STOP : Ballistica.MAGIC_BOLT;
 	}
 
 	public int min(int lvl){
@@ -75,11 +77,26 @@ public class WandOfPrismaticLight extends DamageWand {
 				Buff.prolong( curUser, Light.class, 10f+buffedLvl()*5);
 			}
 		}
-		
-		Char ch = Actor.findChar(beam.collisionPos);
-		if (ch != null){
-			wandProc(ch, chargesPerCast());
-			affectTarget(ch);
+		if (potUnlocked()){
+			int maxDistance = Math.min(buffedLvl()*2+4, beam.dist);
+			ArrayList<Char> chars = new ArrayList<>();
+			for (int c : beam.subPath(1, maxDistance)) {
+				Char ch;
+				if ((ch = Actor.findChar( c )) != null) {
+					chars.add( ch );
+				}
+				CellEmitter.center( c ).burst( RainbowParticle.BURST, Random.IntRange( 1, 2 ) );
+			}
+			for (Char ch : chars) {
+				wandProc(ch, chargesPerCast());
+				affectTarget(ch);
+			}
+		} else {
+			Char ch = Actor.findChar(beam.collisionPos);
+			if (ch != null){
+				wandProc(ch, chargesPerCast());
+				affectTarget(ch);
+			}
 		}
 	}
 
@@ -139,8 +156,13 @@ public class WandOfPrismaticLight extends DamageWand {
 
 	@Override
 	public void fx(Ballistica beam, Callback callback) {
-		curUser.sprite.parent.add(
+		if (potUnlocked()){
+			int cell = beam.path.get(Math.min(beam.dist, 2*buffedLvl()+4));
+			curUser.sprite.parent.add(new Beam.LightRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld( cell )));
+		} else {
+			curUser.sprite.parent.add(
 				new Beam.LightRay(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(beam.collisionPos)));
+		}
 		callback.call();
 	}
 

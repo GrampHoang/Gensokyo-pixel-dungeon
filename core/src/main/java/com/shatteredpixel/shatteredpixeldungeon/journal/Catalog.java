@@ -44,8 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
@@ -164,9 +163,9 @@ public enum Catalog {
 		WEAPONS.seen.put( Gloves.class,                     false);
 		WEAPONS.seen.put( Dagger.class,                     false);
 		WEAPONS.seen.put( MagesStaff.class,                 false);
-		WEAPONS.seen.put( Gohei.class,                 		false);
+		WEAPONS.seen.put( Gohei.class,                 	 false);
 		WEAPONS.seen.put( MarisaStaff.class,                false);
-		WEAPONS.seen.put( Knife.class,                 		false);
+		WEAPONS.seen.put( Knife.class,                 	 false);
 		WEAPONS.seen.put( KoiKnife.class,                 	false);
 		WEAPONS.seen.put( ReisenHand.class,                 false);
 		//T2
@@ -307,6 +306,9 @@ public enum Catalog {
 
 		ENCOUNTERS.seen.put( SuikaEnc.class,     			 false);
 		ENCOUNTERS.seen.put( MarisaEnc.class,     			 false);
+		ENCOUNTERS.seen.put( TenshiEnc.class,     			 false);
+		ENCOUNTERS.seen.put( YoumuEnc.class,     			 false);
+		ENCOUNTERS.seen.put( AyaEnc.class,     			 false);
 	}
 	
 	public static LinkedHashMap<Catalog, Badges.Badge> catalogBadges = new LinkedHashMap<>();

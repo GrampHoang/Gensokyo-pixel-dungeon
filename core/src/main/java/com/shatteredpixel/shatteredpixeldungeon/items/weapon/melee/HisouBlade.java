@@ -21,12 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-
-import java.util.ArrayList;
 
 public class HisouBlade extends MeleeWeapon {
 

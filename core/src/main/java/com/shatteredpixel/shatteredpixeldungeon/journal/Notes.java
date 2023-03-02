@@ -78,7 +78,10 @@ public class Notes {
 		IMP,
 
 		MARISA,
-		SUIKA;
+		SUIKA,
+		TENSHI,
+		YOUMU,
+		AYA;
 		
 		public String desc() {
 			return Messages.get(this, name());

@@ -11,7 +11,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
@@ -113,8 +112,7 @@ public class SuikaNPC extends NPC {
 						alcohol.quantity(3).collect();
 
 						if (!Catalog.isSeen(SuikaEnc.class)) {
-							// Catalog.setSeen(SuikaEnc.class);
-							Dungeon.level.drop(new MarisaEnc(), Dungeon.hero.pos ).sprite.drop();
+							Catalog.setSeen(SuikaEnc.class);
 						}
 					}
 				});

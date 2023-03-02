@@ -318,11 +318,15 @@ public class WandOfWarding extends Wand {
 			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 		}
 
+		protected boolean potUnlock(){
+			if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class)) return true;
+			return false;
+		}
 		@Override
 		protected boolean doAttack(Char enemy) {
 			boolean visible = fieldOfView[pos] || fieldOfView[enemy.pos];
 			if (visible) {
-				if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class)) ((WardSprite)sprite).zapUP( enemy.pos );
+				if (potUnlock()) ((WardSprite)sprite).zapUP( enemy.pos );
 				else sprite.zap( enemy.pos );
 			} else {
 				zap();
@@ -345,7 +349,7 @@ public class WandOfWarding extends Wand {
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail( getClass() );
 			}
-			if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class)){
+			if (potUnlock()){
 				for(int i : PathFinder.NEIGHBOURS8){
 					Char ch = Actor.findChar(enemy.pos + i);
 					if(ch!=null && ch.alignment != Alignment.ALLY) ch.damage( dmg/2,this);
@@ -439,7 +443,6 @@ public class WandOfWarding extends Wand {
 		@Override
 		public String description() {
 			return Messages.get(this, "desc_" + tier, 2+wandLevel, 8 + 4*wandLevel, tier );
-			// if(this.wandLevel >= 12 && Catalog.isSeen(MarisaEnc.class))
 		}
 		
 		{

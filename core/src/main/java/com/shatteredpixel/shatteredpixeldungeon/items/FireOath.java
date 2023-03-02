@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
@@ -30,11 +31,16 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon.Enchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HisouBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HisouBladeAwakened;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -49,7 +55,7 @@ public class FireOath extends Item {
 	private static final float TIME_TO_INSCRIBE = 2;
 	
 	private static final String AC_INSCRIBE = "INSCRIBE";
-	
+	private static final String AC_AWAKEN = "AWAKEN";
 	{
 		image = ItemSpriteSheet.STYLUS;
 		
@@ -64,6 +70,11 @@ public class FireOath extends Item {
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( AC_INSCRIBE );
+
+		if(Catalog.isSeen(TenshiEnc.class)){
+			HisouBlade blade = Dungeon.hero.belongings.getItem( HisouBlade.class);
+			if (blade != null)	actions.add( AC_AWAKEN );
+		}
 		return actions;
 	}
 	
@@ -73,10 +84,12 @@ public class FireOath extends Item {
 		super.execute( hero, action );
 
 		if (action.equals(AC_INSCRIBE)) {
-
 			curUser = hero;
 			GameScene.selectItem( itemSelector );
 			
+		} else if (action.equals(AC_AWAKEN)) {
+			curUser = hero;
+			GameScene.selectItem( hisouSelector );
 		}
 	}
 	
@@ -170,6 +183,54 @@ public class FireOath extends Item {
                 FireOath.this.inscribe( (Armor)item );
             } else{
 				return;
+			}
+		}
+	};
+
+	private final WndBag.ItemSelector hisouSelector = new WndBag.ItemSelector() {
+
+		@Override
+		public String textPrompt() {
+			return Messages.get(Stylus.class, "prompt");
+		}
+
+		@Override
+		public Class<?extends Bag> preferredBag(){
+			return Belongings.Backpack.class;
+		}
+
+		@Override
+		public boolean itemSelectable(Item item) {
+			return item instanceof HisouBlade;
+		}
+
+		@Override
+		public void onSelect( Item item ) {
+            HisouBladeAwakened hba = new HisouBladeAwakened();
+			//Upgrade lvl
+			hba.level(item.trueLevel());
+			//Transfer Yinyang if Reimu
+			YinYang yy = ((MeleeWeapon)item).checkYinYang();
+			if (yy != null){
+				hba.affixSeal(yy);
+			}
+			//Transfer Enchant
+			if (((MeleeWeapon)item).getEnchant() != null){
+				Enchantment ench = ((MeleeWeapon)item).getEnchant();
+				hba.enchant(ench);
+			}
+			//Tranfer Augment
+			hba.augment = ((Weapon)item).augment;
+
+			hba.identify();
+			
+			if (item.isEquipped( Dungeon.hero )) {
+				((EquipableItem)item).doUnequip( Dungeon.hero, false );
+				item.detach( Dungeon.hero.belongings.backpack );
+				Dungeon.hero.belongings.weapon = hba;
+			} else {
+				item.detach( Dungeon.hero.belongings.backpack );
+				hba.collect();
 			}
 		}
 	};

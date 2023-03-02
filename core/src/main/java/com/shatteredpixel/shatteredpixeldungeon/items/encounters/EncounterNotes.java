@@ -4,12 +4,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 
 public abstract class EncounterNotes extends Item {
     {
-		image = ItemSpriteSheet.MASTERY;
+		unique = true;
 	}
 	
 	@Override
@@ -22,14 +21,14 @@ public abstract class EncounterNotes extends Item {
 	}
 
 	public abstract void setSeen();
+	
+	// @Override
+	// public boolean isUpgradable() {
+	// 	return false;
+	// }
 
-	@Override
-	public boolean isUpgradable() {
-		return false;
-	}
-
-	@Override
-	public boolean isIdentified() {
-		return true;
-	}
+	// @Override
+	// public boolean isIdentified() {
+	// 	return true;
+	// }
 }

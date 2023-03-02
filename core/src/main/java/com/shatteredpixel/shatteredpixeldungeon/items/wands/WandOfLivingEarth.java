@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
+import java.util.ArrayList;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -28,13 +30,17 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -337,6 +343,34 @@ public class WandOfLivingEarth extends DamageWand {
 			//same as the hero
 			return 2*defenseSkill + 5;
 		}
+
+		// Have to manually check every wand in inventory
+		private ArrayList<WandOfLivingEarth> wandls = new ArrayList<>();
+		public boolean potUnlock(){
+			if (!Catalog.isSeen(MarisaEnc.class)) return false;
+			//in case multiple WoLE
+			wandls = Dungeon.hero.belongings.getAllItems( WandOfLivingEarth.class );
+			for (WandOfLivingEarth wand : wandls){
+				if (wand.trueLevel() >= 12) return true;
+			}
+			return false;
+		}
+		
+		@Override
+		protected boolean canAttack( Char enemy ) {
+		if (enemy.buff(Blindness.class) == null && potUnlock()){
+			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+			if (attack.collisionPos == enemy.pos){
+				Buff.affect(enemy, Blindness.class, 3f);
+				this.sprite.parent.add(new Beam.Gust(this.sprite.center(), enemy.sprite.center()));
+				enemy.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 10);
+				return true;
+			}
+			return super.canAttack(enemy);
+		} else {
+			return super.canAttack(enemy);
+		}
+	}
 
 		@Override
 		public int attackProc(Char enemy, int damage) {

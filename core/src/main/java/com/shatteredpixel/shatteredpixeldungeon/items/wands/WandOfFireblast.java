@@ -30,7 +30,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage.WildMagic;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
@@ -110,6 +113,22 @@ public class WandOfFireblast extends DamageWand {
 						&& Fire.volumeAt(cell+i, Fire.class) == 0){
 					GameScene.add( Blob.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
 				}
+			}
+		}
+
+		if (potUnlocked()){
+			switch (chargesPerCast()) {
+				case 1:
+					Buff.affect(Dungeon.hero, FireImbue.class).set(10f);
+					break; //no effects
+				case 2:
+					Buff.affect(Dungeon.hero, FireImbue.class).set(20f);
+					Buff.affect(Dungeon.hero, Stamina.class, 15f);
+					break;
+				case 3:
+					Buff.affect(Dungeon.hero, FireImbue.class).set(30f);
+					Buff.affect(Dungeon.hero, Haste.class, 15f);
+					break;
 			}
 		}
 

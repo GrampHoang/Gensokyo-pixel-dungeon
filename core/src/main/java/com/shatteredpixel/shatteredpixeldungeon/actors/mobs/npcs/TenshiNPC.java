@@ -15,7 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
@@ -42,7 +42,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class MarisaNPC extends NPC {
+public class TenshiNPC extends NPC {
 
 	{
 		spriteClass = ImpSprite.class;
@@ -55,7 +55,7 @@ public class MarisaNPC extends NPC {
 	@Override
 	protected boolean act() {
 		if (!Quest.given && Dungeon.level.heroFOV[pos]) {
-			Notes.add( Notes.Landmark.MARISA );
+			Notes.add( Notes.Landmark.TENSHI );
 		} 
 		return super.act();
 	}
@@ -73,6 +73,7 @@ public class MarisaNPC extends NPC {
 	public void add( Buff buff ) {
 	}
 	
+	private ArrayList<Wand> wandls = new ArrayList<>();
 	@Override
 	public boolean interact(Char c) {
 		
@@ -84,6 +85,7 @@ public class MarisaNPC extends NPC {
 
 		//Have quest
 		if (Quest.given) {
+			wandls = Dungeon.hero.belongings.getAllItems( Wand.class );
 			DemonCore tokens = Dungeon.hero.belongings.getItem( DemonCore.class );
 			int tokenNeed = (25 - Dungeon.depth)*2 + 4;
 			// Finished
@@ -91,16 +93,16 @@ public class MarisaNPC extends NPC {
 				switch(Random.IntRange(1,4)){
 					default:
 					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished1"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished1"));
 						break;
 					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished2"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished2"));
 						break;
 					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished3"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished3"));
 						break;
 					case 4:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished4"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished4"));
 						break;
 				}
 			// Finish now
@@ -110,17 +112,16 @@ public class MarisaNPC extends NPC {
 					@Override
 					public void call() {
 						tokens.detachAll(Dungeon.hero.belongings.backpack);
-						MarisaNPC.Quest.complete();
+						TenshiNPC.Quest.complete();
 						//Normal finish
 						if( tokensHave <= tokenNeed*2 ){
-							tell(Messages.get(MarisaNPC.class, "quest_3_normal", tokensHave));
-							//TODO give reward
+							tell(Messages.get(TenshiNPC.class, "quest_3_normal", tokensHave));
 						// Good finish, double what she tell you to get
 						} else {
-							tell(Messages.get(MarisaNPC.class, "quest_3_good"));
-							if (!Catalog.isSeen(MarisaEnc.class)) {
-								// Catalog.setSeen(MarisaEnc.class);
-								Dungeon.level.drop(new MarisaEnc(), Dungeon.hero.pos ).doPickUp(Dungeon.hero, this.pos);
+							tell(Messages.get(TenshiNPC.class, "quest_3_good"));
+							if (!Catalog.isSeen(TenshiEnc.class)) {
+								// Catalog.setSeen(TenshiEnc.class);
+								Dungeon.level.drop(new TenshiEnc(), Dungeon.hero.pos ).sprite.drop();
 							}
 						}
 					}
@@ -131,11 +132,11 @@ public class MarisaNPC extends NPC {
 			}
 			
 		} else {
-			if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(this, "quest_1"));
+			if (Catalog.isSeen(TenshiEnc.class)) tell(Messages.get(this, "quest_1"));
 			else tell(Messages.get(this, "quest_1_notimpress"));
 			Quest.given = true;
 			Quest.completed = false;
-			Notes.add( Notes.Landmark.MARISA );
+			Notes.add( Notes.Landmark.TENSHI );
 		}
 
 		return true;
@@ -145,7 +146,7 @@ public class MarisaNPC extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( MarisaNPC.this, text ));
+				GameScene.show( new WndQuest( TenshiNPC.this, text ));
 			}
 		});
 	}
@@ -174,13 +175,10 @@ public class MarisaNPC extends NPC {
 		private static boolean given;
 		private static boolean completed;
 		
-		// public static Ring reward;
-		
 		public static void reset() {
 			spawned = false;
 			given = false;
 			completed = false;
-			// reward = null;
 		}
 		
 		private static final String NODE		= "mari_Quest";
@@ -224,7 +222,7 @@ public class MarisaNPC extends NPC {
 			// Irrelevant for now, she spawn in her room
 			// if (!spawned && Dungeon.depth == 20 && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
-			// 	MarisaNPC npc = new MarisaNPC();
+			// 	TenshiNPC npc = new TenshiNPC();
 			// 	do {
 			// 		npc.pos = level.randomRespawnCell( npc );
 			// 	} while (
@@ -259,7 +257,7 @@ public class MarisaNPC extends NPC {
 			completed = true;
 
 			Statistics.questScores[3] = 500;
-			Notes.remove( Notes.Landmark.MARISA );
+			Notes.remove( Notes.Landmark.TENSHI );
 		}
 		
 		public static boolean isCompleted() {

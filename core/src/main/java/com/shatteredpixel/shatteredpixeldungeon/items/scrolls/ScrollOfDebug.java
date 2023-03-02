@@ -91,7 +91,7 @@ public class ScrollOfDebug extends Scroll {
         SEED(Blob.class,
                 "BLOB [amount]",
                 "Seeds a blob of the specified amount to a targeted tile"),
-                POS(null, 
+        POS(null, 
                 "",
                 "Give you the current position you are standing on");
 

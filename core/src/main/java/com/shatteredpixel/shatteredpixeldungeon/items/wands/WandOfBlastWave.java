@@ -27,7 +27,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char.Alignment;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -85,7 +88,13 @@ public class WandOfBlastWave extends DamageWand {
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
-				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(), this);
+				if (ch.alignment != Char.Alignment.ALLY){
+					ch.damage(damageRoll(), this);
+					if (potUnlocked()){
+						Buff.affect(ch, Terror.class, level()).object = curUser.id();
+						Buff.affect(ch, Vertigo.class, level());
+					}
+				}
 
 				if (ch.pos == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);

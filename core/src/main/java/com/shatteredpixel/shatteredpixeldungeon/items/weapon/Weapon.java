@@ -384,6 +384,10 @@ abstract public class Weapon extends KindOfWeapon {
 		return enchant( ench );
 	}
 
+	public Weapon.Enchantment getEnchant(){
+		return enchantment;
+	}
+	
 	public boolean hasEnchant(Class<?extends Enchantment> type, Char owner) {
 		return enchantment != null && enchantment.getClass() == type && owner.buff(MagicImmune.class) == null;
 	}

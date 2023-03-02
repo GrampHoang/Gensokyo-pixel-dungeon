@@ -12,8 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SuikaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.*;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
@@ -32,8 +31,6 @@ public class DebugSword extends WeaponWithSP {
         chargeNeed = 0;
     }
 
-	public static float AMOK_DUR = 4f;
-
 	@Override
 	public int max(int lvl) {
 		return  Math.round(69f*(tier+1)) +
@@ -46,10 +43,16 @@ public class DebugSword extends WeaponWithSP {
 			GLog.w("Seen");
             Catalog.setSeen(MarisaEnc.class);
 			Catalog.setSeen(SuikaEnc.class);
+			Catalog.setSeen(TenshiEnc.class);
+			Catalog.setSeen(YoumuEnc.class);
+			Catalog.setSeen(AyaEnc.class);
         } else {
 			GLog.w("Unseen");
 			Catalog.setUnSeen(SuikaEnc.class);
 			Catalog.setUnSeen(MarisaEnc.class);
+			Catalog.setUnSeen(TenshiEnc.class);
+			Catalog.setUnSeen(YoumuEnc.class);
+			Catalog.setUnSeen(AyaEnc.class);
 		}
 		Dungeon.hero.spendAndNext(1f);
         return true;
@@ -57,6 +60,6 @@ public class DebugSword extends WeaponWithSP {
 	
 	@Override
 	public String skillInfo(){
-		return Messages.get(ClownTorch.class, "skill_desc", chargeGain, chargeNeed, (int)AMOK_DUR);
+		return "This is a debug weapon";
 	}
 }

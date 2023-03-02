@@ -26,7 +26,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -111,6 +113,8 @@ public class WandOfTransfusion extends Wand {
 					Charm charm = Buff.affect(ch, Charm.class, Charm.DURATION/2f);
 					charm.object = curUser.id();
 					charm.ignoreHeroAllies = true;
+					Buff.affect(ch, Amok.class, 5f);
+					Buff.affect(ch, Blindness.class, 5f);
 					ch.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 3 );
 				
 				//harm the undead

@@ -55,7 +55,8 @@ public class WandOfPrismaticLight extends DamageWand {
 	{
 		image = ItemSpriteSheet.WAND_PRISMATIC_LIGHT;
 
-		collisionProperties = potUnlocked() ? Ballistica.WONT_STOP : Ballistica.MAGIC_BOLT;
+		// collisionProperties = Ballistica.WONT_STOP;
+		collisionProperties = Ballistica.MAGIC_BOLT;
 	}
 
 	public int min(int lvl){
@@ -64,6 +65,12 @@ public class WandOfPrismaticLight extends DamageWand {
 
 	public int max(int lvl){
 		return 5+3*lvl;
+	}
+
+	@Override
+	public int collisionProperties(int target){
+		if (potUnlocked()) return Ballistica.WONT_STOP;
+		else return collisionProperties;
 	}
 
 	@Override

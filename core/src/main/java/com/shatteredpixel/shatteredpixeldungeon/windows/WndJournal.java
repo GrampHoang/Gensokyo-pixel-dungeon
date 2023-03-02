@@ -700,7 +700,7 @@ public class WndJournal extends WndTabbed {
 				for (Class<? extends Item> cls : itemClasses) known.put(cls, Scroll.getKnown().contains(cls));
 			} else if (currentItemIdx == ENCOUNTER_IDX) {
 				itemClasses = new ArrayList<>(Catalog.ENCOUNTERS.items());
-				for (Class<? extends Item> cls : itemClasses) known.put(cls, Scroll.getKnown().contains(cls));
+				for (Class<? extends Item> cls : itemClasses) known.put(cls, true);
 			} else {
 				itemClasses = new ArrayList<>();
 			}

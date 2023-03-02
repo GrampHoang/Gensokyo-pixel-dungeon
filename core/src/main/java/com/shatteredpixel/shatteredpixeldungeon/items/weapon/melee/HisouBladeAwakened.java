@@ -21,14 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-import java.util.ArrayList;
 
 public class HisouBladeAwakened extends MeleeWeapon {
 
@@ -38,8 +36,9 @@ public class HisouBladeAwakened extends MeleeWeapon {
 		hitSoundPitch = 0.5f;
 
 		tier = 5;
-		DLY = 0.5f;
+		DLY = 0.4f;
 		RCH = 2;
+		ACC = 1.2f;
 	}
 
 	@Override

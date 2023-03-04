@@ -201,7 +201,7 @@ public class FireOath extends Item {
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			return item instanceof HisouBlade;
+			return (item instanceof HisouBlade && item.levelKnown);
 		}
 
 		@Override
@@ -232,6 +232,7 @@ public class FireOath extends Item {
 				item.detach( Dungeon.hero.belongings.backpack );
 				hba.collect();
 			}
+			detach(curUser.belongings.backpack);
 		}
 	};
 }

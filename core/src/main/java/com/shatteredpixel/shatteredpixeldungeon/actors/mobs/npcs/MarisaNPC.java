@@ -20,6 +20,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPsionicBlast;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -73,6 +77,8 @@ public class MarisaNPC extends NPC {
 	public void add( Buff buff ) {
 	}
 	
+	private ArrayList<Wand> wandls = new ArrayList<>();
+
 	@Override
 	public boolean interact(Char c) {
 		
@@ -81,7 +87,6 @@ public class MarisaNPC extends NPC {
 		if (c != Dungeon.hero){
 			return true;
 		}
-
 		//Have quest
 		if (Quest.given) {
 			DemonCore tokens = Dungeon.hero.belongings.getItem( DemonCore.class );
@@ -113,26 +118,58 @@ public class MarisaNPC extends NPC {
 						MarisaNPC.Quest.complete();
 						//Normal finish
 						if( tokensHave <= tokenNeed*2 ){
-							tell(Messages.get(MarisaNPC.class, "quest_3_normal", tokensHave));
-							//TODO give reward
+							wandls = Dungeon.hero.belongings.getAllItems( Wand.class );
+							boolean highwand = false;
+							for (Wand wand : wandls) if (wand.trueLevel() > 12) {highwand = true; break;}
+							//If no high level wand or seen before, no teach
+							if (highwand != true || Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(MarisaNPC.class, "quest_3_normal", tokensHave));
+							// Teach if have >12 level wand
+							else {
+								tell(Messages.get(MarisaNPC.class, "quest_3_normal_wand", tokensHave));
+								// Catalog.setSeen(MarisaEnc.class);
+								MarisaEnc enc = new MarisaEnc();
+								// Dungeon.level.drop(enc, Dungeon.hero.pos );
+								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+							}
+							//Reward: 1 Lullaby, 1 Retribution, 2 PotHealing
+							ScrollOfLullaby lul = new ScrollOfLullaby();
+							if (!lul.quantity(1).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
+							ScrollOfRetribution ret = new ScrollOfRetribution();
+							if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
+							PotionOfHealing poh = new PotionOfHealing();
+							if (!poh.quantity(2).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
 						// Good finish, double what she tell you to get
 						} else {
-							tell(Messages.get(MarisaNPC.class, "quest_3_good"));
-							if (!Catalog.isSeen(MarisaEnc.class)) {
+							if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(MarisaNPC.class, "quest_3_good"));
+							else {
+								tell(Messages.get(MarisaNPC.class, "quest_3_good_first"));
 								// Catalog.setSeen(MarisaEnc.class);
-								Dungeon.level.drop(new MarisaEnc(), Dungeon.hero.pos ).doPickUp(Dungeon.hero, this.pos);
+								MarisaEnc enc = new MarisaEnc();
+								// Dungeon.level.drop(enc, Dungeon.hero.pos );
+								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 							}
+							//Reward: 1 Lullaby, 1 Retribution, 1 PsiBlast, 4 PotHealing and 1 SoU
+							ScrollOfLullaby lul = new ScrollOfLullaby();
+							if (!lul.quantity(2).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
+							ScrollOfRetribution ret = new ScrollOfRetribution();
+							if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
+							ScrollOfPsionicBlast psi = new ScrollOfPsionicBlast();
+							if (!psi.quantity(1).collect()) Dungeon.level.drop(psi, Dungeon.hero.pos);
+							PotionOfHealing poh = new PotionOfHealing();
+							if (!poh.quantity(4).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
+							ScrollOfUpgrade sou = new ScrollOfUpgrade();
+							if (!sou.quantity(1).collect()) Dungeon.level.drop(sou, Dungeon.hero.pos);
 						}
 					}
 				});
 			// Not finish
 			} else {
-				tell(Messages.get(this, "quest_2", tokenNeed));
+				tell(Messages.get(MarisaNPC.class, "quest_2", tokenNeed));
 			}
 			
 		} else {
-			if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(this, "quest_1"));
-			else tell(Messages.get(this, "quest_1_notimpress"));
+			if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(MarisaNPC.class, "quest_1"));
+			else tell(Messages.get(MarisaNPC.class, "quest_1_first"));
 			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.MARISA );
@@ -152,7 +189,7 @@ public class MarisaNPC extends NPC {
 	
 	
 	public void flee() {
-		yell( Messages.get(this, "cya", Dungeon.hero.name()) );
+		yell( Messages.get(MarisaNPC.class, "cya", Dungeon.hero.name()) );
 		destroy();
 		sprite.die();
 	}

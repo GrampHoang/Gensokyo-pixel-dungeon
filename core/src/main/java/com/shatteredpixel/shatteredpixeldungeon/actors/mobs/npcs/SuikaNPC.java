@@ -84,6 +84,19 @@ public class SuikaNPC extends NPC {
 			PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
 			//Finished
 			if (Quest.completed){
+				if(Dungeon.hero.buff(AscensionChallenge.class) != null){
+					if (Catalog.isSeen(SuikaEnc.class)){
+						tell(Messages.get(SuikaNPC.class, "invite"));
+					} else {
+						tell(Messages.get(SuikaNPC.class, "surprise"));
+						Catalog.setSeen(SuikaEnc.class);
+						SuikaEnc enc = new SuikaEnc();
+						enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+					}
+						EndlessAlcohol alcohol = new EndlessAlcohol();
+						if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
+						
+				}
 				switch(Random.IntRange(1,4)){
 					default:
 					case 1:
@@ -109,8 +122,7 @@ public class SuikaNPC extends NPC {
 						SuikaNPC.Quest.complete();
 						tell(Messages.get(SuikaNPC.class, "quest_3"));
 						EndlessAlcohol alcohol = new EndlessAlcohol();
-						alcohol.quantity(3).collect();
-
+						if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
 						if (!Catalog.isSeen(SuikaEnc.class)) {
 							Catalog.setSeen(SuikaEnc.class);
 						}
@@ -122,8 +134,7 @@ public class SuikaNPC extends NPC {
 			}
 		//No quest
 		} else {
-			if (Catalog.isSeen(SuikaEnc.class)) tell(Messages.get(this, "quest_1", Dungeon.hero.name()));
-			else tell(Messages.get(this, "quest_1_firsttime", Dungeon.hero.name()));
+			tell(Messages.get(this, "quest_1", Dungeon.hero.name()));
 			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.SUIKA );

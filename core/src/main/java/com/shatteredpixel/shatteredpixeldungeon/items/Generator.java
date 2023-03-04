@@ -405,11 +405,11 @@ public class Generator {
 					GardenerBlade.class,
 					GhostFriend.class,
 					LusanaViolin.class,
-					// MerlinTrumpet.class,
+					MerlinTrumpet.class,
 					LyricaPiano.class	
 
 			};
-			WEP_T4.probs = new float[]{ 6, 5, 5, 4, 4, 4, 1, 3, 3, 3, 3, 3, 3, 3};
+			WEP_T4.probs = new float[]{ 6, 5, 5, 4, 4, 4, 1,   3, 3, 3, 3, 0, 3, 0, 3};
 			
 			WEP_T5.classes = new Class<?>[]{
 					Greatsword.class,
@@ -421,7 +421,7 @@ public class Generator {
 					HisouBlade.class,
 					HisouBladeAwakened.class
 			};
-			WEP_T5.probs = new float[]{ 6, 5, 5, 4, 4, 4, 2, 0.2f };
+			WEP_T5.probs = new float[]{ 6, 5, 5, 4, 4, 4, 2, 0.01f };
 			
 			//see Generator.randomArmor
 			ARMOR.classes = new Class<?>[]{

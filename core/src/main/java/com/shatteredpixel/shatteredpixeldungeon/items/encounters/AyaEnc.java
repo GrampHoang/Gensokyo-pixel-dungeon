@@ -5,7 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class AyaEnc extends EncounterNotes {
     {
-		image = ItemSpriteSheet.VIAL;
+		image = ItemSpriteSheet.YINYANG;
 	}
 
 	public void setSeen(){

@@ -6,7 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class YoumuEnc extends Item {
     {
-		image = ItemSpriteSheet.HISOUBLADE_FIRE;
+		image = ItemSpriteSheet.GHOST_FRIEND;
 	}
 
 	public void setSeen(){

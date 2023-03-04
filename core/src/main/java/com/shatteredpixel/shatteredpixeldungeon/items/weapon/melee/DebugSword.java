@@ -32,6 +32,12 @@ public class DebugSword extends WeaponWithSP {
     }
 
 	@Override
+	public int min(int lvl) {
+		return  Math.round(68f*(tier+1)) +
+				lvl*Math.round(69f*(tier+1));
+	}
+
+	@Override
 	public int max(int lvl) {
 		return  Math.round(69f*(tier+1)) +
 				lvl*Math.round(69f*(tier+1));

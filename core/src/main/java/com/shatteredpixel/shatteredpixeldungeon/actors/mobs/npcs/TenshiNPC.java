@@ -22,6 +22,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HisouBlade;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -73,7 +74,8 @@ public class TenshiNPC extends NPC {
 	public void add( Buff buff ) {
 	}
 	
-	private ArrayList<Wand> wandls = new ArrayList<>();
+	public static boolean flawless = false; //Won't bundle this cuz you will claim reward immediatly, right?
+
 	@Override
 	public boolean interact(Char c) {
 		
@@ -85,50 +87,35 @@ public class TenshiNPC extends NPC {
 
 		//Have quest
 		if (Quest.given) {
-			wandls = Dungeon.hero.belongings.getAllItems( Wand.class );
-			DemonCore tokens = Dungeon.hero.belongings.getItem( DemonCore.class );
-			int tokenNeed = (25 - Dungeon.depth)*2 + 4;
+			
 			// Finished
 			if (Quest.completed){
-				switch(Random.IntRange(1,4)){
-					default:
-					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished1"));
-						break;
-					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished2"));
-						break;
-					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished3"));
-						break;
-					case 4:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(TenshiNPC.class, "quest_finished4"));
-						break;
-				}
+				sprite.showStatus(CharSprite.POSITIVE, "Have fun~");
 			// Finish now
-			} else if (tokens != null && tokens.quantity() >= tokenNeed && !Quest.completed) {
-				int tokensHave = tokens.quantity();
+			} else if (!Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						tokens.detachAll(Dungeon.hero.belongings.backpack);
 						TenshiNPC.Quest.complete();
 						//Normal finish
-						if( tokensHave <= tokenNeed*2 ){
-							tell(Messages.get(TenshiNPC.class, "quest_3_normal", tokensHave));
-						// Good finish, double what she tell you to get
+						if(!flawless){
+							tell(Messages.get(TenshiNPC.class, "quest_3_normal"));
+						// Good finish, give you the sword too
 						} else {
 							tell(Messages.get(TenshiNPC.class, "quest_3_good"));
 							if (!Catalog.isSeen(TenshiEnc.class)) {
-								// Catalog.setSeen(TenshiEnc.class);
-								Dungeon.level.drop(new TenshiEnc(), Dungeon.hero.pos ).sprite.drop();
+								Catalog.setSeen(TenshiEnc.class);
+								TenshiEnc enc = new TenshiEnc();
+								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 							}
+							// HisouBlade hb = new HisouBlade();
+							// hb.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 						}
 					}
 				});
 			// Not finish
 			} else {
-				tell(Messages.get(this, "quest_2", tokenNeed));
+				tell(Messages.get(this, "quest_2"));
 			}
 			
 		} else {
@@ -161,13 +148,13 @@ public class TenshiNPC extends NPC {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
-		bundle.put( "APPEARED", appeared );
+		bundle.put( "T_APPEARED", appeared );
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		appeared = bundle.getBoolean("APPEARED");
+		appeared = bundle.getBoolean("T_APPEARED");
 	}
 
 	public static class Quest {
@@ -181,11 +168,11 @@ public class TenshiNPC extends NPC {
 			completed = false;
 		}
 		
-		private static final String NODE		= "mari_Quest";
+		private static final String NODE		= "tenshi_Quest";
 		
-		private static final String SPAWNED		= "m_spawned";
-		private static final String GIVEN		= "m_given";
-		private static final String COMPLETED	= "m_completed";
+		private static final String SPAWNED		= "t_spawned";
+		private static final String GIVEN		= "t_given";
+		private static final String COMPLETED	= "t_completed";
 		// private static final String REWARD		= "reward";
 		
 		public static void storeInBundle( Bundle bundle ) {

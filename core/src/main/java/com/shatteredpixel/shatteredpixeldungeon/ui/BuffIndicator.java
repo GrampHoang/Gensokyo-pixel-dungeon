@@ -116,7 +116,8 @@ public class BuffIndicator extends Component {
 	public static final int SIZE_LARGE  = 16;
 	
 	private static BuffIndicator heroInstance;
-	
+	private static BuffIndicator bossInstance;
+
 	private LinkedHashMap<Buff, BuffButton> buffButtons = new LinkedHashMap<>();
 	private boolean needsRefresh;
 	private Char ch;
@@ -302,5 +303,15 @@ public class BuffIndicator extends Component {
 		if (heroInstance != null) {
 			heroInstance.needsRefresh = true;
 		}
+	}
+
+	public static void refreshBoss(){
+		if (bossInstance != null) {
+			bossInstance.needsRefresh = true;
+		}
+	}
+
+	public static void setBossInstance(BuffIndicator boss){
+		bossInstance = boss;
 	}
 }

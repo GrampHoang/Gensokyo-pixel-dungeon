@@ -363,7 +363,8 @@ public class Dungeon {
 					level = new SDMLevel();
 					break;
 				case 10:
-					level = new RemiliaBossLevel();
+					level = new TenshiBossLevel();
+					// level = new RemiliaBossLevel();
 					break;
 				case 11:
 				case 12:

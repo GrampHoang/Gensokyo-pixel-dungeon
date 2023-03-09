@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BossMercy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
@@ -52,6 +53,7 @@ public class DebugSword extends WeaponWithSP {
 			Catalog.setSeen(TenshiEnc.class);
 			Catalog.setSeen(YoumuEnc.class);
 			Catalog.setSeen(AyaEnc.class);
+			if (Dungeon.hero.buff(BossMercy.class)!=null) Dungeon.hero.buff(BossMercy.class).detach();
         } else {
 			GLog.w("Unseen");
 			Catalog.setUnSeen(SuikaEnc.class);

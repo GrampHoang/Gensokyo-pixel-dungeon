@@ -51,7 +51,7 @@ public class FlameParticle extends PixelParticle.Shrinking {
 		revive();
 		
 		this.x = x;
-		this.y = y;
+		this.y = y-4;
 		
 		left = lifespan;
 		

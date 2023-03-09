@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
@@ -47,7 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.TenshiSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
@@ -72,9 +73,9 @@ import java.util.List;
 public class TenshiBoss extends Mob {
 
 	{
-		spriteClass = RemiliaSprite.class;
+		spriteClass = TenshiSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 449 : 350;
+		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 450 : 350;
 
 		defenseSkill = 22;
 		EXP = 20;
@@ -114,8 +115,13 @@ public class TenshiBoss extends Mob {
 	public void damage(int dmg, Object src) {
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
-		};
+		}
 		
+		if(checkWeather(MIST) && distance(Dungeon.hero) > 2){
+			sprite.showStatus(CharSprite.POSITIVE, "!?");
+			return;
+		}
+
 		super.damage(dmg, src);
 		if (HP < HT - HP_BRACKET * bracket_count){
 			HP = HT - HP_BRACKET * bracket_count;
@@ -143,10 +149,15 @@ public class TenshiBoss extends Mob {
 
 	@Override
 	public void die( Object cause ) {
-		Dungeon.level.drop( new PotionOfExperience(), pos ).sprite.drop();
+		this.sprite.remove(CharSprite.State.BURSTING_POWER_RED);
+		this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
+		this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
+		this.sprite.clearAura();
+		Dungeon.hero.buff(BossMercy.class).teleBack(false);
 		Dungeon.level.unseal();
 		GameScene.bossSlain();
 		Statistics.bossScores[1] += 1000;
+		TenshiNPC.Quest.complete();
 		super.die( cause );
 	}
 
@@ -181,12 +192,12 @@ public class TenshiBoss extends Mob {
 		
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+			if (weather_cd > WEATHER_CD*16){	//Live through Scarlet phase same lenght as 4 cycles you immediatly win and satisfy Tenshi
+				die(Dungeon.hero);
+			}
 			if (enemyInFOV && !isCharmedBy( enemy ) && canAttack( enemy )) {
-				switch(cur_weather){
-					case 0:	//Sunny, nothing happend
-					case 1:
-					default:
-						break;
+				if(checkWeather(MIST) && distance(Dungeon.hero) == 1){
+					HP += ((HP < HT - 3) ? 3 : (HT - HP));
 				}
 				if (canUseAbility()){
 					return useAbility();
@@ -226,20 +237,17 @@ public class TenshiBoss extends Mob {
 	//SKILLLLLLLLL
 
 	//Rush (if too far) and slash (distance = 3)
-	private final int SLASH_CD = 8;
-	private int slash_cd = SLASH_CD;
+	private final int SLASH_CD = 7;
+	private int slash_cd = 2;
 	private final int DASH_CD = 10;
-	private int dash_cd = DASH_CD;
+	private int dash_cd = 5;
 	private int dashPos = -1;
 	private final int LASER_CD = 13;
 	private int laser_cd = LASER_CD;
-	private final int WEATHER_CD = 25;
-	private int weather_cd = WEATHER_CD;
+	private final int WEATHER_CD = 10;	//Weather cycle cooldown
+	private int weather_cd = 1;	//Total weather count down, 4 weather cycle 3 time -> last weather. 
 
 	public boolean canUseReady(){
-		GLog.w(Integer.toString(slash_cd));
-		GLog.w(Integer.toString(dash_cd));
-		GLog.w(Integer.toString(laser_cd));
 		if (slash_cd < 2){
 			slash_cd--;
 			return true;
@@ -253,7 +261,7 @@ public class TenshiBoss extends Mob {
 			slash_cd--;
 			dash_cd--;
 			laser_cd--;
-			weather_cd--;
+			weather_cd++;
 			return false;
 		}
 	}
@@ -262,10 +270,10 @@ public class TenshiBoss extends Mob {
 		Dungeon.hero.interrupt();
 		spend(TICK);
 		if (slash_cd < 2){
-			slash_ready();
+			slashReady();
 			return true;
 		} else if (dash_cd < 2){
-			dashPos = dash_ready(Dungeon.hero.pos);
+			dashPos = dashReady(Dungeon.hero.pos);
 			return true;
 		} else if (laser_cd < 2){
 			laser_ready();
@@ -281,6 +289,8 @@ public class TenshiBoss extends Mob {
 			return true;
 		} else if(laser_cd < 1){
 			return true;
+		} else if(weather_cd%WEATHER_CD == 0){
+			return true;
 		} else {
 			return false;
 		} 
@@ -294,16 +304,18 @@ public class TenshiBoss extends Mob {
             return slash();
         } else if(dash_cd < 1){
 			dash_cd = DASH_CD;
-			return dash_stab(dashPos);
+			return dashStab(dashPos);
 		} else if(laser_cd < 1){
 			laser_cd = LASER_CD;
 			return laser();
+		} else if(weather_cd%WEATHER_CD == 0){
+			return changeWeather();
 		}
         return false;
 	}
 
 	//Dash and slash
-	private boolean slash_dash(Char enemy) {
+	private boolean slashDash(Char enemy) {
 		Ballistica b = new Ballistica(this.pos, enemy.pos, Ballistica.STOP_CHARS);
 		for (int p : b.subPath(0, Dungeon.level.distance(this.pos, enemy.pos)-3)){
 			BlastWave.blast(p);
@@ -320,35 +332,30 @@ public class TenshiBoss extends Mob {
         return true;
     }
 
-	private int[] slashEnds = {1,2,3};
-	private int[] basic = {1,2,3};
-	public boolean slash_ready(){
-		GLog.w("Slash_Ready");
+	private int[] slashEnds = {1,2,3};	//Hopefully you won't abuse the fact that I don't save these coordinate
+	public boolean slashReady(){
 		if(Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 3){
-			slash_dash(Dungeon.hero);
+			slashDash(Dungeon.hero);
 		}
 		
 		Ballistica b = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_CHARS);
 		int colliPos = b.path.get(b.path.indexOf(b.collisionPos) - 1);
 		slashEnds = PathFinderUtils.perpendicular(PathFinder.CIRCLE8, colliPos, Dungeon.hero.pos);
-		for (int i : slashEnds){
-			sprite.parent.add(new TargetedCell(i, 0xFF0000));
+		if (!checkWeather(FOG)) {
+			for (int i : slashEnds){
+				sprite.parent.add(new TargetedCell(i, 0xFF0000));
+			}
 		}
 		return true;
 	}
 
     public boolean slash(){
-		GLog.w("Slash");
-		if (Arrays.equals(slashEnds, basic)){
-			GLog.w("No");
-			return true;
-		}
 		for (int i : slashEnds){
 			Ballistica slash = new Ballistica(this.pos, i, Ballistica.STOP_TARGET);
 			sprite.parent.add(new Beam.YoumuSlash(this.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(i)));
 			for (int p : slash.subPath(0, Dungeon.level.distance(this.pos, slash.collisionPos))){
 				CellEmitter.get(p).burst(SmokeParticle.FACTORY, 10);
-				if (p != this.pos && bracket_count > 1)	GameScene.add(Blob.seed(p, 6, Fire.class));
+				if (p != this.pos && bracket_count > 1)	GameScene.add(Blob.seed(p, checkWeather(SUNNY) ? 10 : 5, Fire.class));
 				Char ch = Actor.findChar(p);
 				if(ch != null && ch != this){
 					ch.damage(Math.max(ch.HP/4, 15), this);
@@ -356,27 +363,28 @@ public class TenshiBoss extends Mob {
 				}
 			}
 		}
-		slashEnds = basic;
         return true;
     }	
 
 	//Dash and stab
-	private int dash_ready(int target){
+	private int dashReady(int target){
         Ballistica b = new Ballistica(this.pos, target, Ballistica.STOP_SOLID);
-        for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
-            sprite.parent.add(new TargetedCell(p, 0xFF0000));
-        }
+		if (!checkWeather(FOG)){
+			for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
+				sprite.parent.add(new TargetedCell(p, 0xFF0000));
+			}
+		}
 		return target;
 	}
 
-	private boolean dash_stab(int target) {
+	private boolean dashStab(int target) {
 		boolean heroNotHit = true;
 		//dash
 		Ballistica b = new Ballistica(this.pos, target, Ballistica.STOP_SOLID);
 		sprite.parent.add(new Beam.YoumuSlash(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(b.collisionPos)));
 		//Effect
 		for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
-			if (p != this.pos && bracket_count > 2)	GameScene.add(Blob.seed(p, 6, Fire.class));
+			if (p != this.pos && bracket_count > 2)	GameScene.add(Blob.seed(p, checkWeather(SUNNY) ? 10 : 5, Fire.class));
             Char ch = Actor.findChar(p);
 			if (ch != null && !(ch instanceof TenshiBoss)){
 				ch.damage(18, this);
@@ -425,12 +433,78 @@ public class TenshiBoss extends Mob {
 
 	private boolean laser(){
 		Buff.affect(Dungeon.hero, FallingLaser.class);
+		if (checkWeather(AURORA)) Buff.affect(Dungeon.hero, AuroraLaser.class);
 		return true;
+	}
+
+	private static int SUNNY = 0;
+	private static int FOG = 3;
+	private static int MIST = 2;
+	private static int AURORA = 1;
+	private static int SCARLET = 69;
+
+	private boolean changeWeather(){
+		Camera.main.shake( 4, 2f );
+		GLog.w(Integer.toString(weather_cd));
+		if (weather_cd/WEATHER_CD >= 13 ){
+			cur_weather = 69; //funny number hehe
+			//Clear all effect jsut in case
+			this.sprite.remove(CharSprite.State.BURSTING_POWER_RED);
+			this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
+			this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
+			this.sprite.clearAura();
+			// Scarlet: All effect
+			this.sprite.add(CharSprite.State.BURSTING_POWER_RED);
+			this.sprite.add(CharSprite.State.BURSTING_POWER_YELLOW);
+			this.sprite.add(CharSprite.State.BURSTING_POWER_BLUE);
+			this.sprite.aura(0xFF0000);
+		} else {
+			cur_weather = ((weather_cd/WEATHER_CD)%4);
+			attachAura(cur_weather);
+		}
+		return true;
+	}
+
+	private void attachAura(int weather){
+		switch(weather){
+			default:
+			case 0:	// Sunny: 0; Fire last longer
+			GLog.w("Sunny");
+				this.sprite.remove(CharSprite.State.BURSTING_POWER_RED);
+				this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
+				this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
+				this.sprite.clearAura();
+				this.sprite.aura(0xFFA500);
+				break;
+			case 1: // Aurora: Bombardment now aim for 2 tiles instead of 1
+				GLog.w("Aurora");
+				this.sprite.clearAura();
+				this.sprite.aura(0x90EE90);
+				break;
+			case 2: // River Mist: 2; distance = 1 Tenshi heal 3HP/turn, dist = 2 nothing, dist >= 3 Tenshi is Invul and clear all debuff
+				GLog.w("Mist");
+				this.sprite.clearAura();
+				this.sprite.aura(0xEDEDED);
+				break;
+			case 3: // Heavy Fog: 3; Skill no longer show target mark
+				GLog.w("Fog");
+				this.sprite.clearAura();
+				this.sprite.aura(0x5A5A5A);
+				break;
+		}
+		// weather_Cd will start coutning down, meet the first weather at WEATHER_CD*12 and start cycling 
+		// until WEATHERCD*1 where you get Scarlet weather
+	}
+
+	private boolean checkWeather(int weather){
+		if (cur_weather == SCARLET || cur_weather == weather) return true;
+		return false;
 	}
 	private static final String DASH     = "dash_cd";
 	private static final String SLASH     = "slash_cd";
-	// private static final String LEVATIN_STOP_POS     = "levatin_stop_pos";
-	// private static final String LEVATIN_THROW		= "levatin_throw";
+	private static final String LASER     = "laser_cd";
+	private static final String WEATHER		= "weather_cd";
+	private static final String CWEATHER		= "weather";
 	private static final String BRA_COUNT		= "bracket";
 
 	@Override
@@ -438,7 +512,9 @@ public class TenshiBoss extends Mob {
 		super.storeInBundle(bundle);
 		bundle.put( DASH, dash_cd );
 		bundle.put( SLASH, slash_cd );
-		// bundle.put( LEVATIN_THROW, levatin_throw );
+		bundle.put( LASER, laser_cd );
+		bundle.put( WEATHER, weather_cd );
+		bundle.put( CWEATHER, cur_weather);
 		bundle.put( BRA_COUNT, bracket_count );
 	}
 	
@@ -447,6 +523,9 @@ public class TenshiBoss extends Mob {
 		super.restoreFromBundle(bundle);
 		dash_cd = bundle.getInt( DASH );
 		slash_cd = bundle.getInt( SLASH );
+		laser_cd = bundle.getInt( LASER );
+		weather_cd = bundle.getInt(WEATHER);
+		cur_weather = bundle.getInt(CWEATHER);
 		bracket_count = bundle.getInt( BRA_COUNT );
 		BossHealthBar.assignBoss(this);
 	}
@@ -458,6 +537,10 @@ public class TenshiBoss extends Mob {
 			descript = descript + "\n\n_Badder Bosses:\n" + Messages.get(this, "stronger_bosses");
 		}
 		return descript;
+	}
+
+	public static class AuroraLaser extends FallingLaser{
+		//Nothing, just another thing to attach to your Hero in Aurora
 	}
 
 	public static class FallingLaser extends FlavourBuff {

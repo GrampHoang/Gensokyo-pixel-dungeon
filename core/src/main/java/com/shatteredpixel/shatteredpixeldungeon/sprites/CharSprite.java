@@ -87,7 +87,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER, SHRINK
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER, SHRINK, BURSTING_POWER_RED, BURSTING_POWER_BLUE, BURSTING_POWER_YELLOW
 	}
 	private int stunStates = 0;
 	
@@ -112,7 +112,10 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected Emitter charging;
 	protected Emitter hearts;
 	protected Emitter bursting_power;
-	
+	protected Emitter bursting_power_blue;
+	protected Emitter bursting_power_yellow;
+	protected Emitter bursting_power_red;
+
 	protected IceBlock iceBlock;
 	protected DarkBlock darkBlock;
 	protected TorchHalo light;
@@ -442,8 +445,22 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case BURSTING_POWER:
 				bursting_power = emitter();
-				// bursting_power.pos(0, 0);
 				bursting_power.pour(BurstingPowerParticle.FACTORY, 0.1f);
+				break;
+			case BURSTING_POWER_YELLOW:
+				bursting_power_yellow = emitter();
+				// bursting_power.pos(0, 0);
+				bursting_power_yellow.pour(BurstingPowerParticle.Yellow.FACTORY, 0.1f);
+				break;
+			case BURSTING_POWER_BLUE:
+				bursting_power_blue = emitter();
+				// bursting_power.pos(0, 0);
+				bursting_power_blue.pour(BurstingPowerParticle.Blue.FACTORY, 0.1f);
+				break;
+			case BURSTING_POWER_RED:
+				bursting_power_red = emitter();
+				// bursting_power.pos(0, 0);
+				bursting_power_red.pour(BurstingPowerParticle.Red.FACTORY, 0.1f);
 				break;
 			case SHRINK:
 				scale.x = 0.7f;
@@ -546,6 +563,24 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					bursting_power = null;
 				}
 				break;
+			case BURSTING_POWER_YELLOW:
+				if (bursting_power_yellow != null){
+					bursting_power_yellow.on = false;
+					bursting_power_yellow = null;
+				}
+				break;
+			case BURSTING_POWER_BLUE:
+				if (bursting_power_blue != null){
+					bursting_power_blue.on = false;
+					bursting_power_blue = null;
+				}
+				break;
+			case BURSTING_POWER_RED:
+				if (bursting_power_red != null){
+					bursting_power_red.on = false;
+					bursting_power_red = null;
+				}
+				break;
 			case SHRINK:
 				scale.x = 1f;
 				scale.y = 1f;
@@ -620,6 +655,15 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 		if (bursting_power != null){
 			bursting_power.visible = visible;
+		}
+		if (bursting_power_yellow != null){
+			bursting_power_yellow.visible = visible;
+		}
+		if (bursting_power_blue != null){
+			bursting_power_blue.visible = visible;
+		}
+		if (bursting_power_red != null){
+			bursting_power_red.visible = visible;
 		}
 		if (aura != null){
 			if (aura.parent == null){

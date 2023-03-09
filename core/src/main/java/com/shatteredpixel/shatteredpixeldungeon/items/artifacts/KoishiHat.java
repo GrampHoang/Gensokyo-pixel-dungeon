@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Reality;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fury;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -99,7 +100,7 @@ public class KoishiHat extends Artifact {
 			Dungeon.hero.buff(Invisibility.class).detach();
 		}
 		Buff.affect(Dungeon.hero, Fury.class);
-		Buff.affect(Dungeon.hero, Reality.class);
+		Buff.affect(Dungeon.hero, Doom.KoiDoom.class);
 		return super.doUnequip(hero, collect, single);
 	}
 
@@ -109,8 +110,8 @@ public class KoishiHat extends Artifact {
 			GLog.w("Koishi hasn't calm down yet!");
 			return false;
 		} else {
-			if (Dungeon.hero.buff(Reality.class) != null){
-				Dungeon.hero.buff(Reality.class).detach();
+			if (Dungeon.hero.buff(Doom.KoiDoom.class) != null){
+				Dungeon.hero.buff(Doom.KoiDoom.class).detach();
 			};
 			boolean ret = super.doEquip(hero);
 			Dungeon.hero.buff(KoishiHat.Koishibuff.class).updateTalent();

@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Berserk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BossMercy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
@@ -1797,7 +1798,11 @@ public class Hero extends Char {
 	
 	@Override
 	public void die( Object cause ) {
-		
+		BossMercy inFight = Dungeon.hero.buff(BossMercy.class);
+		if (inFight != null){
+			inFight.teleBack(true);
+			return;
+		}
 		curAction = null;
 
 		Ankh ankh = null;

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
@@ -129,6 +129,7 @@ public class BambooLevel extends RegularLevel {
 	
 	@Override
 	protected void createMobs() {
+		TenshiNPC.Quest.spawn(this);
 		super.createMobs();
 	}
 	

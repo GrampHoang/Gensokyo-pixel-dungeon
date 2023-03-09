@@ -72,13 +72,6 @@ public class Kagerou extends Mob {
 		return Random.NormalIntRange(0, 2);
 	}
 	
-	// @Override
-	// public void rollToDropLoot() {
-	// 	Imp.Quest.process( this );
-		
-	// 	super.rollToDropLoot();
-	// }
-	
 	@Override
 	protected boolean act() {
 		boolean result = super.act();

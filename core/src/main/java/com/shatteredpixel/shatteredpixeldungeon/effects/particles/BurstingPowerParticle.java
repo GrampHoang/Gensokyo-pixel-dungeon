@@ -51,7 +51,7 @@ public class BurstingPowerParticle extends PixelParticle.Shrinking{
 		revive();
 
 		this.x = x;
-		this.y = y - 4;
+		this.y = y-4;
 
 		left = lifespan;
 
@@ -64,5 +64,74 @@ public class BurstingPowerParticle extends PixelParticle.Shrinking{
 		super.update();
 		float p = left / lifespan;
 		am = p > 0.75f ? (1 - p) * 4 : 1;
+	}
+
+	public static class Blue extends BurstingPowerParticle{
+
+		public static final Emitter.Factory FACTORY = new Factory() {
+			@Override
+			public void emit( Emitter emitter, int index, float x, float y ) {
+				((Blue)emitter.recycle( Blue.class )).reset( x, y );
+			}
+			@Override
+			public boolean lightMode() {
+				return true;
+			}
+		};
+	
+		public Blue() {
+			super();
+	
+			color( 0x0000AA );
+			lifespan = 0.6f;
+			
+			acc.set( 0, -50 );
+		}
+	}
+
+	public static class Yellow extends BurstingPowerParticle{
+
+		public static final Emitter.Factory FACTORY = new Factory() {
+			@Override
+			public void emit( Emitter emitter, int index, float x, float y ) {
+				((Yellow)emitter.recycle( Yellow.class )).reset( x, y );
+			}
+			@Override
+			public boolean lightMode() {
+				return true;
+			}
+		};
+	
+		public Yellow() {
+			super();
+	
+			color( 0xAAAA00 );
+			lifespan = 0.6f;
+			
+			acc.set( 0, -50 );
+		}
+	}
+
+	public static class Red extends BurstingPowerParticle{
+
+		public static final Emitter.Factory FACTORY = new Factory() {
+			@Override
+			public void emit( Emitter emitter, int index, float x, float y ) {
+				((Red)emitter.recycle( Red.class )).reset( x, y );
+			}
+			@Override
+			public boolean lightMode() {
+				return true;
+			}
+		};
+	
+		public Red() {
+			super();
+	
+			color( 0xBB0000 );
+			lifespan = 0.6f;
+			
+			acc.set( 0, -50 );
+		}
 	}
 }

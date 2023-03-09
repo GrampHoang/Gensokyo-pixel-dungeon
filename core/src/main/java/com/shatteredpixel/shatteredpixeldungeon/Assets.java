@@ -322,6 +322,7 @@ public class Assets {
 		public static final String RED_SENTRY= "sprites/red_sentry.png";
 
 		public static final String ALICE		= "sprites/alice.png";
+		public static final String TENSHI		= "sprites/tenshi.png";
 		//Forest
 		public static final String FAIRY		= "sprites/fairy.png";
 		public static final String WRIGGLE		= "sprites/wriggle.png";

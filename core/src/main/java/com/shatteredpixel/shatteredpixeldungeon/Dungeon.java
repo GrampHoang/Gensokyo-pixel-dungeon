@@ -24,7 +24,6 @@ package com.shatteredpixel.shatteredpixeldungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
-import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Toolbar;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -43,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SuikaNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -56,26 +56,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.*;
-import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CirnoBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.RemiliaBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.MarisaBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.YukariBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.BambooLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CavesBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.SpecialRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -243,7 +223,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 10;
+		depth = 18;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -263,6 +243,7 @@ public class Dungeon {
 		SuikaNPC.Quest.reset();
 		MarisaNPC.appeared = false;
 		MarisaNPC.Quest.reset(); //Just in case?
+		TenshiNPC.Quest.reset();
 		hero = new Hero();
 		hero.live();
 		
@@ -396,6 +377,16 @@ public class Dungeon {
 					break;
 				case 26:
 					level = new LastLevel();
+					break;
+				default:
+					level = new DeadEndLevel();
+					Statistics.deepestFloor--;
+			}
+		} else if (branch == 9){
+			// Special branch for bosses
+			switch(depth){
+				case 100:
+					level = new TenshiBossLevel();
 					break;
 				default:
 					level = new DeadEndLevel();
@@ -748,6 +739,7 @@ public class Dungeon {
 				Imp.Quest.restoreFromBundle( quests );
 				SuikaNPC.Quest.restoreFromBundle( quests );
 				MarisaNPC.Quest.restoreFromBundle( quests );
+				TenshiNPC.Quest.restoreFromBundle( quests );
 			} else {
 				Ghost.Quest.reset();
 				Wandmaker.Quest.reset();
@@ -755,6 +747,7 @@ public class Dungeon {
 				Imp.Quest.reset();
 				SuikaNPC.Quest.reset();
 				MarisaNPC.Quest.reset();
+				TenshiNPC.Quest.reset();
 			}
 			
 			SpecialRoom.restoreRoomsFromBundle(bundle);

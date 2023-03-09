@@ -73,7 +73,7 @@ public class InterlevelScene extends PixelScene {
 	private static float fadeTime;
 	
 	public enum Mode {
-		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE
+		DESCEND, ASCEND, CONTINUE, RESURRECT, RETURN, FALL, RESET, NONE, NEWTELEPORT
 	}
 	public static Mode mode;
 
@@ -150,6 +150,10 @@ public class InterlevelScene extends PixelScene {
 			case RETURN:
 				loadingDepth = returnDepth;
 				scrollSpeed = returnDepth > Dungeon.depth ? 15 : -15;
+				break;
+			case NEWTELEPORT:
+				loadingDepth = curTransition.destDepth;
+				scrollSpeed = -50;
 				break;
 		}
 
@@ -283,6 +287,9 @@ public class InterlevelScene extends PixelScene {
 								break;
 							case RESET:
 								reset();
+								break;
+							case NEWTELEPORT:
+								newTeleport();
 								break;
 						}
 						
@@ -518,6 +525,31 @@ public class InterlevelScene extends PixelScene {
 		Dungeon.switchLevel( level, level.entrance() );
 	}
 	
+	// Jump to a new floor
+	private void newTeleport() throws IOException {
+
+		if (Dungeon.hero == null) {
+			Mob.clearHeldAllies();
+			Dungeon.init();
+			GameLog.wipe();
+			Level level = Dungeon.newLevel();
+			Dungeon.switchLevel( level, -1 );
+		} else {
+			Mob.holdAllies( Dungeon.level );
+			Dungeon.saveAll();
+			Level level;
+			Dungeon.depth = curTransition.destDepth;
+			Dungeon.branch = curTransition.destBranch;
+			
+			level = Dungeon.newLevel();
+
+			// LevelTransition destTransition = level.getTransition(curTransition.destType);
+			curTransition = null;
+			Dungeon.switchLevel( level, level.entrance() );
+		}
+
+	}
+
 	@Override
 	protected void onBackPressed() {
 		//Do nothing

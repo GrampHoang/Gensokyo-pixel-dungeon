@@ -47,17 +47,29 @@ public class Doom extends Buff {
 	
 	@Override
 	public String toString() {
-		if (Dungeon.hero.heroClass == HeroClass.KOISHI){
-			return Messages.get(this, "koishi_name");
-		}
 		return Messages.get(this, "name");
 	}
 	
 	@Override
 	public String desc() {
-		if (Dungeon.hero.heroClass == HeroClass.KOISHI){
-			return Messages.get(this, "koishi_desc");
-		}
 		return Messages.get(this, "desc");
+	}
+
+	public class KoiDoom extends Doom {
+	
+		{
+			type = buffType.NEGATIVE;
+			announced = true;
+		}
+		
+		@Override
+		public String toString() {
+			return Messages.get(this, "kname");
+		}
+		
+		@Override
+		public String desc() {
+			return Messages.get(this, "kdesc");
+		}
 	}
 }

@@ -49,7 +49,7 @@ public class TenshiBossLevel extends Level {
     @Override
     protected boolean build() {
 
-        setSize(17, 19);
+        setSize(19, 19);
 
         for (int i = 3; i < SIZE_H-3; i++) {
             for (int j = 3; j < SIZE_W-3; j++) {
@@ -70,7 +70,8 @@ public class TenshiBossLevel extends Level {
         Painter.fill(this, midpath, Terrain.EMPTY_SP);
         Painter.fill(this, midpath2, Terrain.EMPTY_SP);
         
-        map[SIZE_H/2 + (SIZE_W-1)*width()/2] = Terrain.STATUE;
+        map[SIZE_H/2 + (SIZE_W-1)*width()/2-1] = Terrain.STATUE;
+        map[SIZE_H/2 + (SIZE_W-1)*width()/2+1] = Terrain.STATUE;
 
         Painter.fill(this, pillar1, Terrain.WALL);
         Painter.fill(this, pillar2, Terrain.WALL);
@@ -80,9 +81,13 @@ public class TenshiBossLevel extends Level {
         entrance = 15 * width() + 9;
         exit     = 3 * width() + 9;
         map[entrance] = Terrain.ENTRANCE;
-        transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
+        transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE, 18, 1, LevelTransition.Type.REGULAR_EXIT));
 
         return true;
+    }
+
+    public int getEntrance(){
+        return 15 * width() + 9;
     }
 
     @Override
@@ -111,7 +116,7 @@ public class TenshiBossLevel extends Level {
         Dungeon.observe();
 
         TenshiBoss mari = new TenshiBoss();
-        mari.pos = (4 * width() + 15);;
+        mari.pos = (4 * width() + 9);;
         GameScene.add(mari);
 
     }
@@ -121,7 +126,7 @@ public class TenshiBossLevel extends Level {
         super.unseal();
         set( entrance, Terrain.ENTRANCE );
         GameScene.updateMap( entrance );
-        transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
+        transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE, 18, 1, LevelTransition.Type.REGULAR_EXIT));
         set( exit, Terrain.EXIT );
         GameScene.updateMap( exit );
 
@@ -157,15 +162,15 @@ public class TenshiBossLevel extends Level {
     @Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-        bundle.put( "REMILIA_ENTRANCE", entrance );
-        bundle.put( "REMILIA__EXIT", exit );
+        bundle.put( "TENSHI_ENTRANCE", entrance );
+        bundle.put( "TENSHI__EXIT", exit );
     }
 
     @Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-        entrance = bundle.getInt( "REMILIA_ENTRANCE" );
-        exit = bundle.getInt( "REMILIA__EXIT" );
+        entrance = bundle.getInt( "TENSHI_ENTRANCE" );
+        exit = bundle.getInt( "TENSHI__EXIT" );
 	}
 
 }

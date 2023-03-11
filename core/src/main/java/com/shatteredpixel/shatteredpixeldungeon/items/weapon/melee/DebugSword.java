@@ -8,6 +8,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BossMercy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
@@ -47,13 +48,15 @@ public class DebugSword extends WeaponWithSP {
     @Override
 	protected boolean useSkill(){
         if (!Catalog.isSeen(SuikaEnc.class)) {
-			GLog.w("Seen");
+			// GLog.w(Boolean.toString(TenshiNPC.Quest.spawned));
+			// GLog.w(Boolean.toString(TenshiNPC.Quest.given));
+			// GLog.w(Boolean.toString(TenshiNPC.Quest.completed));
+			// GLog.w(Integer.toString(TenshiNPC.Quest.impression));
             Catalog.setSeen(MarisaEnc.class);
 			Catalog.setSeen(SuikaEnc.class);
 			Catalog.setSeen(TenshiEnc.class);
 			Catalog.setSeen(YoumuEnc.class);
 			Catalog.setSeen(AyaEnc.class);
-			if (Dungeon.hero.buff(BossMercy.class)!=null) Dungeon.hero.buff(BossMercy.class).detach();
         } else {
 			GLog.w("Unseen");
 			Catalog.setUnSeen(SuikaEnc.class);

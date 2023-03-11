@@ -476,7 +476,7 @@ public class RemiliaBoss extends Mob {
 	public String description() {
 		String descript = super.description();
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-			descript = descript + "\n\n_Badder Bosses:\n" + Messages.get(this, "stronger_bosses");
+			descript = descript + "\n\n_Badder Bosses:_\n" + Messages.get(this, "stronger_bosses");
 		}
 		return descript;
 	}

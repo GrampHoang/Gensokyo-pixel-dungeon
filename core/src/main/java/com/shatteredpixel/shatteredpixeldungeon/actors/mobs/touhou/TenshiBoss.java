@@ -153,11 +153,11 @@ public class TenshiBoss extends Mob {
 		this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
 		this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
 		this.sprite.clearAura();
+		Dungeon.hero.buff(BossMercy.class).tobeDetach();
 		Dungeon.hero.buff(BossMercy.class).teleBack(false);
 		Dungeon.level.unseal();
 		GameScene.bossSlain();
 		Statistics.bossScores[1] += 1000;
-		TenshiNPC.Quest.complete();
 		super.die( cause );
 	}
 
@@ -194,11 +194,9 @@ public class TenshiBoss extends Mob {
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
 			if (weather_cd > WEATHER_CD*16){	//Live through Scarlet phase same lenght as 4 cycles you immediatly win and satisfy Tenshi
 				die(Dungeon.hero);
+				TenshiNPC.Quest.setImpression(4);
 			}
 			if (enemyInFOV && !isCharmedBy( enemy ) && canAttack( enemy )) {
-				if(checkWeather(MIST) && distance(Dungeon.hero) == 1){
-					HP += ((HP < HT - 3) ? 3 : (HT - HP));
-				}
 				if (canUseAbility()){
 					return useAbility();
 				}
@@ -209,7 +207,9 @@ public class TenshiBoss extends Mob {
 				return doAttack( enemy );
 				
 			} else {
-				
+				if(checkWeather(MIST) && distance(Dungeon.hero) == 1){
+					HP += ((HP < HT - 3) ? 3 : (HT - HP));
+				}
 				// sprite.showLost();
 				// state = WANDERING;
 				
@@ -239,12 +239,12 @@ public class TenshiBoss extends Mob {
 	//Rush (if too far) and slash (distance = 3)
 	private final int SLASH_CD = 7;
 	private int slash_cd = 2;
-	private final int DASH_CD = 10;
+	private final int DASH_CD = 4;
 	private int dash_cd = 5;
 	private int dashPos = -1;
-	private final int LASER_CD = 13;
+	private final int LASER_CD = 12;
 	private int laser_cd = LASER_CD;
-	private final int WEATHER_CD = 10;	//Weather cycle cooldown
+	private final int WEATHER_CD = 24;	//Weather cycle cooldown
 	private int weather_cd = 1;	//Total weather count down, 4 weather cycle 3 time -> last weather. 
 
 	public boolean canUseReady(){
@@ -360,6 +360,7 @@ public class TenshiBoss extends Mob {
 				if(ch != null && ch != this){
 					ch.damage(Math.max(ch.HP/4, 15), this);
 					Buff.affect(ch, Burning.class).reignite(ch, 5f);
+					if(ch instanceof Hero) TenshiNPC.Quest.setImpression(2);
 				}
 			}
 		}
@@ -369,6 +370,7 @@ public class TenshiBoss extends Mob {
 	//Dash and stab
 	private int dashReady(int target){
         Ballistica b = new Ballistica(this.pos, target, Ballistica.STOP_SOLID);
+		BlastWave.blast(this.pos);
 		if (!checkWeather(FOG)){
 			for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
 				sprite.parent.add(new TargetedCell(p, 0xFF0000));
@@ -391,6 +393,7 @@ public class TenshiBoss extends Mob {
 				Buff.affect(ch, Cripple.class, 4f);
 				Buff.affect(ch, Bleeding.class).set(5f);
 				if(ch instanceof Hero){
+					TenshiNPC.Quest.setImpression(2);
 					heroNotHit = false;
 					Camera.main.shake( 3, 0.7f );
 					//If Hero, push hero to collision, Tenshi to 1 tile before that
@@ -448,7 +451,7 @@ public class TenshiBoss extends Mob {
 		GLog.w(Integer.toString(weather_cd));
 		if (weather_cd/WEATHER_CD >= 13 ){
 			cur_weather = 69; //funny number hehe
-			//Clear all effect jsut in case
+			//Clear all effect just in case
 			this.sprite.remove(CharSprite.State.BURSTING_POWER_RED);
 			this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
 			this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
@@ -462,6 +465,7 @@ public class TenshiBoss extends Mob {
 			cur_weather = ((weather_cd/WEATHER_CD)%4);
 			attachAura(cur_weather);
 		}
+		weather_cd++;
 		return true;
 	}
 
@@ -505,7 +509,7 @@ public class TenshiBoss extends Mob {
 	private static final String LASER     = "laser_cd";
 	private static final String WEATHER		= "weather_cd";
 	private static final String CWEATHER		= "weather";
-	private static final String BRA_COUNT		= "bracket";
+	private static final String BRA_COUNT		= "bracket";	//Yes
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
@@ -534,7 +538,7 @@ public class TenshiBoss extends Mob {
 	public String description() {
 		String descript = super.description();
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-			descript = descript + "\n\n_Badder Bosses:\n" + Messages.get(this, "stronger_bosses");
+			descript = descript + "\n\n_Badder Bosses:_\n" + Messages.get(this, "stronger_bosses");
 		}
 		return descript;
 	}
@@ -587,6 +591,7 @@ public class TenshiBoss extends Mob {
 						Char ch = Actor.findChar(i);
 						if (ch != null && !(ch instanceof TenshiBoss)) {
 							ch.damage(Random.IntRange(10, 20), this);
+							if(ch instanceof Hero) TenshiNPC.Quest.setImpression(2);
 						}
 					}
 				}

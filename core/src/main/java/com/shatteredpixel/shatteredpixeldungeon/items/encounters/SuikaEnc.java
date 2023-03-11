@@ -11,4 +11,8 @@ public class SuikaEnc extends EncounterNotes {
 	public void setSeen(){
 		Catalog.setSeen(SuikaEnc.class);
 	}
+
+	public String npc(){
+		return "Suika";
+	}
 }

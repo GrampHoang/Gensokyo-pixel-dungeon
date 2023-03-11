@@ -89,7 +89,7 @@ public class SuikaNPC extends NPC {
 						tell(Messages.get(SuikaNPC.class, "invite"));
 					} else {
 						tell(Messages.get(SuikaNPC.class, "surprise"));
-						Catalog.setSeen(SuikaEnc.class);
+						// Catalog.setSeen(SuikaEnc.class);
 						SuikaEnc enc = new SuikaEnc();
 						enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 					}
@@ -123,9 +123,11 @@ public class SuikaNPC extends NPC {
 						tell(Messages.get(SuikaNPC.class, "quest_3"));
 						EndlessAlcohol alcohol = new EndlessAlcohol();
 						if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
-						if (!Catalog.isSeen(SuikaEnc.class)) {
-							Catalog.setSeen(SuikaEnc.class);
-						}
+						// if (!Catalog.isSeen(SuikaEnc.class)) {
+						// 	// Catalog.setSeen(SuikaEnc.class);
+						// 	SuikaEnc enc = new SuikaEnc();
+						// 	enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+						// }
 					}
 				});
 			//Not finish

@@ -100,7 +100,7 @@ public class KoishiHat extends Artifact {
 			Dungeon.hero.buff(Invisibility.class).detach();
 		}
 		Buff.affect(Dungeon.hero, Fury.class);
-		Buff.affect(Dungeon.hero, Doom.KoiDoom.class);
+		Buff.append(Dungeon.hero, Doom.class);
 		return super.doUnequip(hero, collect, single);
 	}
 
@@ -110,8 +110,8 @@ public class KoishiHat extends Artifact {
 			GLog.w("Koishi hasn't calm down yet!");
 			return false;
 		} else {
-			if (Dungeon.hero.buff(Doom.KoiDoom.class) != null){
-				Dungeon.hero.buff(Doom.KoiDoom.class).detach();
+			if (Dungeon.hero.buff(Doom.class) != null){
+				Dungeon.hero.buff(Doom.class).detach();
 			};
 			boolean ret = super.doEquip(hero);
 			Dungeon.hero.buff(KoishiHat.Koishibuff.class).updateTalent();

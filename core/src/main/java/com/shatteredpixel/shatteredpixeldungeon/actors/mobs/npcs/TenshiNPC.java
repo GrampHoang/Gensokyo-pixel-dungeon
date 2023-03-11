@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
@@ -71,7 +72,6 @@ public class TenshiNPC extends NPC {
 	}
 	
 	public static boolean appeared = false;
-	public int impression = 1;
 
 	@Override
 	protected boolean act() {
@@ -103,22 +103,24 @@ public class TenshiNPC extends NPC {
 			return true;
 		}
 		//TODO: FIX COMPLETE LOGIC
-		// 
+		// Not talk -> not given
+		// Talked -> given
+		// Talked then fight -> given completed? -> impression
 		//Have quest
 		if (Quest.given) {
 			
 			// Finished
 			if (Quest.completed){
-				switch(impression){
+				switch(Quest.impression){
 					default:
 					case 1:
 						sprite.showStatus(CharSprite.POSITIVE, "You sucks");
 						break;
 					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, "You are decent");
+						sprite.showStatus(CharSprite.POSITIVE, "You good");
 						break;
 					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, "You good!");
+						sprite.showStatus(CharSprite.POSITIVE, "You strong!");
 						break;
 					
 				}
@@ -129,8 +131,9 @@ public class TenshiNPC extends NPC {
 					@Override
 					public void call() {
 						TenshiNPC.Quest.complete();
-						switch(impression){
+						switch(Quest.impression){
 							default:
+								tell(String.format("Illegal impression value %d", Quest.impression));
 							case 1:
 								// Being trash, die too soon, give you a pot of STR
 								tell(Messages.get(TenshiNPC.class, "i_bad"));
@@ -138,25 +141,37 @@ public class TenshiNPC extends NPC {
 								if (!pos.collect()) Dungeon.level.drop(pos, Dungeon.hero.pos);
 								break;
 							case 2:
-								// Being decent, get her < 50% HP, give you FireOath, 1 HealPot
+								// Being decent, win her normally, give you FireOath, 1 HealPot, 1 pie
 								tell(Messages.get(TenshiNPC.class, "i_decent"));
+								MeatPie mp = new MeatPie();
+								if (!mp.collect()) Dungeon.level.drop(mp, Dungeon.hero.pos);
 								FireOath fo = new FireOath();
 								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
 								PotionOfHealing poh = new PotionOfHealing();
 								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
 								break;
 							case 3:
-								// Flawlfess fight, give you the sword
-								tell(Messages.get(TenshiNPC.class, "i_good"));
-								HisouBlade hb = new HisouBlade();
-								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
+							case 4:
+								// Flawlfess fight, or survival long enough (very long), give you additional sword
 								if (!Catalog.isSeen(TenshiEnc.class)) {
-									Catalog.setSeen(TenshiEnc.class);
+									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good_first"));
+									else tell(Messages.get(TenshiNPC.class, "i_good_first_survive"));
 									TenshiEnc enc = new TenshiEnc();
 									enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+								} else {
+									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good"));
+									else tell(Messages.get(TenshiNPC.class, "i_good_survive"));
 								}
+								FireOath foo = new FireOath();
+								if (!foo.collect()) Dungeon.level.drop(foo, Dungeon.hero.pos);
+								PotionOfHealing pooh = new PotionOfHealing();
+								if (!pooh.collect()) Dungeon.level.drop(pooh, Dungeon.hero.pos);
+								HisouBlade hb = new HisouBlade();
+								hb.identify();
+								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
 								break;
 						}
+						// TenshiNPC.Quest.complete();
 					}
 				});
 			// Not finish
@@ -196,27 +211,31 @@ public class TenshiNPC extends NPC {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
 		bundle.put( "T_APPEARED", appeared );
-		bundle.put("IMPRESS", impression);
+		
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
 		appeared = bundle.getBoolean("T_APPEARED");
-		impression = bundle.getInt("IMPRESS");
 	}
 
 	public static class Quest {
-		private static boolean spawned;
-		private static boolean given;
-		private static boolean completed;
-		
+		public static boolean spawned;
+		public static boolean given;
+		public static boolean completed;
+		public static int impression;
+
 		public static void reset() {
 			spawned = false;
 			given = false;
 			completed = false;
+			impression = 3;
 		}
 		
+		public static void setImpression(int i){
+			impression = i;
+		}
 		private static final String NODE		= "tenshi_Quest";
 		
 		private static final String SPAWNED		= "t_spawned";
@@ -234,6 +253,7 @@ public class TenshiNPC extends NPC {
 				
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
+				node.put("IMPRESS", impression);
 				// node.put( REWARD, reward );
 			}
 			
@@ -248,6 +268,7 @@ public class TenshiNPC extends NPC {
 				
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
+				impression = node.getInt("IMPRESS");
 				// reward = (Ring)node.get( REWARD );
 			}
 		}
@@ -311,12 +332,13 @@ public class TenshiNPC extends NPC {
 				protected void onClick() {
 					hide();
 					Buff.affect(Dungeon.hero, BossMercy.class).set(Dungeon.hero);
-					//TODO FIX THESE TELEPORT THING
+					
 					InterlevelScene.curTransition = new LevelTransition();
 					InterlevelScene.mode = InterlevelScene.Mode.NEWTELEPORT;
 					InterlevelScene.curTransition.destDepth = 100;
 					InterlevelScene.curTransition.destBranch = 9;
 					Game.switchScene(InterlevelScene.class);
+					
 				}
 			};
 			btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );

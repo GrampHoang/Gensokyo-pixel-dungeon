@@ -4,6 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
 public abstract class EncounterNotes extends Item {
@@ -17,11 +18,13 @@ public abstract class EncounterNotes extends Item {
 		Sample.INSTANCE.play( Assets.Sounds.ITEM );
 		hero.spendAndNext( TIME_TO_PICK_UP );
 		setSeen();
+		GLog.p(npc() + " teach you new thing! Check the Journal!");
 		return true;
 	}
 
 	public abstract void setSeen();
 	
+	public abstract String npc();
 	// @Override
 	// public boolean isUpgradable() {
 	// 	return false;

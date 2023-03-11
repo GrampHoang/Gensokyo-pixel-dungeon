@@ -24,8 +24,10 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import java.security.PolicySpi;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -49,6 +51,7 @@ public class BossMercy extends Buff {
     private int floor;
     private int branch;
     private int hp;
+    private boolean tbd;
 
     public void set(int floor, int branch, Hero hero ) {
         this.floor = floor;
@@ -65,9 +68,17 @@ public class BossMercy extends Buff {
         this.pos = hero.pos;
 	}
 
+    public void tobeDetach() {
+        this.tbd = true;
+	}
+
     @Override
 	public boolean act() {
         spend( TICK );
+        if (tbd == true){
+            detach();
+        }
+
 		if (target.HP < 1) {
             teleBack(true);
             detach();
@@ -81,10 +92,11 @@ public class BossMercy extends Buff {
         InterlevelScene.returnBranch = this.branch;
         InterlevelScene.returnPos = this.pos;
         if (lose){
+            TenshiNPC.Quest.setImpression(1);
             Dungeon.hero.HP = this.hp;
         }
         Game.switchScene(InterlevelScene.class);
-        
+        Dungeon.hero.spendAndNext(1f);
     }
 
 	@Override

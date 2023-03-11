@@ -69,9 +69,13 @@ public class TenshiBossLevel extends Level {
         
         Painter.fill(this, midpath, Terrain.EMPTY_SP);
         Painter.fill(this, midpath2, Terrain.EMPTY_SP);
-        
-        map[SIZE_H/2 + (SIZE_W-1)*width()/2-1] = Terrain.STATUE;
-        map[SIZE_H/2 + (SIZE_W-1)*width()/2+1] = Terrain.STATUE;
+            
+        map[(SIZE_H/2-1)*width() + width()/2 - 1] = Terrain.STATUE;
+        map[(SIZE_H/2-1)*width() + width()/2 + 1] = Terrain.STATUE;
+        map[(SIZE_H/2+1)*width() + width()/2 - 1] = Terrain.STATUE;
+        map[(SIZE_H/2+1)*width() + width()/2 + 1] = Terrain.STATUE;
+
+        map[(SIZE_H/2)*width() + width()/2] = Terrain.STATUE;
 
         Painter.fill(this, pillar1, Terrain.WALL);
         Painter.fill(this, pillar2, Terrain.WALL);
@@ -80,9 +84,10 @@ public class TenshiBossLevel extends Level {
         
         entrance = 15 * width() + 9;
         exit     = 3 * width() + 9;
-        map[entrance] = Terrain.ENTRANCE;
-        transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE, 18, 1, LevelTransition.Type.REGULAR_EXIT));
-
+        // map[entrance] = Terrain.ENTRANCE;
+        // map[exit] = Terrain.EXIT;
+        transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.SURFACE, 100, 9, LevelTransition.Type.SURFACE));
+        feeling = Feeling.NONE;
         return true;
     }
 
@@ -93,14 +98,10 @@ public class TenshiBossLevel extends Level {
     @Override
     public void occupyCell( Char ch ) {
         super.occupyCell( ch );
-        //If the hero is here
-        // entrance still there = boss haven't appeared
-        // Exit not there => Haven't triger and kill boss
-        // And move away from the entrance
-        if (map[entrance] == Terrain.ENTRANCE 
-            && ch == Dungeon.hero
-            && map[exit] != Terrain.EXIT
-            && Dungeon.level.distance(ch.pos, entrance) > 2) {
+        if (
+            ch == Dungeon.hero
+            && map[(SIZE_H/2)*width() + width()/2] == Terrain.STATUE
+            && Dungeon.level.distance(ch.pos, entrance) > 1) {
             seal();
         }
     }
@@ -108,13 +109,9 @@ public class TenshiBossLevel extends Level {
     @Override
     public void seal() {
         super.seal();
-        set( entrance, Terrain.EMPTY_DECO );
-        set( exit, Terrain.EMPTY_DECO );
-        GameScene.updateMap( entrance );
-        GameScene.updateMap( exit );
-
+        map[(SIZE_H/2)*width() + width()/2] = Terrain.EMPTY_SP;
+        GameScene.updateMap( (SIZE_H/2)*width() + width()/2 );
         Dungeon.observe();
-
         TenshiBoss mari = new TenshiBoss();
         mari.pos = (4 * width() + 9);;
         GameScene.add(mari);
@@ -124,17 +121,7 @@ public class TenshiBossLevel extends Level {
     @Override
     public void unseal() {
         super.unseal();
-        set( entrance, Terrain.ENTRANCE );
-        GameScene.updateMap( entrance );
-        transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE, 18, 1, LevelTransition.Type.REGULAR_EXIT));
-        set( exit, Terrain.EXIT );
-        GameScene.updateMap( exit );
-
-        CellEmitter.get(exit-1).burst(ShadowParticle.UP, 25);
-        CellEmitter.get(exit).burst(ShadowParticle.UP, 100);
-        CellEmitter.get(exit+1).burst(ShadowParticle.UP, 25);
-
-        Dungeon.observe();
+        // Doesn't matter since you will be teleported back
     }
 
     @Override

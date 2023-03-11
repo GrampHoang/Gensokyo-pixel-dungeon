@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -47,29 +48,17 @@ public class Doom extends Buff {
 	
 	@Override
 	public String toString() {
+		if(target instanceof Hero)
+			if(((Hero)target).heroClass == HeroClass.KOISHI)
+				return Messages.get(this, "kname");
 		return Messages.get(this, "name");
 	}
 	
 	@Override
 	public String desc() {
+		if(target instanceof Hero)
+			if(((Hero)target).heroClass == HeroClass.KOISHI)
+				return Messages.get(this, "kdesc");
 		return Messages.get(this, "desc");
-	}
-
-	public class KoiDoom extends Doom {
-	
-		{
-			type = buffType.NEGATIVE;
-			announced = true;
-		}
-		
-		@Override
-		public String toString() {
-			return Messages.get(this, "kname");
-		}
-		
-		@Override
-		public String desc() {
-			return Messages.get(this, "kdesc");
-		}
 	}
 }

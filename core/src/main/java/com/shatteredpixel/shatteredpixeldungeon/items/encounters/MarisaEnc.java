@@ -11,4 +11,8 @@ public class MarisaEnc extends EncounterNotes {
 	public void setSeen(){
 		Catalog.setSeen(MarisaEnc.class);
 	}
+
+	public String npc(){
+		return "Marisa";
+	}
 }

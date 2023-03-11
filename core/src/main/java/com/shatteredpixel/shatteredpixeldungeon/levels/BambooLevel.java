@@ -75,7 +75,7 @@ public class BambooLevel extends RegularLevel {
 	@Override
 	protected ArrayList<Room> initRooms() {
 		ArrayList<Room> initRooms = super.initRooms();
-		if(Dungeon.depth == 19) initRooms.add(new MarisaRoom());
+		// if(Dungeon.depth == 19) initRooms.add(new MarisaRoom());
 		return initRooms;
 	}
 

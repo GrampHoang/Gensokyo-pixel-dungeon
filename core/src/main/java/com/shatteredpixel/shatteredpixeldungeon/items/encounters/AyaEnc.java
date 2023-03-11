@@ -11,4 +11,8 @@ public class AyaEnc extends EncounterNotes {
 	public void setSeen(){
 		Catalog.setSeen(AyaEnc.class);
 	}
+
+	public String npc(){
+		return "Aya";
+	}
 }

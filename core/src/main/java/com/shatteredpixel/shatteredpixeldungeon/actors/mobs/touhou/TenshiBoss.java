@@ -153,8 +153,11 @@ public class TenshiBoss extends Mob {
 		this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
 		this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
 		this.sprite.clearAura();
-		Dungeon.hero.buff(BossMercy.class).tobeDetach();
-		Dungeon.hero.buff(BossMercy.class).teleBack(false);
+		BossMercy bm = Dungeon.hero.buff(BossMercy.class);
+		if (bm != null){
+			Dungeon.hero.buff(BossMercy.class).tobeDetach();
+			Dungeon.hero.buff(BossMercy.class).teleBack(false);
+		}
 		Dungeon.level.unseal();
 		GameScene.bossSlain();
 		Statistics.bossScores[1] += 1000;
@@ -237,14 +240,14 @@ public class TenshiBoss extends Mob {
 	//SKILLLLLLLLL
 
 	//Rush (if too far) and slash (distance = 3)
-	private final int SLASH_CD = 7;
+	private final int SLASH_CD = 6;
 	private int slash_cd = 2;
-	private final int DASH_CD = 4;
+	private final int DASH_CD = 3;
 	private int dash_cd = 5;
 	private int dashPos = -1;
 	private final int LASER_CD = 12;
 	private int laser_cd = LASER_CD;
-	private final int WEATHER_CD = 24;	//Weather cycle cooldown
+	private final int WEATHER_CD = 18;	//Weather cycle cooldown
 	private int weather_cd = 1;	//Total weather count down, 4 weather cycle 3 time -> last weather. 
 
 	public boolean canUseReady(){
@@ -358,9 +361,9 @@ public class TenshiBoss extends Mob {
 				if (p != this.pos && bracket_count > 1)	GameScene.add(Blob.seed(p, checkWeather(SUNNY) ? 10 : 5, Fire.class));
 				Char ch = Actor.findChar(p);
 				if(ch != null && ch != this){
-					ch.damage(Math.max(ch.HP/4, 15), this);
 					Buff.affect(ch, Burning.class).reignite(ch, 5f);
 					if(ch instanceof Hero) TenshiNPC.Quest.setImpression(2);
+					ch.damage(Math.max(ch.HP/4, 15), this);
 				}
 			}
 		}
@@ -389,7 +392,7 @@ public class TenshiBoss extends Mob {
 			if (p != this.pos && bracket_count > 2)	GameScene.add(Blob.seed(p, checkWeather(SUNNY) ? 10 : 5, Fire.class));
             Char ch = Actor.findChar(p);
 			if (ch != null && !(ch instanceof TenshiBoss)){
-				ch.damage(18, this);
+				
 				Buff.affect(ch, Cripple.class, 4f);
 				Buff.affect(ch, Bleeding.class).set(5f);
 				if(ch instanceof Hero){
@@ -412,8 +415,8 @@ public class TenshiBoss extends Mob {
 					this.move(stopPos);
 					Dungeon.level.occupyCell(this);
 					Dungeon.hero.sprite.bloodBurstA( Dungeon.hero.sprite.center(), 600 );
-
 				}
+				ch.damage(18, this);
 			}
         }
 		//move to colPos if didn't hit Hero
@@ -448,7 +451,7 @@ public class TenshiBoss extends Mob {
 
 	private boolean changeWeather(){
 		Camera.main.shake( 4, 2f );
-		GLog.w(Integer.toString(weather_cd));
+		// GLog.w(Integer.toString(weather_cd));
 		if (weather_cd/WEATHER_CD >= 13 ){
 			cur_weather = 69; //funny number hehe
 			//Clear all effect just in case

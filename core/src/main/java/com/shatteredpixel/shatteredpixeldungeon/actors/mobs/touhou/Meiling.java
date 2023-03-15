@@ -144,8 +144,6 @@ public class Meiling extends Mob {
 		if(enemySeen == false){
 			return false;
 		}
-		GLog.w(Float.toString(punch_cd));
-		GLog.w(Float.toString(rock_cd));
         if(Dungeon.hero.buff(Paralysis.class) != null){
             return false;
         }

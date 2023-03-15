@@ -63,8 +63,8 @@ public class MarisaRoom extends SecretRoom {
 			Painter.drawInside(level, this, entrance, (height() - 3) / 2, Terrain.EMPTY_SP);
 		}
 		entrance.set( Door.Type.HIDDEN );
-		if (MarisaNPC.appeared == false && Random.Int(24 - Dungeon.depth) == 0){
-			MarisaNPC.appeared = true;
+		if (MarisaNPC.Quest.spawned() == false && Random.Int(24 - Dungeon.depth) == 0){
+			MarisaNPC.Quest.spawning();
 			marisa.pos = level.pointToCell(random( 2 ));
 			level.mobs.add( marisa );
 		}

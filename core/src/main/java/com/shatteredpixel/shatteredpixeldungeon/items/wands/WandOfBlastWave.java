@@ -71,7 +71,6 @@ public class WandOfBlastWave extends DamageWand {
 
 	@Override
 	public void onZap(Ballistica bolt) {
-		GLog.w("Test:");
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 		BlastWave.blast(bolt.collisionPos);
 

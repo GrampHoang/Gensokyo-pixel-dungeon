@@ -18,6 +18,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
@@ -135,16 +136,18 @@ public class TenshiNPC extends NPC {
 							default:
 								tell(String.format("Illegal impression value %d", Quest.impression));
 							case 1:
-								// Being trash, die too soon, give you a pot of STR
+								// Being trash, die too soon, give you  3 peaches
 								tell(Messages.get(TenshiNPC.class, "i_bad"));
-								PotionOfStrength pos = new PotionOfStrength();
-								if (!pos.collect()) Dungeon.level.drop(pos, Dungeon.hero.pos);
+								// PotionOfStrength pos = new PotionOfStrength();
+								// if (!pos.collect()) Dungeon.level.drop(pos, Dungeon.hero.pos);
+								Peach mps = new Peach();
+								if (!mps.quantity(3).collect()) Dungeon.level.drop(mps, Dungeon.hero.pos);
 								break;
 							case 2:
-								// Being decent, win her normally, give you FireOath, 1 HealPot, 1 pie
+								// Being decent, win her normally, give you FireOath, 2 peach, 1 poh
 								tell(Messages.get(TenshiNPC.class, "i_decent"));
-								MeatPie mp = new MeatPie();
-								if (!mp.collect()) Dungeon.level.drop(mp, Dungeon.hero.pos);
+								Peach mp = new Peach();
+								if (!mp.quantity(2).collect()) Dungeon.level.drop(mp, Dungeon.hero.pos);
 								FireOath fo = new FireOath();
 								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
 								PotionOfHealing poh = new PotionOfHealing();
@@ -152,7 +155,7 @@ public class TenshiNPC extends NPC {
 								break;
 							case 3:
 							case 4:
-								// Flawlfess fight, or survival long enough (very long), give you additional sword
+								// Flawless fight, or survival long enough (very long), give you additional sword
 								if (!Catalog.isSeen(TenshiEnc.class)) {
 									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good_first"));
 									else tell(Messages.get(TenshiNPC.class, "i_good_first_survive"));
@@ -171,13 +174,12 @@ public class TenshiNPC extends NPC {
 								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
 								break;
 						}
-						// TenshiNPC.Quest.complete();
+						flee();
 					}
 				});
 			// Not finish
 			}
 		} else {
-			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.TENSHI );
 			Game.runOnRenderThread(new Callback() {
@@ -202,7 +204,19 @@ public class TenshiNPC extends NPC {
 	
 	
 	public void flee() {
-		yell( Messages.get(this, "cya", Dungeon.hero.name()) );
+		switch(Quest.impression){
+			default:
+			case 1:
+				sprite.showStatus(CharSprite.POSITIVE, "You sucks");
+				break;
+			case 2:
+				sprite.showStatus(CharSprite.POSITIVE, "You good");
+				break;
+			case 3:
+				sprite.showStatus(CharSprite.POSITIVE, "You strong!");
+				break;
+			
+		}
 		destroy();
 		sprite.die();
 	}
@@ -330,16 +344,18 @@ public class TenshiNPC extends NPC {
 			RedButton btnReward = new RedButton( Messages.get(this, "fight") ) {
 				@Override
 				protected void onClick() {
+					TenshiNPC.Quest.given = true;
 					hide();
 					Buff.affect(Dungeon.hero, BossMercy.class).set(Dungeon.hero);
 					
 					InterlevelScene.curTransition = new LevelTransition();
 					InterlevelScene.mode = InterlevelScene.Mode.NEWTELEPORT;
-					InterlevelScene.curTransition.destDepth = 100;
+					InterlevelScene.curTransition.destDepth = 15;
 					InterlevelScene.curTransition.destBranch = 9;
 					Game.switchScene(InterlevelScene.class);
 					
 				}
+				
 			};
 			btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
 			add( btnReward );

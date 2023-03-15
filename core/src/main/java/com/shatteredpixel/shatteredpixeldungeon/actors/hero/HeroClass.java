@@ -68,6 +68,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ReisenHand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.DebugSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gohei;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Knife;
@@ -398,13 +399,15 @@ public enum HeroClass {
 		new ScrollOfTeleportation().identify();
 		new PotionOfHaste().identify();
 
-				// GhostBlade we = new GhostBlade();
-				// we.level(20);
+				ScrollOfDebug sod = new ScrollOfDebug();
+				sod.quantity(69).collect();
+				Dungeon.quickslot.setSlot(2, sod);
+				
+				// DebugSword we = new DebugSword();
+				// we.level(5);
 				// hero.belongings.weapon = we;
 
-				// ScrollOfDebug sod = new ScrollOfDebug();
-				// sod.quantity(69).collect();
-				// Dungeon.quickslot.setSlot(2, sod);
+				
 
 				// Buff.affect(hero, MagicalSight.class, 9999f);
 				// RingOfMight ring = new RingOfMight();

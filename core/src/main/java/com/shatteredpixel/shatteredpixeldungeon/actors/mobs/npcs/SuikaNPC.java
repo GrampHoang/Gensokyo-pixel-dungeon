@@ -112,7 +112,7 @@ public class SuikaNPC extends NPC {
 						sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "quest_finished4"));
 						break;
 				}
-			// fnished now
+			// finished now
 			}else if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
@@ -155,7 +155,6 @@ public class SuikaNPC extends NPC {
 	}
 	
 	public void flee() {
-		yell( Messages.get(this, "cya", Dungeon.hero.name()) );
 		destroy();
 		sprite.die();
 	}

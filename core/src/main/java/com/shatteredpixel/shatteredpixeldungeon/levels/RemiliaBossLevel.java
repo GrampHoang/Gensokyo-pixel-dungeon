@@ -121,13 +121,13 @@ public class RemiliaBossLevel extends Level {
 
         Dungeon.observe();
 
-        // RemiliaBoss boss = new RemiliaBoss();
-        // boss.pos = (3 * width() + 7);;
-        // GameScene.add(boss);
+        RemiliaBoss boss = new RemiliaBoss();
+        boss.pos = (3 * width() + 7);;
+        GameScene.add(boss);
 
-        TenshiBoss mari = new TenshiBoss();
-        mari.pos = (4 * width() + 15);;
-        GameScene.add(mari);
+        // TenshiBoss mari = new TenshiBoss();
+        // mari.pos = (4 * width() + 15);;
+        // GameScene.add(mari);
 
     }
 

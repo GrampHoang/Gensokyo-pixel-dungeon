@@ -96,10 +96,12 @@ public class WandOfLightning extends DamageWand {
 				ch.damage(Math.round(damageRoll() * multipler * 0.5f), this);
 			} else {
 				ch.damage(Math.round(damageRoll() * multipler), this);
-				Buff.affect(ch, Paralysis.class, 3f);
-				CellEmitter.center( ch.pos ).burst(SparkParticle.FACTORY, 3);
-				CellEmitter.center( ch.pos ).burst(SmokeParticle.FACTORY, 4);
-				CellEmitter.center(ch.pos).burst(BlastParticle.FACTORY, 10);
+				if(potUnlocked()) {
+					Buff.affect(ch, Paralysis.class, level()/3);
+					CellEmitter.center( ch.pos ).burst(SparkParticle.FACTORY, 3);
+					CellEmitter.center( ch.pos ).burst(SmokeParticle.FACTORY, 4);
+					CellEmitter.center(ch.pos).burst(BlastParticle.FACTORY, 10);
+				}
 			}
 		}
 
@@ -137,9 +139,13 @@ public class WandOfLightning extends DamageWand {
 		
 		affected.addAll(hitThisArc);
 		for (Char hit : hitThisArc){
-			PointF tar = hit.sprite.center();
-			tar.y -= 96;
-			arcs.add(new Lightning.Arc(tar, hit.sprite.center()));
+			if(potUnlocked()) {
+				PointF tar = hit.sprite.center();
+				tar.y -= 96;
+				arcs.add(new Lightning.Arc(tar, hit.sprite.center()));
+			} else {
+				arcs.add(new Lightning.Arc(ch.sprite.center(), hit.sprite.center()));
+			}
 			arc(hit);
 		}
 	}

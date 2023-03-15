@@ -113,8 +113,10 @@ public class WandOfTransfusion extends Wand {
 					Charm charm = Buff.affect(ch, Charm.class, Charm.DURATION/2f);
 					charm.object = curUser.id();
 					charm.ignoreHeroAllies = true;
-					Buff.affect(ch, Amok.class, 5f);
-					Buff.affect(ch, Blindness.class, 5f);
+					if (potUnlocked()){
+						Buff.affect(ch, Amok.class, 5f);
+						Buff.affect(ch, Blindness.class, 5f);
+					}
 					ch.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 3 );
 				
 				//harm the undead

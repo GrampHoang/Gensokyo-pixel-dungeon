@@ -223,7 +223,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 1;
+		depth = 16;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -241,7 +241,6 @@ public class Dungeon {
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
 		SuikaNPC.Quest.reset();
-		MarisaNPC.appeared = false;
 		MarisaNPC.Quest.reset(); //Just in case?
 		TenshiNPC.Quest.reset();
 		hero = new Hero();
@@ -344,8 +343,8 @@ public class Dungeon {
 					level = new SDMLevel();
 					break;
 				case 10:
-					level = new TenshiBossLevel();
-					// level = new RemiliaBossLevel();
+					// level = new TenshiBossLevel();
+					level = new RemiliaBossLevel();
 					break;
 				case 11:
 				case 12:
@@ -385,7 +384,7 @@ public class Dungeon {
 		} else if (branch == 9){
 			// Special branch for bosses
 			switch(depth){
-				case 100:
+				case 15:
 					level = new TenshiBossLevel();
 					break;
 				default:

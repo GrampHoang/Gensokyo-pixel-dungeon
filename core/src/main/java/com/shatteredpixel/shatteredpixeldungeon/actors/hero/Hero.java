@@ -1800,8 +1800,9 @@ public class Hero extends Char {
 	public void die( Object cause ) {
 		BossMercy inFight = Dungeon.hero.buff(BossMercy.class);
 		if (inFight != null){
+			// if (buff(Burning.class) != null ) buff(Burning.class).detach();
 			inFight.tobeDetach();
-			inFight.teleBack(true);
+			inFight.teleBack(true);;
 			return;
 		}
 		curAction = null;

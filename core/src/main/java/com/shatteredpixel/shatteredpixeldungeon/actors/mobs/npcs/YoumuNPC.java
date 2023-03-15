@@ -15,7 +15,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.MarisaEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.YoumuEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaBossSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndImp;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -46,10 +46,10 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class MarisaNPC extends NPC {
+public class YoumuNPC extends NPC {
 
 	{
-		spriteClass = MarisaBossSprite.class;
+		spriteClass = ImpSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
@@ -57,7 +57,7 @@ public class MarisaNPC extends NPC {
 	@Override
 	protected boolean act() {
 		if (!Quest.given && Dungeon.level.heroFOV[pos]) {
-			Notes.add( Notes.Landmark.MARISA );
+			Notes.add( Notes.Landmark.YOUMU );
 		} 
 		return super.act();
 	}
@@ -74,8 +74,6 @@ public class MarisaNPC extends NPC {
 	@Override
 	public void add( Buff buff ) {
 	}
-	
-	private ArrayList<Wand> wandls = new ArrayList<>();
 
 	@Override
 	public boolean interact(Char c) {
@@ -94,16 +92,16 @@ public class MarisaNPC extends NPC {
 				switch(Random.IntRange(1,4)){
 					default:
 					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished1"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished1"));
 						break;
 					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished2"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished2"));
 						break;
 					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished3"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished3"));
 						break;
 					case 4:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(MarisaNPC.class, "quest_finished4"));
+						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished4"));
 						break;
 				}
 			// Finish now
@@ -113,65 +111,52 @@ public class MarisaNPC extends NPC {
 					@Override
 					public void call() {
 						tokens.detachAll(Dungeon.hero.belongings.backpack);
+						YoumuNPC.Quest.complete();
 						//Normal finish
 						if( tokensHave <= tokenNeed*2 ){
-							wandls = Dungeon.hero.belongings.getAllItems( Wand.class );
-							boolean highwand = false;
-							for (Wand wand : wandls) if (wand.trueLevel() > 12) {highwand = true; break;}
-							//If no high level wand or seen before, no teach
-							if (highwand != true || Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(MarisaNPC.class, "quest_3_normal", tokensHave));
-							// Teach if have >12 level wand
-							else {
-								tell(Messages.get(MarisaNPC.class, "quest_3_normal_wand", tokensHave));
-								// Catalog.setSeen(MarisaEnc.class);
-								MarisaEnc enc = new MarisaEnc();
-								// Dungeon.level.drop(enc, Dungeon.hero.pos );
-								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-							}
-							//Reward: 1 Lullaby, 1 Retribution, 2 PotHealing
-							ScrollOfLullaby lul = new ScrollOfLullaby();
-							if (!lul.quantity(1).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
-							ScrollOfRetribution ret = new ScrollOfRetribution();
-							if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
-							PotionOfHealing poh = new PotionOfHealing();
-							if (!poh.quantity(2).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
+							// //Reward: 1 Lullaby, 1 Retribution, 2 PotHealing
+							// ScrollOfLullaby lul = new ScrollOfLullaby();
+							// if (!lul.quantity(1).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
+							// ScrollOfRetribution ret = new ScrollOfRetribution();
+							// if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
+							// PotionOfHealing poh = new PotionOfHealing();
+							// if (!poh.quantity(2).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
+
 						// Good finish, double what she tell you to get
 						} else {
-							if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(MarisaNPC.class, "quest_3_good"));
+							if (Catalog.isSeen(YoumuEnc.class)) tell(Messages.get(YoumuNPC.class, "quest_3_good"));
 							else {
-								tell(Messages.get(MarisaNPC.class, "quest_3_good_first"));
-								// Catalog.setSeen(MarisaEnc.class);
-								MarisaEnc enc = new MarisaEnc();
+								tell(Messages.get(YoumuNPC.class, "quest_3_good_first"));
+								// Catalog.setSeen(YoumuEnc.class);
+								YoumuEnc enc = new YoumuEnc();
 								// Dungeon.level.drop(enc, Dungeon.hero.pos );
 								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 							}
 							//Reward: 1 Lullaby, 1 Retribution, 1 PsiBlast, 4 PotHealing and 1 SoU
-							ScrollOfLullaby lul = new ScrollOfLullaby();
-							if (!lul.quantity(2).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
-							ScrollOfRetribution ret = new ScrollOfRetribution();
-							if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
-							ScrollOfPsionicBlast psi = new ScrollOfPsionicBlast();
-							if (!psi.quantity(1).collect()) Dungeon.level.drop(psi, Dungeon.hero.pos);
-							PotionOfHealing poh = new PotionOfHealing();
-							if (!poh.quantity(4).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-							ScrollOfUpgrade sou = new ScrollOfUpgrade();
-							if (!sou.quantity(1).collect()) Dungeon.level.drop(sou, Dungeon.hero.pos);
+							// ScrollOfLullaby lul = new ScrollOfLullaby();
+							// if (!lul.quantity(2).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
+							// ScrollOfRetribution ret = new ScrollOfRetribution();
+							// if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
+							// ScrollOfPsionicBlast psi = new ScrollOfPsionicBlast();
+							// if (!psi.quantity(1).collect()) Dungeon.level.drop(psi, Dungeon.hero.pos);
+							// PotionOfHealing poh = new PotionOfHealing();
+							// if (!poh.quantity(4).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
+							// ScrollOfUpgrade sou = new ScrollOfUpgrade();
+							// if (!sou.quantity(1).collect()) Dungeon.level.drop(sou, Dungeon.hero.pos);
 						}
-						flee();
-						MarisaNPC.Quest.complete();
 					}
 				});
 			// Not finish
 			} else {
-				tell(Messages.get(MarisaNPC.class, "quest_2", tokenNeed));
+				tell(Messages.get(YoumuNPC.class, "quest_2", tokenNeed));
 			}
 			
 		} else {
-			if (Catalog.isSeen(MarisaEnc.class)) tell(Messages.get(MarisaNPC.class, "quest_1"));
-			else tell(Messages.get(MarisaNPC.class, "quest_1_first"));
+			if (Catalog.isSeen(YoumuEnc.class)) tell(Messages.get(YoumuNPC.class, "quest_1"));
+			else tell(Messages.get(YoumuNPC.class, "quest_1_first"));
 			Quest.given = true;
 			Quest.completed = false;
-			Notes.add( Notes.Landmark.MARISA );
+			Notes.add( Notes.Landmark.YOUMU );
 		}
 
 		return true;
@@ -181,13 +166,14 @@ public class MarisaNPC extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( MarisaNPC.this, text ));
+				GameScene.show( new WndQuest( YoumuNPC.this, text ));
 			}
 		});
 	}
 	
 	
 	public void flee() {
+		yell( Messages.get(YoumuNPC.class, "cya", Dungeon.hero.name()) );
 		destroy();
 		sprite.die();
 	}
@@ -207,18 +193,13 @@ public class MarisaNPC extends NPC {
 		private static boolean given;
 		private static boolean completed;
 		
-		public static boolean spawned(){
-			return spawned;
-		}
-
-		public static void spawning(){
-			spawned = true;
-		}
+		// public static Ring reward;
 		
 		public static void reset() {
 			spawned = false;
 			given = false;
 			completed = false;
+			// reward = null;
 		}
 		
 		private static final String NODE		= "mari_Quest";
@@ -226,6 +207,7 @@ public class MarisaNPC extends NPC {
 		private static final String SPAWNED		= "m_spawned";
 		private static final String GIVEN		= "m_given";
 		private static final String COMPLETED	= "m_completed";
+		// private static final String REWARD		= "reward";
 		
 		public static void storeInBundle( Bundle bundle ) {
 			
@@ -237,6 +219,7 @@ public class MarisaNPC extends NPC {
 				
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
+				// node.put( REWARD, reward );
 			}
 			
 			bundle.put( NODE, node );
@@ -250,15 +233,40 @@ public class MarisaNPC extends NPC {
 				
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
+				// reward = (Ring)node.get( REWARD );
 			}
 		}
 		
 		public static void spawn( ForestLevel level ) {
+			// TODO Dungeon.depth > 99 to disable her spawn
+            // Will try to spawn her inside a library
 			// Irrelevant for now, she spawn in her room
+			// if (!spawned && Dungeon.depth == 20 && Random.Int( 4 - Dungeon.depth ) == 0) {
+				
+			// 	YoumuNPC npc = new YoumuNPC();
+			// 	do {
+			// 		npc.pos = level.randomRespawnCell( npc );
+			// 	} while (
+			// 			npc.pos == -1 ||
+			// 			level.heaps.get( npc.pos ) != null ||
+			// 			level.traps.get( npc.pos) != null ||
+			// 			level.findMob( npc.pos ) != null ||
+			// 			//Marisa doesn't move, so she cannot obstruct a passageway
+			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
+			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
+			// 	level.mobs.add( npc );
+			// 	spawned = true;
+			// 	given = false;
+			// }
 		}
 		
 		public static void process( Mob mob ) {
 			if (given && !completed && Dungeon.depth < 25) {
+				// if ((mob instanceof Succubus) ||
+				// 	(mob instanceof Eye) ||
+				// 	(mob instanceof Scorpio)) {
+				// 	Dungeon.level.drop( new DemonCore().quantity(3), mob.pos ).sprite.drop();
+				// }
 				if ((mob instanceof RipperDemon)) {
 					Dungeon.level.drop( new DemonCore(), mob.pos ).sprite.drop();
 				}
@@ -266,6 +274,7 @@ public class MarisaNPC extends NPC {
 		}
 		
 		public static void complete() {
+			// reward = null;
 			completed = true;
 
 			Statistics.questScores[3] = 500;

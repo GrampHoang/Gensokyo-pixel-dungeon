@@ -87,6 +87,8 @@ public class BossMercy extends Buff {
     }
 
     public void teleBack(boolean lose){
+        if (Dungeon.hero.buff(Burning.class) != null ) Dungeon.hero.buff(Burning.class).detach();
+        PotionOfHealing.cure(Dungeon.hero);
         InterlevelScene.mode = InterlevelScene.Mode.RETURN;
         InterlevelScene.returnDepth = this.floor;
         InterlevelScene.returnBranch = this.branch;

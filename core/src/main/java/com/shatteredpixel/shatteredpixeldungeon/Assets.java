@@ -321,7 +321,6 @@ public class Assets {
 		public static final String SPIRIT_HAWK= "sprites/spirit_hawk.png";
 		public static final String RED_SENTRY= "sprites/red_sentry.png";
 
-		public static final String ALICE		= "sprites/alice.png";
 		public static final String TENSHI		= "sprites/tenshi.png";
 		//Forest
 		public static final String FAIRY		= "sprites/fairy.png";
@@ -346,8 +345,7 @@ public class Assets {
 		public static final String CHEN			= "sprites/chen.png";
 		public static final String RAN			= "sprites/ran.png";
 		public static final String LETTY		= "sprites/cirno.png";
-		// public static final String ALICE		= "sprites/alice.png";
-		// public static final String YUKARI= "sprites/yukari.png";
+		public static final String ALICE		= "sprites/alice.png";
 		public static final String YOUMU		= "sprites/youmu.png";
 		public static final String YUKARI		= "sprites/yukari.png";
 		//Touhou 8

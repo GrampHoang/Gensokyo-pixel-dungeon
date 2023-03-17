@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -36,37 +37,34 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 
-public abstract class ElementalSprite extends MobSprite {
+public abstract class BookSprite extends MobSprite {
 	
 	protected int boltType;
 	
-	protected abstract int texOffset();
 	
 	private Emitter particles;
 	protected abstract Emitter createEmitter();
 	
-	public ElementalSprite() {
+	public BookSprite() {
 		super();
 		
-		int c = texOffset();
+		texture( Assets.Sprites.BOOK );
 		
-		texture( Assets.Sprites.ELEMENTAL );
+		TextureFilm frames = new TextureFilm( texture, 15, 15 );
 		
-		TextureFilm frames = new TextureFilm( texture, 12, 14 );
+		idle = new Animation( 3, true );
+		idle.frames( frames, 0, 1, 0 );
 		
-		idle = new Animation( 10, true );
-		idle.frames( frames, c+0, c+1, c+2 );
+		run = new Animation( 5, true );
+		run.frames( frames, 0, 1, 0 );
 		
-		run = new Animation( 12, true );
-		run.frames( frames, c+0, c+1, c+3 );
-		
-		attack = new Animation( 15, false );
-		attack.frames( frames, c+4, c+5, c+6 );
+		attack = new Animation( 14, false );
+		attack.frames( frames, 1, 2, 3, 6 , 6, 3, 2);
 		
 		zap = attack.clone();
 		
 		die = new Animation( 15, false );
-		die.frames( frames, c+7, c+8, c+9, c+10, c+11, c+12, c+13, c+12 );
+		die.frames( frames, 7, 8, 9, 10, 11, 10);
 		
 		play( idle );
 	}
@@ -117,7 +115,7 @@ public abstract class ElementalSprite extends MobSprite {
 				new Callback() {
 					@Override
 					public void call() {
-						((Elemental)ch).onZapComplete();
+						((MagicBook)ch).onZapComplete();
 					}
 				} );
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
@@ -131,17 +129,12 @@ public abstract class ElementalSprite extends MobSprite {
 		super.onComplete( anim );
 	}
 	
-	public static class Fire extends ElementalSprite {
+	public static class Fire extends BookSprite {
 		
 		{
 			boltType = MagicMissile.FIRE;
 		}
-		
-		@Override
-		protected int texOffset() {
-			return 0;
-		}
-		
+
 		@Override
 		protected Emitter createEmitter() {
 			Emitter emitter = emitter();
@@ -155,41 +148,12 @@ public abstract class ElementalSprite extends MobSprite {
 		}
 	}
 	
-	public static class NewbornFire extends ElementalSprite {
-		
-		{
-			boltType = MagicMissile.FIRE;
-		}
-		
-		@Override
-		protected int texOffset() {
-			return 14;
-		}
-		
-		@Override
-		protected Emitter createEmitter() {
-			Emitter emitter = emitter();
-			emitter.pour( ElmoParticle.FACTORY, 0.06f );
-			return emitter;
-		}
-		
-		@Override
-		public int blood() {
-			return 0xFF85FFC8;
-		}
-	}
-	
-	public static class Frost extends ElementalSprite {
+	public static class Frost extends BookSprite {
 		
 		{
 			boltType = MagicMissile.FROST;
 		}
-		
-		@Override
-		protected int texOffset() {
-			return 28;
-		}
-		
+
 		@Override
 		protected Emitter createEmitter() {
 			Emitter emitter = emitter();
@@ -203,20 +167,15 @@ public abstract class ElementalSprite extends MobSprite {
 		}
 	}
 	
-	public static class Shock extends ElementalSprite {
+	public static class Shock extends BookSprite {
 		
 		//different bolt, so overrides zap
 		@Override
 		public void zap( int cell ) {
 			turnTo( ch.pos , cell );
 			play( zap );
-			((Elemental)ch).onZapComplete();
+			((MagicBook)ch).onZapComplete();
 			parent.add( new Beam.LightRay(center(), DungeonTilemap.raisedTileCenterToWorld(cell)));
-		}
-		
-		@Override
-		protected int texOffset() {
-			return 42;
 		}
 		
 		@Override
@@ -232,15 +191,10 @@ public abstract class ElementalSprite extends MobSprite {
 		}
 	}
 	
-	public static class Chaos extends ElementalSprite {
+	public static class Chaos extends BookSprite {
 
 		{
 			boltType = MagicMissile.RAINBOW;
-		}
-		
-		@Override
-		protected int texOffset() {
-			return 56;
 		}
 		
 		@Override

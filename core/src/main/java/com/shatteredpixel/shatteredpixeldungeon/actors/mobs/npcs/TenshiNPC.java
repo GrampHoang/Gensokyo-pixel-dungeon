@@ -132,25 +132,22 @@ public class TenshiNPC extends NPC {
 					@Override
 					public void call() {
 						TenshiNPC.Quest.complete();
+						Peach peach = new Peach();
+						FireOath fo = new FireOath();
+						PotionOfHealing poh = new PotionOfHealing();
 						switch(Quest.impression){
 							default:
 								tell(String.format("Illegal impression value %d", Quest.impression));
 							case 1:
 								// Being trash, die too soon, give you  3 peaches
 								tell(Messages.get(TenshiNPC.class, "i_bad"));
-								// PotionOfStrength pos = new PotionOfStrength();
-								// if (!pos.collect()) Dungeon.level.drop(pos, Dungeon.hero.pos);
-								Peach mps = new Peach();
-								if (!mps.quantity(3).collect()) Dungeon.level.drop(mps, Dungeon.hero.pos);
+								if (!peach.quantity(3).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
 								break;
 							case 2:
 								// Being decent, win her normally, give you FireOath, 2 peach, 1 poh
 								tell(Messages.get(TenshiNPC.class, "i_decent"));
-								Peach mp = new Peach();
-								if (!mp.quantity(2).collect()) Dungeon.level.drop(mp, Dungeon.hero.pos);
-								FireOath fo = new FireOath();
+								if (!peach.quantity(2).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
 								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
-								PotionOfHealing poh = new PotionOfHealing();
 								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
 								break;
 							case 3:
@@ -164,16 +161,15 @@ public class TenshiNPC extends NPC {
 								} else {
 									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good"));
 									else tell(Messages.get(TenshiNPC.class, "i_good_survive"));
-								}
-								FireOath foo = new FireOath();
-								if (!foo.collect()) Dungeon.level.drop(foo, Dungeon.hero.pos);
-								PotionOfHealing pooh = new PotionOfHealing();
-								if (!pooh.collect()) Dungeon.level.drop(pooh, Dungeon.hero.pos);
+								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
+								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
 								HisouBlade hb = new HisouBlade();
 								hb.identify();
 								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
+								}
 								break;
 						}
+						GLog.p("You got new items!");
 						flee();
 					}
 				});

@@ -34,15 +34,15 @@ import com.watabou.utils.Random;
 public class Fairy extends Mob {
 	{	
 		switch( Random.IntRange(0, 2) ){
-			// case 0:
-			// 	spriteClass = FairySprite.Blue.class;
-			// 	break;
-			// case 1:
-			// 	spriteClass = FairySprite.Red.class;
-			// 	break;
-			// case 2:
-			// 	spriteClass = FairySprite.Yellow.class;
-			// 	break;
+			case 0:
+				spriteClass = FairySprite.Blue.class;
+				break;
+			case 1:
+				spriteClass = FairySprite.Red.class;
+				break;
+			case 2:
+				spriteClass = FairySprite.Yellow.class;
+				break;
 			default:
 				spriteClass = FairySprite.Blue.class;
 				break;

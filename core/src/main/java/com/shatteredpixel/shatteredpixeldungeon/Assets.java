@@ -341,11 +341,14 @@ public class Assets {
 		public static final String RUMIA		= "sprites/rumia.png";
 		public static final String SAKUYA		= "sprites/sakuya.png";
 		public static final String REMILIA		= "sprites/remilia.png";
+		public static final String BOOK			= "sprites/book.png";
 		//Touhou 7
 		public static final String CHEN			= "sprites/chen.png";
 		public static final String RAN			= "sprites/ran.png";
 		public static final String LETTY		= "sprites/cirno.png";
 		public static final String ALICE		= "sprites/alice.png";
+		public static final String SHANGHAIDOLL	= "sprites/shanghaidoll.png";
+		public static final String HOURAIDOLL	= "sprites/houraidoll.png";
 		public static final String YOUMU		= "sprites/youmu.png";
 		public static final String YUKARI		= "sprites/yukari.png";
 		//Touhou 8

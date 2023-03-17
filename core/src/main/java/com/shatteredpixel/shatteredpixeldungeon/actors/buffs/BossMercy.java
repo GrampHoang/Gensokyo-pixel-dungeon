@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.TenshiBoss.FallingLaser;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -88,6 +89,7 @@ public class BossMercy extends Buff {
 
     public void teleBack(boolean lose){
         if (Dungeon.hero.buff(Burning.class) != null ) Dungeon.hero.buff(Burning.class).detach();
+        if (Dungeon.hero.buff(FallingLaser.class) != null ) Dungeon.hero.buff(FallingLaser.class).detach();
         PotionOfHealing.cure(Dungeon.hero);
         InterlevelScene.mode = InterlevelScene.Mode.RETURN;
         InterlevelScene.returnDepth = this.floor;

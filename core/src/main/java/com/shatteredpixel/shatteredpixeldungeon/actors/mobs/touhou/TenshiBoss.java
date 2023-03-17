@@ -141,9 +141,6 @@ public class TenshiBoss extends Mob {
 
 	@Override
 	public boolean act() {
-		// if(Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-		// 	GameScene.add(Blob.seed(this.pos, 3, Fire.class));
-		// }
 		return super.act();
 	}
 
@@ -393,7 +390,7 @@ public class TenshiBoss extends Mob {
             Char ch = Actor.findChar(p);
 			if (ch != null && !(ch instanceof TenshiBoss)){
 				
-				Buff.affect(ch, Cripple.class, 4f);
+				Buff.prolong(ch, Cripple.class, 4f);
 				Buff.affect(ch, Bleeding.class).set(5f);
 				if(ch instanceof Hero){
 					TenshiNPC.Quest.setImpression(2);
@@ -403,7 +400,7 @@ public class TenshiBoss extends Mob {
 					if (p != this.pos && bracket_count > 2){
 						Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 						CellEmitter.get( ch.pos ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
-						Buff.affect(ch, Paralysis.class, 2f);
+						Buff.prolong(ch, Paralysis.class, 2f);
 						Buff.affect(ch, Burning.class).reignite(ch, 5f);
 					}
 					Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos), 0);
@@ -466,6 +463,7 @@ public class TenshiBoss extends Mob {
 			this.sprite.aura(0xFF0000);
 		} else {
 			cur_weather = ((weather_cd/WEATHER_CD)%4);
+			GLog.w("The weather has changed!");
 			attachAura(cur_weather);
 		}
 		weather_cd++;
@@ -476,7 +474,7 @@ public class TenshiBoss extends Mob {
 		switch(weather){
 			default:
 			case 0:	// Sunny: 0; Fire last longer
-			GLog.w("Sunny");
+			// GLog.w("Sunny");
 				this.sprite.remove(CharSprite.State.BURSTING_POWER_RED);
 				this.sprite.remove(CharSprite.State.BURSTING_POWER_YELLOW);
 				this.sprite.remove(CharSprite.State.BURSTING_POWER_BLUE);
@@ -484,17 +482,17 @@ public class TenshiBoss extends Mob {
 				this.sprite.aura(0xFFA500);
 				break;
 			case 1: // Aurora: Bombardment now aim for 2 tiles instead of 1
-				GLog.w("Aurora");
+				// GLog.w("Aurora");
 				this.sprite.clearAura();
 				this.sprite.aura(0x90EE90);
 				break;
 			case 2: // River Mist: 2; distance = 1 Tenshi heal 3HP/turn, dist = 2 nothing, dist >= 3 Tenshi is Invul and clear all debuff
-				GLog.w("Mist");
+				// GLog.w("Mist");
 				this.sprite.clearAura();
 				this.sprite.aura(0xEDEDED);
 				break;
 			case 3: // Heavy Fog: 3; Skill no longer show target mark
-				GLog.w("Fog");
+				// GLog.w("Fog");
 				this.sprite.clearAura();
 				this.sprite.aura(0x5A5A5A);
 				break;
@@ -540,6 +538,26 @@ public class TenshiBoss extends Mob {
 	@Override
 	public String description() {
 		String descript = super.description();
+		descript = descript + "\n\n_Current weather:_\n";
+		attachAura(cur_weather); //Can't auto attach aura when game start, since you will be checking the aura anyway so do this here.
+		switch(cur_weather){
+			default:
+			case 0:	// Sunny: 0; Fire last longer
+				descript = descript + Messages.get(this, "w_sunny");
+				break;
+			case 1: // Aurora: Bombardment now aim for 2 tiles instead of 1
+				descript = descript + Messages.get(this, "w_aurora");
+				break;
+			case 2: // River Mist: 2; distance = 1 Tenshi heal 3HP/turn, dist = 2 nothing, dist >= 3 Tenshi is Invul
+				descript = descript + Messages.get(this, "w_mist");
+				break;
+			case 3: // Heavy Fog: 3; Skill no longer show target mark
+				descript = descript + Messages.get(this, "w_fog");
+				break;
+			case 69: // Hisouten: All the above
+				descript = descript + Messages.get(this, "w_hisouten");
+				break;
+		}
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
 			descript = descript + "\n\n_Badder Bosses:_\n" + Messages.get(this, "stronger_bosses");
 		}

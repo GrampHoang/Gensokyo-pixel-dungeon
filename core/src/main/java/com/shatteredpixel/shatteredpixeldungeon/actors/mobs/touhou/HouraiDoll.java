@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.WarlockSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HouraiDollSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -39,7 +39,7 @@ import com.watabou.utils.Random;
 public class HouraiDoll extends Mob {
 	
 	{
-		spriteClass = WarlockSprite.class;
+		spriteClass = HouraiDollSprite.class;
 		HP = HT = 35;
 		defenseSkill = 15;
 		
@@ -85,7 +85,7 @@ public class HouraiDoll extends Mob {
 		        Buff.affect(enemy, Poison.class).set(3f);
                 break;
             case 2:
-                Buff.affect(enemy, Slow.class, 1.5f);
+                Buff.prolong(enemy, Slow.class, 1.5f);
                 break;
             default:
                 break;
@@ -137,7 +137,7 @@ public class HouraiDoll extends Mob {
 
 	public class HouraiDollMob extends HouraiDoll {
 		{
-			spriteClass = WarlockSprite.class;
+			spriteClass = HouraiDollSprite.class;
 			HP = HT = 35;
 			defenseSkill = 15;
 			

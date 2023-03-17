@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MonkSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ShanghaiDollSprite;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
@@ -35,7 +35,7 @@ import com.watabou.utils.Random;
 public class ShanghaiDoll extends Mob {
 	
 	{
-		spriteClass = MonkSprite.class;
+		spriteClass = ShanghaiDollSprite.class;
 
 		HP = HT = 45;
 		defenseSkill = 16;
@@ -65,7 +65,7 @@ public class ShanghaiDoll extends Mob {
     @Override
 	public int attackProc( Char enemy, int damage ) {
 	    damage = super.attackProc( enemy, damage );
-        Buff.affect(enemy, Cripple.class, 1f);
+        Buff.prolong(enemy, Cripple.class, 1f);
         Buff.affect(enemy, Bleeding.class).set(2f);
         return damage;
     }
@@ -97,7 +97,7 @@ public class ShanghaiDoll extends Mob {
 
 	public class ShanghaiDollMob extends ShanghaiDoll {
 		{
-			spriteClass = MonkSprite.class;
+			spriteClass = ShanghaiDollSprite.class;
 			HP = HT = 45;
 			defenseSkill = 16;
 			

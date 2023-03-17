@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocki
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ElementalSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.BookSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
@@ -166,7 +166,7 @@ public abstract class MagicBook extends Mob {
 	public static class FireMagicBook extends MagicBook {
 		
 		{
-			spriteClass = ElementalSprite.Fire.class;
+			spriteClass = BookSprite.Fire.class;
 			harmfulBuffs.add( Burning.class );
 		}
 		
@@ -190,7 +190,7 @@ public abstract class MagicBook extends Mob {
 	public static class FrostMagicBook extends MagicBook {
 		
 		{
-			spriteClass = ElementalSprite.Frost.class;
+			spriteClass = BookSprite.Frost.class;
 			
 			harmfulBuffs.add( Burning.class );
 		}
@@ -213,7 +213,7 @@ public abstract class MagicBook extends Mob {
 	public static class ShockMagicBook extends MagicBook {
 		
 		{
-			spriteClass = ElementalSprite.Shock.class;
+			spriteClass = BookSprite.Shock.class;
             harmfulBuffs.add( Burning.class );
 		}
 		
@@ -254,7 +254,7 @@ public abstract class MagicBook extends Mob {
 	public static class ChaosMagicBook extends MagicBook {
 		
 		{
-			spriteClass = ElementalSprite.Chaos.class;
+			spriteClass = BookSprite.Chaos.class;
 			harmfulBuffs.add( Burning.class );
 		}
 		

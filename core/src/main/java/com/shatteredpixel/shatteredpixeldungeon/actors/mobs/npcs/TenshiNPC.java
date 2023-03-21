@@ -71,8 +71,6 @@ public class TenshiNPC extends NPC {
 
 		properties.add(Property.IMMOVABLE);
 	}
-	
-	public static boolean appeared = false;
 
 	@Override
 	protected boolean act() {
@@ -220,14 +218,12 @@ public class TenshiNPC extends NPC {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
-		bundle.put( "T_APPEARED", appeared );
 		
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		appeared = bundle.getBoolean("T_APPEARED");
 	}
 
 	public static class Quest {

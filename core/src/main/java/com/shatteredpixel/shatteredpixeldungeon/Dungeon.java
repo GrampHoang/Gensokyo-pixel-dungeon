@@ -243,6 +243,7 @@ public class Dungeon {
 		SuikaNPC.Quest.reset();
 		MarisaNPC.Quest.reset(); //Just in case?
 		TenshiNPC.Quest.reset();
+		YoumuNPC.Quest.reset();
 		hero = new Hero();
 		hero.live();
 		
@@ -631,6 +632,8 @@ public class Dungeon {
 			Imp			.Quest.storeInBundle( quests );
 			SuikaNPC	.Quest.storeInBundle( quests );
 			MarisaNPC	.Quest.storeInBundle( quests );
+			TenshiNPC	.Quest.storeInBundle( quests );
+			YoumuNPC	.Quest.storeInBundle( quests );
 			bundle.put( QUESTS, quests );
 			
 			SpecialRoom.storeRoomsInBundle( bundle );
@@ -739,6 +742,7 @@ public class Dungeon {
 				SuikaNPC.Quest.restoreFromBundle( quests );
 				MarisaNPC.Quest.restoreFromBundle( quests );
 				TenshiNPC.Quest.restoreFromBundle( quests );
+				YoumuNPC.Quest.restoreFromBundle( quests );
 			} else {
 				Ghost.Quest.reset();
 				Wandmaker.Quest.reset();
@@ -747,6 +751,7 @@ public class Dungeon {
 				SuikaNPC.Quest.reset();
 				MarisaNPC.Quest.reset();
 				TenshiNPC.Quest.reset();
+				YoumuNPC.Quest.reset();
 			}
 			
 			SpecialRoom.restoreRoomsFromBundle(bundle);

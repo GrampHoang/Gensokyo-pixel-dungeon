@@ -24,47 +24,56 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.Random;
 
-public class GardenerBlade extends MeleeWeapon {
-	
-	// TODO: CHANGE THE NAME
-
+public class YoumuBlade3 extends YoumuBlade2{
 	{
-		image = ItemSpriteSheet.GARDENDER_BLADE;
+		image = ItemSpriteSheet.GHOSTBLADE;
 		hitSound = Assets.Sounds.HIT_SLASH;
 		hitSoundPitch = 2f;
 		ACC = 999;
 		tier = 4;
 	}
+	
+	@Override
+	public String status() {
+		return null;
+	}
 
-    @Override
+	@Override
+	public String evolve_desc() {
+		return "";
+	}
+
+	@Override
+	public void kill(KindOfWeapon blade){}
+
+	@Override
 	public int max(int lvl) {
-		return  Math.round(3f*(tier+1)) +			//base 15
-				lvl*(tier-1);						//3 per level
+		return  Math.round(3f*(tier+1)) +			//base 18, from 25
+				lvl*(tier);						//4 per level, from 5
 	}
 
-    @Override
-	public int damageRoll(Char owner) {
-        return 0;
-	}
-
-    @Override
+	@Override
 	public int proc(Char attacker, Char defender, int damage) {
-		//Check damage augment then add strenght
-        int pierce_damage = augment.damageFactor(Random.NormalIntRange( min(), max()));
+		//Check damage augment then add STR
+        int real_damage = augment.damageFactor(Random.NormalIntRange( min(), max()));
 		if (attacker instanceof Hero){
             int exStr = Dungeon.hero.STR() - STRReq();
             if (exStr > 0) {
-                pierce_damage += Random.IntRange(0, exStr);
+                real_damage += Random.IntRange(0, exStr);
             }
         }
-        //25% pierce damage, the rest is normal damage
-        pierce_damage = pierce_damage/4;
-        damage = damage - pierce_damage;
-		defender.damage(pierce_damage, attacker);
-        return super.proc(attacker, defender, damage);
+		int dmg = defender.drRoll();
+		dmg += defender.drRoll();
+		dmg += defender.drRoll();
+		dmg += defender.drRoll();
+		dmg += defender.drRoll();
+		dmg = (dmg + defender.drRoll())/3;
+		//average of 6 drRoll*2
+        return super.proc(attacker, defender, real_damage+dmg);
 	}
 }

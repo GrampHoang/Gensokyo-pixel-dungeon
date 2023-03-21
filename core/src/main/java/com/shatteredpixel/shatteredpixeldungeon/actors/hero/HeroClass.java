@@ -77,7 +77,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.PatchouliBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.GhostBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade3;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.OfudaHandheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
@@ -106,7 +106,7 @@ public enum HeroClass {
 	public void initHero( Hero hero ) {
 
 	// {
-		// GhostBlade we = new GhostBlade();
+		// YoumuBlade3 we = new YoumuBlade3();
 		// we.level(21);
 		// we.collect();
 

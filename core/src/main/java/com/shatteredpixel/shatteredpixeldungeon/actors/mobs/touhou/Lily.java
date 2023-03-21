@@ -109,14 +109,14 @@ public class Lily extends Mob {
 				new Callback() {
 					@Override
 					public void call() {
-						Ballistica rand = new Ballistica(pos, p, Ballistica.MAGIC_BOLT);
+						Ballistica rand = new Ballistica(pos, p, Ballistica.STOP_SOLID);
 						for (int cell : rand.subPath(1, Dungeon.level.distance(pos, rand.collisionPos))){
 							//Deal with Char
 							Char ch = Actor.findChar(cell);
 							if (ch != null) {
 								if(ch.alignment != alignment){
 									ch.damage(3, this);
-									Buff.affect(ch, Roots.class, 1f);
+									Buff.prolong(ch, Roots.class, 1f);
 								} else {
 									Buff.prolong(ch, Stamina.class, 2f);
 									ch.HP += 3;
@@ -141,7 +141,7 @@ public class Lily extends Mob {
             if (ch != null && ch != this) {
 				if(ch.alignment != this.alignment){
 					ch.damage(3, this);
-					Buff.affect(ch, Roots.class, 1f);
+					Buff.prolong(ch, Roots.class, 2f);
 				} else {
 					Buff.prolong(ch, Stamina.class, 2f);
 					ch.HP += 3;
@@ -154,7 +154,7 @@ public class Lily extends Mob {
 	public boolean growableCell(int cell){
 		int terr = Dungeon.level.map[cell];
 		if (!(terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
-				terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS)) {
+				terr == Terrain.GRASS || terr == Terrain.FURROWED_GRASS)) {
 			return false;
 		} else if (Char.hasProp(Actor.findChar(cell), Char.Property.IMMOVABLE)) {
 			return false;
@@ -184,7 +184,7 @@ public class Lily extends Mob {
     private void lilyCharge(){
         for (int i : PathFinder.NEIGHBOURS8){
 			if (Random.IntRange(1, 8) == 2){
-				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.MAGIC_BOLT);
+				Ballistica rand = new Ballistica(this.pos, this.pos+i, Ballistica.STOP_SOLID);
 				lilySkillCells.add(rand.collisionPos);
 				for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
 					sprite.parent.add(new TargetedCell(p, 0x457462));
@@ -192,7 +192,7 @@ public class Lily extends Mob {
 			}
 		}
 		lilySkillCells.add(Dungeon.hero.pos);
-		Ballistica rand = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.MAGIC_BOLT);
+		Ballistica rand = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
 		lilySkillCells.add(rand.collisionPos);
 		for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
 			sprite.parent.add(new TargetedCell(p, 0x457462));

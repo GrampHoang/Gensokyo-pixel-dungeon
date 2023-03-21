@@ -2,45 +2,34 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import java.util.ArrayList;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.YoumuEnc;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPsionicBlast;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndImp;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.YoumuSprite;
+import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
+import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
@@ -49,7 +38,7 @@ import com.watabou.utils.Random;
 public class YoumuNPC extends NPC {
 
 	{
-		spriteClass = ImpSprite.class;
+		spriteClass = YoumuSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
@@ -74,7 +63,7 @@ public class YoumuNPC extends NPC {
 	@Override
 	public void add( Buff buff ) {
 	}
-
+	
 	@Override
 	public boolean interact(Char c) {
 		
@@ -83,80 +72,35 @@ public class YoumuNPC extends NPC {
 		if (c != Dungeon.hero){
 			return true;
 		}
+
 		//Have quest
 		if (Quest.given) {
-			DemonCore tokens = Dungeon.hero.belongings.getItem( DemonCore.class );
-			int tokenNeed = (25 - Dungeon.depth)*2 + 4;
-			// Finished
+			
+			// Finished now 
 			if (Quest.completed){
-				switch(Random.IntRange(1,4)){
-					default:
-					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished1"));
-						break;
-					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished2"));
-						break;
-					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished3"));
-						break;
-					case 4:
-						sprite.showStatus(CharSprite.POSITIVE, Messages.get(YoumuNPC.class, "quest_finished4"));
-						break;
-				}
-			// Finish now
-			} else if (tokens != null && tokens.quantity() >= tokenNeed && !Quest.completed) {
-				int tokensHave = tokens.quantity();
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						tokens.detachAll(Dungeon.hero.belongings.backpack);
 						YoumuNPC.Quest.complete();
-						//Normal finish
-						if( tokensHave <= tokenNeed*2 ){
-							// //Reward: 1 Lullaby, 1 Retribution, 2 PotHealing
-							// ScrollOfLullaby lul = new ScrollOfLullaby();
-							// if (!lul.quantity(1).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
-							// ScrollOfRetribution ret = new ScrollOfRetribution();
-							// if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
-							// PotionOfHealing poh = new PotionOfHealing();
-							// if (!poh.quantity(2).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-
-						// Good finish, double what she tell you to get
-						} else {
-							if (Catalog.isSeen(YoumuEnc.class)) tell(Messages.get(YoumuNPC.class, "quest_3_good"));
-							else {
-								tell(Messages.get(YoumuNPC.class, "quest_3_good_first"));
-								// Catalog.setSeen(YoumuEnc.class);
-								YoumuEnc enc = new YoumuEnc();
-								// Dungeon.level.drop(enc, Dungeon.hero.pos );
-								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-							}
-							//Reward: 1 Lullaby, 1 Retribution, 1 PsiBlast, 4 PotHealing and 1 SoU
-							// ScrollOfLullaby lul = new ScrollOfLullaby();
-							// if (!lul.quantity(2).collect()) Dungeon.level.drop(lul, Dungeon.hero.pos);
-							// ScrollOfRetribution ret = new ScrollOfRetribution();
-							// if (!ret.quantity(1).collect()) Dungeon.level.drop(ret, Dungeon.hero.pos);
-							// ScrollOfPsionicBlast psi = new ScrollOfPsionicBlast();
-							// if (!psi.quantity(1).collect()) Dungeon.level.drop(psi, Dungeon.hero.pos);
-							// PotionOfHealing poh = new PotionOfHealing();
-							// if (!poh.quantity(4).collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-							// ScrollOfUpgrade sou = new ScrollOfUpgrade();
-							// if (!sou.quantity(1).collect()) Dungeon.level.drop(sou, Dungeon.hero.pos);
-						}
+						Peach peach = new Peach();
+						FireOath fo = new FireOath();
+						PotionOfHealing poh = new PotionOfHealing();
+						tell(String.format("Illegal impression value %d"));
+						GLog.p("You got new items!");
+						flee();
 					}
 				});
 			// Not finish
-			} else {
-				tell(Messages.get(YoumuNPC.class, "quest_2", tokenNeed));
 			}
-			
 		} else {
-			if (Catalog.isSeen(YoumuEnc.class)) tell(Messages.get(YoumuNPC.class, "quest_1"));
-			else tell(Messages.get(YoumuNPC.class, "quest_1_first"));
-			Quest.given = true;
 			Quest.completed = false;
 			Notes.add( Notes.Landmark.YOUMU );
+			Game.runOnRenderThread(new Callback() {
+				@Override
+				public void call() {
+					GameScene.show( new WndYoumu( YoumuNPC.this) );
+				}
+			});
 		}
 
 		return true;
@@ -173,7 +117,7 @@ public class YoumuNPC extends NPC {
 	
 	
 	public void flee() {
-		yell( Messages.get(YoumuNPC.class, "cya", Dungeon.hero.name()) );
+		sprite.showStatus(CharSprite.POSITIVE, "Thank you!");
 		destroy();
 		sprite.die();
 	}
@@ -181,6 +125,7 @@ public class YoumuNPC extends NPC {
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
+		
 	}
 	
 	@Override
@@ -189,26 +134,25 @@ public class YoumuNPC extends NPC {
 	}
 
 	public static class Quest {
-		private static boolean spawned;
-		private static boolean given;
-		private static boolean completed;
-		
-		// public static Ring reward;
+		public static boolean spawned;
+		public static boolean given;
+		public static boolean completed;
+		public static int count;
 		
 		public static void reset() {
 			spawned = false;
 			given = false;
 			completed = false;
-			// reward = null;
+			count = 0;
 		}
 		
-		private static final String NODE		= "mari_Quest";
+		private static final String NODE		= "youmu_Quest";
 		
-		private static final String SPAWNED		= "m_spawned";
-		private static final String GIVEN		= "m_given";
-		private static final String COMPLETED	= "m_completed";
-		// private static final String REWARD		= "reward";
-		
+		private static final String SPAWNED		= "y_spawned";
+		private static final String GIVEN		= "y_given";
+		private static final String COMPLETED	= "y_completed";
+		private static final String COUNT		= "y_count";
+
 		public static void storeInBundle( Bundle bundle ) {
 			
 			Bundle node = new Bundle();
@@ -216,10 +160,9 @@ public class YoumuNPC extends NPC {
 			node.put( SPAWNED, spawned );
 			
 			if (spawned) {
-				
+				node.put(COUNT, count);
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
-				// node.put( REWARD, reward );
 			}
 			
 			bundle.put( NODE, node );
@@ -230,59 +173,180 @@ public class YoumuNPC extends NPC {
 			Bundle node = bundle.getBundle( NODE );
 			
 			if (!node.isNull() && (spawned = node.getBoolean( SPAWNED ))) {
-				
+				count = node.getInt( COUNT );
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
-				// reward = (Ring)node.get( REWARD );
 			}
 		}
 		
-		public static void spawn( ForestLevel level ) {
-			// TODO Dungeon.depth > 99 to disable her spawn
-            // Will try to spawn her inside a library
-			// Irrelevant for now, she spawn in her room
-			// if (!spawned && Dungeon.depth == 20 && Random.Int( 4 - Dungeon.depth ) == 0) {
-				
-			// 	YoumuNPC npc = new YoumuNPC();
-			// 	do {
-			// 		npc.pos = level.randomRespawnCell( npc );
-			// 	} while (
-			// 			npc.pos == -1 ||
-			// 			level.heaps.get( npc.pos ) != null ||
-			// 			level.traps.get( npc.pos) != null ||
-			// 			level.findMob( npc.pos ) != null ||
-			// 			//Marisa doesn't move, so she cannot obstruct a passageway
-			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
-			// 			!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
-			// 	level.mobs.add( npc );
-			// 	spawned = true;
-			// 	given = false;
-			// }
+		public static void process( Mob mob ) {
+			if (spawned && given && !completed) {
+				count++;
+			}
+			GLog.p("Youmu quest: %s/10",count);
+			if (count > 9){
+				complete();
+				GLog.p("You have kill enough Wraiths!");
+			}
 		}
 		
-		public static void process( Mob mob ) {
-			if (given && !completed && Dungeon.depth < 25) {
-				// if ((mob instanceof Succubus) ||
-				// 	(mob instanceof Eye) ||
-				// 	(mob instanceof Scorpio)) {
-				// 	Dungeon.level.drop( new DemonCore().quantity(3), mob.pos ).sprite.drop();
-				// }
-				if ((mob instanceof RipperDemon)) {
-					Dungeon.level.drop( new DemonCore(), mob.pos ).sprite.drop();
-				}
+
+		public static void spawn( ShrineLevel level ) {
+			if (!spawned && Dungeon.depth > 10 && Random.Int( 14 - Dungeon.depth ) == 0) {
+				
+				YoumuNPC npc = new YoumuNPC();
+				do {
+					npc.pos = level.randomRespawnCell( npc );
+				} while (
+						npc.pos == -1 ||
+						level.heaps.get( npc.pos ) != null ||
+						level.traps.get( npc.pos) != null ||
+						level.findMob( npc.pos ) != null ||
+						!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
+						!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
+				level.mobs.add( npc );
+				spawned = true;
+				given = false;
 			}
 		}
 		
 		public static void complete() {
-			// reward = null;
+			Dungeon.level.unseal();
 			completed = true;
-
 			Statistics.questScores[3] = 500;
-			Notes.remove( Notes.Landmark.MARISA );
+			Notes.remove( Notes.Landmark.YOUMU );
 		}
+	}
+
+
 		
-		public static boolean isCompleted() {
-			return completed;
+	public class WndYoumu extends Window {
+		
+		private static final int WIDTH      = 120;
+		private static final int BTN_HEIGHT = 20;
+		private static final int GAP        = 2;
+
+		public WndYoumu( final YoumuNPC youmu) {
+			
+			super();
+			
+			IconTitle titlebar = new IconTitle();
+			titlebar.icon(youmu.sprite());
+			titlebar.label( Messages.get(this, "hunt") );
+			titlebar.setRect( 0, 0, WIDTH, 0 );
+			add( titlebar );
+			
+			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "message"), 6 );
+			message.maxWidth(WIDTH);
+			message.setPos(0, titlebar.bottom() + GAP);
+			add( message );
+			
+			RedButton btnReward = new RedButton( Messages.get(this, "help") ) {
+				@Override
+				protected void onClick() {
+					Dungeon.level.seal();
+					YoumuNPC.Quest.given = true;
+					hide();
+				}
+				
+			};
+			btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnReward );
+
+			RedButton btnReward_special = new RedButton( Messages.get(this, "no") ) {
+				@Override
+				protected void onClick() {
+					hide();
+					GLog.w("You refused");
+					YoumuNPC.Quest.given = false;
+				}
+			};
+			btnReward_special.setRect( 0, (int)btnReward.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnReward_special );
+			
+			resize( WIDTH, (int)btnReward_special.bottom() );
+		}
+	}
+
+	public static class YoumuGhostSpawner extends Buff {
+
+		int spawnPower = 0;
+		int spawnCount = 1;
+		{
+			//not cleansed by reviving, but does check to ensure the dust is still present
+			revivePersists = true;
+		}
+
+		@Override
+		public boolean act() {
+			if (target instanceof Hero && YoumuNPC.Quest.given){
+				spawnPower = 0;
+				spend(TICK);
+				return true;
+			}
+
+			spawnPower++;
+			int wraiths = 1; //we include the wraith we're trying to spawn
+			for (Mob mob : Dungeon.level.mobs){
+				if (mob instanceof Wraith){
+					wraiths++;
+				}
+			}
+
+			int powerNeeded = Math.min(10, wraiths*3);	//Reduce this so that wraith spawn more
+
+			if (powerNeeded <= spawnPower){
+				spawnPower -= powerNeeded;
+				int pos = 0;
+				//FIXME this seems like old bad code (why not more checks at least?) but corpse dust may be balanced around it
+				int tries = 20;
+				do{
+					pos = Random.Int(Dungeon.level.length());
+					tries --;
+				} while (tries > 0 && (!Dungeon.level.heroFOV[pos] || Dungeon.level.solid[pos] || Actor.findChar( pos ) != null));
+				if (tries > 0) {
+					Wraith.spawnAt(pos);
+					spawnCount++;
+					Sample.INSTANCE.play(Assets.Sounds.CURSED);
+				}
+			}
+
+			if (spawnCount > 29){
+				//Spawn Yuyuko
+				Yuyuko yu = new Yuyuko();
+				yu.pos = Dungeon.level.randomRespawnCell(yu);
+				GLog.n("Something dangerous just appeared!");
+				Dungeon.level.seal();
+				GameScene.add(yu);
+			}
+			spend(TICK);
+			return true;
+		}
+
+		public void dispel(){
+			detach();
+			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])){
+				if (mob instanceof Wraith){
+					mob.die(null);
+				}
+			}
+		}
+
+		private static String SPAWNPOWER = "spawnpower";
+		private static String SPAWNCOUNT = "spawncount";
+
+		@Override
+		public void storeInBundle(Bundle bundle) {
+			super.storeInBundle(bundle);
+			bundle.put( SPAWNPOWER, spawnPower );
+			bundle.put( SPAWNCOUNT, spawnCount );
+		}
+
+		@Override
+		public void restoreFromBundle(Bundle bundle) {
+			super.restoreFromBundle(bundle);
+			spawnPower = bundle.getInt( SPAWNPOWER );
+			spawnCount = bundle.getInt( SPAWNCOUNT );
 		}
 	}
 }

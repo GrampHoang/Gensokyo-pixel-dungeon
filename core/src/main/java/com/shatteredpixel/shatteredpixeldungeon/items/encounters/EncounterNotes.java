@@ -11,7 +11,7 @@ public abstract class EncounterNotes extends Item {
     {
 		unique = true;
 	}
-	
+		
 	@Override
 	public final boolean doPickUp(Hero hero, int pos) {
 		GameScene.pickUpJournal(this, pos);
@@ -25,13 +25,4 @@ public abstract class EncounterNotes extends Item {
 	public abstract void setSeen();
 	
 	public abstract String npc();
-	// @Override
-	// public boolean isUpgradable() {
-	// 	return false;
-	// }
-
-	// @Override
-	// public boolean isIdentified() {
-	// 	return true;
-	// }
 }

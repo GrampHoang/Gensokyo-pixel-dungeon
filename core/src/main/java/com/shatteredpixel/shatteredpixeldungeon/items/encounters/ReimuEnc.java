@@ -3,21 +3,23 @@ package com.shatteredpixel.shatteredpixeldungeon.items.encounters;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-public class AyaEnc extends EncounterNotes {
+public class ReimuEnc extends EncounterNotes {
     {
 		image = ItemSpriteSheet.YINYANG;
 	}
 
 	public void setSeen(){
-		Catalog.setSeen(AyaEnc.class);
+		Catalog.setSeen(ReimuEnc.class);
 	}
 
 	public String npc(){
-		return "Aya";
+		return "Reimu";
 	}
-	// 2-4, run around in very fast speed
-	// Caught up with her cause her to drop a PoH
-	// EncNote: You need to catch her 4 times, in each region (she won't go to hell, too deep)
-	// Obviously she wgive you 4 PoH in total
+
+    // 21-24 , Standing around
+	// quest about killing enemy, either 8 eyes or 8 S U C C
+    // give her yinyang (for what? May need buff yinyang), an SoU and a pie.
+	// EncNote: Kill 16 instead
 	// Unlock: ?
+
 }

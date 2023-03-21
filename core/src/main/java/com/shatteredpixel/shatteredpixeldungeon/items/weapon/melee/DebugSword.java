@@ -48,10 +48,6 @@ public class DebugSword extends WeaponWithSP {
     @Override
 	protected boolean useSkill(){
         if (!Catalog.isSeen(SuikaEnc.class)) {
-			// GLog.w(Boolean.toString(TenshiNPC.Quest.spawned));
-			// GLog.w(Boolean.toString(TenshiNPC.Quest.given));
-			// GLog.w(Boolean.toString(TenshiNPC.Quest.completed));
-			// GLog.w(Integer.toString(TenshiNPC.Quest.impression));
             Catalog.setSeen(MarisaEnc.class);
 			Catalog.setSeen(SuikaEnc.class);
 			Catalog.setSeen(TenshiEnc.class);

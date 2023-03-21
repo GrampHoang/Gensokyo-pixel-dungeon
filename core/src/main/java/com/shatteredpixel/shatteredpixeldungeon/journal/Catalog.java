@@ -210,12 +210,12 @@ public enum Catalog {
 		WEAPONS.seen.put( LettySnowball.class,              false);
 		WEAPONS.seen.put( ChenTail.class,      			 false);
 		WEAPONS.seen.put( RanTalisman.class,                false);
-		WEAPONS.seen.put( GardenerBlade.class,              false);
-		WEAPONS.seen.put( GhostFriend.class,                false);
 		WEAPONS.seen.put( LusanaViolin.class,               false);
 		WEAPONS.seen.put( MerlinTrumpet.class,              false);
 		WEAPONS.seen.put( LyricaPiano.class,                false);
-		WEAPONS.seen.put( GhostBlade.class,                 false);
+		WEAPONS.seen.put( YoumuBlade1.class,                 false);
+		WEAPONS.seen.put( YoumuBlade2.class,                 false);
+		WEAPONS.seen.put( YoumuBlade3.class,                 false);
 		//T5
 		WEAPONS.seen.put( Greatsword.class,                 false);
 		WEAPONS.seen.put( WarHammer.class,                  false);

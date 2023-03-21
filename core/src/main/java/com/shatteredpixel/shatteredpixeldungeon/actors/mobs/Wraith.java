@@ -24,7 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade1;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.WraithSprite;
 import com.watabou.noosa.tweeners.AlphaTweener;
@@ -76,6 +81,22 @@ public class Wraith extends Mob {
 		return 10 + level;
 	}
 	
+	@Override
+	public void die( Object cause ) {
+		YoumuNPC.Quest.process( this );
+		super.die( cause );
+	}
+
+	@Override
+	public int defenseSkill( Char enemy ) {
+		if(enemy instanceof Hero && ((Hero)enemy).belongings.weapon() instanceof YoumuBlade1){
+			Buff.affect(Dungeon.hero, Talent.LethalMomentumTracker.class, 1f);
+			return 0;
+		} else {
+			return super.defenseSkill(enemy);
+		}
+	}
+
 	public void adjustStats( int level ) {
 		this.level = level;
 		defenseSkill = attackSkill( null ) * 5;

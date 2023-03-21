@@ -56,6 +56,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Lucky;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade1;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade2;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -786,6 +788,16 @@ public abstract class Mob extends Char {
 			}
 			if(cause == Dungeon.hero && Dungeon.hero.hasTalent(Talent.MIND_READ) && this.surprisedBy(Dungeon.hero)){
 				Buff.prolong(Dungeon.hero, MindVision.class, Dungeon.hero.pointsInTalent(Talent.MIND_READ)*3f);
+			}
+
+			// if (cause == Dungeon.hero
+			// 		&& (Dungeon.hero.belongings.weapon() instanceof YoumuBlade2)){
+			// 	((YoumuBlade2)Dungeon.hero.belongings.weapon()).kill();
+			// }
+
+			if (cause == Dungeon.hero
+					&& (Dungeon.hero.belongings.weapon() instanceof YoumuBlade1)){
+				((YoumuBlade1)Dungeon.hero.belongings.weapon()).kill(Dungeon.hero.belongings.weapon());
 			}
 		}
 

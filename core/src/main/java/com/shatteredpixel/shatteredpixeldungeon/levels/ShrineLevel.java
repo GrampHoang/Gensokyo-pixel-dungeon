@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CavesPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
@@ -72,6 +73,12 @@ public class ShrineLevel extends RegularLevel {
 		return Blacksmith.Quest.spawn(super.initRooms());
 	}
 	
+	@Override
+	protected void createMobs() {
+		YoumuNPC.Quest.spawn( this );
+		super.createMobs();
+	}
+
 	@Override
 	protected int standardRooms(boolean forceMax) {
 		if (forceMax) return 7;

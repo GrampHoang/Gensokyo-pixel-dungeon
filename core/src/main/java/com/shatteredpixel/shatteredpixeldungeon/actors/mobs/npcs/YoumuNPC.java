@@ -13,6 +13,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade1;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade2;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -23,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.YoumuEnc;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -81,16 +85,36 @@ public class YoumuNPC extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						YoumuNPC.Quest.complete();
+						YoumuNPC.Quest.completeReal();
 						Peach peach = new Peach();
 						FireOath fo = new FireOath();
 						PotionOfHealing poh = new PotionOfHealing();
-						tell(String.format("Illegal impression value %d"));
+						YoumuBlade1 blade;
+						if(Quest.yuyuko){
+							//Beat yuyuko
+							if(Catalog.isSeen(YoumuEnc.class)) {
+								tell(Messages.get(YoumuNPC.class, "quest_excel"));
+							} else {
+								YoumuEnc enc = new YoumuEnc();
+								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+								tell(Messages.get(YoumuNPC.class, "quest_excel_first"));
+					 		}
+							blade = new YoumuBlade2();
+							if (!blade.collect()) Dungeon.level.drop(blade, Dungeon.hero.pos);
+							//Normal reward
+						} else{
+							Dungeon.hero.buff(YoumuGhostSpawner.class).dispel();
+							tell(Messages.get(YoumuNPC.class, "quest"));
+							blade = new YoumuBlade1();
+							if (!blade.collect()) Dungeon.level.drop(blade, Dungeon.hero.pos);
+						}
 						GLog.p("You got new items!");
 						flee();
 					}
 				});
 			// Not finish
+			} else {
+				sprite.showStatus(CharSprite.POSITIVE, String.format("%s more", 10 - Dungeon.hero.buff(YoumuGhostSpawner.class).killCount));
 			}
 		} else {
 			Quest.completed = false;
@@ -137,13 +161,13 @@ public class YoumuNPC extends NPC {
 		public static boolean spawned;
 		public static boolean given;
 		public static boolean completed;
-		public static int count;
+		public static boolean yuyuko;
 		
 		public static void reset() {
 			spawned = false;
-			given = false;
-			completed = false;
-			count = 0;
+			// given = false;
+			// completed = false;
+			// yuyuko = false;
 		}
 		
 		private static final String NODE		= "youmu_Quest";
@@ -151,18 +175,18 @@ public class YoumuNPC extends NPC {
 		private static final String SPAWNED		= "y_spawned";
 		private static final String GIVEN		= "y_given";
 		private static final String COMPLETED	= "y_completed";
-		private static final String COUNT		= "y_count";
+		private static final String YUYUKO		= "y_yuyu";
 
 		public static void storeInBundle( Bundle bundle ) {
 			
 			Bundle node = new Bundle();
 			
 			node.put( SPAWNED, spawned );
-			
+			//This is the reason why debug doesn't work bro, only natural spawn affect this
 			if (spawned) {
-				node.put(COUNT, count);
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
+				node.put( YUYUKO, yuyuko);
 			}
 			
 			bundle.put( NODE, node );
@@ -173,20 +197,15 @@ public class YoumuNPC extends NPC {
 			Bundle node = bundle.getBundle( NODE );
 			
 			if (!node.isNull() && (spawned = node.getBoolean( SPAWNED ))) {
-				count = node.getInt( COUNT );
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
+				yuyuko = node.getBoolean(YUYUKO);
 			}
 		}
-		
+
 		public static void process( Mob mob ) {
-			if (spawned && given && !completed) {
-				count++;
-			}
-			GLog.p("Youmu quest: %s/10",count);
-			if (count > 9){
-				complete();
-				GLog.p("You have kill enough Wraiths!");
+			if (given) {
+				Dungeon.hero.buff(YoumuGhostSpawner.class).kill();
 			}
 		}
 		
@@ -213,6 +232,9 @@ public class YoumuNPC extends NPC {
 		public static void complete() {
 			Dungeon.level.unseal();
 			completed = true;
+		}
+
+		public static void completeReal(){
 			Statistics.questScores[3] = 500;
 			Notes.remove( Notes.Landmark.YOUMU );
 		}
@@ -246,6 +268,7 @@ public class YoumuNPC extends NPC {
 				protected void onClick() {
 					Dungeon.level.seal();
 					YoumuNPC.Quest.given = true;
+					Buff.affect(Dungeon.hero, YoumuGhostSpawner.class);
 					hide();
 				}
 				
@@ -270,21 +293,27 @@ public class YoumuNPC extends NPC {
 
 	public static class YoumuGhostSpawner extends Buff {
 
+		public int killCount = 0;
 		int spawnPower = 0;
 		int spawnCount = 1;
+		boolean yuyuSpawn = false;
 		{
 			//not cleansed by reviving, but does check to ensure the dust is still present
 			revivePersists = true;
 		}
 
+		public void kill() {
+			killCount++;
+			if (killCount < 15) GLog.p("Youmu quest: %s/10", killCount);
+			else GLog.p("Youmu quest: %s/??", killCount);
+			if (killCount > 2){
+				GLog.p("You have kill enough Wraiths!");
+				YoumuNPC.Quest.complete();
+			}
+		}
+
 		@Override
 		public boolean act() {
-			if (target instanceof Hero && YoumuNPC.Quest.given){
-				spawnPower = 0;
-				spend(TICK);
-				return true;
-			}
-
 			spawnPower++;
 			int wraiths = 1; //we include the wraith we're trying to spawn
 			for (Mob mob : Dungeon.level.mobs){
@@ -311,8 +340,9 @@ public class YoumuNPC extends NPC {
 				}
 			}
 
-			if (spawnCount > 29){
+			if (killCount > 29 && !yuyuSpawn){
 				//Spawn Yuyuko
+				yuyuSpawn = true;
 				Yuyuko yu = new Yuyuko();
 				yu.pos = Dungeon.level.randomRespawnCell(yu);
 				GLog.n("Something dangerous just appeared!");
@@ -334,12 +364,15 @@ public class YoumuNPC extends NPC {
 
 		private static String SPAWNPOWER = "spawnpower";
 		private static String SPAWNCOUNT = "spawncount";
-
+		private static String YUYU = "yuyuk";
+		private static String KILLCOUNT = "killcount";
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
 			bundle.put( SPAWNPOWER, spawnPower );
 			bundle.put( SPAWNCOUNT, spawnCount );
+			bundle.put( YUYU, yuyuSpawn);
+			bundle.put( KILLCOUNT, killCount);
 		}
 
 		@Override
@@ -347,6 +380,8 @@ public class YoumuNPC extends NPC {
 			super.restoreFromBundle(bundle);
 			spawnPower = bundle.getInt( SPAWNPOWER );
 			spawnCount = bundle.getInt( SPAWNCOUNT );
+			yuyuSpawn = bundle.getBoolean(YUYU);
+			killCount = bundle.getInt(KILLCOUNT);
 		}
 	}
 }

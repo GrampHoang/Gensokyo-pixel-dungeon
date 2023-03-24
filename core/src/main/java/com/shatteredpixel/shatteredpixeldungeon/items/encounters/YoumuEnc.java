@@ -19,5 +19,5 @@ public class YoumuEnc extends EncounterNotes {
 	// floor 10-14, kill lots of ghost, maybe ask for 10 kills, but after 30 kills Yuyuko spawn. (ghost spawn faster after 15 kills)
 	// Give her sword, or her ghost friend
 	// EncNote: Stay until Yuyuko spawn and beat her
-	// Unlock: Maybe a better version of her sword
+	// Unlock: Note on how her sword upgrade works and the fact that they instantkill Wraith
 }

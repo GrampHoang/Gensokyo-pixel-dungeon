@@ -16,6 +16,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SakuyaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
@@ -23,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.TrashBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -54,6 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.SakuyaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -64,10 +68,10 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class TenshiNPC extends NPC {
+public class SakuyaNPC extends NPC {
 
 	{
-		spriteClass = TenshiSprite.class;
+		spriteClass = SakuyaSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
@@ -75,7 +79,7 @@ public class TenshiNPC extends NPC {
 	@Override
 	protected boolean act() {
 		if (!Quest.given && Dungeon.level.heroFOV[pos]) {
-			Notes.add( Notes.Landmark.TENSHI );
+			Notes.add( Notes.Landmark.SAKUYA );
 		} 
 		return super.act();
 	}
@@ -101,88 +105,49 @@ public class TenshiNPC extends NPC {
 		if (c != Dungeon.hero){
 			return true;
 		}
-		//TODO: FIX COMPLETE LOGIC
-		// Not talk -> not given
-		// Talked -> given
-		// Talked then fight -> given completed? -> impression
 		//Have quest
 		if (Quest.given) {
-			
+            //Trash bag count
+			TrashBag tokens = Dungeon.hero.belongings.getItem( TrashBag.class );
+			int tokenNeed = 12;
 			// Finished
 			if (Quest.completed){
-				switch(Quest.impression){
-					default:
-					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, "You sucks");
-						break;
-					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, "You good");
-						break;
-					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, "You strong!");
-						break;
-					
-				}
-				
+				sprite.showStatus(CharSprite.POSITIVE, "Thanks");
+
 			// Finish now
-			} else if (!Quest.completed) {
+			} else if (tokens != null && tokens.quantity() >= tokenNeed && !Quest.completed) {
+				int tokensHave = tokens.quantity();
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						TenshiNPC.Quest.complete();
-						Peach peach = new Peach();
-						FireOath fo = new FireOath();
-						PotionOfHealing poh = new PotionOfHealing();
-						switch(Quest.impression){
-							default:
-								tell(String.format("Illegal impression value %d", Quest.impression));
-								break;
-							case 1:
-								// Being trash, die too soon, give you  3 peaches
-								tell(Messages.get(TenshiNPC.class, "i_bad"));
-								if (!peach.quantity(3).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
-								break;
-							case 2:
-								// Being decent, win her normally, give you FireOath, 2 peach, 1 poh
-								tell(Messages.get(TenshiNPC.class, "i_decent"));
-								if (!peach.quantity(2).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
-								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
-								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-								break;
-							case 3:
-							case 4:
-								// Flawless fight, or survival long enough (very long), give you additional sword
-								if (!Catalog.isSeen(TenshiEnc.class)) {
-									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good_first"));
-									else tell(Messages.get(TenshiNPC.class, "i_good_first_survive"));
-									TenshiEnc enc = new TenshiEnc();
-									enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-								} else {
-									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good"));
-									else tell(Messages.get(TenshiNPC.class, "i_good_survive"));
-								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
-								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-								HisouBlade hb = new HisouBlade();
-								hb.identify();
-								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
-								}
-								break;
+						tokens.detachAll(Dungeon.hero.belongings.backpack);
+						//Normal finish
+						if( tokensHave < tokenNeed*2 ){
+                            //Give choice
+
+						// Good finish, get all the trash bags
+						} else {
+							if (Catalog.isSeen(SakuyaEnc.class)) tell(Messages.get(SakuyaNPC.class, "quest_3_good"));
+							else {
+								tell(Messages.get(SakuyaNPC.class, "quest_3_good_first"));
+								SakuyaEnc enc = new SakuyaEnc();
+								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+                            }
 						}
-						GLog.p("You got new items!");
 						flee();
+						SakuyaNPC.Quest.complete();
 					}
 				});
 			// Not finish
+			} else {
+				tell(Messages.get(SakuyaNPC.class, "quest_2", tokenNeed));
 			}
+			
 		} else {
+			tell(Messages.get(SakuyaNPC.class, "quest_1"));
+			Quest.given = true;
 			Quest.completed = false;
-			Notes.add( Notes.Landmark.TENSHI );
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					GameScene.show( new WndTenshi( TenshiNPC.this) );
-				}
-			});
+			Notes.add( Notes.Landmark.SAKUYA );
 		}
 
 		return true;
@@ -192,26 +157,14 @@ public class TenshiNPC extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( TenshiNPC.this, text ));
+				GameScene.show( new WndQuest( SakuyaNPC.this, text ));
 			}
 		});
 	}
 	
 	
 	public void flee() {
-		switch(Quest.impression){
-			default:
-			case 1:
-				sprite.showStatus(CharSprite.POSITIVE, "You sucks");
-				break;
-			case 2:
-				sprite.showStatus(CharSprite.POSITIVE, "You good");
-				break;
-			case 3:
-				sprite.showStatus(CharSprite.POSITIVE, "You strong!");
-				break;
-			
-		}
+		sprite.showStatus(CharSprite.POSITIVE, "Thanks");
 		destroy();
 		sprite.die();
 	}
@@ -231,7 +184,6 @@ public class TenshiNPC extends NPC {
 		public static boolean spawned;
 		public static boolean given;
 		public static boolean completed;
-		public static int impression;
 
 		public static void reset() {
 			spawned = false;
@@ -239,15 +191,12 @@ public class TenshiNPC extends NPC {
 			// completed = false;
 			// impression = 3;
 		}
+
+		private static final String NODE		= "sakuya_quest";
 		
-		public static void setImpression(int i){
-			impression = i;
-		}
-		private static final String NODE		= "tenshi_Quest";
-		
-		private static final String SPAWNED		= "t_spawned";
-		private static final String GIVEN		= "t_given";
-		private static final String COMPLETED	= "t_completed";
+		private static final String SPAWNED		= "sa_spawned";
+		private static final String GIVEN		= "sa_given";
+		private static final String COMPLETED	= "sa_completed";
 		// private static final String REWARD		= "reward";
 		
 		public static void storeInBundle( Bundle bundle ) {
@@ -260,8 +209,6 @@ public class TenshiNPC extends NPC {
 				
 				node.put( GIVEN, given );
 				node.put( COMPLETED, completed );
-				node.put("IMPRESS", impression);
-				// node.put( REWARD, reward );
 			}
 			
 			bundle.put( NODE, node );
@@ -275,15 +222,13 @@ public class TenshiNPC extends NPC {
 				
 				given = node.getBoolean( GIVEN );
 				completed = node.getBoolean( COMPLETED );
-				impression = node.getInt("IMPRESS");
-				// reward = (Ring)node.get( REWARD );
 			}
 		}
 		
 		public static void spawn( BambooLevel level ) {
-			if (!spawned && Dungeon.depth > 16 && Random.Int( 20 - Dungeon.depth ) == 0) {
+			if (!spawned && Dungeon.depth > 5 && Random.Int( 9 - Dungeon.depth ) == 0) {
 				
-				TenshiNPC npc = new TenshiNPC();
+				SakuyaNPC npc = new SakuyaNPC();
 				do {
 					npc.pos = level.randomRespawnCell( npc );
 				} while (
@@ -303,7 +248,7 @@ public class TenshiNPC extends NPC {
 		public static void complete() {
 			completed = true;
 			Statistics.questScores[3] = 500;
-			Notes.remove( Notes.Landmark.TENSHI );
+			Notes.remove( Notes.Landmark.SAKUYA );
 		}
 		
 		public static boolean isCompleted() {
@@ -313,58 +258,61 @@ public class TenshiNPC extends NPC {
 
 
 		
-	public class WndTenshi extends Window {
+	public class WndSakuya extends Window {
 		
 		private static final int WIDTH      = 120;
 		private static final int BTN_HEIGHT = 20;
 		private static final int GAP        = 2;
 
-		public WndTenshi( final TenshiNPC tenshi) {
+		public WndSakuya( final SakuyaNPC sakuya) {
 			
 			super();
 			
 			IconTitle titlebar = new IconTitle();
-			titlebar.icon(tenshi.sprite());
-			titlebar.label( Messages.get(this, "duel") );
+			titlebar.icon(sakuya.sprite());
+			titlebar.label( Messages.get(this, "title_reward") );
 			titlebar.setRect( 0, 0, WIDTH, 0 );
 			add( titlebar );
 			
-			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "message"), 6 );
+			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "pick_mess"), 6 );
 			message.maxWidth(WIDTH);
 			message.setPos(0, titlebar.bottom() + GAP);
 			add( message );
 			
-			RedButton btnReward = new RedButton( Messages.get(this, "fight") ) {
+			RedButton btnReward_knife = new RedButton( Messages.get(this, "knife") ) {
 				@Override
 				protected void onClick() {
-					TenshiNPC.Quest.given = true;
 					hide();
-					Buff.affect(Dungeon.hero, BossMercy.class).set(Dungeon.hero);
-					
-					InterlevelScene.curTransition = new LevelTransition();
-					InterlevelScene.mode = InterlevelScene.Mode.NEWTELEPORT;
-					InterlevelScene.curTransition.destDepth = 15;
-					InterlevelScene.curTransition.destBranch = 9;
-					Game.switchScene(InterlevelScene.class);
-					
+
 				}
 				
 			};
-			btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
-			add( btnReward );
+			btnReward_knife.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnReward_knife );
 
-			RedButton btnReward_special = new RedButton( Messages.get(this, "no") ) {
+			RedButton btnReward_daggers = new RedButton( Messages.get(this, "daggers") ) {
 				@Override
 				protected void onClick() {
 					hide();
-					GLog.w("You refused");
-					TenshiNPC.Quest.given = false;
+
 				}
 			};
-			btnReward_special.setRect( 0, (int)btnReward.bottom() + GAP, WIDTH, BTN_HEIGHT );
-			add( btnReward_special );
+			btnReward_daggers.setRect( 0, (int)btnReward_knife.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnReward_daggers );
 			
-			resize( WIDTH, (int)btnReward_special.bottom() );
+            TimekeepersHourglass hourglass = Dungeon.hero.belongings.getItem( TimekeepersHourglass.class );
+            if (hourglass != null){
+                RedButton btnReward_hourglass = new RedButton( Messages.get(this, "hourglass") ) {
+                    @Override
+                    protected void onClick() {
+                        hide();
+    
+                    }
+                };
+                btnReward_hourglass.setRect( 0, (int)btnReward_daggers.bottom() + GAP, WIDTH, BTN_HEIGHT );
+                add( btnReward_hourglass );
+            }
+			resize( WIDTH, (int)btnReward_daggers.bottom() );
 		}
 	}
 

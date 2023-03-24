@@ -40,6 +40,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SuikaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
@@ -223,7 +225,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 1;
+		depth = 6;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;

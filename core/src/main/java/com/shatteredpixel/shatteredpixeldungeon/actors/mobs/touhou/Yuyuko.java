@@ -115,8 +115,8 @@ public class Yuyuko extends Mob {
 
     @Override
     public void die( Object cause ) {
-        Dungeon.level.unseal();
         YoumuNPC.Quest.complete();
+        YoumuNPC.Quest.yuyuko = true;
         super.die( cause );
         //GameScene.bossSlain();
     }

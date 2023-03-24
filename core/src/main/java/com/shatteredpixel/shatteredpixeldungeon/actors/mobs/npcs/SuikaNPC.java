@@ -171,9 +171,9 @@ public class SuikaNPC extends NPC {
 		
 		public static void reset() {
 			spawned		= false;
-			given		= false;
-			completed	= false;
-			alternative	= false;
+			// given		= false;
+			// completed	= false;
+			// alternative	= false;
 		}
 		
 		private static final String NODE		= "suika";

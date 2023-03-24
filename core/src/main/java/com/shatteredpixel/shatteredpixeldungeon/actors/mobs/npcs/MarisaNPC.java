@@ -217,8 +217,8 @@ public class MarisaNPC extends NPC {
 		
 		public static void reset() {
 			spawned = false;
-			given = false;
-			completed = false;
+			// given = false;
+			// completed = false;
 		}
 		
 		private static final String NODE		= "mari_Quest";

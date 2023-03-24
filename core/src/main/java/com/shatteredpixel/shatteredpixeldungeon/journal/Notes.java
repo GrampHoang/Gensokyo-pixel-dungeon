@@ -77,11 +77,17 @@ public class Notes {
 		TROLL,
 		IMP,
 
-		MARISA,
 		SUIKA,
-		TENSHI,
+		AYA,
+		KOISHI,
+		SAKUYA,
 		YOUMU,
-		AYA;
+		YUYUKO,
+		TENSHI,
+		REISEN,
+		MARISA,
+		REIMU,
+		SATORI;
 		
 		public String desc() {
 			return Messages.get(this, name());

@@ -403,22 +403,22 @@ public enum HeroClass {
 				sod.quantity(69).collect();
 				Dungeon.quickslot.setSlot(2, sod);
 				
-				// DebugSword we = new DebugSword();
-				// we.level(5);
-				// hero.belongings.weapon = we;
+				DebugSword we = new DebugSword();
+				we.level(5);
+				hero.belongings.weapon = we;
 
 				
 
-				// Buff.affect(hero, MagicalSight.class, 9999f);
-				// RingOfMight ring = new RingOfMight();
-				// ring.level(40);
-				// ring.doEquip(hero);
+				Buff.affect(hero, MagicalSight.class, 9999f);
+				RingOfMight ring = new RingOfMight();
+				ring.level(40);
+				ring.doEquip(hero);
 
-				// RingOfTenacity ring2 = new RingOfTenacity();
-				// ring2.level(99);	
-				// ring2.doEquip(hero);
+				RingOfTenacity ring2 = new RingOfTenacity();
+				ring2.level(99);	
+				ring2.doEquip(hero);
 
-				// PotionOfHealing.heal(hero);
+				PotionOfHealing.heal(hero);
 
 				// PlateArmor plate = new PlateArmor();
 				// plate.level(2);
@@ -428,13 +428,13 @@ public enum HeroClass {
 				// bow.collect();
 				// Dungeon.quickslot.setSlot(4, bow);
 
-				// PotionOfHealing poh = new PotionOfHealing();
-				// poh.quantity(99).collect();
-				// Dungeon.quickslot.setSlot(3, poh);
+				PotionOfHealing poh = new PotionOfHealing();
+				poh.quantity(99).collect();
+				Dungeon.quickslot.setSlot(3, poh);
 
-				// ScrollOfMagicMapping som = new ScrollOfMagicMapping();
-				// som.quantity(99).collect();
-				// Dungeon.quickslot.setSlot(5, som);
+				ScrollOfMagicMapping som = new ScrollOfMagicMapping();
+				som.quantity(99).collect();
+				Dungeon.quickslot.setSlot(5, som);
 	}
 	
 	private static void initKoishi( Hero hero ) {

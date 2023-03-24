@@ -16,6 +16,6 @@ public class SakuyaEnc extends EncounterNotes {
 		return "Sakuya";
 	}
 
-	// floor 5-9, pick up trashes
-	// Give her sword
+	// floor 6-9, pick up trashes
+	// Give her knife, thrwoing knife or fully upgrade the hourglass if you are using it
 }

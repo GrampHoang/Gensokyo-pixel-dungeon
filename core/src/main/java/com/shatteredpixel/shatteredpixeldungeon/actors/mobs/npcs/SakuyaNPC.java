@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HisouBlade;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
-import com.shatteredpixel.shatteredpixeldungeon.levels.BambooLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -108,31 +108,35 @@ public class SakuyaNPC extends NPC {
 		//Have quest
 		if (Quest.given) {
             //Trash bag count
-			TrashBag tokens = Dungeon.hero.belongings.getItem( TrashBag.class );
-			int tokenNeed = 12;
+			int tokens = (Dungeon.hero.buff(SakuyaTrashSpawner.class) != null) ? Dungeon.hero.buff(SakuyaTrashSpawner.class).count : 0;
 			// Finished
 			if (Quest.completed){
 				sprite.showStatus(CharSprite.POSITIVE, "Thanks");
-
 			// Finish now
-			} else if (tokens != null && tokens.quantity() >= tokenNeed && !Quest.completed) {
-				int tokensHave = tokens.quantity();
+			} else if (tokens  >= 12 && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						tokens.detachAll(Dungeon.hero.belongings.backpack);
 						//Normal finish
-						if( tokensHave < tokenNeed*2 ){
+						if( tokens < 30 ){
+							tell(Messages.get(SakuyaNPC.class, "quest_3_normal"));
                             //Give choice
-
+							GLog.w("Quest done normal");
 						// Good finish, get all the trash bags
 						} else {
+							GLog.w("Quest done normal good");
 							if (Catalog.isSeen(SakuyaEnc.class)) tell(Messages.get(SakuyaNPC.class, "quest_3_good"));
 							else {
 								tell(Messages.get(SakuyaNPC.class, "quest_3_good_first"));
 								SakuyaEnc enc = new SakuyaEnc();
 								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
                             }
+							Game.runOnRenderThread(new Callback() {
+								@Override
+								public void call() {
+									GameScene.show( new WndSakuya( SakuyaNPC.this) );
+								}
+							});
 						}
 						flee();
 						SakuyaNPC.Quest.complete();
@@ -140,13 +144,16 @@ public class SakuyaNPC extends NPC {
 				});
 			// Not finish
 			} else {
-				tell(Messages.get(SakuyaNPC.class, "quest_2", tokenNeed));
+				tell(Messages.get(SakuyaNPC.class, "quest_2"));
 			}
 			
 		} else {
+			Buff.affect(Dungeon.hero, SakuyaTrashSpawner.class);
 			tell(Messages.get(SakuyaNPC.class, "quest_1"));
 			Quest.given = true;
 			Quest.completed = false;
+			Quest.spawnable = true;
+			Quest.spawnTrash();
 			Notes.add( Notes.Landmark.SAKUYA );
 		}
 
@@ -184,7 +191,7 @@ public class SakuyaNPC extends NPC {
 		public static boolean spawned;
 		public static boolean given;
 		public static boolean completed;
-
+		public static boolean spawnable;
 		public static void reset() {
 			spawned = false;
 			// given = false;
@@ -224,8 +231,13 @@ public class SakuyaNPC extends NPC {
 				completed = node.getBoolean( COMPLETED );
 			}
 		}
-		
-		public static void spawn( BambooLevel level ) {
+		public static void spawnTrash(){
+			for(int i = 0; i < 5; i++){
+				Dungeon.level.drop( new TrashBag(), Dungeon.level.randomRespawnCell( Dungeon.hero ) );
+			}
+		}
+
+		public static void spawn( SDMLevel level ) {
 			if (!spawned && Dungeon.depth > 5 && Random.Int( 9 - Dungeon.depth ) == 0) {
 				
 				SakuyaNPC npc = new SakuyaNPC();
@@ -316,4 +328,47 @@ public class SakuyaNPC extends NPC {
 		}
 	}
 
+	public static class SakuyaTrashSpawner extends Buff {
+
+		public int count = 0;
+		{
+			revivePersists = true;
+		}
+
+		public void pickUp() {
+			count++;
+			
+			if (count <= 24) {	// + 5 starting trash, this should be enough
+				GLog.p(Messages.get(SakuyaNPC.class,"quest_prog", count));
+			} else {
+				GLog.p(Messages.get(SakuyaNPC.class,"quest_prog_special", count));
+			}
+			if (count <= 30) {	// + 5 starting trash, this should be enough
+				Dungeon.level.drop( new TrashBag(), Dungeon.level.randomRespawnCell( Dungeon.hero ) );
+			}
+			if (count == 12){
+				GLog.p(Messages.get(SakuyaNPC.class,"quest_enough"));
+				YoumuNPC.Quest.complete();
+			}
+		}
+
+		@Override
+		public boolean act() {
+			spend(TICK);
+			return true;
+		}
+
+		private static String COUNT = "CounT";
+		@Override
+		public void storeInBundle(Bundle bundle) {
+			super.storeInBundle(bundle);
+			bundle.put( COUNT, count);
+		}
+
+		@Override
+		public void restoreFromBundle(Bundle bundle) {
+			super.restoreFromBundle(bundle);
+			count = bundle.getInt(COUNT);
+		}
+	}
 }

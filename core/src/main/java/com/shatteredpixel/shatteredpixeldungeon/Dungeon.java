@@ -40,9 +40,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
-
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.KoishiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SuikaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
@@ -243,9 +244,15 @@ public class Dungeon {
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
 		SuikaNPC.Quest.reset();
-		MarisaNPC.Quest.reset(); //Just in case?
-		TenshiNPC.Quest.reset();
+		//Aya
+		KoishiNPC.Quest.reset();
+		SakuyaNPC.Quest.reset();
 		YoumuNPC.Quest.reset();
+		//Yuyuko
+		TenshiNPC.Quest.reset();
+		//Reisen
+		MarisaNPC.Quest.reset(); //Just in case?
+		//Reimu
 		hero = new Hero();
 		hero.live();
 		
@@ -633,9 +640,16 @@ public class Dungeon {
 			Blacksmith	.Quest.storeInBundle( quests );
 			Imp			.Quest.storeInBundle( quests );
 			SuikaNPC	.Quest.storeInBundle( quests );
-			MarisaNPC	.Quest.storeInBundle( quests );
-			TenshiNPC	.Quest.storeInBundle( quests );
+			//Aya
+			KoishiNPC	.Quest.storeInBundle( quests );
+			SakuyaNPC	.Quest.storeInBundle( quests );
 			YoumuNPC	.Quest.storeInBundle( quests );
+			//Yuyuko
+			TenshiNPC	.Quest.storeInBundle( quests );
+			//Reisen
+			MarisaNPC	.Quest.storeInBundle( quests );
+			//Reimu
+			//Satori
 			bundle.put( QUESTS, quests );
 			
 			SpecialRoom.storeRoomsInBundle( bundle );
@@ -742,18 +756,30 @@ public class Dungeon {
 				Blacksmith.Quest.restoreFromBundle( quests );
 				Imp.Quest.restoreFromBundle( quests );
 				SuikaNPC.Quest.restoreFromBundle( quests );
-				MarisaNPC.Quest.restoreFromBundle( quests );
-				TenshiNPC.Quest.restoreFromBundle( quests );
+				//Aya
+				KoishiNPC.Quest.restoreFromBundle( quests );
+				SakuyaNPC.Quest.restoreFromBundle( quests );
 				YoumuNPC.Quest.restoreFromBundle( quests );
+				//Yuyuko
+				TenshiNPC.Quest.restoreFromBundle( quests );
+				//Reisen
+				MarisaNPC.Quest.restoreFromBundle( quests );
+				//Reimu
 			} else {
 				Ghost.Quest.reset();
 				Wandmaker.Quest.reset();
 				Blacksmith.Quest.reset();
 				Imp.Quest.reset();
 				SuikaNPC.Quest.reset();
-				MarisaNPC.Quest.reset();
-				TenshiNPC.Quest.reset();
+				//Aya
+				KoishiNPC.Quest.reset();
+				SakuyaNPC.Quest.reset();
 				YoumuNPC.Quest.reset();
+				//Yuyuko
+				TenshiNPC.Quest.reset();
+				//Reisen
+				MarisaNPC.Quest.reset();
+				//Reimu
 			}
 			
 			SpecialRoom.restoreRoomsFromBundle(bundle);

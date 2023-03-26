@@ -21,8 +21,17 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC.SakuyaTrashSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 
 public class TrashBag extends Item {
 	
@@ -40,5 +49,17 @@ public class TrashBag extends Item {
 	@Override
 	public boolean isIdentified() {
 		return true;
+	}
+
+	@Override
+	public boolean doPickUp(Hero hero, int pos){
+		SakuyaTrashSpawner quest = Dungeon.hero.buff(SakuyaTrashSpawner.class);
+		if (quest != null){
+			quest.pickUp();
+			hero.spendAndNext( TIME_TO_PICK_UP );
+			Sample.INSTANCE.play( Assets.Sounds.ITEM );
+			return true;
+		}
+		return false;
 	}
 }

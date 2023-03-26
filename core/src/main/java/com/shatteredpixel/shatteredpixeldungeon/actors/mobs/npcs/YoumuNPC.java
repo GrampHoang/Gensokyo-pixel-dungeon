@@ -108,7 +108,7 @@ public class YoumuNPC extends NPC {
 							blade = new YoumuBlade1();
 							if (!blade.collect()) Dungeon.level.drop(blade, Dungeon.hero.pos);
 						}
-						GLog.p("You got new items!");
+						GLog.p(Messages.get(NPC.class,"newitems"));
 						flee();
 					}
 				});
@@ -304,10 +304,10 @@ public class YoumuNPC extends NPC {
 
 		public void kill() {
 			killCount++;
-			if (killCount < 15) GLog.p("Youmu quest: %s/10", killCount);
-			else GLog.p("Youmu quest: %s/??", killCount);
-			if (killCount > 2){
-				GLog.p("You have kill enough Wraiths!");
+			if (killCount < 18) GLog.p(Messages.get(YoumuNPC.class,"quest_prog",killCount));
+			else GLog.p(Messages.get(YoumuNPC.class,"quest_prog2",killCount));
+			if (killCount == 10){
+				GLog.p(Messages.get(YoumuNPC.class,"quest_enough"));
 				YoumuNPC.Quest.complete();
 			}
 		}
@@ -345,7 +345,8 @@ public class YoumuNPC extends NPC {
 				yuyuSpawn = true;
 				Yuyuko yu = new Yuyuko();
 				yu.pos = Dungeon.level.randomRespawnCell(yu);
-				GLog.n("Something dangerous just appeared!");
+				yu.state = yu.HUNTING;
+				GLog.n(Messages.get(YoumuNPC.class,"spawn_yuyu"));
 				Dungeon.level.seal();
 				GameScene.add(yu);
 			}

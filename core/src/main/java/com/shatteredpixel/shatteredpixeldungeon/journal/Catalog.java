@@ -304,11 +304,17 @@ public enum Catalog {
 		SCROLLS.seen.put( ScrollOfRetribution.class,        false);
 		SCROLLS.seen.put( ScrollOfTransmutation.class,      false);
 
+		ENCOUNTERS.seen.put( SatoriEnc.class,     			 false);
 		ENCOUNTERS.seen.put( SuikaEnc.class,     			 false);
-		ENCOUNTERS.seen.put( MarisaEnc.class,     			 false);
-		ENCOUNTERS.seen.put( TenshiEnc.class,     			 false);
-		ENCOUNTERS.seen.put( YoumuEnc.class,     			 false);
 		ENCOUNTERS.seen.put( AyaEnc.class,     			 false);
+		ENCOUNTERS.seen.put( KoishiEnc.class,     			 false);
+		ENCOUNTERS.seen.put( SakuyaEnc.class,     			 false);
+		ENCOUNTERS.seen.put( YoumuEnc.class,     			 false);
+		ENCOUNTERS.seen.put( YuyukoEnc.class,     			 false);
+		ENCOUNTERS.seen.put( TenshiEnc.class,     			 false);
+		ENCOUNTERS.seen.put( ReisenEnc.class,     			 false);
+		ENCOUNTERS.seen.put( MarisaEnc.class,     			 false);
+		ENCOUNTERS.seen.put( ReimuEnc.class,     			 false);
 	}
 	
 	public static LinkedHashMap<Catalog, Badges.Badge> catalogBadges = new LinkedHashMap<>();

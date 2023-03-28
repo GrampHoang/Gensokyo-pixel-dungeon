@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.AyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -226,7 +227,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 6;
+		depth = 1;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -244,15 +245,15 @@ public class Dungeon {
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
 		SuikaNPC.Quest.reset();
-		//Aya
+		AyaNPC.Quest.reset();
 		KoishiNPC.Quest.reset();
 		SakuyaNPC.Quest.reset();
 		YoumuNPC.Quest.reset();
-		//Yuyuko
+		//YuyukoNPC.Quest.reset();
 		TenshiNPC.Quest.reset();
-		//Reisen
+		//ReisenNPC.Quest.reset();
 		MarisaNPC.Quest.reset(); //Just in case?
-		//Reimu
+		//ReimuNPC.Quest.reset();
 		hero = new Hero();
 		hero.live();
 		
@@ -640,16 +641,16 @@ public class Dungeon {
 			Blacksmith	.Quest.storeInBundle( quests );
 			Imp			.Quest.storeInBundle( quests );
 			SuikaNPC	.Quest.storeInBundle( quests );
-			//Aya
+			AyaNPC		.Quest.storeInBundle( quests );
 			KoishiNPC	.Quest.storeInBundle( quests );
 			SakuyaNPC	.Quest.storeInBundle( quests );
 			YoumuNPC	.Quest.storeInBundle( quests );
-			//Yuyuko
+			//YuyukoNPC	.Quest.storeInBundle( quests );
 			TenshiNPC	.Quest.storeInBundle( quests );
-			//Reisen
+			//ReisenNPC	.Quest.storeInBundle( quests );
 			MarisaNPC	.Quest.storeInBundle( quests );
-			//Reimu
-			//Satori
+			//ReimuNPC	.Quest.storeInBundle( quests );
+			//SatoriNPC	.Quest.storeInBundle( quests );
 			bundle.put( QUESTS, quests );
 			
 			SpecialRoom.storeRoomsInBundle( bundle );
@@ -756,30 +757,30 @@ public class Dungeon {
 				Blacksmith.Quest.restoreFromBundle( quests );
 				Imp.Quest.restoreFromBundle( quests );
 				SuikaNPC.Quest.restoreFromBundle( quests );
-				//Aya
+				AyaNPC.Quest.restoreFromBundle( quests );
 				KoishiNPC.Quest.restoreFromBundle( quests );
 				SakuyaNPC.Quest.restoreFromBundle( quests );
 				YoumuNPC.Quest.restoreFromBundle( quests );
-				//Yuyuko
+				//YuyukoNPC.Quest.restoreFromBundle( quests );
 				TenshiNPC.Quest.restoreFromBundle( quests );
-				//Reisen
+				//ReisenNPC.Quest.restoreFromBundle( quests );
 				MarisaNPC.Quest.restoreFromBundle( quests );
-				//Reimu
+				//ReimuNPC.Quest.restoreFromBundle( quests );
 			} else {
 				Ghost.Quest.reset();
 				Wandmaker.Quest.reset();
 				Blacksmith.Quest.reset();
 				Imp.Quest.reset();
 				SuikaNPC.Quest.reset();
-				//Aya
+				AyaNPC.Quest.reset();
 				KoishiNPC.Quest.reset();
 				SakuyaNPC.Quest.reset();
 				YoumuNPC.Quest.reset();
-				//Yuyuko
+				//YuyukoNPC.Quest.reset();
 				TenshiNPC.Quest.reset();
-				//Reisen
+				//ReisenNPC.Quest.reset();
 				MarisaNPC.Quest.reset();
-				//Reimu
+				//ReimuNPC.Quest.reset();
 			}
 			
 			SpecialRoom.restoreRoomsFromBundle(bundle);

@@ -21,7 +21,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.YoumuSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
@@ -42,7 +42,7 @@ import com.watabou.utils.Random;
 public class YoumuNPC extends NPC {
 
 	{
-		spriteClass = YoumuSprite.class;
+		spriteClass = ImpSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}

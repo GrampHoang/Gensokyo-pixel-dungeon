@@ -9,7 +9,7 @@ public class YoumuSprite extends MobSprite {
 	public YoumuSprite() {
 		super();
 		
-		texture( Assets.Sprites.YOUMU );
+		texture( Assets.Sprites.IMP );
 		
 		TextureFilm frames = new TextureFilm( texture, 13, 16 );
 		

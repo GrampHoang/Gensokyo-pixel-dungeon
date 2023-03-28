@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.AyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Ripple;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -132,7 +133,7 @@ public class ForestLevel extends RegularLevel {
 	@Override
 	protected void createItems() {
 		Ghost.Quest.spawnForest( this );
-		
+		AyaNPC.Quest.spawn( this);
 		super.createItems();
 	}
 	

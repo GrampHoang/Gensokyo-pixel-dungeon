@@ -25,13 +25,14 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
-import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.KoishiSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -40,18 +41,19 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class KoishiNPC extends NPC {
+public class AyaNPC extends NPC {
 
 	{
-		spriteClass = KoishiSprite.class;
+		spriteClass = ImpSprite.class;
 		state = WANDERING;
-		flying = true; //No water ripple, no break grasses but may struggle to find her on floor with many chasm
+		flying = true; //She fly
+        baseSpeed = 10f;
 	}
 
 	@Override
 	protected boolean act() {
 		if (Dungeon.level.heroFOV[pos]){
-			Notes.add( Notes.Landmark.KOISHI );
+			Notes.add( Notes.Landmark.AYA );
 		}
 		return super.act();
 	}
@@ -59,11 +61,6 @@ public class KoishiNPC extends NPC {
 	@Override
 	public int defenseSkill( Char enemy ) {
 		return INFINITE_EVASION;
-	}
-	
-	@Override
-	public float speed() {
-		return 0.6f;
 	}
 	
 	@Override
@@ -96,11 +93,11 @@ public class KoishiNPC extends NPC {
 
 		if (Quest.given){
 			Quest.complete();
-			Dungeon.level.drop( new ScrollOfUpgrade(), pos ).sprite.drop();
-			GLog.p(Messages.get(KoishiNPC.class, "farewell"));
+			Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+			GLog.p(Messages.get(AyaNPC.class, "farewell"));
 			die( null );
 		} else {
-			tell(Messages.get(KoishiNPC.class, "find_me"));
+			tell(Messages.get(AyaNPC.class, "find_me"));
 			this.pos = Dungeon.level.randomRespawnCell( this );
 			Dungeon.level.occupyCell( this );
 			Quest.given = true;
@@ -112,7 +109,7 @@ public class KoishiNPC extends NPC {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( KoishiNPC.this, text ));
+				GameScene.show( new WndQuest( AyaNPC.this, text ));
 			}
 		});
 	}
@@ -127,11 +124,11 @@ public class KoishiNPC extends NPC {
 			spawned = false;
 		}
 		
-		private static final String NODE		= "sadKoishi";
+		private static final String NODE		= "chaseAya";
 		
-		private static final String SPAWNED		= "kspawned";
-		private static final String GIVEN		= "kgiven";
-		private static final String DEPTH		= "kdepth";
+		private static final String SPAWNED		= "ayspawned";
+		private static final String GIVEN		= "aygiven";
+		private static final String DEPTH		= "aydepth";
 		
 		public static void storeInBundle( Bundle bundle ) {
 			
@@ -160,10 +157,10 @@ public class KoishiNPC extends NPC {
 			}
 		}
 		
-		public static void spawn( SDMLevel level ) {
+		public static void spawn( ForestLevel level ) {
 			if (!spawned && Dungeon.depth > 5 && Random.Int( 9 - Dungeon.depth ) == 0) {
 				
-				KoishiNPC Koishi = new KoishiNPC();
+				AyaNPC Koishi = new AyaNPC();
 				do {
 					Koishi.pos = level.randomRespawnCell( Koishi );
 				} while (Koishi.pos == -1);
@@ -178,8 +175,8 @@ public class KoishiNPC extends NPC {
 		
 		public static void complete() {
 			if (spawned && given) {
-				Notes.remove( Notes.Landmark.KOISHI );
-				Statistics.questScores[0] = 1000;
+				Notes.remove( Notes.Landmark.AYA );
+				Statistics.questScores[0] = 500;
 			}
 		}
 	}

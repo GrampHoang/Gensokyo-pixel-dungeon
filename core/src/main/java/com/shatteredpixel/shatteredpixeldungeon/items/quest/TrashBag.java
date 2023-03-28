@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC.SakuyaTrashSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
@@ -36,7 +37,7 @@ import com.watabou.noosa.audio.Sample;
 public class TrashBag extends Item {
 	
 	{
-		image = ItemSpriteSheet.TOKEN;
+		image = ItemSpriteSheet.POUCH;
 		stackable = true;
 		unique = true;
 	}

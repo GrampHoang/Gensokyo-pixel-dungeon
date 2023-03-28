@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.KoishiNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -72,6 +73,7 @@ public class SDMLevel extends RegularLevel {
 	@Override
 	protected void createMobs() {
 		KoishiNPC.Quest.spawn( this );
+		SakuyaNPC.Quest.spawn( this );
 		super.createMobs();
 	}
 

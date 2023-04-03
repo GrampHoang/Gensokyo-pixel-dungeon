@@ -30,7 +30,12 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.watabou.utils.Random;
 
-public class GluttonyFan extends MeleeWeapon {
+public class GluttonyYuyukoFan extends GluttonyFan {
+
+    // 2 More base damage
+    // Better food scaling
+    // Special effect in Hero.java, die()
+    // Can only be acquired from Yuyuko quest
 
 	{
 		image = ItemSpriteSheet.GLUTTONYFAN;
@@ -38,13 +43,13 @@ public class GluttonyFan extends MeleeWeapon {
 		hitSoundPitch = 1.3f;
 
 		tier = 3;
-		DLY = 1f;
+		DLY = 0.8f;
     }
 
 	@Override
 	public int max(int lvl) {
-		return  Statistics.foodEaten/3 +
-                Math.round(4f*(tier+1)) +
+		return  Statistics.foodEaten/2 +
+                Math.round(4f*(tier+1)) + 2 +
 				lvl*Math.round(1f*(tier+1));
 	}
 

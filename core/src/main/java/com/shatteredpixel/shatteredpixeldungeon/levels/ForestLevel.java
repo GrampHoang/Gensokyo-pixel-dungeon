@@ -47,6 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SuikaRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.UnknownPotRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -75,6 +76,7 @@ public class ForestLevel extends RegularLevel {
 	protected ArrayList<Room> initRooms() {
 		ArrayList<Room> initRooms = super.initRooms();
 		if(Dungeon.depth == 4) initRooms.add(new SuikaRoom());
+		if(Dungeon.depth == 1) initRooms.add(new UnknownPotRoom());
 		return initRooms;
 	}
 

@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.KoishiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YuyukoNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MarisaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SakuyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.SuikaNPC;
@@ -249,7 +250,7 @@ public class Dungeon {
 		KoishiNPC.Quest.reset();
 		SakuyaNPC.Quest.reset();
 		YoumuNPC.Quest.reset();
-		//YuyukoNPC.Quest.reset();
+		YuyukoNPC.Quest.reset();
 		TenshiNPC.Quest.reset();
 		//ReisenNPC.Quest.reset();
 		MarisaNPC.Quest.reset(); //Just in case?
@@ -645,7 +646,7 @@ public class Dungeon {
 			KoishiNPC	.Quest.storeInBundle( quests );
 			SakuyaNPC	.Quest.storeInBundle( quests );
 			YoumuNPC	.Quest.storeInBundle( quests );
-			//YuyukoNPC	.Quest.storeInBundle( quests );
+			YuyukoNPC	.Quest.storeInBundle( quests );
 			TenshiNPC	.Quest.storeInBundle( quests );
 			//ReisenNPC	.Quest.storeInBundle( quests );
 			MarisaNPC	.Quest.storeInBundle( quests );
@@ -761,7 +762,7 @@ public class Dungeon {
 				KoishiNPC.Quest.restoreFromBundle( quests );
 				SakuyaNPC.Quest.restoreFromBundle( quests );
 				YoumuNPC.Quest.restoreFromBundle( quests );
-				//YuyukoNPC.Quest.restoreFromBundle( quests );
+				YuyukoNPC.Quest.restoreFromBundle( quests );
 				TenshiNPC.Quest.restoreFromBundle( quests );
 				//ReisenNPC.Quest.restoreFromBundle( quests );
 				MarisaNPC.Quest.restoreFromBundle( quests );
@@ -776,7 +777,7 @@ public class Dungeon {
 				KoishiNPC.Quest.reset();
 				SakuyaNPC.Quest.reset();
 				YoumuNPC.Quest.reset();
-				//YuyukoNPC.Quest.reset();
+				YuyukoNPC.Quest.reset();
 				TenshiNPC.Quest.reset();
 				//ReisenNPC.Quest.reset();
 				MarisaNPC.Quest.reset();

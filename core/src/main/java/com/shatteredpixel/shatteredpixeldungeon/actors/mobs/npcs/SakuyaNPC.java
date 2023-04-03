@@ -1,62 +1,24 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
-import java.util.ArrayList;
-
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BossMercy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Succubus;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SakuyaEnc;
-import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
-import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
-import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.TrashBag;
-import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HisouBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SakuyaKnife;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.TenshiSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.TenshiBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
-import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
-import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SakuyaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
@@ -112,34 +74,37 @@ public class SakuyaNPC extends NPC {
 			// Finished
 			if (Quest.completed){
 				sprite.showStatus(CharSprite.POSITIVE, "Thanks");
-			// Finish now
+			// Finish now good
+			} else if (tokens  >= 30 && !Quest.completed) {
+				Game.runOnRenderThread(new Callback() {
+					@Override
+					public void call() {
+						if (Catalog.isSeen(SakuyaEnc.class)) tell(Messages.get(SakuyaNPC.class, "quest_3_good"));
+						else {
+							tell(Messages.get(SakuyaNPC.class, "quest_3_good_first"));
+							SakuyaEnc enc = new SakuyaEnc();
+							enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+						}
+						Game.runOnRenderThread(new Callback() {
+							@Override
+							public void call() {
+								GameScene.show( new WndSakuya( SakuyaNPC.this, true) );
+							}
+						});
+					}
+				});
+			// Finish now normal
 			} else if (tokens  >= 12 && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						//Normal finish
-						if( tokens < 30 ){
-							tell(Messages.get(SakuyaNPC.class, "quest_3_normal"));
-                            //Give choice
-							GLog.w("Quest done normal");
-						// Good finish, get all the trash bags
-						} else {
-							GLog.w("Quest done normal good");
-							if (Catalog.isSeen(SakuyaEnc.class)) tell(Messages.get(SakuyaNPC.class, "quest_3_good"));
-							else {
-								tell(Messages.get(SakuyaNPC.class, "quest_3_good_first"));
-								SakuyaEnc enc = new SakuyaEnc();
-								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-                            }
-							Game.runOnRenderThread(new Callback() {
-								@Override
-								public void call() {
-									GameScene.show( new WndSakuya( SakuyaNPC.this) );
-								}
-							});
-						}
-						flee();
-						SakuyaNPC.Quest.complete();
+						tell(Messages.get(SakuyaNPC.class, "quest_3_normal"));
+						Game.runOnRenderThread(new Callback() {
+							@Override
+							public void call() {
+								GameScene.show( new WndSakuya( SakuyaNPC.this, false) );
+							}
+						});
 					}
 				});
 			// Not finish
@@ -276,7 +241,7 @@ public class SakuyaNPC extends NPC {
 		private static final int BTN_HEIGHT = 20;
 		private static final int GAP        = 2;
 
-		public WndSakuya( final SakuyaNPC sakuya) {
+		public WndSakuya( final SakuyaNPC sakuya, boolean excel) {
 			
 			super();
 			
@@ -291,11 +256,17 @@ public class SakuyaNPC extends NPC {
 			message.setPos(0, titlebar.bottom() + GAP);
 			add( message );
 			
-			RedButton btnReward_knife = new RedButton( Messages.get(this, "knife") ) {
+			RedButton btnReward_knife = new RedButton( excel ? Messages.get(this, "knife_excel") : Messages.get(this, "knife") ) {
 				@Override
 				protected void onClick() {
-					hide();
-
+					SakuyaKnife sk = new SakuyaKnife();
+					sk.identify();
+					if (excel){
+						sk.upgrade();
+						sk.enchant(Weapon.Enchantment.random());
+					}
+					if (!sk.collect()) Dungeon.level.drop(sk, Dungeon.hero.pos);
+					takeReward(SakuyaNPC.this);
 				}
 				
 			};
@@ -305,26 +276,37 @@ public class SakuyaNPC extends NPC {
 			RedButton btnReward_daggers = new RedButton( Messages.get(this, "daggers") ) {
 				@Override
 				protected void onClick() {
-					hide();
-
+					ThrowingKnife tk = new ThrowingKnife();
+					if (excel)  if (!tk.quantity(4).collect()) Dungeon.level.drop(tk, Dungeon.hero.pos);
+					else 		if (!tk.quantity(8).collect()) Dungeon.level.drop(tk, Dungeon.hero.pos);
+					takeReward(SakuyaNPC.this);
+					
 				}
 			};
 			btnReward_daggers.setRect( 0, (int)btnReward_knife.bottom() + GAP, WIDTH, BTN_HEIGHT );
 			add( btnReward_daggers );
 			
             TimekeepersHourglass hourglass = Dungeon.hero.belongings.getItem( TimekeepersHourglass.class );
-            if (hourglass != null){
+            if (hourglass != null && excel){
                 RedButton btnReward_hourglass = new RedButton( Messages.get(this, "hourglass") ) {
                     @Override
                     protected void onClick() {
-                        hide();
-    
+						while(hourglass.level() < 10){
+							hourglass.upgrade();
+						}
+						takeReward(SakuyaNPC.this);
                     }
                 };
                 btnReward_hourglass.setRect( 0, (int)btnReward_daggers.bottom() + GAP, WIDTH, BTN_HEIGHT );
                 add( btnReward_hourglass );
             }
 			resize( WIDTH, (int)btnReward_daggers.bottom() );
+		}
+
+		private void takeReward( SakuyaNPC maid) {
+			hide();
+			maid.flee();
+			SakuyaNPC.Quest.complete();
 		}
 	}
 

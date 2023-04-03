@@ -15,9 +15,13 @@ public class YuyukoEnc extends EncounterNotes {
 	public String npc(){
 		return "Yuyuko";
 	}
-	// 2-4, run around in very fast speed
-	// Caught up with her cause her to drop a PoH
-	// EncNote: You need to catch her 4 times, in each region (she won't go to hell, too deep)
-	// Obviously she wgive you 4 PoH in total
+	// 11-14, Chilling around in a hidden room
+	// Feed her foods, maybe lots of food
+	// 1 any kind of meat ->
+	// 1 Normal ration ->
+	// 1 Pie ->
+	// 3 Pies ->
+	// Yes, 3, in the 3rd region lmao
+	// EncNote: Fullfil her completely
 	// Unlock: ?
 }

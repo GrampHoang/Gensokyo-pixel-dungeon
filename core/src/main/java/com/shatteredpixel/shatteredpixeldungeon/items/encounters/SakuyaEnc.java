@@ -17,5 +17,8 @@ public class SakuyaEnc extends EncounterNotes {
 	}
 
 	// floor 6-9, pick up trashes
-	// Give her knife, thrwoing knife or fully upgrade the hourglass if you are using it
+	// Give her knife, thrwoing knife if you are using it
+	// EncNote: Clean most of the trash (>30->35)
+	// Rewward: +1 knife + enchant, or double the knife throw or fully upgrade the hourglass
+	// Unlock: 
 }

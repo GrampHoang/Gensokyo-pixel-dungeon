@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -408,7 +409,7 @@ public enum HeroClass {
 				hero.belongings.weapon = we;
 
 				
-
+				Buff.affect(hero, MindVision.class, 9999f);
 				Buff.affect(hero, MagicalSight.class, 9999f);
 				RingOfMight ring = new RingOfMight();
 				ring.level(40);

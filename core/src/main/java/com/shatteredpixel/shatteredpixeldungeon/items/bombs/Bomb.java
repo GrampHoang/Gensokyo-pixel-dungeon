@@ -164,7 +164,7 @@ public class Bomb extends Item {
 					
 					Trap trap = Dungeon.level.traps.get(c);
 					if (trap instanceof DelayedExplosiveTrap){
-						trap.activate();
+						trap.trigger();
 					}
 					//destroys items / triggers bombs caught in the blast.
 					Heap heap = Dungeon.level.heaps.get(c);

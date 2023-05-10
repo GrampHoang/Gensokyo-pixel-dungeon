@@ -50,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Exterminating;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.HoldFast;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hourai;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
@@ -1800,13 +1801,20 @@ public class Hero extends Char {
 	
 	@Override
 	public void die( Object cause ) {
-		BossMercy inFight = Dungeon.hero.buff(BossMercy.class);
+		BossMercy inFight = buff(BossMercy.class);
 		if (inFight != null){
 			// if (buff(Burning.class) != null ) buff(Burning.class).detach();
 			inFight.tobeDetach();
 			inFight.teleBack(true);;
 			return;
 		}
+
+		if(buff(Hourai.class) != null){
+			this.HP = HT;
+			GLog.p("Ressurection!");
+			return;
+		}
+
 		curAction = null;
 
 		Ankh ankh = null;

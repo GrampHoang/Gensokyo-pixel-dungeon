@@ -40,22 +40,22 @@ public class UnknownPotRoom extends SecretRoom {
 	
 	@Override
 	public int minWidth() {
-		return 14;
+		return 10;
 	}
 	
 	@Override
 	public int minHeight() {
-		return 14;
+		return 10;
 	}
 	
 	@Override
 	public int maxWidth() {
-		return 18;
+		return 12;
 	}
 	
 	@Override
 	public int maxHeight() {
-		return 18;
+		return 12;
 	}
 	
 	@Override
@@ -67,23 +67,19 @@ public class UnknownPotRoom extends SecretRoom {
 		Maze.allowDiagonals = false;
 		boolean[][] maze = Maze.generate(this);
 		boolean[] passable = new boolean[width()*height()];
-    
-		Painter.fill(level, this, 1, Terrain.EMPTY);
-		for (int x = 0; x < maze.length; x++) {
-			for (int y = 0; y < maze[0].length; y++) {
-				if (maze[x][y] == Maze.FILLED) {
-					Painter.fill(level, x + left, y + top, 1, 1, Terrain.WALL);
-				}
-				passable[x + width()*y] = maze[x][y] == Maze.EMPTY;
-			}
-		}
 		
         for (int x = 1; x < maze.length-1; x++) {
 			for (int y = 1; y < maze[0].length-1; y++) {
 				if (maze[x][y] == Maze.FILLED) {
-                    Painter.fill(level, x + left, y + top, 1, 1, Terrain.TRAP);
-			        level.setTrap(new ExplosiveTrap(), x + width()*y);
+                    Painter.fill(level, x + left, y + top, 1, 1, Terrain.SECRET_TRAP);
 				}
+			}
+		}
+
+		for (Point p : getPoints()){
+			int cell = level.pointToCell(p);
+			if (level.map[cell] == Terrain.SECRET_TRAP){
+				level.setTrap(new DelayedExplosiveTrap().hide(), cell);
 			}
 		}
 

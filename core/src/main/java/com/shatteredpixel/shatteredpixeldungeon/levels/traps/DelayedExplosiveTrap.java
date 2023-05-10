@@ -39,7 +39,7 @@ public class DelayedExplosiveTrap extends Trap {
 	@Override
 	public void activate() {
 		
-		DelayedExplosion p = Buff.affect(Dungeon.hero, DelayedExplosion.class, 1);
+		DelayedExplosion p = Buff.append(Dungeon.hero, DelayedExplosion.class, 1);
 		p.depth = Dungeon.depth;
 		p.pos = pos;
 

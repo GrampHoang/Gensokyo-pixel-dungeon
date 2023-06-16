@@ -1,38 +1,34 @@
-I'm doing Graduation Thesis so this game will have even slower update. I know that very few people follow this project, but I would still apologize xP
-
 # Gensokyo Pixel Dungeon
 
-This is heavily inspired by Shattered PD v1.3.1 (obviously), (old) TouhouPD and Tommorow's RougeNights. The game also borrow idea from some other forks.
+This is forked from Shattered PD v1.3.1. Inspired by (old) TouhouPD and Tomorrow's RougeNights. The game also borrow idea from some other forks.
 
 # Progress 
-(The source code, not the release beta/alpha/main game so some of this may not be in the apk you downloaded):
-- 4 new characters, they are a based on the classic existing 4. Plus Sakuya who is (literally) broken, she's there because it's harder to remove her, you can pick her to handicap yourself since half her kit doesn't work.
+(Base on the source code, not the released files so some of this may not be in the apk/jar you downloaded):
+- 4 new characters, their playstyle loosely based on the 4 original classes. Plus Sakuya who is a broken character. You can pick her to handicap yourself since half her kit doesn't work.
 ![Heros list](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/heros.PNG)
-- All new character have their own unique subclasses, no armor ability
-- A bunch more weapon to spice up the gameplay, most of them have special skill that you can gain "skill point" to use by just hitting the enemies, spread evenly between tiers (Currently T1, T2, T3 are done). They have lower drop rate though. Might nerf later, or change them into secret weapons. High Priority
+- All new character have their own unique subclasses, no unique armor ability as of now.
+- A bunch more weapon to spice up the gameplay. Including secret weapons!
 ![Weapons](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/weaponlist.PNG)
+- New Weapon SP mechanic: some weapons have special skill(s). You can gain "skill points" to use them by just hitting the enemies
 ![Skill demo](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/weaponskill.png)
-- New challenges: Lunatic - where all enemy have additional perk and skill, doesn't affect normal boss though. It require constant kiting and re-positioning so becareful.
-- Alternative path (Currently up to 20 floors, last 5 are still Demon Hall) - aka Gensokyo challenge. New enemies, new bosses. Not play tested enough, but on paper it should be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill and you should be fine. Except lots of repositioning though, and don't too rely on narrow pathway.
+- New challenge "Lunatic": all enemy have additional perk/skill. This make the game more dynamic, force you to run around a bit more!
+- Alternative path (Currently up to 20 floors) - the "Gensokyo" challenge: New enemies, new bosses. My aim is it to be harder in general but easier if you don't get gang up on. Read monster's description, dodge their skill! Except lots of repositioning, don't too rely on narrow pathway!
 
 # Plan:
-- Finish the first 4 regions. Outside of very sepecific situation where dungeon mobs behave a bit weird, only the 3rd boss is unfinished.
-- Draw more stuffs, need to re-draw lots sprite from TouhouPD.
-- More weapons, Currently doing T4, I'll start adding secret weapon after this.
-- Introducing "Encounters", if you meet some NPC and meet their requirement, they will unlock something new permanently. For replayability purpose.
-- 
-- A few artifact
-- A few more spell/items that can sygnergy with weapon skill and help adapt with new challenges.
-- NPCs and Description that hint the above things.
-- Music (will compressed) and SFX, medium priority
-- No new armor, I'm considering it but not sure what to implement.
+- Finish and flesh out the first 4 regions. 3rd boss is unfinished and there are lots of unintended behavior (due to bad coding)
+- Draw more! Currently I borrow a lot from TouhouPD for the aesthetic.
+- More weapons!
+- Introducing "Encounters", if you meet some NPC and meet their requirement, they may unlock something new permanently. For replayability purpose.
+- A few more spells/items that can synergy with weapon skill and help adapt with new challenges.
+- Finishing the NPCs
+- Music (will compressed) and SFX
+- Making unique armor ability
 - Badges: For the new stuff
-- Last 5 floors will be developed later on.
 
 # My goal:
-- Is to make SPD but with different approach, more option and playstyle to go for and have more re-playability.
-
-If there is any issue, you can use the feedback link inside the game.
+- Is to make SPD but with different approach, more option and playstyle to go for and have more replayability.
+- 
+If there is any issue, you can use the feedback link inside the game or find me on Pixel Dungeon Discord.
 
 # ShatteredPD
 A Roguelike RPG, with randomly generated levels, items, enemies, and traps! Based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://www.watabou.ru).

@@ -30,6 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.IceBlock;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ShieldHalo;
+import com.shatteredpixel.shatteredpixeldungeon.effects.ShieldHaloMelee;
+import com.shatteredpixel.shatteredpixeldungeon.effects.ShieldHaloRange;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TorchHalo;
@@ -87,7 +89,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER, SHRINK, BURSTING_POWER_RED, BURSTING_POWER_BLUE, BURSTING_POWER_YELLOW
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, SHIELDEDMELEE, SHIELDEDRANGE, HEARTS, MIND, STAR_FLY, CHARGING, BURSTING_POWER, SHRINK, BURSTING_POWER_RED, BURSTING_POWER_BLUE, BURSTING_POWER_YELLOW
 	}
 	private int stunStates = 0;
 	
@@ -120,6 +122,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected DarkBlock darkBlock;
 	protected TorchHalo light;
 	protected ShieldHalo shield;
+	protected ShieldHaloMelee shieldmelee;
+	protected ShieldHaloRange shieldrange;
 	protected AlphaTweener invisible;
 	protected Flare aura;
 	
@@ -426,6 +430,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case SHIELDED:
 				GameScene.effect( shield = new ShieldHalo( this ));
+				break;
+			case SHIELDEDMELEE:
+				GameScene.effect( shieldmelee = new ShieldHaloMelee( this ));
+				break;
+			case SHIELDEDRANGE:
+				GameScene.effect( shieldrange = new ShieldHaloRange( this ));
 				break;
 			case HEARTS:
 				hearts = emitter();

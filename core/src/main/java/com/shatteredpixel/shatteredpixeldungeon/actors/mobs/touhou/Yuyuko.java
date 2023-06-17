@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -59,7 +62,7 @@ public class Yuyuko extends Mob {
 		maxLvl = 14;
 
 		properties.add(Property.UNDEAD);
-		
+		properties.add(Property.BOSS);
 		HUNTING = new Hunting();
 	}
     private static int LASER_LENGTH = 4;

@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,11 +29,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.UnknownPotion;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.Maze;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.DelayedExplosiveTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlockTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ExplosiveTrap;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
@@ -68,18 +72,12 @@ public class UnknownPotRoom extends SecretRoom {
 		boolean[][] maze = Maze.generate(this);
 		boolean[] passable = new boolean[width()*height()];
 		
-        for (int x = 1; x < maze.length-1; x++) {
-			for (int y = 1; y < maze[0].length-1; y++) {
+		for (int x = 0; x < maze.length; x++) {
+			for (int y = 0; y < maze[0].length; y++) {
 				if (maze[x][y] == Maze.FILLED) {
-                    Painter.fill(level, x + left, y + top, 1, 1, Terrain.SECRET_TRAP);
+					Painter.fill(level, x + left, y + top, 1, 1, Terrain.WALL);
 				}
-			}
-		}
-
-		for (Point p : getPoints()){
-			int cell = level.pointToCell(p);
-			if (level.map[cell] == Terrain.SECRET_TRAP){
-				level.setTrap(new DelayedExplosiveTrap().hide(), cell);
+				passable[x + width()*y] = maze[x][y] == Maze.EMPTY;
 			}
 		}
 
@@ -100,24 +98,28 @@ public class UnknownPotRoom extends SecretRoom {
 			}
 		}
 		
-		Item prize;
-		//1 floor set higher in probability, never cursed
-		do {
-			if (Random.Int(2) == 0) {
-				prize = Generator.randomWeapon((Dungeon.depth / 5) + 1);
-			} else {
-				prize = Generator.randomArmor((Dungeon.depth / 5) + 1);
+		Item prize = new UnknownPotion();
+		level.drop(prize, level.pointToCell(bestDistP)).type = Heap.Type.HEAP;
+		
+		//Replace Wall with trap, you have to do this for the path finding thingy
+		for (int x = 1; x < maze.length-1; x++) {
+			for (int y = 1; y < maze[0].length-1; y++) {
+				if (maze[x][y] == Maze.FILLED) {
+                    Painter.fill(level, x + left, y + top, 1, 1, Terrain.SECRET_TRAP);
+				}
 			}
-		} while (prize.cursed || Challenges.isItemBlocked(prize));
-		prize.cursedKnown = true;
-		
-		//33% chance for an extra update.
-		if (Random.Int(3) == 0){
-			prize.upgrade();
 		}
-		
-		level.drop(prize, level.pointToCell(bestDistP)).type = Heap.Type.CHEST;
-		
+
+		for (Point p : getPoints()){
+			int cell = level.pointToCell(p);
+			if (level.map[cell] == Terrain.SECRET_TRAP){
+				level.setTrap(new FlockTrap().hide(), cell);
+			}
+		}
+
+		int ecell = level.pointToCell(bestDistP);
+		level.setTrap(new ExplosiveTrap().hide(), ecell);
+
 		PathFinder.setMapSize(level.width(), level.height());
 		
 		entrance().set(Door.Type.HIDDEN);

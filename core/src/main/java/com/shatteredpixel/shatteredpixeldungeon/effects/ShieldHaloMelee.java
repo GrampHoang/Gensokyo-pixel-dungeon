@@ -24,62 +24,60 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.Game;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.Halo;
 import com.watabou.utils.PointF;
 
-
-public class MasterSparkBig extends Image {
-
-	private static final double A = 180 / Math.PI;
+public class ShieldHaloMelee extends Halo {
 	
-	private  float duration;
+	private CharSprite target;
 	
-	private float timeLeft;
-	private MasterSparkBig(PointF s, PointF e, Effects.Type asset, float duration) {
-		super( Effects.get( asset ) );
+	private float phase;
+	
+	public ShieldHaloMelee( CharSprite sprite ) {
 		
-		origin.set( 0, height / 2 );
+		//rectangular sprite to circular radius. Pythagorean theorem
+		super( (float)Math.sqrt(Math.pow(sprite.width()/2f, 2) + Math.pow(sprite.height()/2f, 2)), 0xDD7777, 1f );
 		
-		x = s.x - origin.x;
-		y = s.y - origin.y;
+		am = -0.33f;
+		aa = +0.33f;
 		
-		float dx = e.x - s.x;
-		float dy = e.y - s.y;
-		angle = (float)(Math.atan2( dy, dx ) * A);
-		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width * 1.1f;
+		target = sprite;
 		
-		Sample.INSTANCE.play( Assets.Sounds.RAY );
-		
-		timeLeft = this.duration = duration;
+		phase = 1;
 	}
-
-	public static class BigMasterSpark extends MasterSparkBig{
-		public BigMasterSpark(PointF s, PointF e, float dur){
-			super(s, e, Effects.Type.LIGHT_RAY, dur);
-		}
-	}
-    
+	
 	@Override
 	public void update() {
 		super.update();
-		//float size = 2f;
-		float p = 2f - 2f/((float)Math.pow(5,Math.sqrt(timeLeft)));
-		alpha( p );
-		scale.set( scale.x, p );
 		
-		if ((timeLeft -= Game.elapsed) <= 0) {
-			killAndErase();
+		if (phase < 1) {
+			if ((phase -= Game.elapsed) <= 0) {
+				killAndErase();
+			} else {
+				scale.set( (2 - phase) * radius / RADIUS );
+				am = phase * (-1);
+				aa = phase * (+1);
+			}
+		}
+		
+		if (visible = target.visible) {
+			PointF p = target.center();
+			point( p.x, p.y );
 		}
 	}
 	
 	@Override
 	public void draw() {
-		Blending.setLightMode(); 
+		Blending.setLightMode();
 		super.draw();
 		Blending.setNormalMode();
 	}
+	
+	public void putOut() {
+		phase = 0.999f;
+	}
+	
 }

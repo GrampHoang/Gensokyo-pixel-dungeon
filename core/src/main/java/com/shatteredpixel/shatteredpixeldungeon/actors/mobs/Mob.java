@@ -704,6 +704,15 @@ public abstract class Mob extends Char {
 
 	@Override
 	public void damage( int dmg, Object src ) {
+		KomachiBlessing komachi = this.buff(KomachiBlessing.class);
+		if (komachi != null){
+			if (
+			( komachi.isMelee() && Dungeon.level.distance(Dungeon.hero.pos, this.pos) < 2) ||
+			(!komachi.isMelee() && Dungeon.level.distance(Dungeon.hero.pos, this.pos) > 1) ){
+				sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "immune"));
+				return;
+			}
+		}
 
 		if (state == SLEEPING) {
 			state = WANDERING;

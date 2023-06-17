@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -29,9 +32,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hourai;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Silence;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
@@ -42,15 +51,18 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.utils.Random;
 
-public class UnkownPotion extends Item {
+public class UnknownPotion extends Item {
 
 	{
 		image = ItemSpriteSheet.POTION_HOLDER;
@@ -78,8 +90,8 @@ public class UnkownPotion extends Item {
 			else {
                 GameScene.show(
                     new WndOptions(new ItemSprite(this),
-                            Messages.get(Potion.class, "harmful"),
-                            Messages.get(Potion.class, "sure_drink"),
+                            Messages.get(UnknownPotion.class, "harmful"),
+                            Messages.get(UnknownPotion.class, "sure_drink"),
                             Messages.get(Potion.class, "yes"), Messages.get(Potion.class, "no") ) {
                         @Override
                         protected void onSelect(int index) {
@@ -96,15 +108,37 @@ public class UnkownPotion extends Item {
 	public static void drink( Hero hero ){
 		hero.spend(TIME_TO_DRINK);
         int i = Random.IntRange(0, 100);
-
         if        (i < 10){
-
-        } else if (i < 20){
-
+			// Instant death
+			hero.die(null);
+			GLog.n(Messages.get(UnknownPotion.class, "eff1"));
+        } else if (i < 45){
+			//Horrible debuff
+			Buff.affect(hero, Slow.class, 100f);
+			Buff.affect(hero, Degrade.class, 100f);
+			Buff.affect(hero, Silence.class, 100f);
+			Buff.affect(hero, Cripple.class, 100f);
+			Buff.affect(hero, Levitation.class, 100f);
+			for (Plant.Seed seeds : Dungeon.hero.belongings.getAllItems( Plant.Seed.class )){
+				seeds.detachAll( Dungeon.hero.belongings.backpack );
+			}
+			GLog.w(Messages.get(UnknownPotion.class, "eff2"));
+		} else if (i < 80){
+			// Perma doom
+			Buff.affect(hero, Doom.class);
+			GLog.w(Messages.get(UnknownPotion.class, "eff3"));
         } else if (i < 99){
-
-        } else {    //Jackpot
-            
+			// +1 strength
+			hero.STR++;
+			hero.sprite.showStatus( CharSprite.POSITIVE, Messages.get(PotionOfStrength.class, "msg_1") );
+			GLog.w(Messages.get(UnknownPotion.class, "eff4"));
+        } else {    //Jackpot, 1%
+			Buff.affect(hero, Hourai.class);
+			GLog.n(Messages.get(UnknownPotion.class, "eff5"));
+			hero.busy();
+			Dungeon.hero.spend(50f);
+			Dungeon.hero.next();
+            GLog.p(Messages.get(UnknownPotion.class, "jackpot"));
         }
 	}
 

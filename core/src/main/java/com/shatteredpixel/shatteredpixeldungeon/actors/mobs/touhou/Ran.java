@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -82,13 +86,16 @@ public class Ran extends Mob {
 	
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		if (new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos && charging == false){
-			charging = true;
-			this.sprite.add(CharSprite.State.CHARGING);
-			return false;
-		} else{
-		return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+		if(enemy != null){
+			if (new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos && charging == false){
+				charging = true;
+				this.sprite.add(CharSprite.State.CHARGING);
+				return false;
+			} else{
+			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+			}
 		}
+		return false;
 	}
 
 	@Override
@@ -104,9 +111,21 @@ public class Ran extends Mob {
 		return super.createLoot();
 	}
 
+	@Override
+	protected boolean act() {
+		if(! canAttack( enemy )){
+			charging = false;
+			this.sprite.remove(CharSprite.State.CHARGING);
+		}
+		return super.act();
+	}
+
 	protected boolean doAttack(Char enemy ) {
 		charging = false;
-		if(Dungeon.level.water[this.pos] == true && Random.IntRange(0, 1) == 1) Dungeon.level.map[this.pos] = Terrain.EMPTY;
+		if(Dungeon.level.water[this.pos] == true && Random.IntRange(0, 1) == 1){
+			Dungeon.level.map[this.pos] = Terrain.EMPTY;
+			GameScene.updateMap(this.pos);
+		}
 		this.sprite.remove(CharSprite.State.CHARGING);
 		CellEmitter.get(enemy.pos).burst(SmokeParticle.FACTORY, 4);
 		Buff.prolong( enemy, Hex.class, 12f );

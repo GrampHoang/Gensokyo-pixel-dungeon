@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -66,20 +69,10 @@ public class Cirno extends Mob {
 	}
 
 	@Override
-	protected boolean getCloser( int target ) {
-		if (state == HUNTING && (isLunatic())) {
-			return enemySeen && getFurther( target );
-		} else {
-			return super.getCloser( target );
-		}
-	}
-
-	@Override
 	protected boolean canAttack( Char enemy ) {
 		if (isLunatic()){
 			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-			return ((!Dungeon.level.adjacent( pos, enemy.pos ) && attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4)
-					|| canGetFurther(enemy.pos) == false);
+			return (attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4);
 		}
 		return super.canAttack(enemy);
 	}
@@ -87,22 +80,10 @@ public class Cirno extends Mob {
 	@Override
 	public int attackProc(Char enemy, int damage) {
 		damage = super.attackProc(enemy, damage);
-		if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
-			Buff.affect(enemy, Chill.class, 0.5f);
-			spend(TICK/2);
-		}
-		Buff.affect(enemy, Chill.class, 0.5f);
+		Buff.affect(enemy, Chill.class, 1f);
 		return damage;
 	}
 
-	// @Override
-	// public boolean doAttack(Char enemy) {
-	// 	if (Dungeon.level.distance(this.pos, enemy.pos) > 1){
-	// 		spend(TICK/2);
-	// 	}
-	// 	return super.doAttack(enemy);
-	// }
-	
     @Override
 	protected boolean act() {
 		return super.act();
@@ -110,37 +91,31 @@ public class Cirno extends Mob {
 
 	@Override
 	public void die(Object cause) {
-        if (this.flying || !Dungeon.level.pit[this.pos]) {
-            PathFinder.buildDistanceMap( this.pos, BArray.not( Dungeon.level.solid, null ), 1 );
-			for (int i = 0; i < PathFinder.distance.length; i++) {
-				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-					//avoid items
-					Heap heap = Dungeon.level.heaps.get(i);
-					if(heap == null){
-						GameScene.add(Blob.seed(i, 2, Freezing.class));
-					}
-				}
+        // if (this.flying || !Dungeon.level.pit[this.pos]) {
+        //     PathFinder.buildDistanceMap( this.pos, BArray.not( Dungeon.level.solid, null ), 1 );
+		// 	for (int i = 0; i < PathFinder.distance.length; i++) {
+		// 		if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+		// 			//avoid items
+		// 			Heap heap = Dungeon.level.heaps.get(i);
+		// 			if(heap == null){
+		// 				GameScene.add(Blob.seed(i, 2, Freezing.class));
+		// 			}
+		// 		}
+		// 	}
+        // }
+		
+		if(isLunatic()){
+			Cirno newCirno = new Cirno();
+			newCirno.state = newCirno.SLEEPING;
+			newCirno.pos = Dungeon.level.randomRespawnCell( newCirno );
+			if (newCirno.pos != -1) {
+				GameScene.add(newCirno);
 			}
-        }
+		}
 
 		if(Random.Int(500) == 1){
 			Dungeon.level.drop( new CirnoIcecream(), pos ).sprite.drop();
 		}
 		super.die(cause);
 	}
-
-	protected boolean canGetFurther( int target ) {
-		if (rooted || target == pos) {
-			return false;
-		}
-		
-		int step = Dungeon.flee( this, target, Dungeon.level.passable, fieldOfView, true );
-		if (step != -1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	
 }

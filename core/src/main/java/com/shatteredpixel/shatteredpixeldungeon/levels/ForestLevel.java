@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -76,7 +79,7 @@ public class ForestLevel extends RegularLevel {
 	protected ArrayList<Room> initRooms() {
 		ArrayList<Room> initRooms = super.initRooms();
 		if(Dungeon.depth == 4) initRooms.add(new SuikaRoom());
-		if(Dungeon.depth == 1) initRooms.add(new UnknownPotRoom());
+		if(Dungeon.depth == 1) initRooms.add(new UnknownPotRoom()); //This is a test room for Reisen's quest, but I'm gonna keep it
 		return initRooms;
 	}
 

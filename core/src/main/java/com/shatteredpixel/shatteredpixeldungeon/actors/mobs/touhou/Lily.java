@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -40,8 +43,6 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -78,7 +79,8 @@ public class Lily extends Mob {
     @Override
 	protected boolean act() {
         if (charging_skill == true && !lilySkillCells.isEmpty()){
-            return lilySkill();
+			lilySkill();
+            return true;
         } else if(Random.IntRange(0, (isLunatic() ? 4 : 8)) == 1 && enemySeen == true){
 			lilyCharge();
 			charging_skill = true;
@@ -95,7 +97,7 @@ public class Lily extends Mob {
 		super.die(cause);
 	}
 
-    private boolean lilySkill(){
+    private void lilySkill(){
 		int[] ret = new int[lilySkillCells.size()];
 		for (int i=0; i < ret.length; i++)
 		{
@@ -148,7 +150,7 @@ public class Lily extends Mob {
 				}
             }
 		}
-		return true;
+		spend(TICK);
     }
 
 	public boolean growableCell(int cell){

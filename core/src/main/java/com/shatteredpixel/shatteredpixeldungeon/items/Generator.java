@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
@@ -368,6 +369,9 @@ public class Generator {
 					EternityLeaf.class
 			};
 			WEP_T2.probs = new float[]{ 6, 5, 5, 4, 4,   3, 3, 3, 3, 3, 3, 3, 3};
+			if (Dungeon.isChallenged(Challenges.TOUHOU)){
+			WEP_T2.probs = new float[]{ 5, 4, 4, 3, 3,   6, 3, 6, 6, 6, 5, 4, 4};}
+			// Touhou weapon drop more in gensokyo challenge, just to fit the theme
 			
 			WEP_T3.classes = new Class<?>[]{
 					Sword.class,
@@ -389,7 +393,9 @@ public class Generator {
 					FlandreSpear.class
 			};
 			WEP_T3.probs = new float[]{ 6, 5, 5, 4, 4, 4,   3, 3,    3, 3, 3, 3, 3, 2, 2};
-			
+			if (Dungeon.isChallenged(Challenges.TOUHOU)){
+			WEP_T3.probs = new float[]{ 5, 4, 4, 3, 3, 3,   3, 3,    6, 6, 4, 6, 5, 2, 2};}
+
 			WEP_T4.classes = new Class<?>[]{
 					Longsword.class,
 					BattleAxe.class,
@@ -408,7 +414,9 @@ public class Generator {
 
 			};
 			WEP_T4.probs = new float[]{ 6, 5, 5, 4, 4, 4,   3, 3, 3, 3, 3, 0, 3};
-			
+			if (Dungeon.isChallenged(Challenges.TOUHOU)){
+			WEP_T4.probs = new float[]{ 4, 3, 3, 2, 2, 2,   6, 6, 6, 4, 6, 6, 6};}
+
 			WEP_T5.classes = new Class<?>[]{
 					Greatsword.class,
 					WarHammer.class,
@@ -419,8 +427,9 @@ public class Generator {
 					HisouBlade.class,
 					HisouBladeAwakened.class
 			};
-			WEP_T5.probs = new float[]{ 6, 5, 5, 4, 4, 4, 2, 0.01f };
-			
+			WEP_T5.probs = new float[]{ 60, 50, 50, 40, 40, 40, 10, 1 };
+			//Except this tier, Hisoublade are supposed to be broken
+
 			//see Generator.randomArmor
 			ARMOR.classes = new Class<?>[]{
 					ClothArmor.class,

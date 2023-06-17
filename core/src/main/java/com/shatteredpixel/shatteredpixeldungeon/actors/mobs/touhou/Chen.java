@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -90,7 +93,11 @@ public class Chen extends Mob {
 				spend(TICK);
 				return roll(enemy_pos);
 			} else if (roll_cd <= 1 && enemySeen && rolling == false){
-				enemy_pos = ready(enemy.pos);
+				if(enemy != null){
+					enemy_pos = ready(enemy.pos);	
+				} else {
+					enemy_pos = Dungeon.hero.pos;
+				}
 				spend(TICK);
 				if (isLunatic() && Random.IntRange(1,3) == 2){
 					roll_cd = 2;

@@ -1812,6 +1812,7 @@ public class Hero extends Char {
 		if(buff(Hourai.class) != null){
 			this.HP = HT;
 			GLog.p("Ressurection!");
+			
 			return;
 		}
 

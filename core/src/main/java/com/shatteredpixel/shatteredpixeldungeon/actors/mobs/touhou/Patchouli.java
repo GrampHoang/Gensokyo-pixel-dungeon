@@ -1,4 +1,28 @@
-package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+/*
+ * Pixel Dungeon
+ * Copyright (C) 2012-2015 Oleg Dolya
+ *
+ * Shattered Pixel Dungeon
+ * Copyright (C) 2014-2022 Evan Debenham
+ *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+
+ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
@@ -197,6 +221,7 @@ public class Patchouli extends Mob {
 		}
 
 		patchyBook.pos = summoningPos;
+		patchyBook.state = patchyBook.HUNTING;
 		CellEmitter.get( summoningPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 		GameScene.add( patchyBook );
 		Dungeon.level.occupyCell( patchyBook );
@@ -233,6 +258,10 @@ public class Patchouli extends Mob {
 					pacthyCells.add(enemy.pos + i);
 					sprite.parent.add(new TargetedCell(enemy.pos + i, color));
 				}
+		}
+		if(Random.IntRange(0, 1) == 1){
+			pacthyCells.add(enemy.pos);
+			sprite.parent.add(new TargetedCell(enemy.pos, color));
 		}
 	}
 

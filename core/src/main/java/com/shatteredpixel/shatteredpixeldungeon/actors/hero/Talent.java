@@ -829,10 +829,10 @@ public enum Talent {
 						Buff.affect(enemy, Vertigo.class, 3f);
 					}
 					if (hero.pointsInTalent(Talent.HIDDEN_DANGER) > 1){
-						Buff.affect(enemy, Haste.class, 3f);
+						Buff.affect(enemy, Poison.class).set(3f);
 					}
 					if (hero.pointsInTalent(Talent.HIDDEN_DANGER) > 2){
-						Buff.affect(enemy, Haste.class, 3f);
+						Buff.affect(enemy, Corrosion.class).set(3f, 5);
 					}
 			
 		}

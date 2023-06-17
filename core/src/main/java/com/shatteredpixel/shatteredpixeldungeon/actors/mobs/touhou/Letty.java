@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -103,7 +106,13 @@ public class Letty extends Mob {
 					//avoid items and allies
 					Char ch = Actor.findChar(i);
 					Heap heap = Dungeon.level.heaps.get(i);
-					if( !(heap != null && (ch != null && (ch.alignment == this.alignment || ch.alignment == Alignment.NEUTRAL)))){
+					if (heap != null			// No item
+						&& (ch == null			// No Char
+							|| (ch != null 		// Or if there are Char, they aren't ally or neutral
+								&& (ch.alignment != this.alignment && ch.alignment != Alignment.NEUTRAL)
+								)
+							)
+						){
 						GameScene.add(Blob.seed(i, 2, Freezing.class));
 					}
 				}

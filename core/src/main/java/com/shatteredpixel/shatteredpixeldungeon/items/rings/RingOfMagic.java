@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -39,10 +42,12 @@ public class RingOfMagic extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			return Messages.get(this, "stats",
-					new DecimalFormat("#.##").format(100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)));
+					new DecimalFormat("#.##").format(100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)),
+					new DecimalFormat("#.##").format(100f * (Math.pow(1.10f, soloBuffedBonus()) - 1f)));
 		} else {
 			return Messages.get(this, "typical_stats",
-					new DecimalFormat("#.##").format(20f));
+					new DecimalFormat("#.##").format(20f),
+					new DecimalFormat("#.##").format(10f));
 		}
 	}
 	
@@ -55,6 +60,16 @@ public class RingOfMagic extends Ring {
 		return (float)Math.pow(1.20, getBuffedBonus(target, WeaponSP.class));
 	}
 	
+	public static float artifactChargeMultiplier( Char target ){
+		float bonus = (float)Math.pow(1.1, getBuffedBonus(target, WeaponSP.class));
+
+		if (target instanceof Hero && ((Hero) target).heroClass != HeroClass.ROGUE && ((Hero) target).hasTalent(Talent.LIGHT_CLOAK)){
+			bonus *= 1f + (0.2f * ((Hero) target).pointsInTalent(Talent.LIGHT_CLOAK)/3f);
+		}
+
+		return bonus;
+	}
+
 	public class WeaponSP extends RingBuff {
 	}
 }

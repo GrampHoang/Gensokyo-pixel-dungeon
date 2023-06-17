@@ -3,7 +3,10 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
+ *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
+
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -121,9 +125,11 @@ public class RemiliaBoss extends Mob {
 
 	@Override
 	public void damage(int dmg, Object src) {
-		if (!Dungeon.level.mobs.contains(this)){
+		if (!isAlive()){
+			die(src);
 			return;
 		}
+
 		if ( Blob.volumeAt(this.pos, SmokeScreen.class) > 0){
 			sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "smoke"));
 			return;
@@ -139,20 +145,17 @@ public class RemiliaBoss extends Mob {
 			return;
 		}
 
+		int dmgTaken = beforeHitHP - HP;
+		if (dmgTaken > 0) {
+			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+			if (lock != null && !isImmune(src.getClass())) lock.addTime(dmgTaken*1.5f);
+		}
+
 		if (HP < HT - HP_BRACKET * bracket_count){
 			bracket_count++;
 			HP = HT - HP_BRACKET * bracket_count;
 			callSakuya(summon_pos[Random.IntRange(0,3)]);
 		}
-		// // cannot be hit through multiple brackets at a time
-		// if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
-		// 	HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
-		// }
-
-
-		// if (beforeHitHP / hpBracket != HP / hpBracket) {
-		// 	callSakuya(summon_pos[Random.IntRange(0,3)]);
-		// }
 	}
 
 	@Override

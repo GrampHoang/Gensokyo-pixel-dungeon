@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.FeatherFall;
 import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
@@ -116,7 +117,14 @@ public class Chasm implements Hero.Doom {
 			} else {
 				InterlevelScene.fallIntoPit = false;
 			}
-			Game.switchScene( InterlevelScene.class );
+			if (Dungeon.hero.buff(LockedFloor.class) != null){
+				ScrollOfTeleportation.teleportPreferringUnseen(Dungeon.hero);
+				GLog.n("Something stop you from going down!");
+				//TODO delete this
+			} else {
+				Game.switchScene( InterlevelScene.class );
+			}
+			
 		} else {
 			Dungeon.hero.sprite.visible = false;
 		}

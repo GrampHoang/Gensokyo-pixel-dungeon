@@ -47,12 +47,12 @@ public class Star extends ThreeFairiesOfLight {
 
 	{
 		spriteClass = StarSprite.class;
+		anger = 0;
+		charging_skill = false;
 	}
 
-    public int anger = 0;
 	private int SKILL_COOLDOWN = 18;
 	public int star_cd = 13;
-    private boolean charging_skill = false;
 
     @Override
 	public int damageRoll() {
@@ -86,6 +86,12 @@ public class Star extends ThreeFairiesOfLight {
 		super.damage( dmg, src );
 	}
 	
+	public void loseFriend(){
+		this.anger++;
+		this.star_cd = 4;
+		if (this.anger > 1) BossHealthBar.assignBoss(this);
+	}
+
 	@Override
 	public void die( Object cause ) {
 		if(anger > 1){
@@ -93,19 +99,15 @@ public class Star extends ThreeFairiesOfLight {
 			Dungeon.level.unseal();
 			GameScene.bossSlain();
 		}
+
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob instanceof Sunny){
-				((Sunny)mob).anger++;
-				((Sunny)mob).sun_cd = 7;
-			} else if(mob instanceof Luna){
-				((Luna)mob).anger++;
-				((Luna)mob).moon_cd = 1;
-			}
-			if (anger > 0) BossHealthBar.assignBoss(mob);
+			if (mob instanceof Sunny) ((Sunny)mob).loseFriend();
+			if (mob instanceof Luna) ((Luna)mob).loseFriend();
 		}
+
         Statistics.bossScores[0] += 350;
 		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
-
+		GLog.w(String.valueOf(anger));
 		super.die( cause );
 	}
 	

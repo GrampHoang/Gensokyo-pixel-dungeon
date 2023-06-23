@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -56,8 +57,13 @@ public class DaiyoseiFlower extends WeaponWithSP {
 	protected boolean useSkill(){
         Hero hero = Dungeon.hero;
 		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 3 );
-		hero.HP += Math.round(hero.HT * HEAL_PERCENTAGE / 100);
-        if(hero.HP > hero.HT) hero.HP = hero.HT;
+		int healAmount = hero.HT * HEAL_PERCENTAGE / 100;
+		hero.HP += Math.round(healAmount);
+        if(hero.HP > hero.HT){
+			healAmount = hero.HT - hero.HP + healAmount;
+			hero.HP = hero.HT;
+		}
+		curUser.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(healAmount));
 		Dungeon.hero.spendAndNext(1f);
         return true;
 	}

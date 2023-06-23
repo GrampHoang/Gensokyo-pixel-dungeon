@@ -53,7 +53,7 @@ public class MasterSpark extends Image {
 		scale.x = (float)Math.sqrt( dx * dx + dy * dy ) / width;
 		
 		Sample.INSTANCE.play( Assets.Sounds.RAY );
-		
+		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 		timeLeft = this.duration = duration;
 	}
 

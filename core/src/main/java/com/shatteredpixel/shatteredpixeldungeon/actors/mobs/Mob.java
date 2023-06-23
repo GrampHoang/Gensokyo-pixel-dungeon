@@ -69,6 +69,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
@@ -951,7 +952,7 @@ public abstract class Mob extends Char {
 		if (isLunatic()){
 			descript = descript + "\n\n_Lunatic mode_\n" + Messages.get(this, "lunatic");
 		}
-		if (UFOSettings.red_Mobs()){
+		if (DeviceCompat.isDebug()){
 			descript = String.format("_HP: %1d/%2d_ \n\n",HP,HT) + descript;
 		}
 		return descript;

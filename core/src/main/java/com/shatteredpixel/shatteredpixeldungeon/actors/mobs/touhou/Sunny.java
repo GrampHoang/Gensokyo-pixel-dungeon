@@ -24,7 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
-
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.Callback;
@@ -57,9 +58,10 @@ public class Sunny extends ThreeFairiesOfLight {
 
 	{
 		spriteClass = SunnySprite.class;
+		anger = 0;
+		charging_skill = false;
 	}
 
-    public int anger = 0;
 	private int SKILL_COOLDOWN = 18;
 	public int sun_cd = 7;
 	private int aim = 1;
@@ -106,6 +108,12 @@ public class Sunny extends ThreeFairiesOfLight {
 		super.damage( dmg, src );
 	}
 
+	public void loseFriend(){
+		this.anger++;
+		this.sun_cd = 7;
+		if (this.anger > 1) BossHealthBar.assignBoss(this);
+	}
+
 	@Override
 	public void die( Object cause ) {
 		if(anger > 1){
@@ -113,16 +121,12 @@ public class Sunny extends ThreeFairiesOfLight {
 			Dungeon.level.unseal();
 			GameScene.bossSlain();
 		}
+		
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if(mob instanceof Luna){
-				((Luna)mob).anger++;
-				((Luna)mob).moon_cd = 7;
-			} else if(mob instanceof Star){
-				((Star)mob).anger++;
-				((Star)mob).star_cd = 1;
-			}
-			if (anger > 0) BossHealthBar.assignBoss(mob);
+			if (mob instanceof Luna) ((Luna)mob).loseFriend();
+			if (mob instanceof Star) ((Star)mob).loseFriend();
 		}
+
 		Statistics.bossScores[0] += 350;
 		Statistics.bossScores[0] = Math.min(1050, Statistics.bossScores[0]);
 
@@ -181,6 +185,8 @@ public class Sunny extends ThreeFairiesOfLight {
         spend( TICK );
         charging_skill = false;
         this.sprite.remove(CharSprite.State.CHARGING);
+		Sample.INSTANCE.play( Assets.Sounds.BURNING );
+		Sample.INSTANCE.play( Assets.Sounds.BLAST );
         sun_cd = SKILL_COOLDOWN / (anger +1);
         Ballistica p = new Ballistica(this.pos, aim, Ballistica.WONT_STOP);
         for(int i : p.path){

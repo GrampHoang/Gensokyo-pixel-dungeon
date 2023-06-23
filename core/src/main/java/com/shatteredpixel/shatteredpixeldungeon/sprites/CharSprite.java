@@ -543,6 +543,14 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 					shield.putOut();
 				}
 				break;
+			case SHIELDEDMELEE:
+				if (shieldmelee != null){
+					shieldmelee.putOut();
+				}
+			case SHIELDEDRANGE:
+				if (shieldrange != null){
+					shieldrange.putOut();
+				}
 			case HEARTS:
 				if (hearts != null){
 					hearts.on = false;

@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.DaiyoseiFlower;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.DaiyoseiSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.utils.PathFinder;
@@ -81,6 +82,7 @@ public class Daiyosei extends Mob {
 				if (ch.HP < ch. HT) {
 					ch.HP += 1;
 					ch.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.2f, 2 );
+					ch.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(1));
 				}
 				if (isLunatic()) Buff.affect(ch, Bless.class, 5f);
 			}

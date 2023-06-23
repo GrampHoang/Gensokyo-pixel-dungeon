@@ -43,7 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.SakuyaSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.SakuyaNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
@@ -57,7 +57,7 @@ import com.watabou.utils.Random;
 public class SakuyaNPC extends NPC {
 
 	{
-		spriteClass = SakuyaSprite.class;
+		spriteClass = SakuyaNPCSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}

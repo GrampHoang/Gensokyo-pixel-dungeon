@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MoveDetect;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
 public class ThreeFairiesOfLight extends Mob {
     {
@@ -48,6 +49,10 @@ public class ThreeFairiesOfLight extends Mob {
 		properties.add(Property.BOSS);
         immunities.add(Burning.class);
     }
+
+    public Sunny sunny;
+    public Star star;
+    public Luna luna;
 
     public int anger = 0;
     protected boolean charging_skill = false;
@@ -98,7 +103,8 @@ public class ThreeFairiesOfLight extends Mob {
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
 		// When super angry only do melee, else range attack only when no move detect
-		if (anger < 2) return ( !(Dungeon.level.adjacent(pos, enemy.pos)) 
+        GLog.w(Integer.toString(this.anger));
+		if (this.anger < 2) return ( !(Dungeon.level.adjacent(pos, enemy.pos)) 
                                 && attack.collisionPos == enemy.pos 
                                 && (Dungeon.hero.buff(MoveDetect.class) == null))
                             // Being corner, they will retaliate

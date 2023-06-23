@@ -58,6 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.SpeckTouhou;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
@@ -111,17 +112,29 @@ public class Hakkero extends DamageWand {
 	public void onZap(Ballistica beam) {
 
 		//yes I'm serious, it doesn't look as good as I though though
-		//I wanted to burst 3 times, quickly, like how touhou work buuuut it doesn't go as planned...
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_1), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_2), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_3), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_4), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_5), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_6), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_7), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_8), quantity);
-		// Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_9), quantity);
-		
+		if (Dungeon.hero.subClass == HeroSubClass.MAGICIAN)
+		{	
+			// One line for each stars, uh I don't know if it's possible to make this... cleaner../
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_1), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_2), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_3), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_4), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_5), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_6), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_7), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_8), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(Speck.factory(Speck.STAR_CIRCLE_9), quantity);
+
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_11), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_12), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_13), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_14), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_15), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_16), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_17), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_18), quantity);
+			Dungeon.hero.sprite.centerEmitter().burst(SpeckTouhou.factory(SpeckTouhou.STAR_CIRCLE_19), quantity);
+		}
 		float blind_dur = 0;
 		if (Dungeon.hero.hasTalent(Talent.STARLIGHT_SPARK)){
 			Buff.prolong( curUser, Light.class, Dungeon.hero.pointsInTalent(Talent.STARLIGHT_SPARK)*10);

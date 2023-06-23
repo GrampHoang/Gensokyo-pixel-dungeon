@@ -39,10 +39,10 @@ public class ShieldHaloMelee extends Halo {
 	public ShieldHaloMelee( CharSprite sprite ) {
 		
 		//rectangular sprite to circular radius. Pythagorean theorem
-		super( (float)Math.sqrt(Math.pow(sprite.width()/2f, 2) + Math.pow(sprite.height()/2f, 2)), 0xDD7777, 1f );
+		super( (float)Math.sqrt(Math.pow(sprite.width()/2f, 2) + Math.pow(sprite.height()/2f, 2)), 0xDD5555, 1f );
 		
 		am = -0.33f;
-		aa = +0.33f;
+		aa = +0.5f;
 		
 		target = sprite;
 		

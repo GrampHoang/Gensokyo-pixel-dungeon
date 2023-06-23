@@ -142,7 +142,7 @@ public class ForestBossLevel extends Level {
         Sunny sunny = new Sunny();
         sunny.pos = (SIZE_H - 2) * width() + SIZE_W - 2;
         GameScene.add(sunny);
-
+        
         Luna luna = new Luna();
         luna.pos = 1 * width() + SIZE_W - 2;
         GameScene.add(luna);
@@ -151,6 +151,13 @@ public class ForestBossLevel extends Level {
         star.pos = (SIZE_H - 2) * width() + 1;
         GameScene.add(star);
 
+        //Assign this here to make coding easier in each faires
+        sunny.star = star;
+        sunny.luna = luna;
+        luna.sunny = sunny;
+        luna.star = star;
+        star.sunny= sunny;
+        star.luna = luna;
     }
 
     @Override

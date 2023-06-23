@@ -88,7 +88,7 @@ public class RemiliaBoss extends Mob {
 		immunities.add(Drowsy.class);
 	}
 	private int middle_of_map = 8*17+8;
-	private int[] summon_pos = {2*17+3, 2*17+14, 14*17+3, 14*17+14};
+	private int[] summonPos = {2*17+3, 2*17+14, 14*17+3, 14*17+14};
 	private final int LEVATIN_CD = (isLunatic() ? 12 : 20);
 
 	private int levatin_cd = LEVATIN_CD;
@@ -100,8 +100,8 @@ public class RemiliaBoss extends Mob {
 	private int FIRE_DUR = (isLunatic() ? 30 : 10);
 
 	private int HP_BRACKET = 40;	//every 40 damage the trigger happen
-	private int bracket_count = 1;
-
+	private int bracketCount = 1;
+	private int maxBracket = isLunatic() ? 6 : 4; 
 	private ArrayList<Integer> levatinCells = new ArrayList<>();
 	@Override
 	protected void onAdd() {
@@ -140,10 +140,10 @@ public class RemiliaBoss extends Mob {
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
 
-		if(HP <= 0){
-			die(src);
-			return;
-		}
+		// if(HP <= 0){
+		// 	die(src);
+		// 	return;
+		// }
 
 		int dmgTaken = beforeHitHP - HP;
 		if (dmgTaken > 0) {
@@ -151,10 +151,10 @@ public class RemiliaBoss extends Mob {
 			if (lock != null && !isImmune(src.getClass())) lock.addTime(dmgTaken*1.5f);
 		}
 
-		if (HP < HT - HP_BRACKET * bracket_count){
-			bracket_count++;
-			HP = HT - HP_BRACKET * bracket_count;
-			callSakuya(summon_pos[Random.IntRange(0,3)]);
+		if (HP < HT - HP_BRACKET * bracketCount){
+			if (bracketCount < maxBracket) bracketCount++;
+			HP = HT - HP_BRACKET * bracketCount;
+			callSakuya(summonPos[Random.IntRange(0,3)]);
 		}
 	}
 
@@ -339,7 +339,7 @@ public class RemiliaBoss extends Mob {
 				releaseSmoke();
 				levatin_cd = LEVATIN_CD+1;
 				MarisaBoss summoner = new MarisaBoss();
-				summoner.callHelp(summon_pos[Random.IntRange(0,3)], MaidSakuya.class);
+				summoner.callHelp(summonPos[Random.IntRange(0,3)], MaidSakuya.class);
 			}
 			return true;
 		} else {
@@ -445,7 +445,7 @@ public class RemiliaBoss extends Mob {
 	private static final String LEVATIN_CELLS     = "levatin_cells";
 	private static final String LEVATIN_STOP_POS     = "levatin_stop_pos";
 	private static final String LEVATIN_THROW		= "levatin_throw";
-	private static final String BRACKET_COUNT		= "bracket_count";
+	private static final String BRACKETCOUNT		= "bracketCount";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
@@ -453,7 +453,7 @@ public class RemiliaBoss extends Mob {
 		bundle.put( LEVATIN_COOLDOWN, levatin_cd );
 		bundle.put( LEVATIN_STOP_POS, levatin_stop_pos );
 		bundle.put( LEVATIN_THROW, levatin_throw );
-		bundle.put( BRACKET_COUNT, bracket_count );
+		bundle.put( BRACKETCOUNT, bracketCount );
 
 		int[] bundleArr = new int[levatinCells.size()];
 		for (int i = 0; i < levatinCells.size(); i++){
@@ -468,7 +468,7 @@ public class RemiliaBoss extends Mob {
 		levatin_cd = bundle.getInt( LEVATIN_COOLDOWN );
 		levatin_stop_pos = bundle.getInt( LEVATIN_STOP_POS );
 		levatin_throw = bundle.getBoolean( LEVATIN_THROW );
-		bracket_count = bundle.getInt( BRACKET_COUNT );
+		bracketCount = bundle.getInt( BRACKETCOUNT );
 		BossHealthBar.assignBoss(this);
 		for (int i : bundle.getIntArray(LEVATIN_CELLS)){
 			levatinCells.add(i);

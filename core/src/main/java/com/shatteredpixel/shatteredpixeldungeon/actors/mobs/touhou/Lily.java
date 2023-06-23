@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.LilySprite;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -120,8 +121,14 @@ public class Lily extends Mob {
 									ch.damage(3, this);
 									Buff.prolong(ch, Roots.class, 1f);
 								} else {
-									Buff.prolong(ch, Stamina.class, 2f);
-									ch.HP += 3;
+									if (ch.HP + 3 > ch.HT){
+										Buff.prolong(ch, Stamina.class, 2f);
+										ch.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(ch.HT-ch.HP));
+										ch.HP = ch.HT;
+									} else {
+										ch.HP += 3;
+										ch.sprite.showStatus(CharSprite.POSITIVE, Integer.toString(3));
+									}
 								}
 							}
 							//Effect

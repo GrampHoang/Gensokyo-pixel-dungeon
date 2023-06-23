@@ -39,10 +39,10 @@ public class ShieldHaloRange extends Halo {
 	public ShieldHaloRange( CharSprite sprite ) {
 		
 		//rectangular sprite to circular radius. Pythagorean theorem
-		super( (float)Math.sqrt(Math.pow(sprite.width()/2f, 2) + Math.pow(sprite.height()/2f, 2)), 0x71ABC2, 1f );
+		super( (float)Math.sqrt(Math.pow(sprite.width()/2f, 2) + Math.pow(sprite.height()/2f, 2)), 0x3683a1, 1f );
 		
 		am = -0.33f;
-		aa = +0.33f;
+		aa = +0.5f;
 		
 		target = sprite;
 		

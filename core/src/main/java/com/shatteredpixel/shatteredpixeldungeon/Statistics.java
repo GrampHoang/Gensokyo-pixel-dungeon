@@ -59,10 +59,14 @@ public class Statistics {
 	
 	public static float duration;
 	
+	//These are old code, I scrap the UFO upgrade idea cuz I can't make a decent shop UI or balance the stat
 	public static int upgradeUFO_Red;
 	public static int upgradeUFO_Blue;
 	public static int upgradeUFO_Green;
 	public static int upgradeUFO_Rainbow;
+
+	//Tracking some NPC-related stuff
+	public static int ayaArea;
 
 	public static boolean qualifiedForNoKilling = false;
 	public static boolean completedWithNoKilling = false;
@@ -99,6 +103,8 @@ public class Statistics {
 		upgradesUsed    = 0;
 		sneakAttacks    = 0;
 		thrownAttacks   = 0;
+
+		ayaArea			= 0;
 
 		spawnersAlive   = 0;
 		
@@ -140,6 +146,7 @@ public class Statistics {
 	private static final String THROWN		= "thrownAssists";
 
 	private static final String SPAWNERS	= "spawnersAlive";
+	private static final String AYAAREA		= "ayaarea";
 
 	private static final String UFO_RED		= "ufo_red";
 	private static final String UFO_BLUE	= "ufo_blue";
@@ -193,7 +200,8 @@ public class Statistics {
 		bundle.put( UFO_BLUE,	upgradeUFO_Blue );
 		bundle.put( UFO_RAINBOW,	upgradeUFO_Rainbow );
 
-		
+		bundle.put( AYAAREA,	ayaArea );
+
 		bundle.put( DURATION,	duration );
 
 		bundle.put(NO_KILLING_QUALIFIED, qualifiedForNoKilling);
@@ -238,6 +246,8 @@ public class Statistics {
 		sneakAttacks    = bundle.getInt( SNEAKS );
 		thrownAttacks   = bundle.getInt( THROWN );
 
+		ayaArea			= bundle.getInt(AYAAREA);
+
 		spawnersAlive   = bundle.getInt( SPAWNERS );
 		
 		duration		= bundle.getFloat( DURATION );
@@ -257,3 +267,5 @@ public class Statistics {
 	}
 
 }
+
+

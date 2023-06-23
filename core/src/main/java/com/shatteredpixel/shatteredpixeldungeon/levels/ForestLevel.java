@@ -138,7 +138,7 @@ public class ForestLevel extends RegularLevel {
 	@Override
 	protected void createItems() {
 		Ghost.Quest.spawnForest( this );
-		AyaNPC.Quest.spawn( this);
+		AyaNPC.Quest.spawn(this);
 		super.createItems();
 	}
 	

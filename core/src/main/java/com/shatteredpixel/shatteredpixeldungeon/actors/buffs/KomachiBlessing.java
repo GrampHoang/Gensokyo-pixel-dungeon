@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Random;
 
 public class KomachiBlessing extends Buff {
 	
@@ -48,6 +49,10 @@ public class KomachiBlessing extends Buff {
 		isMelee = false;
 	}
 
+	public void setRandom(){
+		if (Random.IntRange(0, 1) == 0) isMelee = false;	//since default is true, only random the false
+	}
+
 	public boolean isMelee(){
 		return isMelee;
 	}
@@ -60,7 +65,7 @@ public class KomachiBlessing extends Buff {
 	@Override
 	public void detach() {
 		target.sprite.remove( CharSprite.State.SHIELDEDMELEE );
-		target.sprite.remove( CharSprite.State.SHIELDEDMELEE );
+		target.sprite.remove( CharSprite.State.SHIELDEDRANGE );
 		super.detach();
 	}
 

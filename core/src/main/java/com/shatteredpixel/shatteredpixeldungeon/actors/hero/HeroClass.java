@@ -421,6 +421,8 @@ public enum HeroClass {
 
 				PotionOfHealing.heal(hero);
 
+				ReisenGun rg = new ReisenGun();
+				rg.collect();
 				// PlateArmor plate = new PlateArmor();
 				// plate.level(2);
 				// hero.belongings.armor = plate;

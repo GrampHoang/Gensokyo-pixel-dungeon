@@ -214,10 +214,10 @@ public class Assets {
 		public static final String SHEEP    = "sounds/sheep.mp3";
 		
 		// public static final String DAGGER_WOOSH 		= "sounds/new/mixkit_dagger_woosh_1487.wav";
-		// public static final String METAL_WOOSH 			= "sounds/new/mixkit_metal_hit_woosh_1485.wav";
-		// public static final String SWING 				= "sounds/new/swing.mp3";
+		// public static final String METAL_WOOSH 		= "sounds/new/mixkit_metal_hit_woosh_1485.wav";
+		// public static final String SWING 			= "sounds/new/swing.mp3";
 		public static final String SWING 				= "sounds/new/swing.mp3";
-		public static final String MASTERSPARK 				= "sounds/new/ms_sfx.mp3";
+		public static final String MASTERSPARK 			= "sounds/new/ms_sfx.mp3";
 
 		public static final String[] all = new String[]{
 				CLICK, BADGE, GOLD,
@@ -328,10 +328,14 @@ public class Assets {
 		public static final String CIRNO		= "sprites/cirno.png";
 		public static final String MYSTIA		= "sprites/mystia.png";
 		public static final String DAIYOSEI		= "sprites/daiyosei.png";
+		public static final String AYANPC		= "sprites/ayanpc.png";
+		public static final String SUIKANPC		= "sprites/suikanpc.png";
+
 		//Forest boss
 		public static final String STAR			= "sprites/star.png";
 		public static final String SUNNY		= "sprites/sunny.png";
 		public static final String LUNA			= "sprites/luna.png";
+
 		//Scarlet Devil Mansion
 		public static final String KOAKUMA		= "sprites/koakuma.png";
 		public static final String MARISA_MOB	= "sprites/marisa_mob.png";
@@ -342,6 +346,7 @@ public class Assets {
 		public static final String SAKUYA		= "sprites/sakuya.png";
 		public static final String REMILIA		= "sprites/remilia.png";
 		public static final String BOOK			= "sprites/book.png";
+		public static final String SAKUYANPC	= "sprites/sakuyanpc.png";
 		//Touhou 7
 		public static final String CHEN			= "sprites/chen.png";
 		public static final String RAN			= "sprites/ran.png";

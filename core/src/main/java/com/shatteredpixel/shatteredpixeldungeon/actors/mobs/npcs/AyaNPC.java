@@ -29,11 +29,16 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
+import com.shatteredpixel.shatteredpixeldungeon.levels.BambooLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.AyaNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.watabou.noosa.Game;
@@ -44,16 +49,46 @@ import com.watabou.utils.Random;
 public class AyaNPC extends NPC {
 
 	{
-		spriteClass = ImpSprite.class;
+		spriteClass = AyaNPCSprite.class;
 		state = WANDERING;
 		flying = true; //She fly
-        baseSpeed = 10f;
+        baseSpeed = 2f;
 	}
 
 	@Override
 	protected boolean act() {
 		if (Dungeon.level.heroFOV[pos]){
 			Notes.add( Notes.Landmark.AYA );
+		}
+
+		int count = 20;
+		int pos;
+		do {
+			pos = Dungeon.level.randomRespawnCell( this );
+			if (count-- <= 0) {
+				break;
+			}
+		} while (pos == -1 || Dungeon.level.secret[pos]);
+		
+		if (pos == -1) {
+			//Do nothing			
+		} else {
+			
+			this.sprite.interruptMotion();
+			if (Dungeon.level.heroFOV[this.pos] && this != Dungeon.hero ) {
+				CellEmitter.get(this.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+			}
+
+			this.move( pos, false );
+			if (this.pos == pos) this.sprite.place( pos );
+
+			if (Dungeon.level.heroFOV[pos] || this == Dungeon.hero ) {
+				this.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+			}
+
+			Dungeon.level.occupyCell( this );
+			return true;
+			
 		}
 		return super.act();
 	}
@@ -82,6 +117,12 @@ public class AyaNPC extends NPC {
 	}
 	
 	@Override
+	public float speed() {
+		float speed = super.speed()*Random.Float(0.6f, 2.6f);
+		return speed;
+	}
+
+	@Override
 	public boolean interact(Char c) {
 		sprite.turnTo( pos, c.pos );
 		
@@ -91,17 +132,47 @@ public class AyaNPC extends NPC {
 			return super.interact(c);
 		}
 
-		if (Quest.given){
-			Quest.complete();
-			Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
-			GLog.p(Messages.get(AyaNPC.class, "farewell"));
-			die( null );
-		} else {
-			tell(Messages.get(AyaNPC.class, "find_me"));
-			this.pos = Dungeon.level.randomRespawnCell( this );
-			Dungeon.level.occupyCell( this );
-			Quest.given = true;
+		// if (Quest.given){
+		// 	Quest.complete();
+		// 	Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+		// 	GLog.p(Messages.get(AyaNPC.class, "farewell"));
+		// 	die( null );
+		// } else {
+		// 	tell(Messages.get(AyaNPC.class, "find_me"));
+		// 	this.pos = Dungeon.level.randomRespawnCell( this );
+		// 	Dungeon.level.occupyCell( this );
+		// 	Quest.given = true;
+		// }
+		switch(Statistics.ayaArea){
+			case 0:
+				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				tell(Messages.get(AyaNPC.class, "dialog1"));
+				break;
+			case 1:
+				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				tell(Messages.get(AyaNPC.class, "dialog2"));
+				break;
+			case 2:
+				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				tell(Messages.get(AyaNPC.class, "dialog3"));
+				break;
+			case 3:
+				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				tell(Messages.get(AyaNPC.class, "dialog4"));
+				break;
+			case 4:
+				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				tell(Messages.get(AyaNPC.class, "dialog5"));
+				break;
+			//Should I put ascension dialog too? Would be fun
+			default:
+				GLog.w("Error, something went wrong in the code!\n");
+				GLog.w(Integer.toString(Statistics.ayaArea));
+				break;
 		}
+
+		Quest.complete();
+		die( null );
 		return true;
 	}
 
@@ -122,6 +193,8 @@ public class AyaNPC extends NPC {
 		
 		public static void reset() {
 			spawned = false;
+			given = false;
+			// Statistics.ayaArea == 0;	//Check Statistic.java
 		}
 		
 		private static final String NODE		= "chaseAya";
@@ -158,13 +231,13 @@ public class AyaNPC extends NPC {
 		}
 		
 		public static void spawn( ForestLevel level ) {
-			if (!spawned && Dungeon.depth > 5 && Random.Int( 9 - Dungeon.depth ) == 0) {
+			if (!spawned && Statistics.ayaArea == 0  && Random.Int( 4 - Dungeon.depth ) == 0) {
 				
-				AyaNPC Koishi = new AyaNPC();
+				AyaNPC aya = new AyaNPC();
 				do {
-					Koishi.pos = level.randomRespawnCell( Koishi );
-				} while (Koishi.pos == -1);
-				level.mobs.add( Koishi );
+					aya.pos = level.randomRespawnCell( aya );
+				} while (aya.pos == -1);
+				level.mobs.add( aya );
 				
 				spawned = true;
 				given = false;
@@ -172,11 +245,71 @@ public class AyaNPC extends NPC {
 			}
 		}
 
-		
+		public static void spawn( SDMLevel level ) {
+			if (!spawned && Statistics.ayaArea == 1  && Random.Int( 9 - Dungeon.depth ) == 0) {
+				
+				AyaNPC aya = new AyaNPC();
+				do {
+					aya.pos = level.randomRespawnCell( aya );
+				} while (aya.pos == -1);
+				level.mobs.add( aya );
+				
+				spawned = true;
+				given = false;
+				depth = Dungeon.depth;
+			}
+		}
+
+		public static void spawn( ShrineLevel level ) {
+			if (!spawned && Statistics.ayaArea == 2  && Random.Int( 14 - Dungeon.depth ) == 0) {
+				
+				AyaNPC aya = new AyaNPC();
+				do {
+					aya.pos = level.randomRespawnCell( aya );
+				} while (aya.pos == -1);
+				level.mobs.add( aya );
+				
+				spawned = true;
+				given = false;
+				depth = Dungeon.depth;
+			}
+		}
+
+		public static void spawn( BambooLevel level ) {
+			if (!spawned && Statistics.ayaArea == 3  && Random.Int( 19 - Dungeon.depth ) == 0) {
+				
+				AyaNPC aya = new AyaNPC();
+				do {
+					aya.pos = level.randomRespawnCell( aya );
+				} while (aya.pos == -1);
+				level.mobs.add( aya );
+				
+				spawned = true;
+				given = false;
+				depth = Dungeon.depth;
+			}
+		}
+
+		public static void spawn( HallsLevel level ) {
+			if (!spawned && Statistics.ayaArea == 3  && Random.Int( 24 - Dungeon.depth ) == 0) {
+				
+				AyaNPC aya = new AyaNPC();
+				do {
+					aya.pos = level.randomRespawnCell( aya );
+				} while (aya.pos == -1);
+				level.mobs.add( aya );
+				
+				spawned = true;
+				given = false;
+				depth = Dungeon.depth;
+			}
+		}
 		public static void complete() {
-			if (spawned && given) {
+			if (spawned) {
 				Notes.remove( Notes.Landmark.AYA );
-				Statistics.questScores[0] = 500;
+				Statistics.questScores[0] = 100;
+				spawned = false;
+				Statistics.ayaArea++;
 			}
 		}
 	}

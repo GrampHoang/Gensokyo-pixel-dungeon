@@ -37,7 +37,16 @@ public class AyaNPCSprite extends MobSprite {
 		TextureFilm frames = new TextureFilm( texture, 13, 15 );
 		
 		idle = new Animation( 1, true );
-		idle.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );
+		idle.frames( frames, 0, 0, 0, 1, 2, 2, 1, 1 );
+
+		run = new Animation( 1, true );
+		run.frames( frames, 0, 0, 1, 0, 0, 1, 1, 2, 2, 0, 1);
+		
+		operate = new Animation( 1, false );
+		operate.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );
+		
+		die = new Animation( 2, false );
+		die.frames( frames, 2, 2, 2, 0 );
 
 		play( idle );
 	}

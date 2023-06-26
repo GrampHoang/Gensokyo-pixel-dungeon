@@ -54,8 +54,10 @@ public class SacrificeRoom extends SpecialRoom {
 				Painter.set( level, p, Terrain.EMPTY_SP );
 			}
 		}
-
+		Painter.fill( level, c.x - 2, c.y - 2, 5, 5, Terrain.EMPTY_SP );
 		Painter.fill( level, c.x - 1, c.y - 1, 3, 3, Terrain.EMBERS );
+		Painter.fill( level, c.x - 2, c.y, 5, 1, Terrain.STATUE );
+		Painter.fill( level, c.x, c.y-2, 1, 5, Terrain.STATUE );
 		Painter.set( level, c, Terrain.PEDESTAL );
 
 		Blob.seed( level.pointToCell(c), 6 + Dungeon.depth * 4, SacrificialFire.class, level );

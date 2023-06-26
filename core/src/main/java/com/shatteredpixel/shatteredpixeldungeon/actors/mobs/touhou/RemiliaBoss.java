@@ -152,8 +152,8 @@ public class RemiliaBoss extends Mob {
 		}
 
 		if (HP < HT - HP_BRACKET * bracketCount){
-			if (bracketCount < maxBracket) bracketCount++;
-			HP = HT - HP_BRACKET * bracketCount;
+			bracketCount++;
+			if (bracketCount <= maxBracket) HP = HT - HP_BRACKET * bracketCount;
 			callSakuya(summonPos[Random.IntRange(0,3)]);
 		}
 	}

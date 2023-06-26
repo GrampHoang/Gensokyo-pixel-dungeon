@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.KoishiSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.KoishiNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -46,7 +46,7 @@ import com.watabou.utils.Random;
 public class KoishiNPC extends NPC {
 
 	{
-		spriteClass = KoishiSprite.class;
+		spriteClass = KoishiNPCSprite.class;
 		state = WANDERING;
 		flying = true; //No water ripple, no break grasses but may struggle to find her on floor with many chasm
 	}

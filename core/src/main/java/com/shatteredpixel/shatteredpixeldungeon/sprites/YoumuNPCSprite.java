@@ -27,18 +27,27 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
 
-public class SakuyaNPCSprite extends MobSprite {
-
-	public SakuyaNPCSprite() {
+public class YoumuNPCSprite extends MobSprite {
+	
+	public YoumuNPCSprite() {
 		super();
 		
-		texture( Assets.Sprites.SAKUYANPC );
+		texture( Assets.Sprites.YOUMUNPC );
 		
 		TextureFilm frames = new TextureFilm( texture, 17, 15 );
 		
-		idle = new Animation( 1, true );
-		idle.frames( frames, 0, 0, 1, 0, 0, 2, 3, 2, 3, 1, 0, 1 );
-
+		idle = new Animation( 2, true );
+		idle.frames( frames, 0, 0, 0, 1, 1, 0, 0, 2, 3, 4, 5, 6, 1, 0 );
+		
+		// run = new Animation( 12, true );
+		// run.frames( frames, 0, 1 );
+		
+		// attack = new Animation( 12, false );
+		// attack.frames( frames, 0, 1 );
+		
+		die = new Animation( 12, false );
+		die.frames( frames, 0, 1, 2, 3, 4, 5, 6, 0 );
+		
 		play( idle );
 	}
-}   
+}

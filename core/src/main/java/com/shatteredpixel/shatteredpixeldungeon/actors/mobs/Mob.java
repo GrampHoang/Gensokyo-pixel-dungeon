@@ -950,11 +950,11 @@ public abstract class Mob extends Char {
 	public String description() {
 		String descript = Messages.get(this, "desc");
 		if (isLunatic()){
-			descript = descript + "\n\n_Lunatic mode_\n" + Messages.get(this, "lunatic");
+			descript = descript + "\n_Lunatic mode_\n" + Messages.get(this, "lunatic");
 		}
-		if (DeviceCompat.isDebug()){
-			descript = String.format("_HP: %1d/%2d_ \n\n",HP,HT) + descript;
-		}
+		// if (DeviceCompat.isDebug()){
+		// 	descript = String.format("_HP: %1d/%2d_ \n",HP,HT) + descript;
+		// }
 		return descript;
 	}
 

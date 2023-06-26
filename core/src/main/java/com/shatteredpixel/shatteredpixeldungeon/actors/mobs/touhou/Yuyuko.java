@@ -26,6 +26,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC.YoumuGhostSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -119,7 +120,7 @@ public class Yuyuko extends Mob {
     @Override
     public void die( Object cause ) {
         YoumuNPC.Quest.complete();
-        YoumuNPC.Quest.yuyuko = true;
+        Dungeon.hero.buff(YoumuGhostSpawner.class).yuyuKilled();
         super.die( cause );
         //GameScene.bossSlain();
     }

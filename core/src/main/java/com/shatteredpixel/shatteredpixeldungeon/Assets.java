@@ -356,6 +356,7 @@ public class Assets {
 		public static final String HOURAIDOLL	= "sprites/houraidoll.png";
 		public static final String YOUMU		= "sprites/youmu.png";
 		public static final String YUKARI		= "sprites/yukari.png";
+		public static final String YOUMUNPC		= "sprites/youmunpc.png";
 		//Touhou 8
 		public static final String TEWI			= "sprites/tewi.png";
 		public static final String REISEN_MOB	= "sprites/reisen_mob.png";

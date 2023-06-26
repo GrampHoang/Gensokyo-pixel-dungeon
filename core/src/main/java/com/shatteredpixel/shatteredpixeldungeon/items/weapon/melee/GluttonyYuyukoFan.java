@@ -46,7 +46,7 @@ public class GluttonyYuyukoFan extends GluttonyFan {
 		hitSoundPitch = 1.3f;
 
 		tier = 3;
-		DLY = 0.8f;
+		DLY = 1f;
     }
 
 	@Override

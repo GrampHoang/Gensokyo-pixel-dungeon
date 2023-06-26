@@ -25,7 +25,10 @@ import java.util.ArrayList;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.AyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YuyukoNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
@@ -130,6 +133,8 @@ public class BambooLevel extends RegularLevel {
 	@Override
 	protected void createMobs() {
 		TenshiNPC.Quest.spawn(this);
+		AyaNPC.Quest.spawn(this);
+		YuyukoNPC.Quest.spawn(this);
 		super.createMobs();
 	}
 	

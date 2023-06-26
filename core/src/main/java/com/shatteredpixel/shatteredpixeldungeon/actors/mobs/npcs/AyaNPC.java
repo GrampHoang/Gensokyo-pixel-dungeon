@@ -28,7 +28,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.BambooLevel;
@@ -55,40 +60,43 @@ public class AyaNPC extends NPC {
         baseSpeed = 2f;
 	}
 
+	private int cooldown = 0;
+
 	@Override
 	protected boolean act() {
 		if (Dungeon.level.heroFOV[pos]){
 			Notes.add( Notes.Landmark.AYA );
 		}
-
-		int count = 20;
-		int pos;
-		do {
-			pos = Dungeon.level.randomRespawnCell( this );
-			if (count-- <= 0) {
-				break;
-			}
-		} while (pos == -1 || Dungeon.level.secret[pos]);
-		
-		if (pos == -1) {
-			//Do nothing			
-		} else {
+		cooldown--;
+		if (cooldown < 0){
+			int count = 20;
+			int pos;
+			do {
+				pos = Dungeon.level.randomDestination( this );
+				if (count-- <= 0) {
+					break;
+				}
+			} while (pos == -1 || Dungeon.level.secret[pos]);
 			
-			this.sprite.interruptMotion();
-			if (Dungeon.level.heroFOV[this.pos] && this != Dungeon.hero ) {
-				CellEmitter.get(this.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+			if (pos == -1) {
+				//Do nothing			
+			} else {
+				
+				this.sprite.interruptMotion();
+				if (Dungeon.level.heroFOV[this.pos]) {
+					CellEmitter.get(this.pos).start(Speck.factory(Speck.JET), 0.2f, 3);
+				}
+
+				this.move( pos, true );
+				if (this.pos == pos) this.sprite.place( pos );
+
+				if (Dungeon.level.heroFOV[pos]) {
+					this.sprite.emitter().start(Speck.factory(Speck.JET), 0.2f, 3);
+				}
+
+				Dungeon.level.occupyCell( this );
+				cooldown = Random.IntRange(4,6);
 			}
-
-			this.move( pos, false );
-			if (this.pos == pos) this.sprite.place( pos );
-
-			if (Dungeon.level.heroFOV[pos] || this == Dungeon.hero ) {
-				this.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
-			}
-
-			Dungeon.level.occupyCell( this );
-			return true;
-			
 		}
 		return super.act();
 	}
@@ -145,19 +153,19 @@ public class AyaNPC extends NPC {
 		// }
 		switch(Statistics.ayaArea){
 			case 0:
-				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				Dungeon.level.drop( new PotionOfLevitation(), pos ).sprite.drop();
 				tell(Messages.get(AyaNPC.class, "dialog1"));
 				break;
 			case 1:
-				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				Dungeon.level.drop( new ScrollOfMagicMapping(), pos ).sprite.drop();
 				tell(Messages.get(AyaNPC.class, "dialog2"));
 				break;
 			case 2:
-				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				Dungeon.level.drop( new PotionOfLevitation(), pos ).sprite.drop();
 				tell(Messages.get(AyaNPC.class, "dialog3"));
 				break;
 			case 3:
-				Dungeon.level.drop( new PotionOfStrength(), pos ).sprite.drop();
+				Dungeon.level.drop( new MeatPie(), pos ).sprite.drop();
 				tell(Messages.get(AyaNPC.class, "dialog4"));
 				break;
 			case 4:
@@ -202,13 +210,13 @@ public class AyaNPC extends NPC {
 		private static final String SPAWNED		= "ayspawned";
 		private static final String GIVEN		= "aygiven";
 		private static final String DEPTH		= "aydepth";
+		private static final String COOLDOWN	= "cooldown";
 		
 		public static void storeInBundle( Bundle bundle ) {
 			
 			Bundle node = new Bundle();
 			
 			node.put( SPAWNED, spawned );
-			
 			if (spawned) {
 				node.put( GIVEN, given );
 				node.put( DEPTH, depth );

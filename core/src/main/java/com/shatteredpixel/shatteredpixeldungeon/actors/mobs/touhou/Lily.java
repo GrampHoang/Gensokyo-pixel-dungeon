@@ -64,7 +64,7 @@ public class Lily extends Mob {
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(2, 5);
+		return Random.NormalIntRange(2, 4);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class Lily extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(2, 5);
+		return Random.NormalIntRange(0, 4);
 	}
 
     @Override
@@ -200,11 +200,13 @@ public class Lily extends Mob {
 				}
 			}
 		}
-		lilySkillCells.add(Dungeon.hero.pos);
-		Ballistica rand = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
-		lilySkillCells.add(rand.collisionPos);
-		for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
-			sprite.parent.add(new TargetedCell(p, 0x457462));
+
+		if (!lilySkillCells.contains(Dungeon.hero.pos)){
+			Ballistica rand = new Ballistica(this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
+			lilySkillCells.add(rand.collisionPos);
+			for (int p : rand.subPath(0, Dungeon.level.distance(this.pos, rand.collisionPos))){
+				sprite.parent.add(new TargetedCell(p, 0x457462));
+			}
 		}
 		spend(TICK);
     }

@@ -106,7 +106,7 @@ public class Letty extends Mob {
 					//avoid items and allies
 					Char ch = Actor.findChar(i);
 					Heap heap = Dungeon.level.heaps.get(i);
-					if (heap != null			// No item
+					if (heap == null			// No item
 						&& (ch == null			// No Char
 							|| (ch != null 		// Or if there are Char, they aren't ally or neutral
 								&& (ch.alignment != this.alignment && ch.alignment != Alignment.NEUTRAL)

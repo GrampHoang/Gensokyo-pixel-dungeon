@@ -24,9 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
 
-public class KoishiSprite extends MobSprite {
+public class KoishiNPCSprite extends MobSprite {
 
-	public KoishiSprite() {
+	public KoishiNPCSprite() {
 		super();
 		
 		texture( Assets.Sprites.KOISHI );

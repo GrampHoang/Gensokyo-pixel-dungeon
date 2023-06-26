@@ -78,14 +78,9 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.TenshiBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
@@ -135,58 +130,49 @@ public class YuyukoNPC extends NPC {
 		if (c != Dungeon.hero){
 			return true;
 		}
-		if (Quest.given) {
+
+		Quest.given = true;
+
+		switch(Quest.impression){
+			default:
+			case 1:
+				sprite.showStatus(CharSprite.POSITIVE, "I'm hungry");
+				break;
+			case 2:
+				sprite.showStatus(CharSprite.POSITIVE, "I'm still hungry");
+				break;
+			case 3:
+				sprite.showStatus(CharSprite.POSITIVE, "I'm good");
+				break;
+			case 4:
+				sprite.showStatus(CharSprite.POSITIVE, "I'm full");
+				break;
 			
-			// Finished
-			if (Quest.completed){
-				switch(Quest.impression){
-					default:
-					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, "I'm hungry");
-						break;
-					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, "I'm still hungry");
-						break;
-					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, "I'm good");
-						break;
-                    case 4:
-						sprite.showStatus(CharSprite.POSITIVE, "I'm full");
-						break;
-					
-				}
-			// Finish now
-			} else if (!Quest.completed) {
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						Game.runOnRenderThread(new Callback() {
-                            @Override
-                            public void call() {
-                                GameScene.show( new WndYuyuko( YuyukoNPC.this) );
-                            }
-                        });
-					}
-				});
-			}
-		} else {
-			Quest.given = true;
-			Quest.completed = false;
-            Quest.setImpression(0);
-			Notes.add( Notes.Landmark.YUYUKO );
 		}
 
-		return true;
-	}
-	
-	private void tell( String text ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( YuyukoNPC.this, text ));
+				Game.runOnRenderThread(new Callback() {
+					@Override
+					public void call() {
+						GameScene.show( new WndYuyuko( YuyukoNPC.this) );
+					}
+				});
 			}
 		});
+		
+		return true;
 	}
+	
+	// private void tell( String text ) {
+	// 	Game.runOnRenderThread(new Callback() {
+	// 		@Override
+	// 		public void call() {
+	// 			GameScene.show( new WndQuest( YuyukoNPC.this, text ));
+	// 		}
+	// 	});
+	// }
 	
 	
 	public void flee() {
@@ -221,11 +207,11 @@ public class YuyukoNPC extends NPC {
 		public static void setImpression(int i){
 			impression = i;
 		}
-		private static final String NODE		= "tenshi_Quest";
+		private static final String NODE		= "yuyuko_Quest";
 		
-		private static final String SPAWNED		= "t_spawned";
-		private static final String GIVEN		= "t_given";
-		private static final String COMPLETED	= "t_completed";
+		private static final String SPAWNED		= "yu_spawned";
+		private static final String GIVEN		= "yu_given";
+		private static final String COMPLETED	= "yu_completed";
 		// private static final String REWARD		= "reward";
 		
 		public static void storeInBundle( Bundle bundle ) {
@@ -259,7 +245,7 @@ public class YuyukoNPC extends NPC {
 		}
 		
 		public static void spawn( BambooLevel level ) {
-			if (!spawned && Dungeon.depth > 16 && Random.Int( 20 - Dungeon.depth ) == 0) {
+			if (!spawned && Dungeon.depth > 16 && Random.Int( 19 - Dungeon.depth ) == 0) {
 				
 				YuyukoNPC npc = new YuyukoNPC();
 				do {
@@ -356,13 +342,11 @@ public class YuyukoNPC extends NPC {
 					switch(Quest.impression){
 						default:
 						case 0: //Hungry, need any meat
-							Item ration = Dungeon.hero.belongings.getItem( SmallRation.class);
-							if (ration == null){
-								ration = Dungeon.hero.belongings.getItem( FrozenCarpaccio.class );
-								if (ration == null){
-									ration = Dungeon.hero.belongings.getItem( StewedMeat.class );
-								}
-							}
+							Item ration;
+							// Will prioritize frozen -> Meat -> ration
+							ration = Dungeon.hero.belongings.getItem( FrozenCarpaccio.class );
+							ration = Dungeon.hero.belongings.getItem( StewedMeat.class );
+							ration = Dungeon.hero.belongings.getItem( SmallRation.class);
 							if (ration!=null){
 								ration.detach(Dungeon.hero.belongings.backpack);
 								sprite.showStatus(CharSprite.POSITIVE, "Chomp");
@@ -370,7 +354,7 @@ public class YuyukoNPC extends NPC {
 								if (!sol.quantity(1).collect()) Dungeon.level.drop(sol, Dungeon.hero.pos);
 								Quest.setImpression(1);
 							} else {
-								GLog.w(Messages.get(this, "no_food"));
+								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
 							break;
 						case 1:
@@ -382,7 +366,7 @@ public class YuyukoNPC extends NPC {
 								if (!soe.quantity(2).collect()) Dungeon.level.drop(soe, Dungeon.hero.pos);
 								Quest.setImpression(2);
 							} else {
-								GLog.w(Messages.get(this, "no_food"));
+								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
 							break;
 						case 2:
@@ -395,7 +379,7 @@ public class YuyukoNPC extends NPC {
 								if (!gfan.collect()) Dungeon.level.drop(gfan, Dungeon.hero.pos);
 								Quest.setImpression(3);
 							} else {
-								GLog.w(Messages.get(this, "no_food"));
+								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
 							break;
 						case 3:
@@ -409,13 +393,14 @@ public class YuyukoNPC extends NPC {
 								gyyfan.identify();
 								gyyfan.upgrade();
 								gyyfan.upgrade();
-								gyyfan.enchant(Weapon.Enchantment.random());
+								Grim grim = new Grim();
+								gyyfan.enchant((Weapon.Enchantment)grim);
 								if (!gyyfan.collect()) Dungeon.level.drop(gyyfan, Dungeon.hero.pos);
 								Quest.setImpression(4);
 								Quest.complete();
 								flee();
 							} else {
-								GLog.w(Messages.get(this, "no_food"));
+								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
 							break;
 					}

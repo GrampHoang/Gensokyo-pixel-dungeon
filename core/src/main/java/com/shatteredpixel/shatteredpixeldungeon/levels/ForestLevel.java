@@ -79,7 +79,7 @@ public class ForestLevel extends RegularLevel {
 	protected ArrayList<Room> initRooms() {
 		ArrayList<Room> initRooms = super.initRooms();
 		if(Dungeon.depth == 4) initRooms.add(new SuikaRoom());
-		if(Dungeon.depth == 1) initRooms.add(new UnknownPotRoom()); //This is a test room for Reisen's quest, but I'm gonna keep it
+		// if(Dungeon.depth == 1) initRooms.add(new UnknownPotRoom()); //This is a test room for Reisen's quest, but I'm gonna keep it
 		return initRooms;
 	}
 

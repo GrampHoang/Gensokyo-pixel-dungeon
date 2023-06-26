@@ -54,8 +54,8 @@ public abstract class FairySprite extends MobSprite {
 		attack = new Animation( 8, false );
 		attack.frames( frames, c+0, c+1);
 		
-		die = new Animation( 10, false );
-		die.frames( frames, c+0, c+1 );
+		die = new Animation( 9, false );
+		die.frames( frames, c+1, c+0 , c+2);
 		
 		play(idle);
 	}

@@ -25,6 +25,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -41,16 +42,26 @@ public class KomachiBlessing extends Buff {
 	}
 	protected boolean isMelee = true;
 
-	public void setMelee(){
-		isMelee = true;
+	public static void setMelee(Char ch){
+		KomachiBlessing newBuff = new KomachiBlessing();
+		// isMelee is true default
+		newBuff.attachTo(ch);
 	}
 
-	public void setRange(){
-		isMelee = false;
+	public static void setRange(Char ch){
+		KomachiBlessing newBuff = new KomachiBlessing();
+		newBuff.isMelee = false;
+		newBuff.attachTo(ch);
 	}
 
-	public void setRandom(){
-		if (Random.IntRange(0, 1) == 0) isMelee = false;	//since default is true, only random the false
+	public static void setRandom(Char ch){
+		KomachiBlessing newBuff = new KomachiBlessing();
+		if (Random.IntRange(0, 1) == 0) newBuff.isMelee = false;	//since default is true, only random the false
+		newBuff.attachTo(ch);
+	}
+
+	public static void tryDetach(Char ch){
+		if (ch.buff(KomachiBlessing.class) != null) ch.buff(KomachiBlessing.class).detach();
 	}
 
 	public boolean isMelee(){

@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.KomachiBlessing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MoveDetect;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -110,6 +111,19 @@ public class ThreeFairiesOfLight extends Mob {
                             // Being corner, they will retaliate
 							|| canGetFurther(enemy.pos) == false;
 		else return Dungeon.level.adjacent(pos, enemy.pos);
+	}
+
+    @Override
+	public void damage( int dmg, Object src ) {
+        super.damage( dmg, src );
+		// Give range shield
+        if(isAlive()){
+            if (Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 1){
+                KomachiBlessing.setRange(this);
+            } else {
+                KomachiBlessing.tryDetach(this);
+            }
+        }
 	}
 
     @Override

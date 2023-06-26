@@ -44,9 +44,9 @@ import com.watabou.utils.Random;
 public class Cirno extends Mob {
 	{
 		spriteClass = CirnoSprite.class;
-		HP = HT = 30;
+		HP = HT = 20;
 		defenseSkill = 5;
-		EXP = 3;
+		EXP = 4;
 		maxLvl = 9;
         loot = Icecream.class;
 		lootChance = 0.1666f;
@@ -57,7 +57,7 @@ public class Cirno extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 3, 6 );
+		return Random.NormalIntRange( 2, 6 );
 	}
 	
 	@Override
@@ -118,7 +118,7 @@ public class Cirno extends Mob {
 				Cirno newCirno = new Cirno();
 				newCirno.state = newCirno.SLEEPING;
 				newCirno.pos = Dungeon.level.randomRespawnCell( newCirno );
-				KomachiBlessing.affect(newCirno, KomachiBlessing.class).setRandom();
+				KomachiBlessing.setRandom(newCirno);
 				if (newCirno.pos != -1) {
 					GameScene.add(newCirno);
 				}

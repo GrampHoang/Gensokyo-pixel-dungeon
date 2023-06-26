@@ -103,9 +103,10 @@ public class SakuyaNPC extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						if (Catalog.isSeen(SakuyaEnc.class)) tell(Messages.get(SakuyaNPC.class, "quest_3_good"));
-						else {
-							tell(Messages.get(SakuyaNPC.class, "quest_3_good_first"));
+						if (Catalog.isSeen(SakuyaEnc.class)) {
+							// tell(Messages.get(SakuyaNPC.class, "quest_3_good"));
+						} else {
+							// tell(Messages.get(SakuyaNPC.class, "quest_3_good_first"));
 							SakuyaEnc enc = new SakuyaEnc();
 							enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 						}
@@ -122,7 +123,7 @@ public class SakuyaNPC extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						tell(Messages.get(SakuyaNPC.class, "quest_3_normal"));
+						// tell(Messages.get(SakuyaNPC.class, "quest_3_normal"));
 						Game.runOnRenderThread(new Callback() {
 							@Override
 							public void call() {
@@ -297,7 +298,7 @@ public class SakuyaNPC extends NPC {
 			btnReward_knife.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
 			add( btnReward_knife );
 
-			RedButton btnReward_daggers = new RedButton( Messages.get(this, "daggers") ) {
+			RedButton btnReward_daggers = new RedButton( excel ? Messages.get(this, "dagger_excel") : Messages.get(this, "dagger") ) {
 				@Override
 				protected void onClick() {
 					ThrowingKnife tk = new ThrowingKnife();
@@ -309,7 +310,9 @@ public class SakuyaNPC extends NPC {
 			};
 			btnReward_daggers.setRect( 0, (int)btnReward_knife.bottom() + GAP, WIDTH, BTN_HEIGHT );
 			add( btnReward_daggers );
-			
+
+			resize( WIDTH, (int)btnReward_daggers.bottom() );
+
             TimekeepersHourglass hourglass = Dungeon.hero.belongings.getItem( TimekeepersHourglass.class );
             if (hourglass != null && excel){
                 RedButton btnReward_hourglass = new RedButton( Messages.get(this, "hourglass") ) {
@@ -323,8 +326,8 @@ public class SakuyaNPC extends NPC {
                 };
                 btnReward_hourglass.setRect( 0, (int)btnReward_daggers.bottom() + GAP, WIDTH, BTN_HEIGHT );
                 add( btnReward_hourglass );
+				resize( WIDTH, (int)btnReward_hourglass.bottom() );
             }
-			resize( WIDTH, (int)btnReward_daggers.bottom() );
 		}
 
 		private void takeReward( SakuyaNPC maid) {
@@ -344,7 +347,7 @@ public class SakuyaNPC extends NPC {
 		public void pickUp() {
 			count++;
 			
-			if (count <= 24) {	// + 5 starting trash, this should be enough
+			if (count <= 20) {	// + 5 starting trash, this should be enough
 				GLog.p(Messages.get(SakuyaNPC.class,"quest_prog", count));
 			} else {
 				GLog.p(Messages.get(SakuyaNPC.class,"quest_prog_special", count));

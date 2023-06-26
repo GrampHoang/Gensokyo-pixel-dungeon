@@ -245,16 +245,22 @@ public class Dungeon {
 		Wandmaker.Quest.reset();
 		Blacksmith.Quest.reset();
 		Imp.Quest.reset();
+
 		SuikaNPC.Quest.reset();
 		AyaNPC.Quest.reset();
+
 		KoishiNPC.Quest.reset();
 		SakuyaNPC.Quest.reset();
+
 		YoumuNPC.Quest.reset();
 		YuyukoNPC.Quest.reset();
+
 		TenshiNPC.Quest.reset();
 		//ReisenNPC.Quest.reset();
+
 		MarisaNPC.Quest.reset(); //Just in case?
 		//ReimuNPC.Quest.reset();
+		
 		hero = new Hero();
 		hero.live();
 		

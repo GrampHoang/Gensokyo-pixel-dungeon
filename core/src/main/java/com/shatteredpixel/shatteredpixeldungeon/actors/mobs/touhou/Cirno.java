@@ -27,18 +27,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CirnoSprite;
-import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Icecream;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.CirnoIcecream;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
-import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class Cirno extends Mob {
@@ -72,18 +66,20 @@ public class Cirno extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
+		boolean can = super.canAttack(enemy);
+		if (can) return can;	// Champion buff take priority
 		if (isLunatic()){
 			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-			return (attack.collisionPos == enemy.pos && Dungeon.level.distance(this.pos, enemy.pos) < 4);
+			return Dungeon.level.distance(this.pos, enemy.pos) < 3 && attack.collisionPos == enemy.pos;
+		} else {
+			return super.canAttack(enemy);
 		}
-		return super.canAttack(enemy);
 	}
 
 	@Override
 	public int attackProc(Char enemy, int damage) {
-		damage = super.attackProc(enemy, damage);
-		Buff.affect(enemy, Chill.class, 1f);
-		return damage;
+		Buff.affect(enemy, Chill.class, 2f);
+		return super.attackProc(enemy, damage);
 	}
 
     @Override
@@ -106,24 +102,25 @@ public class Cirno extends Mob {
 		// 	}
         // }
 			
-		if(isLunatic()){
-			int lastCirno = 0;
-			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-				if (mob instanceof Cirno){
-					lastCirno++;
-				}
-			}
-			if (lastCirno < 2){	//Because it will count the dying Cirno
-				// Spawn new Cirno if no other cirno present
-				Cirno newCirno = new Cirno();
-				newCirno.state = newCirno.SLEEPING;
-				newCirno.pos = Dungeon.level.randomRespawnCell( newCirno );
-				KomachiBlessing.setRandom(newCirno);
-				if (newCirno.pos != -1) {
-					GameScene.add(newCirno);
-				}
-			}
-		}
+		// if(isLunatic()){
+		// 	int lastCirno = 0;
+		// 	for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+		// 		if (mob instanceof Cirno){
+		// 			lastCirno++;
+		// 		}
+		// 	}
+		// 	if (lastCirno < 2){	//Because it will count the dying Cirno
+		// 		// Spawn new Cirno if no other cirno present
+		// 		Cirno newCirno = new Cirno();
+		// 		MagicalSleep.affect(newCirno, MagicalSleep.class); 
+		// 		newCirno.state = newCirno.SLEEPING;
+		// 		newCirno.pos = Dungeon.level.randomRespawnCell( newCirno );
+		// 		KomachiBlessing.setRandom(newCirno);
+		// 		if (newCirno.pos != -1) {
+		// 			GameScene.add(newCirno);
+		// 		}
+		// 	}
+		// }
 
 		if(Random.Int(500) == 1){
 			Dungeon.level.drop( new CirnoIcecream(), pos ).sprite.drop();

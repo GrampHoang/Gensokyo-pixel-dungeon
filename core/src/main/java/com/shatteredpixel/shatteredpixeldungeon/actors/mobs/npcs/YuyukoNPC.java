@@ -72,9 +72,11 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.TenshiSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.YuyukoNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.TenshiBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
@@ -96,7 +98,7 @@ import com.watabou.utils.Random;
 public class YuyukoNPC extends NPC {
 
 	{
-		spriteClass = TenshiSprite.class;
+		spriteClass = YuyukoNPCSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
@@ -244,8 +246,8 @@ public class YuyukoNPC extends NPC {
 			}
 		}
 		
-		public static void spawn( BambooLevel level ) {
-			if (!spawned && Dungeon.depth > 16 && Random.Int( 19 - Dungeon.depth ) == 0) {
+		public static void spawn( ShrineLevel level ) {
+			if (!spawned && Dungeon.depth > 10 && Random.Int( 14 - Dungeon.depth ) == 0) {
 				
 				YuyukoNPC npc = new YuyukoNPC();
 				do {
@@ -266,7 +268,7 @@ public class YuyukoNPC extends NPC {
 		
 		public static void complete() {
 			completed = true;
-			Statistics.questScores[3] = 500;
+			Statistics.questScores[2] += 3000;
 			Notes.remove( Notes.Landmark.YUYUKO );
 		}
 		
@@ -336,7 +338,7 @@ public class YuyukoNPC extends NPC {
 			message.setPos(0, titlebar.bottom() + GAP);
 			add( message );
 
-			RedButton btnReward = new RedButton( wantString ) {
+			RedButton btnGive = new RedButton( wantString ) {
 				@Override
 				protected void onClick() {
 					switch(Quest.impression){
@@ -353,6 +355,7 @@ public class YuyukoNPC extends NPC {
 								ScrollOfLullaby sol = new ScrollOfLullaby();
 								if (!sol.quantity(1).collect()) Dungeon.level.drop(sol, Dungeon.hero.pos);
 								Quest.setImpression(1);
+								sprite.operate(Dungeon.hero.pos);
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
@@ -365,6 +368,7 @@ public class YuyukoNPC extends NPC {
 								StoneOfEnchantment soe = new StoneOfEnchantment();
 								if (!soe.quantity(2).collect()) Dungeon.level.drop(soe, Dungeon.hero.pos);
 								Quest.setImpression(2);
+								sprite.operate(Dungeon.hero.pos);
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
@@ -378,6 +382,7 @@ public class YuyukoNPC extends NPC {
 								gfan.identify();
 								if (!gfan.collect()) Dungeon.level.drop(gfan, Dungeon.hero.pos);
 								Quest.setImpression(3);
+								sprite.operate(Dungeon.hero.pos);
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
@@ -398,6 +403,7 @@ public class YuyukoNPC extends NPC {
 								if (!gyyfan.collect()) Dungeon.level.drop(gyyfan, Dungeon.hero.pos);
 								Quest.setImpression(4);
 								Quest.complete();
+								// sprite.operate(Dungeon.hero.pos);
 								flee();
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
@@ -408,19 +414,19 @@ public class YuyukoNPC extends NPC {
 				}
 				
 			};
-			btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
-			add( btnReward );
+			btnGive.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnGive );
 
-			RedButton btnReward_special = new RedButton( Messages.get(this, "no") ) {
+			RedButton btnNo = new RedButton( Messages.get(this, "no") ) {
 				@Override
 				protected void onClick() {
 					hide();
 				}
 			};
-			btnReward_special.setRect( 0, (int)btnReward.bottom() + GAP, WIDTH, BTN_HEIGHT );
-			add( btnReward_special );
+			btnNo.setRect( 0, (int)btnGive.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnNo );
 			
-			resize( WIDTH, (int)btnReward_special.bottom() );
+			resize( WIDTH, (int)btnNo.bottom() );
 		}
 	}
 

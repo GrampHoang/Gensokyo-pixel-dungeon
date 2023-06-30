@@ -315,7 +315,7 @@ public class AyaNPC extends NPC {
 		public static void complete() {
 			if (spawned) {
 				Notes.remove( Notes.Landmark.AYA );
-				Statistics.questScores[0] = 100;
+				Statistics.questScores[Statistics.ayaArea] += 1000;
 				spawned = false;
 				Statistics.ayaArea++;
 			}

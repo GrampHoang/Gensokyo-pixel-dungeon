@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.AyaNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YuyukoNPC;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CavesPainter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
@@ -80,6 +81,7 @@ public class ShrineLevel extends RegularLevel {
 	@Override
 	protected void createMobs() {
 		YoumuNPC.Quest.spawn( this );
+		YuyukoNPC.Quest.spawn( this );
 		AyaNPC.Quest.spawn(this);
 		super.createMobs();
 	}

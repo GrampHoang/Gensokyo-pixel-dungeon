@@ -143,7 +143,7 @@ public class Kagerou extends Mob {
 		}
 
 		@Override
-		public int icon() {
+		public int icon() {	
 			return BuffIndicator.AMOK;
 		}
 

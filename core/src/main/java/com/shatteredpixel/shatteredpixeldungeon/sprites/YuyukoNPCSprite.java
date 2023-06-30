@@ -22,28 +22,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.encounters;
+package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
-import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.watabou.noosa.TextureFilm;
 
-public class ReisenEnc extends EncounterNotes {
-    {
-		image = ItemSpriteSheet.REISENGUN;
+public class YuyukoNPCSprite extends MobSprite {
+
+	public YuyukoNPCSprite() {
+		super();
+		
+		texture( Assets.Sprites.YUYUKONPC );
+		
+		TextureFilm frames = new TextureFilm( texture, 13, 16 );
+		
+		idle = new Animation( 1, true );
+		idle.frames( frames, 0, 0, 1, 0, 0, 1, 0, 1 );
+
+        //eat
+        operate = new Animation( 6, false );
+		operate.frames( frames, 0, 2, 0, 2);
+		
+		die = new Animation( 4, false );
+		die.frames( frames, 0, 3, 3, 3 );
+
+		play( idle );
 	}
-
-	public void setSeen(){
-		Catalog.setSeen(ReisenEnc.class);
-	}
-
-	public String npc(){
-		return "Reisen";
-	}
-
-    // 16-19, standing around
-	// Asking you to pick up the unknown potion
-    // pay money (for lost golds) and 2 randoms knowns potions, also id 2 more potions for you
-	// EncNote: If you give her the pot instantly (by getting the pot first)
-	// Unlock: Know what odd with the unkown potion
-
-}
+}   

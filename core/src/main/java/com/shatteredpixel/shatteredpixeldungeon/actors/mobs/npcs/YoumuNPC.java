@@ -37,8 +37,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RaikoDrum;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade1;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade2;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeilingHand.PunchWave;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
@@ -47,9 +50,13 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.YoumuNPCSprite;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.YoumuEnc;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -62,6 +69,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
 public class YoumuNPC extends NPC {
@@ -72,11 +80,13 @@ public class YoumuNPC extends NPC {
 		properties.add(Property.IMMOVABLE);
 	}
 
+	private static int drum_count = 0;	//For the fail SFX, only happen once so no need to save
+
 	@Override
 	protected boolean act() {
 		if (!Quest.given && Dungeon.level.heroFOV[pos]) {
 			Notes.add( Notes.Landmark.YOUMU );
-		} 
+		}
 		return super.act();
 	}
 	
@@ -174,9 +184,48 @@ public class YoumuNPC extends NPC {
 	
 	
 	public void flee() {
-		sprite.showStatus(CharSprite.POSITIVE, "Thank you!");
+		// sprite.showStatus(CharSprite.POSITIVE, "Thank you!");
 		destroy();
 		sprite.die();
+	}
+
+	// When you die with the quest on, currently removed
+	public static void epicFail(){
+		PointF drum_from = Dungeon.hero.sprite.center();	{drum_from.y -= Random.IntRange(16,32);}
+		PointF drum_to   = Dungeon.hero.sprite.center();
+		drum_count++;
+		int cell;
+		int cell2;
+		do {cell = PathFinder.NEIGHBOURS12_LEFT[Random.Int(0, 11)] + Dungeon.hero.pos;}
+		while (cell < 0 || cell > Dungeon.level.map.length || Dungeon.level.solid[cell] == true);
+		do {cell2 = PathFinder.NEIGHBOURS12_RIGHT[Random.Int(0, 11)] + Dungeon.hero.pos;}
+		while (cell2 < 0 || cell2 > Dungeon.level.map.length || Dungeon.level.solid[cell2] == true);
+		WandOfBlastWave.BlastWave.blast(cell);
+		WandOfBlastWave.BlastWave.blast(cell2);
+		Dungeon.hero.sprite.parent.add(new Beam.YoumuSlash(DungeonTilemap.raisedTileCenterToWorld( cell2 ), DungeonTilemap.raisedTileCenterToWorld( cell )));
+		if (drum_count < 10){
+			((MagicMissile)Dungeon.hero.sprite.parent.recycle( MagicMissile.class )).reset(
+				MagicMissile.FORCE_CONE, 
+				drum_from, 
+				drum_to, 
+				new Callback(){
+					@Override
+					public void call(){
+						epicFail();
+					}
+				}
+			);
+		} else {
+			drum_count = 0;
+			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+				if (mob.alignment != Alignment.ALLY && Dungeon.level.distance(mob.pos, Dungeon.hero.pos) < 9) {
+					PunchWave.blast(mob.pos);
+					mob.damage(mob.HP, Dungeon.hero);
+				}
+			}
+			Dungeon.hero.spendAndNext(1f);
+			YoumuNPC.Quest.completed = true;
+		}
 	}
 
 	@Override
@@ -258,9 +307,9 @@ public class YoumuNPC extends NPC {
 		}
 
 		public static void complete(){
-			Statistics.questScores[3] = 500;
+			Statistics.questScores[2] += 3000;
 			Notes.remove( Notes.Landmark.YOUMU );
-			Dungeon.level.unseal();
+			// Dungeon.level.unseal();
 			completed = true;
 		}
 	}
@@ -291,7 +340,7 @@ public class YoumuNPC extends NPC {
 			RedButton btnReward = new RedButton( Messages.get(this, "help") ) {
 				@Override
 				protected void onClick() {
-					Dungeon.level.seal();
+					// Dungeon.level.seal();
 					YoumuNPC.Quest.given = true;
 					Buff.affect(Dungeon.hero, YoumuGhostSpawner.class);
 					hide();
@@ -321,6 +370,7 @@ public class YoumuNPC extends NPC {
 		public int killCount = 0;
 		int spawnPower = 0;
 		int spawnCount = 1;
+		int turn_count = 0;
 		boolean yuyuSpawn = false;
 		boolean yuyuKill  = false;
 		{
@@ -347,6 +397,7 @@ public class YoumuNPC extends NPC {
 		@Override
 		public boolean act() {
 			spawnPower++;
+			turn_count++;
 			int wraiths = 1; //we include the wraith we're trying to spawn
 			for (Mob mob : Dungeon.level.mobs){
 				if (mob instanceof Wraith){
@@ -355,7 +406,7 @@ public class YoumuNPC extends NPC {
 			}
 
 			int powerNeeded = Math.min(10, wraiths*3);	//Reduce this so that wraith spawn more
-
+			if (turn_count > 300) powerNeeded = powerNeeded*10; // To prevent Necro build from too OP
 			if (powerNeeded <= spawnPower){
 				spawnPower -= powerNeeded;
 				int pos = 0;
@@ -379,7 +430,7 @@ public class YoumuNPC extends NPC {
 				yu.pos = Dungeon.level.randomRespawnCell(yu);
 				yu.state = yu.HUNTING;
 				GLog.n(Messages.get(YoumuNPC.class,"spawn_yuyu"));
-				Dungeon.level.seal();
+				// Dungeon.level.seal();
 				GameScene.add(yu);
 			}
 			spend(TICK);
@@ -400,6 +451,8 @@ public class YoumuNPC extends NPC {
 		private static String YUYUS = "yuyuspawn";
 		private static String YUYUK = "yuyukilled";
 		private static String KILLCOUNT = "killcount";
+		private static String TURNCOUNT = "turncount";
+
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
@@ -408,6 +461,7 @@ public class YoumuNPC extends NPC {
 			bundle.put( YUYUS, yuyuSpawn);
 			bundle.put( YUYUK, yuyuKill);
 			bundle.put( KILLCOUNT, killCount);
+			bundle.put( TURNCOUNT, turn_count);
 		}
 
 		@Override
@@ -418,6 +472,7 @@ public class YoumuNPC extends NPC {
 			yuyuSpawn = bundle.getBoolean(YUYUS);
 			yuyuKill  = bundle.getBoolean(YUYUK);
 			killCount = bundle.getInt(KILLCOUNT);
+			turn_count = bundle.getInt(TURNCOUNT);
 		}
 	}
 }

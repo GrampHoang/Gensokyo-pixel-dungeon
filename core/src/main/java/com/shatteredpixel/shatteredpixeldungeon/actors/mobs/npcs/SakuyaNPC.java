@@ -249,7 +249,7 @@ public class SakuyaNPC extends NPC {
 		
 		public static void complete() {
 			completed = true;
-			Statistics.questScores[3] = 500;
+			Statistics.questScores[1] += 2000;
 			Notes.remove( Notes.Landmark.SAKUYA );
 		}
 		

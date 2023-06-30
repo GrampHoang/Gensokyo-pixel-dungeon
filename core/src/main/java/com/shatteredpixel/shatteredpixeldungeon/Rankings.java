@@ -150,7 +150,7 @@ public enum Rankings {
 					Statistics.heldItemValue += i.value();
 					if (i instanceof CorpseDust && Statistics.deepestFloor >= 10){
 						// in case player kept the corpse dust, for a necromancer run
-						Statistics.questScores[1] = 2000;
+						Statistics.questScores[1] += 2000;
 					}
 				}
 			}

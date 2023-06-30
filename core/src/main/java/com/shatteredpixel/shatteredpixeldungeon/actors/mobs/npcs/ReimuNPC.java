@@ -34,7 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.SDMLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.KoishiNPCSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
+// import com.shatteredpixel.shatteredpixeldungeon.sprites.ReimuNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -43,18 +44,17 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class KoishiNPC extends NPC {
+public class ReimuNPC extends NPC {
 
 	{
-		spriteClass = KoishiNPCSprite.class;
-		state = WANDERING;
-		flying = true; //No water ripple, no break grasses but may struggle to find her on floor with many chasm
+		spriteClass = ImpSprite.class;
+		properties.add(Property.IMMOVABLE);
 	}
 
 	@Override
 	protected boolean act() {
 		if (Dungeon.level.heroFOV[pos]){
-			Notes.add( Notes.Landmark.KOISHI );
+			Notes.add( Notes.Landmark.REIMU );
 		}
 		return super.act();
 	}
@@ -65,26 +65,11 @@ public class KoishiNPC extends NPC {
 	}
 	
 	@Override
-	public float speed() {
-		return 0.6f;
-	}
-	
-	@Override
-	protected Char chooseEnemy() {
-		return null;
-	}
-	
-	@Override
 	public void damage( int dmg, Object src ) {
 	}
 	
 	@Override
 	public void add( Buff buff ) {
-	}
-	
-	@Override
-	public boolean reset() {
-		return true;
 	}
 	
 	@Override
@@ -97,13 +82,29 @@ public class KoishiNPC extends NPC {
 			return super.interact(c);
 		}
 
+        switch(checkOtherQuest()){
+            case 0:
+                tell(Messages.get(ReimuNPC.class, "help_few"));
+                // Do nothing
+                break;
+            case 1:
+                tell(Messages.get(ReimuNPC.class, "hekp_some"));
+                // Give small reward
+                break;
+            case 2:
+                tell(Messages.get(ReimuNPC.class, "help_all"));
+                // Give big reward, Enc and Unlock different final boss
+                break;
+            default:
+                break;
+        }
 		if (Quest.given){
 			Quest.complete();
 			Dungeon.level.drop( new ScrollOfUpgrade(), pos ).sprite.drop();
-			GLog.p(Messages.get(KoishiNPC.class, "farewell"));
+			GLog.p(Messages.get(ReimuNPC.class, "farewell"));
 			die( null );
 		} else {
-			tell(Messages.get(KoishiNPC.class, "find_me"));
+			tell(Messages.get(ReimuNPC.class, "find_me"));
 			this.pos = Dungeon.level.randomRespawnCell( this );
 			Dungeon.level.occupyCell( this );
 			Quest.given = true;
@@ -111,11 +112,27 @@ public class KoishiNPC extends NPC {
 		return true;
 	}
 
+    private int checkOtherQuest(){
+        // Check if player have helped other NPCs or not
+        if (Statistics.questScores[0] <= 1000 && Statistics.questScores[1] <= 2000 &&
+            Statistics.questScores[2] <= 3000 && Statistics.questScores[3] <= 4000){
+            return 0;
+
+        // Help some
+        } else if ( Statistics.questScores[0] <= 2000 && Statistics.questScores[1] <= 4000 &&
+                    Statistics.questScores[2] <= 6000 && Statistics.questScores[3] <= 8000){
+            return 1;
+        //help all
+        } else {
+           return 2;
+        }
+    }
+
 	private void tell( String text ) {
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( KoishiNPC.this, text ));
+				GameScene.show( new WndQuest( ReimuNPC.this, text ));
 			}
 		});
 	}
@@ -166,7 +183,7 @@ public class KoishiNPC extends NPC {
 		public static void spawn( SDMLevel level ) {
 			if (!spawned && Dungeon.depth > 5 && Random.Int( 9 - Dungeon.depth ) == 0) {
 				
-				KoishiNPC Koishi = new KoishiNPC();
+				ReimuNPC Koishi = new ReimuNPC();
 				do {
 					Koishi.pos = level.randomRespawnCell( Koishi );
 				} while (Koishi.pos == -1);
@@ -182,7 +199,7 @@ public class KoishiNPC extends NPC {
 		public static void complete() {
 			if (spawned && given) {
 				Notes.remove( Notes.Landmark.KOISHI );
-				Statistics.questScores[1] += 2000;
+				Statistics.questScores[1] += 1000;
 			}
 		}
 	}

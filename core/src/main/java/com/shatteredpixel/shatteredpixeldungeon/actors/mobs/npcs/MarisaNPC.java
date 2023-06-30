@@ -275,7 +275,7 @@ public class MarisaNPC extends NPC {
 		public static void complete() {
 			completed = true;
 
-			Statistics.questScores[3] = 500;
+			Statistics.questScores[4] += 4000;
 			Notes.remove( Notes.Landmark.MARISA );
 		}
 		

@@ -267,7 +267,7 @@ public class Imp extends NPC {
 			reward = null;
 			completed = true;
 
-			Statistics.questScores[3] = 4000;
+			Statistics.questScores[3] += 4000;
 			Notes.remove( Notes.Landmark.IMP );
 		}
 		

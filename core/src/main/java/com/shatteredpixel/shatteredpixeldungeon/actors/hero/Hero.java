@@ -69,6 +69,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.En
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Snake;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YoumuNPC.YoumuGhostSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CheckedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -1801,14 +1803,6 @@ public class Hero extends Char {
 	
 	@Override
 	public void die( Object cause ) {
-		BossMercy inFight = buff(BossMercy.class);
-		if (inFight != null){
-			// if (buff(Burning.class) != null ) buff(Burning.class).detach();
-			inFight.tobeDetach();
-			inFight.teleBack(true);;
-			return;
-		}
-
 		if(buff(Hourai.class) != null){
 			this.HP = HT;
 			GLog.p("Ressurection!");
@@ -1816,6 +1810,14 @@ public class Hero extends Char {
 			return;
 		}
 
+		BossMercy inFight = buff(BossMercy.class);
+		if (inFight != null){
+			// if (buff(Burning.class) != null ) buff(Burning.class).detach();
+			inFight.tobeDetach();
+			inFight.teleBack(true);;
+			return;
+		}
+		
 		curAction = null;
 
 		Ankh ankh = null;

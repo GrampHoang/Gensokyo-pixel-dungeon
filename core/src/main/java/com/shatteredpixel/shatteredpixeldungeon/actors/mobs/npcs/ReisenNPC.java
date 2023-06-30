@@ -22,7 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
- package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import java.util.ArrayList;
 
@@ -40,16 +40,28 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.ReisenEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.TenshiEnc;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.FrozenCarpaccio;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.StewedMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DemonCore;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.UnknownPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
+import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.GluttonyFan;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.GluttonyYuyukoFan;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HisouBlade;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
@@ -62,20 +74,20 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.TenshiSprite;
+// import com.shatteredpixel.shatteredpixeldungeon.sprites.ReisenNPCSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ReisenSprite;
 import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.ShrineLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.TenshiBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.UnknownPotRoom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
-import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
@@ -88,19 +100,22 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class TenshiNPC extends NPC {
+public class ReisenNPC extends NPC {
 
 	{
-		spriteClass = TenshiSprite.class;
+		spriteClass = ReisenSprite.class;
 
 		properties.add(Property.IMMOVABLE);
 	}
 
+	public int count = 10; //Count turn that give pot since reset
+
 	@Override
 	protected boolean act() {
 		if (!Quest.given && Dungeon.level.heroFOV[pos]) {
-			Notes.add( Notes.Landmark.TENSHI );
-		} 
+			Notes.add( Notes.Landmark.REISEN );
+		}
+		count++;
 		return super.act();
 	}
 	
@@ -125,129 +140,53 @@ public class TenshiNPC extends NPC {
 		if (c != Dungeon.hero){
 			return true;
 		}
-		//TODO: FIX COMPLETE LOGIC
-		// Not talk -> not given
-		// Talked -> given
-		// Talked then fight -> given completed? -> impression
-		//Have quest
-		if (Quest.given) {
-			
-			// Finished
-			if (Quest.completed){
-				switch(Quest.impression){
-					default:
-					case 1:
-						sprite.showStatus(CharSprite.POSITIVE, "You sucks");
-						break;
-					case 2:
-						sprite.showStatus(CharSprite.POSITIVE, "You good");
-						break;
-					case 3:
-						sprite.showStatus(CharSprite.POSITIVE, "You strong!");
-						break;
-					
-				}
-				
-			// Finish now
-			} else if (!Quest.completed) {
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						TenshiNPC.Quest.complete();
-						Peach peach = new Peach();
-						FireOath fo = new FireOath();
-						PotionOfHealing poh = new PotionOfHealing();
-						switch(Quest.impression){
-							default:
-								tell(String.format("Illegal impression value %d", Quest.impression));
-								break;
-							case 1:
-								// Being trash, die too soon, give you  3 peaches
-								tell(Messages.get(TenshiNPC.class, "i_bad"));
-								if (!peach.quantity(3).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
-								break;
-							case 2:
-								// Being decent, win her normally, give you FireOath, 2 peach, 1 poh
-								tell(Messages.get(TenshiNPC.class, "i_decent"));
-								if (!peach.quantity(2).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
-								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
-								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-								break;
-							case 3:
-							case 4:
-								// Flawless fight, or survival long enough (very long), give you additional sword
-								if (!Catalog.isSeen(TenshiEnc.class)) {
-									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good_first"));
-									else tell(Messages.get(TenshiNPC.class, "i_good_first_survive"));
-									TenshiEnc enc = new TenshiEnc();
-									enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-								} else {
-									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good"));
-									else tell(Messages.get(TenshiNPC.class, "i_good_survive"));
-								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
-								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-								HisouBlade hb = new HisouBlade();
-								hb.identify();
-								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
-								}
-								break;
-						}
-						GLog.p("You got new items!");
-						flee();
-					}
-				});
-			// Not finish
-			}
-		} else {
-			Quest.completed = false;
-			Notes.add( Notes.Landmark.TENSHI );
-			Game.runOnRenderThread(new Callback() {
-				@Override
-				public void call() {
-					GameScene.show( new WndTenshi( TenshiNPC.this) );
-				}
-			});
-		}
 
-		return true;
-	}
-	
-	private void tell( String text ) {
+		if(Quest.given == false){
+			Quest.given = true;
+			count = 0;
+		}
+		
+
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
-				GameScene.show( new WndQuest( TenshiNPC.this, text ));
+				Game.runOnRenderThread(new Callback() {
+					@Override
+					public void call() {
+						GameScene.show( new WndReisen( ReisenNPC.this) );
+					}
+				});
 			}
 		});
+		
+		return true;
 	}
+	
+	// private void tell( String text ) {
+	// 	Game.runOnRenderThread(new Callback() {
+	// 		@Override
+	// 		public void call() {
+	// 			GameScene.show( new WndQuest( ReisenNPC.this, text ));
+	// 		}
+	// 	});
+	// }
 	
 	
 	public void flee() {
-		switch(Quest.impression){
-			default:
-			case 1:
-				sprite.showStatus(CharSprite.POSITIVE, "You sucks");
-				break;
-			case 2:
-				sprite.showStatus(CharSprite.POSITIVE, "You good");
-				break;
-			case 3:
-				sprite.showStatus(CharSprite.POSITIVE, "You strong!");
-				break;
-			
-		}
 		destroy();
 		sprite.die();
 	}
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
+		bundle.put( "COUNT", count ); 
 		super.storeInBundle(bundle);
 		
 	}
 	
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
+		count = bundle.getInt("COUNT");
 		super.restoreFromBundle(bundle);
 	}
 
@@ -267,11 +206,11 @@ public class TenshiNPC extends NPC {
 		public static void setImpression(int i){
 			impression = i;
 		}
-		private static final String NODE		= "tenshi_Quest";
+		private static final String NODE		= "reisenQuest";
 		
-		private static final String SPAWNED		= "t_spawned";
-		private static final String GIVEN		= "t_given";
-		private static final String COMPLETED	= "t_completed";
+		private static final String SPAWNED		= "re_spawned";
+		private static final String GIVEN		= "re_given";
+		private static final String COMPLETED	= "re_completed";
 		// private static final String REWARD		= "reward";
 		
 		public static void storeInBundle( Bundle bundle ) {
@@ -304,10 +243,12 @@ public class TenshiNPC extends NPC {
 			}
 		}
 		
+		private static boolean questRoomSpawned;
+
 		public static void spawn( BambooLevel level ) {
-			if (!spawned && Dungeon.depth > 16 && Random.Int( 20 - Dungeon.depth ) == 0) {
-				
-				TenshiNPC npc = new TenshiNPC();
+			if (questRoomSpawned) {
+				questRoomSpawned = false;
+				ReisenNPC npc = new ReisenNPC();
 				do {
 					npc.pos = level.randomRespawnCell( npc );
 				} while (
@@ -324,10 +265,19 @@ public class TenshiNPC extends NPC {
 			}
 		}
 		
+		public static ArrayList<Room> spawnRoom( ArrayList<Room> rooms) {
+			questRoomSpawned = false;
+			if (!spawned && Dungeon.depth > 15 && Random.Int( 20 - Dungeon.depth ) == 0) {
+				questRoomSpawned = true;
+				rooms.add(new UnknownPotRoom());
+			}
+			return rooms;
+		}
+
 		public static void complete() {
 			completed = true;
 			Statistics.questScores[3] += 4000;
-			Notes.remove( Notes.Landmark.TENSHI );
+			Notes.remove( Notes.Landmark.REISEN );
 		}
 		
 		public static boolean isCompleted() {
@@ -335,60 +285,58 @@ public class TenshiNPC extends NPC {
 		}
 	}
 
-
-		
-	public class WndTenshi extends Window {
+	public class WndReisen extends Window {
 		
 		private static final int WIDTH      = 120;
 		private static final int BTN_HEIGHT = 20;
 		private static final int GAP        = 2;
 
-		public WndTenshi( final TenshiNPC tenshi) {
+		public WndReisen( final ReisenNPC reisen) {
 			
 			super();
 			
 			IconTitle titlebar = new IconTitle();
-			titlebar.icon(tenshi.sprite());
-			titlebar.label( Messages.get(this, "duel") );
+			titlebar.icon(reisen.sprite());
+			titlebar.label( Messages.get(this, "title") );
 			titlebar.setRect( 0, 0, WIDTH, 0 );
 			add( titlebar );
 			
-			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "message"), 6 );
+		
+			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "mess") , 6 );
 			message.maxWidth(WIDTH);
 			message.setPos(0, titlebar.bottom() + GAP);
 			add( message );
-			
-			RedButton btnReward = new RedButton( Messages.get(this, "fight") ) {
+
+			RedButton btnGive = new RedButton( Messages.get(this, "give_pot") ) {
 				@Override
 				protected void onClick() {
-					TenshiNPC.Quest.given = true;
+                    Item pot = Dungeon.hero.belongings.getItem( UnknownPotion.class);
+					if (pot != null){
+                        sprite.showStatus(CharSprite.POSITIVE, "Thanks");
+						if(count < 10 && !Catalog.isSeen(ReisenEnc.class)){
+							ReisenEnc enc = new ReisenEnc();
+							enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+						}
+                    } else {
+                        sprite.showStatus(CharSprite.POSITIVE, "Where is it?");
+                    }
 					hide();
-					Buff.affect(Dungeon.hero, BossMercy.class).set(Dungeon.hero);
-					
-					InterlevelScene.curTransition = new LevelTransition();
-					InterlevelScene.mode = InterlevelScene.Mode.NEWTELEPORT;
-					InterlevelScene.curTransition.destDepth = 15;
-					InterlevelScene.curTransition.destBranch = 9;
-					Game.switchScene(InterlevelScene.class);
-					
 				}
 				
 			};
-			btnReward.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
-			add( btnReward );
+			btnGive.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnGive );
 
-			RedButton btnReward_special = new RedButton( Messages.get(this, "no") ) {
+			RedButton btnNo = new RedButton( Messages.get(this, "no") ) {
 				@Override
 				protected void onClick() {
 					hide();
-					GLog.w("You refused");
-					TenshiNPC.Quest.given = false;
 				}
 			};
-			btnReward_special.setRect( 0, (int)btnReward.bottom() + GAP, WIDTH, BTN_HEIGHT );
-			add( btnReward_special );
+			btnNo.setRect( 0, (int)btnGive.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnNo );
 			
-			resize( WIDTH, (int)btnReward_special.bottom() );
+			resize( WIDTH, (int)btnNo.bottom() );
 		}
 	}
 

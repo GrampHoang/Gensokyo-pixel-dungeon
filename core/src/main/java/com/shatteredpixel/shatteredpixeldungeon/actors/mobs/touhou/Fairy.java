@@ -86,6 +86,8 @@ public class Fairy extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
+		boolean can = super.canAttack(enemy);
+		if (can) return can;	// Champion buff take priority
 		if (isLunatic()){
 			Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
 			return Dungeon.level.distance(this.pos, enemy.pos) < 3 && attack.collisionPos == enemy.pos;

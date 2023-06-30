@@ -70,6 +70,8 @@ public class CodeDummy extends Mob {
 
     @Override
 	protected boolean canAttack( Char enemy ) {
+		boolean can = super.canAttack(enemy);
+		if (can) return can;	// Champion buff take priority
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.WONT_STOP);
 		return !Dungeon.level.adjacent(pos, enemy.pos) && attack.collisionPos == enemy.pos;
 	}

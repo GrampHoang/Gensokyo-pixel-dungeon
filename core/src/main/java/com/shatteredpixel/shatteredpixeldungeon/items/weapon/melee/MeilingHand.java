@@ -187,4 +187,46 @@ public class MeilingHand extends WeaponWithSP {
 		}
 
 	}
+
+	public static class PullWave extends Image {
+
+		private static final float TIME_TO_FADE = 0.25f;
+
+		private float time;
+
+		public PullWave(){
+			super(Effects.get(Effects.Type.RIPPLE));
+			origin.set(width / 2, height / 2);
+		}
+
+		public void reset(int pos) {
+			revive();
+
+			x = (pos % Dungeon.level.width()) * DungeonTilemap.SIZE + (DungeonTilemap.SIZE - width) / 2;
+			y = (pos / Dungeon.level.width()) * DungeonTilemap.SIZE + (DungeonTilemap.SIZE - height) / 2;
+
+			time = TIME_TO_FADE;
+		}
+
+		@Override
+		public void update() {
+			super.update();
+
+			if ((time -= Game.elapsed) <= 0) {
+				kill();
+			} else {
+				float p = time / TIME_TO_FADE;
+				alpha(p);
+				scale.y = scale.x = p*7;
+			}
+		}
+
+		public static void blast(int pos) {
+			Group parent = Dungeon.hero.sprite.parent;
+			PullWave b = (PullWave) parent.recycle(PullWave.class);
+			parent.bringToFront(b);
+			b.reset(pos);
+		}
+
+	}
 }

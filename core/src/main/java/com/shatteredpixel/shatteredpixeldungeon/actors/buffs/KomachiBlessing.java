@@ -43,21 +43,27 @@ public class KomachiBlessing extends Buff {
 	protected boolean isMelee = true;
 
 	public static void setMelee(Char ch){
-		KomachiBlessing newBuff = new KomachiBlessing();
-		// isMelee is true default
-		newBuff.attachTo(ch);
+		if (ch.buff(KomachiBlessing.class) == null){
+			KomachiBlessing newBuff = new KomachiBlessing();
+			// isMelee is true default
+			newBuff.attachTo(ch);
+		}
 	}
 
 	public static void setRange(Char ch){
-		KomachiBlessing newBuff = new KomachiBlessing();
-		newBuff.isMelee = false;
-		newBuff.attachTo(ch);
+		if (ch.buff(KomachiBlessing.class) == null){
+			KomachiBlessing newBuff = new KomachiBlessing();
+			newBuff.isMelee = false;
+			newBuff.attachTo(ch);
+		}
 	}
 
 	public static void setRandom(Char ch){
-		KomachiBlessing newBuff = new KomachiBlessing();
-		if (Random.IntRange(0, 1) == 0) newBuff.isMelee = false;	//since default is true, only random the false
-		newBuff.attachTo(ch);
+		if (ch.buff(KomachiBlessing.class) == null){
+			KomachiBlessing newBuff = new KomachiBlessing();
+			if (Random.IntRange(0, 1) == 0) newBuff.isMelee = false;	//since default is true, only random the false
+			newBuff.attachTo(ch);
+		}
 	}
 
 	public static void tryDetach(Char ch){

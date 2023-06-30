@@ -250,7 +250,7 @@ public class SuikaNPC extends NPC {
 			// reward = null;
 			completed = true;
 
-			Statistics.questScores[3] = 500;
+			Statistics.questScores[0] += 1000;
 			Notes.remove( Notes.Landmark.SUIKA );
 		}
 		

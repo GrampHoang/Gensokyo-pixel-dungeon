@@ -255,7 +255,7 @@ public abstract class Elemental extends Mob {
 			super.die(cause);
 			if (alignment == Alignment.ENEMY) {
 				Dungeon.level.drop( new Embers(), pos ).sprite.drop();
-				Statistics.questScores[1] = 2000;
+				Statistics.questScores[1] += 2000;
 			}
 		}
 

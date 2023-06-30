@@ -63,7 +63,7 @@ public class CirnoSprite extends MobSprite {
 					reset( this, cell, new Bullet(), new Callback() {
 						@Override
 						public void call() {
-							ch.onAttackComplete();
+							// ch.onAttackComplete();
 						}
 					} );
 

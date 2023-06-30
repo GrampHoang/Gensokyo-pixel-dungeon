@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.AyaNPC;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.ReisenNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YuyukoNPC;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
@@ -77,9 +78,7 @@ public class BambooLevel extends RegularLevel {
 
 	@Override
 	protected ArrayList<Room> initRooms() {
-		ArrayList<Room> initRooms = super.initRooms();
-		// if(Dungeon.depth == 19) initRooms.add(new MarisaRoom());
-		return initRooms;
+		return ReisenNPC.Quest.spawnRoom(super.initRooms());
 	}
 
 	@Override
@@ -134,7 +133,7 @@ public class BambooLevel extends RegularLevel {
 	protected void createMobs() {
 		TenshiNPC.Quest.spawn(this);
 		AyaNPC.Quest.spawn(this);
-		YuyukoNPC.Quest.spawn(this);
+		ReisenNPC.Quest.spawn(this);
 		super.createMobs();
 	}
 	

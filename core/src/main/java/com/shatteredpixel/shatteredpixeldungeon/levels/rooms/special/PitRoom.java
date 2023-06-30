@@ -65,8 +65,8 @@ public class PitRoom extends SpecialRoom {
 		Painter.set( level, well, Terrain.EMPTY_WELL );
 		
 		int remains = level.pointToCell(center());
-		Level.set(remains+1, Terrain.HIGH_GRASS);
-		Level.set(remains-1, Terrain.HIGH_GRASS);
+		Painter.set(level, remains+1, Terrain.HIGH_GRASS);
+		Painter.set(level, remains-1, Terrain.HIGH_GRASS);
 		Item mainLoot = null;
 		do {
 			switch (Random.Int(3)){

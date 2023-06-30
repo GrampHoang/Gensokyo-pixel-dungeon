@@ -104,7 +104,6 @@ public class ThreeFairiesOfLight extends Mob {
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
 		// When super angry only do melee, else range attack only when no move detect
-        GLog.w(Integer.toString(this.anger));
 		if (this.anger < 2) return ( !(Dungeon.level.adjacent(pos, enemy.pos)) 
                                 && attack.collisionPos == enemy.pos 
                                 && (Dungeon.hero.buff(MoveDetect.class) == null))

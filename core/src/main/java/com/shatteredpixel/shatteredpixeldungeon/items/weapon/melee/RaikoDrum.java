@@ -145,7 +145,6 @@ public class RaikoDrum extends WeaponWithSP {
     protected void drumSFX(){
         PointF drum_from = Dungeon.hero.sprite.center();	{drum_from.y -= Random.IntRange(16,32);}
 		PointF drum_to   = Dungeon.hero.sprite.center();
-		GLog.w(Integer.toString(drum_count));
 		drum_count++;
 		int cell;
 		do {cell = PathFinder.NEIGHBOURS24[Random.Int(0, 23)] + Dungeon.hero.pos;}

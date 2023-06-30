@@ -56,7 +56,7 @@ public class SakuyaKnife extends WeaponWithSP {
         chargeNeed = 30;
 	}
 
-	public int skilldmg_min(){	return min()*2;}
+	public int skilldmg_min(){	return min()+1;}
 
 	public int skilldmg_max(){	return max();	}
 

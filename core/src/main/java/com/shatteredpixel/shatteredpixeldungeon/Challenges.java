@@ -39,8 +39,9 @@ public class Challenges {
 
 	public static final int TOUHOU 				= 512;
 	public static final int LUNATIC 			= 1024;
+	// public static final int EXTRA 			= 2048;
 
-	public static final int MAX_VALUE           = 2047;
+	public static final int MAX_VALUE           = 2047; //4097
 
 	public static final String[] NAME_IDS = {
 			"champion_enemies",

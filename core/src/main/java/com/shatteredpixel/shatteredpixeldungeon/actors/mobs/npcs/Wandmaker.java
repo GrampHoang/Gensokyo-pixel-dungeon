@@ -353,7 +353,7 @@ public class Wandmaker extends NPC {
 			wand2 = null;
 			
 			Notes.remove( Notes.Landmark.WANDMAKER );
-			Statistics.questScores[1] = 2000;
+			// Statistics.questScores[1] += 2000;
 		}
 	}
 }

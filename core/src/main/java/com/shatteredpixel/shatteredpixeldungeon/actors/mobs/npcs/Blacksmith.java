@@ -126,7 +126,7 @@ public class Blacksmith extends NPC {
 					
 					Quest.completed = true;
 					Quest.reforged = false;
-					Statistics.questScores[2] = 3000;
+					Statistics.questScores[2] += 3000;
 				}
 				
 			} else {
@@ -147,7 +147,7 @@ public class Blacksmith extends NPC {
 					
 					Quest.completed = true;
 					Quest.reforged = false;
-					Statistics.questScores[2] = 3000;
+					Statistics.questScores[2] += 3000;
 				}
 				
 			}

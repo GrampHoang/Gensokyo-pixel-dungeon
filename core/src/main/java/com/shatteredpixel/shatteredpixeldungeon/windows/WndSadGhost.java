@@ -143,7 +143,7 @@ public class WndSadGhost extends Window {
 					bg.resetColor();
 				}
 				@Override
-				protected void onClick() {
+				protected void onClick(	) {
 					GameScene.show(new RewardWindow(item));
 				}
 			};

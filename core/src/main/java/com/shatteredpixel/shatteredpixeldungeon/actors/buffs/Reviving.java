@@ -53,7 +53,7 @@ public class Reviving extends FlavourBuff {
             if (target.paralysed > 0){
 			    target.paralysed = 0;
             }
-            Sample.INSTANCE.play( Assets.Sounds.EVOKE, 1f, 2f );
+            Sample.INSTANCE.play( Assets.Sounds.EVOKE, 1f, 5f );
             target.HP = target.HT;
             target.sprite.idle();
             super.detach();
@@ -67,14 +67,6 @@ public class Reviving extends FlavourBuff {
     @Override
     public boolean attachTo(Char target) {
         if (super.attachTo( target )) {
-            //only this 2 can revive, maaaybe Eirin too? 
-            // if (target instanceof Mokou){
-            //     ((MokouSprite)target.sprite).crumple();
-            // } else if(target instanceof Kaguya){
-            //     ((KaguyaSprite)target.sprite).crumple();
-            // } else{
-            //     //do nothing
-            // }
             target.paralysed++;
         return true;
         } else {

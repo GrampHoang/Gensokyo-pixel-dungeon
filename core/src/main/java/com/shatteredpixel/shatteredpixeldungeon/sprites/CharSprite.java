@@ -294,6 +294,19 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		play( operate );
 	}
 	
+	public void operateWithTime(float time, Callback callback ) {
+		animCallback = callback;
+		Animation operateTime = new Animation( 16, false );
+		operateTime.delay = time;
+		operateTime.frames = operate.frames;
+		play( operateTime );
+	}
+
+	// public Animation( int fps, boolean looped ) {
+	// 	this.delay = 1f / fps;
+	// 	this.looped = looped;
+	// }
+
 	public void zap( int cell ) {
 		turnTo( ch.pos, cell );
 		play( zap );

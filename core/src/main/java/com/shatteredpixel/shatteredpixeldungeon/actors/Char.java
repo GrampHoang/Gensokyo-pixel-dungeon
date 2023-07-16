@@ -60,7 +60,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MusicFlow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Madden;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -114,6 +113,7 @@ import static com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -557,7 +557,6 @@ public abstract class Char extends Actor {
 		if ( buff( Haste.class ) != null) speed *= 3f;
 		if ( buff( Exterminating.class ) != null) speed *= 1.2f;
 		if ( buff( Dread.class ) != null) speed *= 2f;
-		if ( buff( MusicFlow.class ) != null) speed *=  buff( MusicFlow.class ).getSpeedBuff();
 		return speed;
 	}
 	
@@ -725,7 +724,28 @@ public abstract class Char extends Actor {
 	public boolean isAlive() {
 		return HP > 0 || deathMarked;
 	}
+	
+	// public void spendAndCallback( float time, Callback call) {
+		
+	// 	float timeScale = 1f;
+	// 	if (buff( Slow.class ) != null) {
+	// 		timeScale *= 0.5f;
+	// 		//slowed and chilled do not stack
+	// 	} else if (buff( Chill.class ) != null) {
+	// 		timeScale *= buff( Chill.class ).speedFactor();
+	// 	}
+	// 	if (buff( Speed.class ) != null) {
+	// 		timeScale *= 2.0f;
+	// 	}
+	// 	// super.spend( time / timeScale );
+	// 	for(int i = 0; i < (int)time; i++){
+	// 		spend(1f);
+	// 		next();
+	// 	}
+	// 	call.call();
+	// }
 
+	// Just spend but public
 	public void spend_modified( float time ) {
 		
 		float timeScale = 1f;
@@ -738,7 +758,7 @@ public abstract class Char extends Actor {
 		if (buff( Speed.class ) != null) {
 			timeScale *= 2.0f;
 		}
-		super.spend( time / timeScale );
+		spend( time / timeScale );
 	}
 
 	@Override

@@ -62,74 +62,45 @@ public class RaikoDrum extends WeaponWithSP {
 		hitSoundPitch = 1f;
 
 		tier = 4;
-		DLY = 1f;
+		DLY = 0.5f;
 
-        chargeGain = 10;
+        chargeGain = 4;
+		usesTargeting = false;
     }
 
     protected int drum_count = 0;
-
-    //For MusicFlow on Mob, chec Mob.attackdelay
-    @Override
-    public float delayFactor(Char user) {
-        if (user instanceof Hero && Dungeon.hero.buff(MusicFlow.class) != null)
-            return 1/(Dungeon.hero.buff(MusicFlow.class).getSpeedBuff());
-        return 1;
-    }
     
 	@Override
 	public int max(int lvl) {
-		return  Math.round(4f*(tier+1)) + //20 base
-				lvl*Math.round(1f*(tier)); // 4 instead of 5 per level
+		return  Math.round(3f*(tier)) + //12 base
+				lvl*Math.round(0.5f*(tier+1)); // 2.5 instead of 5 per level
 	}
 
+    protected int skillDamage(){
+        return Random.IntRange(min(), max());
+    }
+    
     @Override
 	public int proc(Char attacker, Char defender, int damage) {
-        //Stack speed
-        if (attacker.buff(MusicFlow.class) == null){
-            Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION).increaseFlow(1);
-        }
-        else{
-            MusicFlow flow = attacker.buff(MusicFlow.class);
-            flow.increaseFlow(1);
-            Buff.prolong( attacker, MusicFlow.class, MusicFlow.DURATION );
-        }
-        attacker.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 4 );
-
+        PunchWave.blast(defender.pos);
+        defender.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.2f, 2 );
         //Aoe 2 distance around you
-        int damageDo = super.proc(attacker, defender, damage);
-        int count = 0;
         for (int i : PathFinder.NEIGHBOURS24){
             Char ch = Actor.findChar(attacker.pos + i);
             //Exist and not same alignment, not the current target
             if (ch != null && ch.alignment != attacker.alignment && ch != defender){
-                count++;
-                ch.damage(damageDo, attacker);
+                ch.damage(skillDamage(), attacker);
                 ch.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.2f, 3 );
                 PunchWave.blast(ch.pos);
             }
         }
-        if (count == 0) {
-            damageDo = (int)Math.round(damageDo * 1.5f);
-            defender.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
-        } else {
-            defender.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.2f, 2 );
-        }
-        return damageDo;
+        return super.proc(attacker, defender, damage);
 	}
 
     @Override
 	protected boolean useSkill(){
         Dungeon.hero.busy();
         //Stack speed
-		if (Dungeon.hero.buff(MusicFlow.class) == null){
-            Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION).increaseFlow(5);
-        }
-        else{
-            MusicFlow flow = Dungeon.hero.buff(MusicFlow.class);
-            flow.increaseFlow(5);
-            Buff.prolong( Dungeon.hero, MusicFlow.class, MusicFlow.DURATION );
-        }
         Dungeon.hero.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 4 );
         //Damage enemy in 8 tiles range
         drum_count = 0;
@@ -190,6 +161,6 @@ public class RaikoDrum extends WeaponWithSP {
                         Dungeon.hero.spendAndNext(1f);
 					}
 				}
-			);
+		);
     }
 }

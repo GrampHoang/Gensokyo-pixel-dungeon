@@ -72,8 +72,8 @@ public class FlandreSpear extends WeaponWithSP {
 
 	@Override
 	public int max(int lvl) {
-		return  12 +    //14 base, down from 20
-				lvl*(tier);     //+3 per level, down from +4
+		return  12 +                                //10 base, down from 20
+				lvl*Math.round(0.5f*(tier+2));     //+2.5 per level, down from +4
 	}
 
     @Override

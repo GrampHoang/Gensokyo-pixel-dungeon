@@ -136,6 +136,7 @@ public class TenshiBossLevel extends Level {
         GameScene.updateMap( (SIZE_H/2)*width() + width()/2 );
         Dungeon.observe();
         TenshiBoss mari = new TenshiBoss();
+        
         mari.pos = (4 * width() + 9);;
         GameScene.add(mari);
 

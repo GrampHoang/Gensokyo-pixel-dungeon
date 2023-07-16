@@ -80,7 +80,7 @@ public class Patchouli extends Mob {
 	protected final int STATE_FIRE = 1;
 	protected final int STATE_FROST = 2;
 	protected final int STATE_SHOCK = 3;
-	protected int state = STATE_NONE_CASTING;
+	protected int stateSkill = STATE_NONE_CASTING;
 	protected int summonCD = Random.NormalIntRange( 20, 25 );
 	protected int SKILL_CD = 5;
 	protected int skill_cd = 5;
@@ -93,16 +93,16 @@ public class Patchouli extends Mob {
 		if (isLunatic()){
 			skill_cd--;
 
-			if (!enemySeen && state != STATE_NONE_CASTING){
-				state = STATE_NONE_CASTING;
+			if (!enemySeen && stateSkill != STATE_NONE_CASTING){
+				stateSkill = STATE_NONE_CASTING;
 				skill_cd = SKILL_CD;
 				spend(TICK);
 				return true;
 			}
 
-			if (state != STATE_NONE_CASTING){
+			if (stateSkill != STATE_NONE_CASTING){
 				this.sprite.remove(CharSprite.State.CHARGING);
-				switch(state){
+				switch(stateSkill){
 					case STATE_FIRE:
 						skillFire();
 						break;
@@ -119,15 +119,15 @@ public class Patchouli extends Mob {
 					this.HP = this.HP - 4;
 				}
 				skill_cd = SKILL_CD;
-				state = 0;
+				stateSkill = 0;
 				spend(TICK);
 				return true;
 			}
 
-			if (skill_cd <= 0 && state == STATE_NONE_CASTING && enemySeen){
+			if (skill_cd <= 0 && stateSkill == STATE_NONE_CASTING && enemySeen){
 				this.sprite.add(CharSprite.State.CHARGING);
-				state = Random.IntRange(1,3);
-				readySkill(enemy, state);
+				stateSkill = Random.IntRange(1,3);
+				readySkill(enemy, stateSkill);
 				spend(TICK);
 				return true;
 			}
@@ -176,7 +176,7 @@ public class Patchouli extends Mob {
 	}
 
 	private static final String SUMMONING_CD = "summoning_cd";
-	private static final String CUR_STATE = "cur_state";
+	private static final String CUR_STATE = "cur_stateSkill";
 	private static final String SKILL_COOLDOWN = "skill_cd";
 	private static final String PATCHYCELLS = "patchyCells";
 	// private static final String SUMMONING_CD = "summoning_cd";
@@ -185,7 +185,7 @@ public class Patchouli extends Mob {
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
 		bundle.put( SUMMONING_CD, summonCD );
-		bundle.put( CUR_STATE, state );
+		bundle.put( CUR_STATE, stateSkill );
 		bundle.put( SKILL_COOLDOWN, skill_cd );
 		
 		int[] bundleArr = new int[pacthyCells.size()];
@@ -199,7 +199,7 @@ public class Patchouli extends Mob {
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		summonCD = bundle.getInt( SUMMONING_CD );
-		state = bundle.getInt(CUR_STATE);
+		stateSkill = bundle.getInt(CUR_STATE);
 		skill_cd = bundle.getInt(SKILL_COOLDOWN);
 		for (int i : bundle.getIntArray(PATCHYCELLS)){
 			pacthyCells.add(i);
@@ -207,16 +207,19 @@ public class Patchouli extends Mob {
 	}
 	
 	public boolean summonBook(int summoningPos){
+		if (state == SLEEPING){	//Wake Patchouli up
+			state = HUNTING;
+		}
 		MagicBook patchyBook;
 		float roll = Random.Float();
 		if (roll < 0.4f){
-			state = STATE_FIRE;
+			stateSkill = STATE_FIRE;
 			patchyBook = new MagicBook.FireMagicBook();
 		} else if (roll < 0.8f){
-			state = STATE_FROST;
+			stateSkill = STATE_FROST;
 			patchyBook = new MagicBook.FrostMagicBook();
 		} else {
-			state = STATE_SHOCK;
+			stateSkill = STATE_SHOCK;
 			patchyBook = new MagicBook.ShockMagicBook();
 		}
 
@@ -238,11 +241,11 @@ public class Patchouli extends Mob {
 		return true;
 	}
 
-	public void readySkill(Char enemy, int state){
+	public void readySkill(Char enemy, int stateSkill){
 		Dungeon.hero.interrupt();
 		pacthyCells.clear();
 		int color = 0xFF0000;
-		switch(state){
+		switch(stateSkill){
 			case STATE_FROST:
 				color = 0x7EC8E3;
 				break;

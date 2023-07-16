@@ -98,7 +98,19 @@ public class Beam extends Image {
 		super.update();
 		alpha(0.2f);
 		}
+	}
 
+	public static class Claw extends Beam{
+		public Claw(PointF s, PointF e){
+			super(s, e, Effects.Type.GUST, 0.5f);
+			Sample.INSTANCE.play( Assets.Sounds.MISS );
+		}
+
+		@Override
+		public void update() {
+		super.update();
+		alpha(0.8f);
+		}
 	}
 
 	@Override

@@ -101,9 +101,9 @@ public class Statue extends Mob {
 				skill_cd = SKILL_CD;
 				SmolStatue smol = new SmolStatue();
 				smol.pos = Dungeon.level.randomRespawnCell(smol);
-				Dungeon.level.occupyCell(smol);
-				if(smol.pos != 1) {
+				if(smol.pos != -1) {
 					GameScene.add(smol);
+					Dungeon.level.occupyCell(smol);
 				}
 			}
 		}

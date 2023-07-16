@@ -146,7 +146,7 @@ public class ReisenNPC extends NPC {
 			count = 0;
 		}
 		
-
+		// why did I do did again? I don't remember, is this a mistake?
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {

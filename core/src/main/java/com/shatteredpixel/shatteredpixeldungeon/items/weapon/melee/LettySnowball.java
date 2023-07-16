@@ -153,6 +153,11 @@ public class LettySnowball extends WeaponWithSP {
 			}
 		}
 	}
+
+	public String skillInfo(){
+		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, max()/4, 3);
+	}
+
     public class Orb extends Item {
 		{
 			image = ItemSpriteSheet.AQUA_BLAST;

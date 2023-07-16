@@ -35,9 +35,15 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Peach;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Polarized;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Sacrificial;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RaikoDrum;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade1;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade2;
@@ -58,10 +64,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.YoumuEnc;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RewardButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
@@ -124,21 +132,18 @@ public class YoumuNPC extends NPC {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						YoumuNPC.Quest.complete();
+						// YoumuNPC.Quest.complete();
 						if(isKill){
 							//Beat yuyuko
 							if(Catalog.isSeen(YoumuEnc.class)) {
-								tell(Messages.get(YoumuNPC.class, "quest_excel"));
+								// tell(Messages.get(YoumuNPC.class, "quest_excel"));
 							} else {
 								YoumuEnc enc = new YoumuEnc();
 								enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-								tell(Messages.get(YoumuNPC.class, "quest_excel_first"));
+								// tell(Messages.get(YoumuNPC.class, "quest_excel_first"));
 					 		}
-							Dungeon.hero.buff(YoumuGhostSpawner.class).dispel();
-							YoumuBlade2 blade = new YoumuBlade2();
-							if (!blade.collect()) Dungeon.level.drop(blade, Dungeon.hero.pos);
-							GLog.p(Messages.get(NPC.class,"newitems"));
-							flee();
+
+							 GameScene.show( new WndYoumuReward( YoumuNPC.this, true) );
 							//Hasn't beat her up yet
 						} else{
 							tell(Messages.get(YoumuNPC.class, "beatyuyuforme"));
@@ -148,13 +153,12 @@ public class YoumuNPC extends NPC {
 				});
 			// Not spawn Yuyuko/Finish Normal quest
 			} else if (count >= 10 && !isSpawn){
-				YoumuNPC.Quest.complete();
-				Dungeon.hero.buff(YoumuGhostSpawner.class).dispel();
-				tell(Messages.get(YoumuNPC.class, "quest"));
-				YoumuBlade1 blade = new YoumuBlade1();
-				if (!blade.collect()) Dungeon.level.drop(blade, Dungeon.hero.pos);
-				GLog.p(Messages.get(NPC.class,"newitems"));
-				flee();
+				Game.runOnRenderThread(new Callback() {
+					@Override
+					public void call() {
+						GameScene.show( new WndYoumuReward( YoumuNPC.this, false) );
+					}
+				});
 			// Not finish
 			} else {
 				sprite.showStatus(CharSprite.POSITIVE, String.format("%s more", 10 - Dungeon.hero.buff(YoumuGhostSpawner.class).killCount));
@@ -282,7 +286,9 @@ public class YoumuNPC extends NPC {
 
 		public static void process( Mob mob ) {
 			if (given && !completed) {
-				Dungeon.hero.buff(YoumuGhostSpawner.class).kill();
+				if(Dungeon.hero.buff(YoumuGhostSpawner.class) != null){
+					Dungeon.hero.buff(YoumuGhostSpawner.class).kill();
+				}
 			}
 		}
 		
@@ -310,6 +316,9 @@ public class YoumuNPC extends NPC {
 			Statistics.questScores[2] += 3000;
 			Notes.remove( Notes.Landmark.YOUMU );
 			// Dungeon.level.unseal();
+			if (Dungeon.hero.buff(YoumuGhostSpawner.class) != null) {
+				Dungeon.hero.buff(YoumuGhostSpawner.class).dispel();
+			}
 			completed = true;
 		}
 	}
@@ -365,12 +374,84 @@ public class YoumuNPC extends NPC {
 		}
 	}
 
+	public class WndYoumuReward extends Window {
+		
+		private static final int WIDTH      = 120;
+		private static final int BTN_HEIGHT = 20;
+		private static final int GAP        = 2;
+		private static final int BTN_SIZE	= 32;
+		private static final int BTN_GAP	= 5;
+
+		public WndYoumuReward( final YoumuNPC youmu, boolean excel) {
+			
+			super();
+			
+			IconTitle titlebar = new IconTitle();
+			titlebar.icon(youmu.sprite());
+			titlebar.label( Messages.get(this, "title_reward") );
+			titlebar.setRect( 0, 0, WIDTH, 0 );
+			add( titlebar );
+			
+			RenderedTextBlock message = PixelScene.renderTextBlock(
+				(excel ? Messages.get(this, "pick_mess_excel") :  Messages.get(this, "pick_mess")), 6 );
+			message.maxWidth(WIDTH);
+			message.setPos(0, titlebar.bottom() + GAP);
+			add( message );
+			
+			YoumuBlade1 item1 = new YoumuBlade1();
+			YoumuBlade1 item2 = new YoumuBlade1();
+			Sacrificial sac = new Sacrificial();
+			Polarized pol = new Polarized();
+			item1.enchant((Weapon.Enchantment)sac);
+			item2.enchant((Weapon.Enchantment)pol);
+			if (excel) {
+				item1 = new YoumuBlade2();
+				Kinetic kinetic = new Kinetic();
+				item1.enchant((Weapon.Enchantment)kinetic);
+				item2.upgrade();
+				ScrollOfRemoveCurse.uncurse(null, item1);
+				ScrollOfRemoveCurse.uncurse(null, item2);
+			}
+			item1.identify();
+			item2.identify();
+
+			RewardButton btnReward_item1 = new RewardButton(item1, YoumuNPC.this, this, null);
+			btnReward_item1.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
+			add( btnReward_item1 );
+			RewardButton btnReward_item2 = new RewardButton(item2, YoumuNPC.this, this, null);
+			btnReward_item2.setRect( btnReward_item1.right() + BTN_GAP, btnReward_item1.top(), BTN_SIZE, BTN_SIZE );
+			add( btnReward_item2 );
+
+			resize( WIDTH, (int)btnReward_item2.bottom() + BTN_GAP);
+
+            if (excel){
+                RedButton btnReward_pies = new RedButton( Messages.get(this, "food") ) {
+                    @Override
+                    protected void onClick() {
+						MeatPie pie = new MeatPie();
+						pie.quantity(2);
+						if (!pie.collect()) Dungeon.level.drop(pie, Dungeon.hero.pos);
+						takeReward(YoumuNPC.this);
+                    }
+                };
+                btnReward_pies.setRect( 0, (int)btnReward_item2.bottom() + GAP, WIDTH, BTN_HEIGHT );
+                add( btnReward_pies );
+				resize( WIDTH, (int)btnReward_pies.bottom() );
+            }
+		}
+
+		private void takeReward( YoumuNPC maid) {
+			hide();
+			maid.flee();
+			YoumuNPC.Quest.complete();
+		}
+	}
+
 	public static class YoumuGhostSpawner extends Buff {
 
 		public int killCount = 0;
 		int spawnPower = 0;
 		int spawnCount = 1;
-		int turn_count = 0;
 		boolean yuyuSpawn = false;
 		boolean yuyuKill  = false;
 		{
@@ -397,7 +478,6 @@ public class YoumuNPC extends NPC {
 		@Override
 		public boolean act() {
 			spawnPower++;
-			turn_count++;
 			int wraiths = 1; //we include the wraith we're trying to spawn
 			for (Mob mob : Dungeon.level.mobs){
 				if (mob instanceof Wraith){
@@ -406,7 +486,7 @@ public class YoumuNPC extends NPC {
 			}
 
 			int powerNeeded = Math.min(10, wraiths*3);	//Reduce this so that wraith spawn more
-			if (turn_count > 300) powerNeeded = powerNeeded*10; // To prevent Necro build from too OP
+			if (spawnCount > 50) powerNeeded = powerNeeded*10; // To prevent Necro build from too OP
 			if (powerNeeded <= spawnPower){
 				spawnPower -= powerNeeded;
 				int pos = 0;
@@ -461,7 +541,6 @@ public class YoumuNPC extends NPC {
 			bundle.put( YUYUS, yuyuSpawn);
 			bundle.put( YUYUK, yuyuKill);
 			bundle.put( KILLCOUNT, killCount);
-			bundle.put( TURNCOUNT, turn_count);
 		}
 
 		@Override
@@ -472,7 +551,6 @@ public class YoumuNPC extends NPC {
 			yuyuSpawn = bundle.getBoolean(YUYUS);
 			yuyuKill  = bundle.getBoolean(YUYUK);
 			killCount = bundle.getInt(KILLCOUNT);
-			turn_count = bundle.getInt(TURNCOUNT);
 		}
 	}
 }

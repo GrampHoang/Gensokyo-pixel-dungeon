@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+import com.watabou.utils.Reflection;
 
 public class KomachiBlessing extends Buff {
 	
@@ -52,7 +53,7 @@ public class KomachiBlessing extends Buff {
 
 	public static void setRange(Char ch){
 		if (ch.buff(KomachiBlessing.class) == null){
-			KomachiBlessing newBuff = new KomachiBlessing();
+			KomachiBlessing newBuff = Reflection.newInstance(KomachiBlessing.class);
 			newBuff.isMelee = false;
 			newBuff.attachTo(ch);
 		}

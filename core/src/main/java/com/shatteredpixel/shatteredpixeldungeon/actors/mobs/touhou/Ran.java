@@ -123,7 +123,8 @@ public class Ran extends Mob {
 	protected boolean doAttack(Char enemy ) {
 		charging = false;
 		if(Dungeon.level.water[this.pos] == true && Random.IntRange(0, 1) == 1){
-			Dungeon.level.map[this.pos] = Terrain.EMPTY;
+			// Dungeon.level.map[this.pos] = Terrain.EMPTY;
+			Dungeon.level.set(this.pos, Terrain.EMPTY);
 			GameScene.updateMap(this.pos);
 		}
 		this.sprite.remove(CharSprite.State.CHARGING);
@@ -174,8 +175,12 @@ public class Ran extends Mob {
 			if (Dungeon.level.water[pos]){
 				dmg = Random.NormalIntRange( 8, 16 );
 			}
+			//Reduce damage if too far, cuz she's too strong
+			int reduceDmgDiv = 1;
+			if (Dungeon.level.distance(this.pos, enemy.pos) > 4) reduceDmgDiv = 2;
+			
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-			enemy.damage( dmg, new EarthenBolt() );
+			enemy.damage( dmg/reduceDmgDiv, new EarthenBolt() );
 			
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
 				Badges.validateDeathFromEnemyMagic();

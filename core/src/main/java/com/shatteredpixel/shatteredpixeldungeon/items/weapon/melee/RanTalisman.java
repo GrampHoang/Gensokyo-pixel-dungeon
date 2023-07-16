@@ -55,6 +55,8 @@ public class RanTalisman extends WeaponWithSP {
 		RCH = 99;    //extra reach
 
 		chargeGain = 8;
+
+		usesTargeting = false;
 	}
 
 	@Override

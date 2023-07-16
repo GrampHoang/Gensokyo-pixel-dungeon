@@ -84,6 +84,7 @@ public class TenshiBoss extends Mob {
 
 		properties.add(Property.BOSS);
 		immunities.add(Fire.class);
+		immunities.add(Sleep.class);
 	}
 
 	private int HP_BRACKET = 150;	//every 150 damage phase change
@@ -114,10 +115,23 @@ public class TenshiBoss extends Mob {
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
-		
+	
 		if(checkWeather(MIST) && distance(Dungeon.hero) > 2){
 			sprite.showStatus(CharSprite.POSITIVE, "!?");
 			return;
+		}
+
+		if(isAlive()){
+            if (Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 1){
+                KomachiBlessing.setRange(this);
+            } else {
+                KomachiBlessing.tryDetach(this);
+            }
+        }
+
+		if (dmg >= 16){
+			// Reduce damage like slime, but start from 15 and not as powerful
+			dmg = 15 + (int)(Math.sqrt(12*(dmg - 15) + 1) - 1)/2;
 		}
 
 		super.damage(dmg, src);
@@ -220,9 +234,11 @@ public class TenshiBoss extends Mob {
 				}
 					
 				int oldPos = pos;
-				if (getCloser(enemy.pos)){
-					spend(1/speed());
-					return moveSprite( oldPos,  pos );
+				if (enemy != null){
+					if (getCloser(enemy.pos)){
+						spend(1/speed());
+						return moveSprite( oldPos,  pos );
+					}
 				}
 				spend( TICK );
 				return true;

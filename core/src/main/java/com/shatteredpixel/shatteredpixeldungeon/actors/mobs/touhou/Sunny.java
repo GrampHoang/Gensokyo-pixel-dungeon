@@ -206,6 +206,9 @@ public class Sunny extends ThreeFairiesOfLight {
 				} else{
 					ch.damage(6,this);
 				}
+				if (ch == Dungeon.hero){
+					Statistics.bossScores[2] -= 100;
+				}
                 Buff.affect(ch, Burning.class).reignite(ch, 4f);
             }
 		}
@@ -261,6 +264,7 @@ public class Sunny extends ThreeFairiesOfLight {
                 public void call() {
                     // ch.onAttackComplete();
 					Dungeon.hero.damage( (isLunatic() ? Random.IntRange(1, anger*2+1) : anger*2+2), this);
+					Statistics.bossScores[2] -= 10;
                 }
             } );
 	}

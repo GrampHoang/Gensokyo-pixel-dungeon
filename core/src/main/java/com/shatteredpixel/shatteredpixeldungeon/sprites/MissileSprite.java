@@ -102,8 +102,6 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		ANGULAR_SPEEDS.put(Kunai.class,         0);
 		ANGULAR_SPEEDS.put(Javelin.class,       0);
 		ANGULAR_SPEEDS.put(Trident.class,       0);
-		
-		ANGULAR_SPEEDS.put(MerlinTrumpet.Note.class,       0);
 
 		ANGULAR_SPEEDS.put(SpiritBow.SpiritArrow.class,       0);
 		ANGULAR_SPEEDS.put(ScorpioSprite.ScorpioShot.class,   0);
@@ -170,8 +168,6 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 				|| item instanceof ScorpioSprite.ScorpioShot
 				|| item instanceof TenguSprite.TenguShuriken){
 			speed *= 1.75f;
-		} else if (item instanceof MerlinTrumpet.Note){
-			speed *= 0.5f;
 		}
 		
 		PosTweener tweener = new PosTweener( this, to, d.length() / speed );

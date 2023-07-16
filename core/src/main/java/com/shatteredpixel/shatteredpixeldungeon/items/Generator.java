@@ -410,12 +410,15 @@ public class Generator {
 					YoumuBlade1.class,
 					LusanaViolin.class,
 					MerlinTrumpet.class,
-					LyricaPiano.class	
+					LyricaPiano.class,
+
+					RaikoDrum.class
 
 			};
-			WEP_T4.probs = new float[]{ 6, 5, 5, 4, 4, 4,   3, 3, 3, 3, 3, 0, 3};
+			WEP_T4.probs = new float[]{ 6, 5, 5, 4, 4, 4,   3, 3, 3, 3, 3, 3, 3, 0.01f};
 			if (Dungeon.isChallenged(Challenges.TOUHOU)){
-			WEP_T4.probs = new float[]{ 4, 3, 3, 2, 2, 2,   6, 6, 6, 4, 6, 6, 6};}
+			WEP_T4.probs = new float[]{ 4, 3, 3, 2, 2, 2,   6, 6, 6, 4, 6, 6, 6, 0.02f};
+			}
 
 			WEP_T5.classes = new Class<?>[]{
 					Greatsword.class,

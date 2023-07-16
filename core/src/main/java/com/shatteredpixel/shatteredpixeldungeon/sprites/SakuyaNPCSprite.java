@@ -39,6 +39,10 @@ public class SakuyaNPCSprite extends MobSprite {
 		idle = new Animation( 1, true );
 		idle.frames( frames, 0, 0, 1, 0, 0, 2, 3, 2, 3, 1, 0, 1 );
 
+		die = new Animation( 4, true );
+		die.frames( frames, 0, 0, 1, 1);
+
+
 		play( idle );
 	}
 }   

@@ -58,7 +58,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Magicdust;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MusicFlow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
@@ -719,9 +718,8 @@ public class Hero extends Char {
 		
 		float delay = 1f;
 
-		if ( buff( MusicFlow.class ) != null) delay /= buff( MusicFlow.class ).getSpeedBuff();
 		//Trying to get attack speed buff speed
-		if (buff(Exterminating.class) != null) delay /= 0.8f;
+		if (buff(Exterminating.class) != null) delay *= 0.8f;
 
 		if (belongings.weapon() != null) {
 			return belongings.weapon().delayFactor( this ) * delay;
@@ -1804,10 +1802,11 @@ public class Hero extends Char {
 	@Override
 	public void die( Object cause ) {
 		if(buff(Hourai.class) != null){
-			this.HP = HT;
-			GLog.p("Ressurection!");
-			
-			return;
+			if (buff(Hourai.class).isImmortal()){
+				this.HP = HT;
+				GLog.p("Ressurection!");
+				return;
+			}
 		}
 
 		BossMercy inFight = buff(BossMercy.class);

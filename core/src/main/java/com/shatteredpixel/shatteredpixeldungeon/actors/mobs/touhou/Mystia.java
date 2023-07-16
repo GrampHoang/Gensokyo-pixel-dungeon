@@ -24,12 +24,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MystiaSprite;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -96,8 +98,9 @@ public class Mystia extends Mob {
 			}
 
 			if (Dungeon.level.heroFOV[pos]) {
-				CellEmitter.center( pos ).start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
+				sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 10 );
 			}
+			Sample.INSTANCE.play( Assets.Sounds.LULLABY );
 			
 			if (isLunatic() && enemy != null){
 				Buff.affect(enemy, Blindness.class, 2f);

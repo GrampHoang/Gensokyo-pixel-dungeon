@@ -24,53 +24,67 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char.Alignment;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+import com.watabou.utils.Callback;
+import com.watabou.utils.Bundle;
 
-public class ReisenHand extends WeaponWithSP {
+public abstract class GhostbandWeapon extends WeaponWithSP {
 
 	{
-		image = ItemSpriteSheet.REISENHAND;
+		image = ItemSpriteSheet.LUSANA_VIOLIN;
 		hitSound = Assets.Sounds.HIT;
-		hitSoundPitch = 1.3f;
+		hitSoundPitch = 1f;
 
-		tier = 1;
-		DLY = 0.4f; //2.5x speed
-		
-		bones = false;
+		tier = 4;
+		DLY = 1f;
 
-		chargeGain = 12;
-		chargeNeed = 100;
-	}
+        chargeGain = 10;
+        chargeNeed = 100;
+    }
 
-	@Override
-	public ItemSprite.Glowing glowing() {
-		return enchantment != null && (cursedKnown || !enchantment.curse()) ?
-				new ItemSprite.Glowing(enchantment.glowing().color, 0.33f*enchantment.glowing().period) : PURPLE;
-	}
-
-	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0xa020f0, 0.33f );
-
+    protected int hitCounter = 0;
 
 	@Override
 	public int max(int lvl) {
-		return (3 + lvl);  //just simplify the normal scaling equation, nerfed because of extra effect.
+		return  Math.round(3f*(tier+1)) + 3 +  // 18 base instead of 25
+				lvl*Math.round(0.8f*(tier+1)); // 4 instead of 5 per level
 	}
 
-	@Override
+    @Override
+	public int proc(Char attacker, Char defender, int damage) {
+        if (hitCounter >= 5){
+            activateAttackSkill(attacker, defender);
+            hitCounter = 0;
+        } else {
+            hitCounter++;
+        }
+        return super.proc(attacker, defender, damage);
+	}
+
+    protected abstract void activateAttackSkill(Char attacker, Char defender);
+
+    @Override
 	protected boolean useSkill(){
 		refundSP();
 		GameScene.selectCell(targeter);
@@ -93,7 +107,7 @@ public class ReisenHand extends WeaponWithSP {
             } else if (Dungeon.level.distance(ch.pos, Dungeon.hero.pos) > 1) {
                 GLog.w(Messages.get(GhostbandWeapon.class, "too_far"));
             } else{
-                pushNdmg(ch);
+                activateAttackSkill(curUser, ch);
 				spendSP();
                 Dungeon.hero.spendAndNext(1f);
             }
@@ -102,27 +116,26 @@ public class ReisenHand extends WeaponWithSP {
 
 		@Override
 		public String prompt() {
-			return Messages.get(this, "prompt");
+			return Messages.get(GhostbandWeapon.class, "prompt");
 		}
 
 	};
 
-	private void pushNdmg(Char ch){
-		Ballistica trajectory = new Ballistica(Dungeon.hero.pos, ch.pos, Ballistica.STOP_TARGET);
-		//trim it to just be the part that goes past them
-		trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
-		//knock them back along that ballistica
-		WandOfBlastWave.throwChar(ch, trajectory, 1, false, true, this.getClass());
-		Buff.affect(ch, Paralysis.class, 0.4f);
-		ch.damage(Random.Int(min()*2, max()), Dungeon.hero);
+    protected int skillDamage(){
+        return Random.IntRange(min(), max());
+    }
+
+    private static final String HITCOUNT = "hitcount";
+
+    @Override
+	public void storeInBundle( Bundle bundle ) {
+		super.storeInBundle(bundle);
+		bundle.put( HITCOUNT , hitCounter );
 	}
 
-    public String statsInfo(){
-        int chance = Math.round((buffedLvl() + 1)*100/(buffedLvl() + 5));
-		return Messages.get(this, "stats_desc", chance) + "_%_.";
-	}
-
-	public String skillInfo(){
-		return Messages.get(this, "skill_desc", chargeGain, chargeNeed, 1 + Math.round(level()/5), min()*2, max());
+    @Override
+	public void restoreFromBundle( Bundle bundle ) {
+		super.restoreFromBundle(bundle);
+		hitCounter = bundle.getInt( HITCOUNT );
 	}
 }

@@ -43,6 +43,7 @@ public class DaiyoseiFlower extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 8;
+		usesTargeting = false;
     }
 
 	public static int HEAL_PERCENTAGE = 20;

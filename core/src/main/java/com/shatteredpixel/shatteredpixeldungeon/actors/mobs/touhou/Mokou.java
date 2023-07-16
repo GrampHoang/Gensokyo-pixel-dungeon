@@ -68,7 +68,7 @@ public class Mokou extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 25, 30 );
+		return Random.NormalIntRange( 22, 26 );
 	}
 	
 	@Override
@@ -78,7 +78,7 @@ public class Mokou extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 12);
+		return Random.NormalIntRange(5, 12);
 	}
 
 	@Override
@@ -134,8 +134,8 @@ public class Mokou extends Mob {
 
     @Override
 	public void die(Object cause) {
-		if ((Random.IntRange(0, 99) < (100/(revive_count+1)) && isLunatic())    
-            //if Lunatic, each revive reduce next reviev chance by half
+		if (isLunatic() && (Random.IntRange(0, 99) < (100/(revive_count+1)))    
+            //if Lunatic, each revive reduce next reviev chance by half. Else revive once
             || revive_count < 1){
             skill_cd = Reviving.DOWN_TIME*2;
 			Buff.affect(this, Reviving.class, Reviving.DOWN_TIME);

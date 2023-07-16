@@ -119,7 +119,7 @@ public class Yuyuko extends Mob {
 
     @Override
     public void die( Object cause ) {
-        YoumuNPC.Quest.complete();
+        // YoumuNPC.Quest.complete();
         Dungeon.hero.buff(YoumuGhostSpawner.class).yuyuKilled();
         super.die( cause );
         //GameScene.bossSlain();

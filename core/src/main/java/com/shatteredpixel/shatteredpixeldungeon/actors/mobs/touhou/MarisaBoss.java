@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -457,7 +458,11 @@ public class MarisaBoss extends Mob {
 			Char ch = Actor.findChar(stopCell + p);
 			if(ch != null && ch != this){
 				Buff.affect(ch, Paralysis.class, 1.5f);
+				if (ch == Dungeon.hero){
+					Statistics.bossScores[2] -= 200;
+				}
 			}
+			
 		}
 
 		Ballistica b = new Ballistica(this.pos, stopCell, Ballistica.STOP_SOLID);
@@ -480,6 +485,9 @@ public class MarisaBoss extends Mob {
         for (Char ch : affected) {
 			Buff.affect(ch, Bleeding.class).set(5);
 			if (ch.alignment != this.alignment){
+				if (ch == Dungeon.hero){
+					Statistics.bossScores[2] -= 400;
+				}
             	ch.damage(Random.NormalIntRange(10, 20), new Hakkero());
 			} else {
 				ch.damage(Random.NormalIntRange(5, 10), new Hakkero());
@@ -577,6 +585,9 @@ public class MarisaBoss extends Mob {
 			Buff.affect(ch, Vertigo.class, 2f);
 			if (ch.alignment != this.alignment){
             	ch.damage(Random.NormalIntRange(20, 35), new Hakkero());
+				if (ch == Dungeon.hero){
+					Statistics.bossScores[2] -= 400;
+				}
 			} else {
 				ch.damage(Random.NormalIntRange(5, 10), new Hakkero());
 			}

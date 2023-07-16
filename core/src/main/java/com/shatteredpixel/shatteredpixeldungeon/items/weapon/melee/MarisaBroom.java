@@ -48,6 +48,7 @@ public class MarisaBroom extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 25;
+		usesTargeting = false;
     }
 
 	public static float BLIND_DUR = 3f;

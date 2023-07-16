@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Healing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hourai;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Silence;
@@ -47,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -60,6 +62,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 public class UnknownPotion extends Item {
@@ -105,9 +108,9 @@ public class UnknownPotion extends Item {
 		}
 	}
 
-	public static void drink( Hero hero ){
+	public void drink( Hero hero ){
 		hero.spend(TIME_TO_DRINK);
-        int i = Random.IntRange(0, 100);
+        int i = Random.IntRange(0, 10000);
         if        (i < 10){
 			// Instant death
 			hero.die(null);
@@ -133,13 +136,29 @@ public class UnknownPotion extends Item {
 			hero.sprite.showStatus( CharSprite.POSITIVE, Messages.get(PotionOfStrength.class, "msg_1") );
 			GLog.w(Messages.get(UnknownPotion.class, "eff4"));
         } else {    //Jackpot, 1%
-			Buff.affect(hero, Hourai.class);
-			GLog.n(Messages.get(UnknownPotion.class, "eff5"));
+			GLog.p(Messages.get(UnknownPotion.class, "eff5"));
+			Buff.affect(hero, Invisibility.class, 25f);
 			hero.busy();
-			Dungeon.hero.spend(50f);
-			Dungeon.hero.next();
-            GLog.p(Messages.get(UnknownPotion.class, "jackpot"));
+			Dungeon.hero.sprite.operateWithTime(0.25f, new Callback() {
+				@Override
+				public void call() {
+					// Dungeon.hero.next();
+					GLog.n(Messages.get(UnknownPotion.class, "eff5_2"));
+					// Dungeon.hero.next();
+					Dungeon.hero.spend(50f);
+					Dungeon.hero.sprite.operateWithTime(2f, new Callback() {
+						@Override
+						public void call() {
+							GLog.p(Messages.get(UnknownPotion.class, "jackpot"));
+							Buff.affect(hero, Hourai.class);
+
+							Dungeon.hero.next();
+						}
+					});
+				}
+			});
         }
+		detach( hero.belongings.backpack );
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public class KoishiNPCSprite extends MobSprite {
 
     @Override
 	public void draw() {
-		this.alpha(0.025f);
+		this.alpha(0.05f);
 		super.draw();
 	}
 }

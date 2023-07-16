@@ -39,8 +39,13 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.ForestLevel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SuikaNPCSprite;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundle;
@@ -106,8 +111,9 @@ public class SuikaNPC extends NPC {
 						SuikaEnc enc = new SuikaEnc();
 						enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
 					}
-						EndlessAlcohol alcohol = new EndlessAlcohol();
-						if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
+					EndlessAlcohol alcohol = new EndlessAlcohol();
+					if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
+					flee();
 						
 				}
 				switch(Random.IntRange(1,4)){
@@ -126,21 +132,11 @@ public class SuikaNPC extends NPC {
 						break;
 				}
 			// finished now
-			}else if (poh != null && (poh.quantity() >= 2) && !Quest.completed) {
+			}else if (poh != null && poh.isIdentified() && (poh.quantity() >= 2) && !Quest.completed) {
 				Game.runOnRenderThread(new Callback() {
 					@Override
 					public void call() {
-						poh.detach(Dungeon.hero.belongings.backpack);
-						poh.detach(Dungeon.hero.belongings.backpack);
-						SuikaNPC.Quest.complete();
-						tell(Messages.get(SuikaNPC.class, "quest_3"));
-						EndlessAlcohol alcohol = new EndlessAlcohol();
-						if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
-						// if (!Catalog.isSeen(SuikaEnc.class)) {
-						// 	// Catalog.setSeen(SuikaEnc.class);
-						// 	SuikaEnc enc = new SuikaEnc();
-						// 	enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
-						// }
+						GameScene.show( new WndSuika( SuikaNPC.this) );
 					}
 				});
 			//Not finish
@@ -171,7 +167,7 @@ public class SuikaNPC extends NPC {
 		destroy();
 		sprite.die();
 	}
-
+	
 	public static class Quest {
 		
 		private static boolean alternative;
@@ -256,6 +252,63 @@ public class SuikaNPC extends NPC {
 		
 		public static boolean isCompleted() {
 			return completed;
+		}
+	}
+
+	public class WndSuika extends Window {
+		
+		private static final int WIDTH      = 120;
+		private static final int BTN_HEIGHT = 20;
+		private static final int GAP        = 2;
+
+		public WndSuika( final SuikaNPC suika) {
+			
+			super();
+			
+			IconTitle titlebar = new IconTitle();
+			titlebar.icon(suika.sprite());
+			titlebar.label( Messages.get(this, "title") );
+			titlebar.setRect( 0, 0, WIDTH, 0 );
+			add( titlebar );
+			
+		
+			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "mess") , 6 );
+			message.maxWidth(WIDTH);
+			message.setPos(0, titlebar.bottom() + GAP);
+			add( message );
+
+			RedButton btnGive = new RedButton( Messages.get(this, "give_pot") ) {
+				@Override
+				protected void onClick() {
+					PotionOfHealing poh = Dungeon.hero.belongings.getItem( PotionOfHealing.class );
+                    poh.detach(Dungeon.hero.belongings.backpack);
+					poh.detach(Dungeon.hero.belongings.backpack);
+					SuikaNPC.Quest.complete();
+					tell(Messages.get(SuikaNPC.class, "quest_3"));
+					EndlessAlcohol alcohol = new EndlessAlcohol();
+					if (!alcohol.quantity(3).collect()) Dungeon.level.drop(alcohol, Dungeon.hero.pos);
+					// if (!Catalog.isSeen(SuikaEnc.class)) {
+					// 	// Catalog.setSeen(SuikaEnc.class);
+					// 	SuikaEnc enc = new SuikaEnc();
+					// 	enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+					// }
+					hide();
+				}
+				
+			};
+			btnGive.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnGive );
+
+			RedButton btnNo = new RedButton( Messages.get(this, "no") ) {
+				@Override
+				protected void onClick() {
+					hide();
+				}
+			};
+			btnNo.setRect( 0, (int)btnGive.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			add( btnNo );
+			
+			resize( WIDTH, (int)btnNo.bottom() );
 		}
 	}
 }

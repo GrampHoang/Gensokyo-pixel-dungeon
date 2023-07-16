@@ -37,6 +37,12 @@ import com.watabou.utils.Point;
 public class SacrificeRoom extends SpecialRoom {
 
 	@Override
+	public int minWidth() { return 7; }
+	public int minHeight() { return 7; }
+	public int maxWidth() { return 8; }
+	public int maxHeight() { return 8; }
+
+	@Override
 	public void paint(Level level) {
 		Painter.fill( level, this, Terrain.WALL );
 		Painter.fill( level, this, 1, Terrain.CHASM );

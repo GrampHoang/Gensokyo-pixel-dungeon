@@ -22,12 +22,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
- package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
@@ -38,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLevitation;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -45,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 public class Marisa extends Mob {
@@ -72,7 +77,7 @@ public class Marisa extends Mob {
 	
     private static final String ITEM = "item";
     public Item item;
-
+	public int count = 0;	//Won't save this into bundle, drop item after count reach 10
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 4, 12 );
@@ -94,13 +99,32 @@ public class Marisa extends Mob {
 		
 		if (alignment == Alignment.ENEMY && item == null
 				&& enemy instanceof Hero && steal( (Hero)enemy )) {
-			if(isLunatic()){
-				Buff.affect(this, Stamina.class, 10f);
-				Sample.INSTANCE.play( Assets.Sounds.SHATTER );
-				Sample.INSTANCE.play( Assets.Sounds.GAS );
-				GameScene.add( Blob.seed( this.pos, 15*Dungeon.depth, ConfusionGas.class ) );
-			}
+			Buff.affect(this, Haste.class, 4f);
 			state = FLEEING;
+			if(isLunatic()){
+				int maxDist = 0;
+				Ballistica dashReal = new Ballistica( this.pos, Dungeon.hero.pos, Ballistica.STOP_SOLID);
+				for (int i : PathFinder.NEIGHBOURS8){
+					Ballistica dashTry = new Ballistica( this.pos, this.pos+i, Ballistica.STOP_SOLID);
+					if (maxDist < Dungeon.level.distance(this.pos, dashTry.collisionPos)){
+						maxDist = Dungeon.level.distance(this.pos, dashTry.collisionPos);
+						dashReal = dashTry;
+					}
+				}
+
+				for (int i : dashReal.subPath(1, Dungeon.level.distance(Dungeon.hero.pos, dashReal.collisionPos))) {
+					CellEmitter.get(i).start(Speck.factory(Speck.JET), 0.05f, 10);
+					
+					Char ch = Actor.findChar(i);
+					if (ch != null) {
+						Buff.affect(ch, Vertigo.class, 3f);					   
+					}
+				}
+
+				moveSprite(this.pos, dashReal.collisionPos);
+				move(dashReal.collisionPos);
+				Dungeon.level.occupyCell(Marisa.this);
+			}
 		}
 
 		return damage;
@@ -132,13 +156,14 @@ public class Marisa extends Mob {
 
 		if (toSteal != null && !toSteal.unique && toSteal.level() < 1 ) {
 
-			GLog.w( Messages.get(Thief.class, "stole", toSteal.name()) );
+			GLog.w( Messages.get(Marisa.class, "stole", toSteal.name()) );
 			if (!toSteal.stackable) {
 				Dungeon.quickslot.convertToPlaceholder(toSteal);
 			}
 			Item.updateQuickslot();
 
 			item = toSteal.detach( hero.belongings.backpack );
+			count = 0;
 			return true;
 		} else {
 			return false;
@@ -150,16 +175,35 @@ public class Marisa extends Mob {
 		if (item != null) {
 			Dungeon.level.drop( item, pos ).sprite.drop();
 			item = null;
+			count = 0;
 		}
 		super.rollToDropLoot();
 	}
 	
+	@Override
+	public String description() {
+		String desc = super.description();
+
+		if (item != null) {
+			desc += Messages.get(Marisa.class, "carries", item.name() );
+		}
+
+		return desc;
+	}
+
     private class Wandering extends Mob.Wandering {
 		
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
 			super.act(enemyInFOV, justAlerted);
-			
+			if (state == WANDERING && item != null){
+				count++;
+			}
+			if (count >= 20 && item != null) {
+				Dungeon.level.drop( item, pos ).sprite.drop();
+				item = null;
+				count = 0;
+			}
 			//if an enemy is just noticed and the thief posses an item, run, don't fight.
 			if (state == HUNTING && item != null){
 				state = FLEEING;
@@ -185,5 +229,22 @@ public class Marisa extends Mob {
 				super.nowhereToRun();
 			}
 		}
+
+		@Override
+		public boolean act( boolean enemyInFOV, boolean justAlerted ) {
+			super.act(enemyInFOV, justAlerted);
+			if (state == FLEEING && item != null){
+				count++;
+				count++;
+			}
+			if (count >= 20 && item != null) {
+				Dungeon.level.drop( item, pos ).sprite.drop();
+				item = null;
+				count = 0;
+				state = WANDERING;
+			}
+			return true;
+		}
+
 	}
 }

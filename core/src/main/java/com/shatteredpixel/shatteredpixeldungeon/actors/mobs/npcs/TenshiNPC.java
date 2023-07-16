@@ -165,6 +165,7 @@ public class TenshiNPC extends NPC {
 								// Being trash, die too soon, give you  3 peaches
 								tell(Messages.get(TenshiNPC.class, "i_bad"));
 								if (!peach.quantity(3).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
+								GLog.i( Messages.get(Dungeon.hero, "you_now_have", peach.name()) );
 								break;
 							case 2:
 								// Being decent, win her normally, give you FireOath, 2 peach, 1 poh
@@ -172,6 +173,7 @@ public class TenshiNPC extends NPC {
 								if (!peach.quantity(2).collect()) Dungeon.level.drop(peach, Dungeon.hero.pos);
 								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
 								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
+								GLog.i( Messages.get(Dungeon.hero, "you_now_have", peach.name() + ", " + fo.name() + ", " + poh.name()));
 								break;
 							case 3:
 							case 4:
@@ -184,11 +186,12 @@ public class TenshiNPC extends NPC {
 								} else {
 									if (Quest.impression == 3) tell(Messages.get(TenshiNPC.class, "i_good"));
 									else tell(Messages.get(TenshiNPC.class, "i_good_survive"));
-								if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
-								if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
-								HisouBlade hb = new HisouBlade();
-								hb.identify();
-								if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
+									if (!fo.collect()) Dungeon.level.drop(fo, Dungeon.hero.pos);
+									if (!poh.collect()) Dungeon.level.drop(poh, Dungeon.hero.pos);
+									HisouBlade hb = new HisouBlade();
+									hb.identify();
+									if (!hb.collect()) Dungeon.level.drop(hb, Dungeon.hero.pos);
+									GLog.i( Messages.get(Dungeon.hero, "you_now_have", hb.name() + ", " + fo.name() + ", " + poh.name()));
 								}
 								break;
 						}
@@ -255,13 +258,13 @@ public class TenshiNPC extends NPC {
 		public static boolean spawned;
 		public static boolean given;
 		public static boolean completed;
-		public static int impression;
+		public static int impression = 3;
 
 		public static void reset() {
 			spawned = false;
 			// given = false;
 			// completed = false;
-			// impression = 3;
+			impression = 3;
 		}
 		
 		public static void setImpression(int i){
@@ -367,7 +370,7 @@ public class TenshiNPC extends NPC {
 					
 					InterlevelScene.curTransition = new LevelTransition();
 					InterlevelScene.mode = InterlevelScene.Mode.NEWTELEPORT;
-					InterlevelScene.curTransition.destDepth = 15;
+					InterlevelScene.curTransition.destDepth = Dungeon.depth;
 					InterlevelScene.curTransition.destBranch = 9;
 					Game.switchScene(InterlevelScene.class);
 					

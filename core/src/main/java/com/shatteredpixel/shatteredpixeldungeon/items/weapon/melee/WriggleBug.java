@@ -46,6 +46,7 @@ public class WriggleBug extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 10;
+		usesTargeting = false;
     }
 
 	public float BLIND_DUR = 3f;

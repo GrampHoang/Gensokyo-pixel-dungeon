@@ -565,7 +565,6 @@ public abstract class Mob extends Char {
 	public float attackDelay() {
 		float delay = 1f;
 		if ( buff(Adrenaline.class) != null) delay /= 1.5f;
-		if ( buff( MusicFlow.class ) != null) delay /=  buff( MusicFlow.class ).getSpeedBuff();
 		return delay;
 	}
 	

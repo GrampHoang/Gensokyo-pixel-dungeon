@@ -49,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
@@ -80,9 +81,9 @@ public class Hakkero extends DamageWand {
 
         unique = true;
 		bones = false;
-
-		isMagician = false;
 	}
+
+	public boolean isMagician = false;
 
 	float interval = 2f;
 	int quantity = 1;
@@ -101,6 +102,15 @@ public class Hakkero extends DamageWand {
 
 	public void turnMagician() {
 		this.isMagician = true;
+	}
+
+	@Override
+	public void updateLevel() {
+		maxCharges = Math.min( initialCharges() + level(), 10 );
+		if (this.isMagician != true){
+			maxCharges = Math.min( initialCharges() + level(), 5 );
+		}
+		curCharges = Math.min( curCharges, maxCharges );
 	}
 
 	@Override
@@ -312,7 +322,7 @@ public class Hakkero extends DamageWand {
 
 	@Override
 	public void staffFx(MagesStaff.StaffParticle particle) {
-		particle.color(0x220022);
+		particle.color(0x123456);
 		particle.am = 0.6f;
 		particle.setLifespan(1f);
 		particle.acc.set(10, -10);
@@ -320,4 +330,18 @@ public class Hakkero extends DamageWand {
 		particle.shuffleXY(1f);
 	}
 	
+	private static final String IS_MAGICIAN	        = "isMagician";
+
+	@Override
+	public void storeInBundle( Bundle bundle ) {
+		super.storeInBundle( bundle );
+		bundle.put( IS_MAGICIAN, isMagician );
+	}
+	
+	@Override
+	public void restoreFromBundle( Bundle bundle ) {
+		super.restoreFromBundle( bundle );
+		isMagician = bundle.getBoolean(IS_MAGICIAN);
+		updateLevel();
+	}
 }

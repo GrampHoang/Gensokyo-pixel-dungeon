@@ -31,6 +31,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.AliceSprite;
@@ -62,9 +65,11 @@ public class Alice extends Mob {
 
         loot = PotionOfHealing.class;
 		lootChance = 0.1667f;
+
+		baseSpeed = 0.6f;
 	}
 
-	private float SUMMON_CD = 30f;
+	private float SUMMON_CD = 25f;
     private float summon_cd = 5f;
 
 	@Override
@@ -82,10 +87,10 @@ public class Alice extends Mob {
 		return Random.NormalIntRange(2, 8);
 	}
 
-    @Override
-	public float speed() {
-		return 3f * super.speed() / 4f;
-	}
+    // @Override
+	// public float speed() {
+	// 	return 3f * super.speed() / 5f;
+	// }
 
     @Override
 	protected boolean canAttack( Char enemy ) {
@@ -122,6 +127,10 @@ public class Alice extends Mob {
 		return super.act();
 	}
     protected void summonDolls(){
+		if (isLunatic()) {
+			Buff.affect(this, Haste.class, 10f);
+			Buff.affect(this, Levitation.class, 20f);
+		}
         summon_cd = SUMMON_CD;
 		boolean hourai_not_spawned = true;
 		boolean shanghai_not_spawned = true;

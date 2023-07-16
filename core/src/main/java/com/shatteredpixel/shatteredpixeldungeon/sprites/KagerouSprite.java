@@ -33,6 +33,8 @@ import com.watabou.utils.Callback;
 
 public class KagerouSprite extends MobSprite {
 	
+	private Animation leap;
+	
 	public KagerouSprite() {
 		super();
 		
@@ -49,10 +51,19 @@ public class KagerouSprite extends MobSprite {
 		attack = new Animation( 12, false );
 		attack.frames( frames, 0, 1);
 		
+		leap = new Animation( 1, true );
+		leap.frames( frames, 0 );
+
 		die = new Animation( 15, false );
 		die.frames( frames, 0, 2, 3, 4 );
 
 		play( idle );
+	}
+
+	@Override
+	public void jump(int from, int to, Callback callback) {
+		super.jump(from, to, callback);
+		play( leap );
 	}
 	
 }

@@ -154,10 +154,13 @@ public class ForestBossLevel extends Level {
         //Assign this here to make coding easier in each faires
         sunny.star = star;
         sunny.luna = luna;
+        sunny.sunny = sunny;
         luna.sunny = sunny;
         luna.star = star;
+        luna.luna = luna;
         star.sunny= sunny;
         star.luna = luna;
+        star.star = star;
     }
 
     @Override

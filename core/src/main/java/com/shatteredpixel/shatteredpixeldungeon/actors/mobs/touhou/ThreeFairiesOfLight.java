@@ -117,6 +117,9 @@ public class ThreeFairiesOfLight extends Mob {
         super.damage( dmg, src );
 		// Give range shield
         if(isAlive()){
+            // this.sunny.beckon(this.pos);
+            // this.star.beckon(this.pos);
+            // this.luna.beckon(this.pos);
             if (Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 1){
                 KomachiBlessing.setRange(this);
             } else {

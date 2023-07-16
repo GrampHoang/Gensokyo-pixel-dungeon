@@ -210,6 +210,7 @@ public class Star extends ThreeFairiesOfLight {
                 public void call() {
                     // ch.onAttackComplete();
 					Dungeon.hero.damage( (isLunatic() ? Random.IntRange(1, anger*2+1) : anger*2+2), this);
+					Statistics.bossScores[2] -= 10;
                 }
             } );
 	}

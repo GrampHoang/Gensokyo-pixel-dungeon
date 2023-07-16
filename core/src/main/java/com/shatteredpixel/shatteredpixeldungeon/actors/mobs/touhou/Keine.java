@@ -71,9 +71,9 @@ public class Keine extends Mob {
 	@Override	
 	public int damageRoll() {
 		if (!hakutaku()){
-			return Random.NormalIntRange(18, 23);
+			return Random.NormalIntRange(15, 20);
 		}
-		return Random.NormalIntRange(25, 30);
+		return Random.NormalIntRange(20, 25);
 	}
 	
 	@Override

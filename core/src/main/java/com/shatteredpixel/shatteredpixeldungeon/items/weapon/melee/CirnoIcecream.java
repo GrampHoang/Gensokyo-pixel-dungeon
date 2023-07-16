@@ -58,6 +58,8 @@ public class CirnoIcecream extends WeaponWithSP {
 
 		Chilling chill = new Chilling();
 		enchant((Weapon.Enchantment)chill);
+
+		usesTargeting = false;
     }
 
 	// public int HUNGER_FILL = 100 + charge/2 ;

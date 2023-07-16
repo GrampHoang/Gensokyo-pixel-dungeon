@@ -48,7 +48,7 @@ public class Kaguya extends Mob {
 	{
 		spriteClass = KaguyaSprite.class;
 		HP = HT = 60;
-		defenseSkill = 20;
+		defenseSkill = 15;
 		
 		EXP = 10;
 		maxLvl = 20;
@@ -59,7 +59,7 @@ public class Kaguya extends Mob {
 
 	@Override	
 	public int damageRoll() {
-		return Random.NormalIntRange(25, 30);
+		return Random.NormalIntRange(12, 18);
 	}
 	
 	@Override
@@ -69,7 +69,7 @@ public class Kaguya extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(5, 10);
+		return Random.NormalIntRange(4, 10);
 	}
 	
 	@Override
@@ -130,7 +130,7 @@ public class Kaguya extends Mob {
             }
 			if (enemy == Dungeon.hero) {Sample.INSTANCE.play( Assets.Sounds.DEBUFF );}
 			
-			int dmg = Random.NormalIntRange( 20, 30 );
+			int dmg = Random.NormalIntRange( 15, 20 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.damage( dmg, new KaguyaBolt() );
 			

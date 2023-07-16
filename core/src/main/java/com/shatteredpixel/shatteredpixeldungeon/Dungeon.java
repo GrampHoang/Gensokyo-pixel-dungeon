@@ -902,7 +902,7 @@ public class Dungeon {
 	}
 
 	public static void updateLevelExplored(){
-		if (branch == 0 && level instanceof RegularLevel && !Dungeon.bossLevel()){
+		if ((branch == 0 || branch == 1) && level instanceof RegularLevel && !Dungeon.bossLevel()){
 			Statistics.floorsExplored.put( depth, level.isLevelExplored(depth));
 		}
 	}

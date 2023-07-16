@@ -296,22 +296,13 @@ public class YuyukoNPC extends NPC {
 			String hungString = "";
 			String wantString = "";
 			String rationName = "Small Ration";
-			String rationName3= "Small Ration";
+			String rationNameBig= "Big Ration";
 
 			Item ration = Dungeon.hero.belongings.getItem( SmallRation.class);
+			if (ration == null) ration = Dungeon.hero.belongings.getItem( FrozenCarpaccio.class);
+			if (ration == null) ration = Dungeon.hero.belongings.getItem( StewedMeat.class);
 			if (ration != null){
 				rationName = ration.name();
-				if (ration.quantity() > 3) rationName3 = ration.name();
-			}
-			ration = Dungeon.hero.belongings.getItem( FrozenCarpaccio.class);
-			if (ration != null){
-				rationName = ration.name();
-				if (ration.quantity() > 3) rationName3 = ration.name();
-			}
-			ration = Dungeon.hero.belongings.getItem( StewedMeat.class);
-			if (ration != null){
-				rationName = ration.name();
-				if (ration.quantity() > 3) rationName3 = ration.name();
 			}
 			switch(Quest.impression){
 				default:
@@ -321,7 +312,7 @@ public class YuyukoNPC extends NPC {
 					break;
 				case 1:
 					hungString = Messages.get(this, "still_hungry");
-					wantString = Messages.get(this, "want_ration", rationName3);
+					wantString = Messages.get(this, "want_ration", rationNameBig);
 					break;
 				case 2:
 					hungString = Messages.get(this, "ok");
@@ -344,11 +335,10 @@ public class YuyukoNPC extends NPC {
 					switch(Quest.impression){
 						default:
 						case 0: //Hungry, need any meat
-							Item ration;
 							// Will prioritize frozen -> Meat -> ration
-							ration = Dungeon.hero.belongings.getItem( FrozenCarpaccio.class );
-							ration = Dungeon.hero.belongings.getItem( StewedMeat.class );
-							ration = Dungeon.hero.belongings.getItem( SmallRation.class);
+							Item ration = Dungeon.hero.belongings.getItem( SmallRation.class);
+							if (ration == null) ration = Dungeon.hero.belongings.getItem( FrozenCarpaccio.class);
+							if (ration == null) ration = Dungeon.hero.belongings.getItem( StewedMeat.class);
 							if (ration!=null){
 								ration.detach(Dungeon.hero.belongings.backpack);
 								sprite.showStatus(CharSprite.POSITIVE, "Chomp");
@@ -356,6 +346,7 @@ public class YuyukoNPC extends NPC {
 								if (!sol.quantity(1).collect()) Dungeon.level.drop(sol, Dungeon.hero.pos);
 								Quest.setImpression(1);
 								sprite.operate(Dungeon.hero.pos);
+								GLog.i( Messages.get(Dungeon.hero, "you_now_have", sol.name()) );
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
@@ -369,6 +360,7 @@ public class YuyukoNPC extends NPC {
 								if (!soe.quantity(2).collect()) Dungeon.level.drop(soe, Dungeon.hero.pos);
 								Quest.setImpression(2);
 								sprite.operate(Dungeon.hero.pos);
+								GLog.i( Messages.get(Dungeon.hero, "you_now_have", soe.name()) );
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
@@ -383,6 +375,7 @@ public class YuyukoNPC extends NPC {
 								if (!gfan.collect()) Dungeon.level.drop(gfan, Dungeon.hero.pos);
 								Quest.setImpression(3);
 								sprite.operate(Dungeon.hero.pos);
+								GLog.i( Messages.get(Dungeon.hero, "you_now_have", gfan.name()) );
 							} else {
 								GLog.w(Messages.get(YuyukoNPC.class, "no_food"));
 							}
@@ -401,6 +394,7 @@ public class YuyukoNPC extends NPC {
 								Grim grim = new Grim();
 								gyyfan.enchant((Weapon.Enchantment)grim);
 								if (!gyyfan.collect()) Dungeon.level.drop(gyyfan, Dungeon.hero.pos);
+								GLog.i( Messages.get(Dungeon.hero, "you_now_have", gyyfan.name()) );
 								Quest.setImpression(4);
 								Quest.complete();
 								// sprite.operate(Dungeon.hero.pos);

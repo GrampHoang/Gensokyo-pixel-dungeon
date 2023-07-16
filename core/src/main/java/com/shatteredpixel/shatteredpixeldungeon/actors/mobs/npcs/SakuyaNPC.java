@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourg
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.SakuyaEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.TrashBag;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Unstable;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.SakuyaKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -46,6 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SakuyaNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.RewardButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.Game;
@@ -265,6 +267,8 @@ public class SakuyaNPC extends NPC {
 		private static final int WIDTH      = 120;
 		private static final int BTN_HEIGHT = 20;
 		private static final int GAP        = 2;
+		private static final int BTN_SIZE	= 32;
+		private static final int BTN_GAP	= 5;
 
 		public WndSakuya( final SakuyaNPC sakuya, boolean excel) {
 			
@@ -281,37 +285,49 @@ public class SakuyaNPC extends NPC {
 			message.setPos(0, titlebar.bottom() + GAP);
 			add( message );
 			
-			RedButton btnReward_knife = new RedButton( excel ? Messages.get(this, "knife_excel") : Messages.get(this, "knife") ) {
-				@Override
-				protected void onClick() {
-					SakuyaKnife sk = new SakuyaKnife();
-					sk.identify();
-					if (excel){
-						sk.upgrade();
-						sk.enchant(Weapon.Enchantment.random());
-					}
-					if (!sk.collect()) Dungeon.level.drop(sk, Dungeon.hero.pos);
-					takeReward(SakuyaNPC.this);
-				}
+			// RedButton btnReward_knife = new RedButton( excel ? Messages.get(this, "knife_excel") : Messages.get(this, "knife") ) {
+			// 	@Override
+			// 	protected void onClick() {
+			// 		SakuyaKnife sk = new SakuyaKnife();
+			// 		sk.identify();
+			// 		if (excel){
+			// 			sk.upgrade();
+			// 			sk.enchant(Weapon.Enchantment.random());
+			// 		}
+			// 		if (!sk.collect()) Dungeon.level.drop(sk, Dungeon.hero.pos);
+			// 		GLog.i( Messages.get(Dungeon.hero, "you_now_have", sk.name()) );
+			// 		takeReward(SakuyaNPC.this);
+			// 	}
 				
-			};
-			btnReward_knife.setRect( 0, message.top() + message.height() + GAP, WIDTH, BTN_HEIGHT );
+			// };
+			
+			SakuyaKnife sk = new SakuyaKnife();
+			sk.identify();
+			if (excel){
+				sk.upgrade();
+				Unstable unstable = new Unstable();
+				sk.enchant((Weapon.Enchantment)unstable);
+			}
+	
+			ThrowingKnife tk = new ThrowingKnife();
+					if (excel){
+						Unstable unstable = new Unstable();
+						((Weapon)tk).enchant((Weapon.Enchantment)unstable);
+						tk.upgrade();
+						tk.quantity(4);}
+					else {
+						tk.quantity(4);
+					}
+			
+			
+			RewardButton btnReward_knife = new RewardButton(sk, SakuyaNPC.this, this, null);
+			btnReward_knife.setRect( (WIDTH - BTN_GAP) / 2 - BTN_SIZE, message.top() + message.height() + BTN_GAP, BTN_SIZE, BTN_SIZE );
 			add( btnReward_knife );
-
-			RedButton btnReward_daggers = new RedButton( excel ? Messages.get(this, "dagger_excel") : Messages.get(this, "dagger") ) {
-				@Override
-				protected void onClick() {
-					ThrowingKnife tk = new ThrowingKnife();
-					if (excel)  if (!tk.quantity(4).collect()) Dungeon.level.drop(tk, Dungeon.hero.pos);
-					else 		if (!tk.quantity(8).collect()) Dungeon.level.drop(tk, Dungeon.hero.pos);
-					takeReward(SakuyaNPC.this);
-					
-				}
-			};
-			btnReward_daggers.setRect( 0, (int)btnReward_knife.bottom() + GAP, WIDTH, BTN_HEIGHT );
+			RewardButton btnReward_daggers = new RewardButton(tk, SakuyaNPC.this, this, null);
+			btnReward_daggers.setRect( btnReward_knife.right() + BTN_GAP, btnReward_knife.top(), BTN_SIZE, BTN_SIZE );
 			add( btnReward_daggers );
 
-			resize( WIDTH, (int)btnReward_daggers.bottom() );
+			resize( WIDTH, (int)btnReward_daggers.bottom() + BTN_GAP);
 
             TimekeepersHourglass hourglass = Dungeon.hero.belongings.getItem( TimekeepersHourglass.class );
             if (hourglass != null && excel){
@@ -380,4 +396,5 @@ public class SakuyaNPC extends NPC {
 			count = bundle.getInt(COUNT);
 		}
 	}
+	
 }

@@ -72,20 +72,20 @@ public class DebugSword extends WeaponWithSP {
 
     @Override
 	protected boolean useSkill(){
-        // if (!Catalog.isSeen(SuikaEnc.class)) {
-        //     Catalog.setSeen(MarisaEnc.class);
-		// 	Catalog.setSeen(SuikaEnc.class);
-		// 	Catalog.setSeen(TenshiEnc.class);
-		// 	Catalog.setSeen(YoumuEnc.class);
-		// 	Catalog.setSeen(AyaEnc.class);
-        // } else {
-		// 	GLog.w("Unseen");
-		// 	Catalog.setUnSeen(SuikaEnc.class);
-		// 	Catalog.setUnSeen(MarisaEnc.class);
-		// 	Catalog.setUnSeen(TenshiEnc.class);
-		// 	Catalog.setUnSeen(YoumuEnc.class);
-		// 	Catalog.setUnSeen(AyaEnc.class);
-		// }
+        if (!Catalog.isSeen(SuikaEnc.class)) {
+            Catalog.setSeen(MarisaEnc.class);
+			Catalog.setSeen(SuikaEnc.class);
+			Catalog.setSeen(TenshiEnc.class);
+			Catalog.setSeen(YoumuEnc.class);
+			Catalog.setSeen(AyaEnc.class);
+        } else {
+			GLog.w("Unseen");
+			Catalog.setUnSeen(SuikaEnc.class);
+			Catalog.setUnSeen(MarisaEnc.class);
+			Catalog.setUnSeen(TenshiEnc.class);
+			Catalog.setUnSeen(YoumuEnc.class);
+			Catalog.setUnSeen(AyaEnc.class);
+		}
 		PullWave.blast(curUser.pos);
 		Dungeon.hero.spendAndNext(1f);
         return true;

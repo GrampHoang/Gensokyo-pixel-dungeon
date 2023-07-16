@@ -34,7 +34,7 @@ import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 
-public class WeaponWithSP extends MeleeWeapon{
+public abstract class WeaponWithSP extends MeleeWeapon{
     {
         have_skill = true;
 		usesTargeting = true;
@@ -64,6 +64,8 @@ public class WeaponWithSP extends MeleeWeapon{
 		if (action.equals(AC_SKILL)){
 			if (!isEquipped( hero )) {
 				GLog.i( Messages.get(WeaponWithSP.class, "need_to_equip") );
+			} else if (!isIdentified()){
+				GLog.i( Messages.get(WeaponWithSP.class, "need_to_identify") );
 			} else if (charge >= chargeNeed){
                 if (useSkill()) charge = charge - chargeNeed;
                 updateQuickslot();
@@ -77,12 +79,13 @@ public class WeaponWithSP extends MeleeWeapon{
         return charge;
     }
 
-    protected boolean useSkill(){
-        //do nothing by default, weapon will override this
-        //Only the hero can use skill
-		Dungeon.hero.spend(1f); //Should scale with speed, but oh well. We haven't call this as super yet so still take 0 turn
-        return false;
-    }
+    protected abstract boolean useSkill();
+	// {
+    //     //do nothing by default, weapon will override this
+    //     //Only the hero can use skill
+	// 	Dungeon.hero.spend(1f); //Should scale with speed, but oh well. We haven't call this as super yet so still take 0 turn
+    //     return false;
+    // }
 
 	//These 2 are for cell-selecting skill. By default you use skill immediatly and spend SP
 	//However, for cell selecting, you will not spend SP until you actually use skill

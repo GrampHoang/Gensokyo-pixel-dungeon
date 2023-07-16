@@ -48,6 +48,7 @@ public class ClownTorch extends WeaponWithSP {
 		DLY = 1f;
 
         chargeGain = 4;
+		usesTargeting = false;
     }
 
 	public static float AMOK_DUR = 4f;

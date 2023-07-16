@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave.BlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
@@ -124,6 +125,12 @@ public class RemiliaBoss extends Mob {
 	}
 
 	@Override
+	protected boolean canAttack( Char enemy ) {
+		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
+		return Dungeon.level.distance(this.pos, enemy.pos) < 3 && attack.collisionPos == enemy.pos;
+	}
+
+	@Override
 	public void damage(int dmg, Object src) {
 		if (!isAlive()){
 			die(src);
@@ -136,6 +143,10 @@ public class RemiliaBoss extends Mob {
 		}
 		// int hpBracket = HT / 3;
 		
+		if (dmg >= 16){
+			// Reduce damage like slime, but start from 15 and not as powerful
+			dmg = 15 + (int)(Math.sqrt(12*(dmg - 15) + 1) - 1)/2;
+		}
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
@@ -144,7 +155,7 @@ public class RemiliaBoss extends Mob {
 		// 	die(src);
 		// 	return;
 		// }
-
+		if (Random.IntRange(1,4) == 2) GameScene.add( Blob.seed( this.pos, 5, SmokeScreen.class ) );
 		int dmgTaken = beforeHitHP - HP;
 		if (dmgTaken > 0) {
 			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
@@ -234,8 +245,9 @@ public class RemiliaBoss extends Mob {
 	}
 
 	public void callSakuya(int summonPos) {
+		int moveToPos = Random.IntRange(1,3) == 2 ? middle_of_map : Dungeon.level.randomDestination(this);
 		//Make sure mid map is empty
-		Char block = Actor.findChar(middle_of_map);
+		Char block = Actor.findChar(moveToPos);
 		if(block != null && !(block instanceof RemiliaBoss)){
 			block.move(15*17+8);
 			block.sprite.move( this.pos, 15*17+8 );
@@ -244,14 +256,14 @@ public class RemiliaBoss extends Mob {
 		if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( this.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 		GameScene.add( Blob.seed( this.pos, 5, SmokeScreen.class ) );
 
-		if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( middle_of_map ).burst( Speck.factory( Speck.WOOL ), 6 );
-		sprite.move( this.pos, middle_of_map );
-		move( middle_of_map );
+		if (Dungeon.level.heroFOV[this.pos]) CellEmitter.get( moveToPos ).burst( Speck.factory( Speck.WOOL ), 6 );
+		sprite.move( this.pos, moveToPos );
+		move( moveToPos );
 		if (Dungeon.level.heroFOV[summonPos]) CellEmitter.get( summonPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 
 		//Release Smoke and set levatin_cd to 6
 		releaseSmoke();
-		levatin_cd = 6;
+		levatin_cd = 2;
 
 		//Summon Sakuya and deliver cake
 		if (Actor.findChar(summonPos) instanceof Sheep){
@@ -299,7 +311,7 @@ public class RemiliaBoss extends Mob {
 					sprite.showLost();
 					levatin_throw = false;
 					//is this even helpful at all?
-					levatin_cd += 2;
+					// levatin_cd += 2;
 					state = WANDERING;
 					return true;
 				}
@@ -399,7 +411,9 @@ public class RemiliaBoss extends Mob {
 				Buff.affect(ch, Paralysis.class, 1f);
 				this.spend(TICK);
                 ch.damage(Random.IntRange(8,16), this);
-
+				if (ch == Dungeon.hero){
+					Statistics.bossScores[2] -= 200;
+				}
 				Actor.addDelayed(new Pushing(ch, ch.pos, levatin_stop_pos), 0);
 				
 				ch.pos = levatin_stop_pos;
@@ -410,12 +424,18 @@ public class RemiliaBoss extends Mob {
 		PathFinder.buildDistanceMap( levatin_stop_pos, BArray.not( Dungeon.level.solid, null ), 1 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+				if (Dungeon.level.map[i] == Terrain.STATUE){
+					Dungeon.level.set(i, Terrain.EMPTY);
+				}
 				GameScene.add(Blob.seed(i, FIRE_DUR, Fire.class));
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 				CellEmitter.get(i).burst(SmokeParticle.FACTORY, 4);
 				Char ch = Actor.findChar(i);
 					if (ch != null && !(ch instanceof RemiliaBoss)) {
 						ch.damage(8, this);
+						if (ch == Dungeon.hero){
+							Statistics.bossScores[2] -= 100;
+						}
 					}
 			}
 		}

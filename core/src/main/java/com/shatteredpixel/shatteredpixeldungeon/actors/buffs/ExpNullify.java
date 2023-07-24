@@ -5,9 +5,6 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
- * Gensokyo Pixel Dungeon
- * Copyright (C) 2022-2023 GrampHoang
- * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -25,51 +22,49 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroAction;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.watabou.noosa.Image;
 
-public class Koishibuff extends Buff {
+public class ExpNullify extends Buff {
+	
 	{
-		type = buffType.POSITIVE;
+		type = buffType.NEGATIVE;
+		announced = false;
 	}
-
-	public float turn_to_invis = 15;
-    public float turn_till_invis = turn_to_invis;
-
+	
 	@Override
-	public boolean act() {
-		if (turn_till_invis > 0){
-			turn_till_invis--;
-		}
-
-		if(Dungeon.hero.curAction instanceof HeroAction.Attack){
-			turn_till_invis = turn_to_invis;
-		}
-
-		if (turn_till_invis <= 0){
-			Buff.affect(Dungeon.hero, Invisibility.class, 515f);
-		}
-
-		spend(TICK);
-		return true;
+	public void fx(boolean on) {
+		if (on) target.sprite.add(CharSprite.State.MIND);
+		else if (target.invisible == 0) target.sprite.remove(CharSprite.State.MIND);
+	}
+	
+	@Override
+	public int icon() {
+		return BuffIndicator.VERTIGO;
+	}
+	
+    @Override
+	public void tintIcon(Image icon) {
+		icon.hardlight(0.3f, 0.3f, 0.8f);
 	}
 
 	@Override
 	public String toString() {
-		return  Messages.get(this, "name");
-	}
-
-	@Override
-	public String desc() {
-		return Messages.get(this, "desc", turn_to_invis, turn_till_invis);
-	}
-
-	@Override
-	public int icon() {
-		return BuffIndicator.INVISIBLE;
+		if(target instanceof Hero)
+			if(((Hero)target).heroClass == HeroClass.KOISHI)
+				return Messages.get(this, "kname");
+		return Messages.get(this, "name");
 	}
 	
+	@Override
+	public String desc() {
+		if(target instanceof Hero)
+			if(((Hero)target).heroClass == HeroClass.KOISHI)
+				return Messages.get(this, "kdesc");
+		return Messages.get(this, "desc");
+	}
 }

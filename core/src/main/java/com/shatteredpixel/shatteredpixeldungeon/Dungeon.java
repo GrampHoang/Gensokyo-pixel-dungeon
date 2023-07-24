@@ -403,11 +403,12 @@ public class Dungeon {
 			// Special branch for bosses
 			switch(depth){
 				case 15:
+				default:
 					level = new TenshiBossLevel();
 					break;
-				default:
-					level = new DeadEndLevel();
-					Statistics.deepestFloor--;
+				// default:
+				// 	level = new DeadEndLevel();
+				// 	Statistics.deepestFloor--;
 			}
 		}
 		else {

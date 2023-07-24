@@ -52,8 +52,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.WellFed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.encounters.ReisenEnc;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -110,7 +112,7 @@ public class UnknownPotion extends Item {
 
 	public void drink( Hero hero ){
 		hero.spend(TIME_TO_DRINK);
-        int i = Random.IntRange(0, 10000);
+        int i = Random.IntRange(0, 100);
         if        (i < 10){
 			// Instant death
 			hero.die(null);
@@ -164,5 +166,13 @@ public class UnknownPotion extends Item {
 	@Override
 	public int value() {
 		return 1;   // "You don't know what this potion does? It's trash then" - Shopkeeper
+	}
+
+	public String desc() {
+		String d = Messages.get(this, "desc");
+		if (Catalog.isSeen(ReisenEnc.class)){
+			d += "\n\n" + Messages.get(this, "chance");
+		}
+		return d;
 	}
 }

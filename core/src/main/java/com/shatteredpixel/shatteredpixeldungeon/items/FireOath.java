@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
@@ -241,6 +242,8 @@ public class FireOath extends Item {
 				item.detach( Dungeon.hero.belongings.backpack );
 				hba.collect();
 			}
+			Sample.INSTANCE.play( Assets.Sounds.MASTERY );
+			Dungeon.hero.sprite.emitter().burst( Speck.factory( Speck.CROWN), 12 );
 			detach(curUser.belongings.backpack);
 		}
 	};

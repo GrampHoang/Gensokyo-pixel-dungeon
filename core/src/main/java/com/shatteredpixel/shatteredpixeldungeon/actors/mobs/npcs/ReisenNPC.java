@@ -312,6 +312,7 @@ public class ReisenNPC extends NPC {
 				protected void onClick() {
                     Item pot = Dungeon.hero.belongings.getItem( UnknownPotion.class);
 					if (pot != null){
+						pot.detach(Dungeon.hero.belongings.backpack);
                         sprite.showStatus(CharSprite.POSITIVE, "Thanks");
 						if(count < 10 && !Catalog.isSeen(ReisenEnc.class)){
 							ReisenEnc enc = new ReisenEnc();

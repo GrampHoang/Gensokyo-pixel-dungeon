@@ -517,7 +517,7 @@ public class Generator {
 					EtherealChains.class,
 					SomeonePhone.class
 			};
-			ARTIFACT.defaultProbs = new float[]{ 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1};
+			ARTIFACT.defaultProbs = new float[]{ 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0};
 			ARTIFACT.probs = ARTIFACT.defaultProbs.clone();
 		}
 	}

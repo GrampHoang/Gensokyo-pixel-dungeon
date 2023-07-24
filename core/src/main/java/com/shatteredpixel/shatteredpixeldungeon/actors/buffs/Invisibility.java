@@ -121,7 +121,7 @@ public class Invisibility extends FlavourBuff {
 
 		KoishiHat.Koishibuff koi = Dungeon.hero.buff(KoishiHat.Koishibuff.class);
 		if (koi != null){
-			koi.turn_till_invis = koi.turn_to_invis + 1; //+1 because time will tick after this get reset
+			koi.turnTillInvis = koi.turnToInvis + 1; //+1 because time will tick after this get reset
 		}
 		
 	}

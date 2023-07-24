@@ -354,7 +354,7 @@ public class Assets {
 		public static final String ALICE		= "sprites/alice.png";
 		public static final String SHANGHAIDOLL	= "sprites/shanghaidoll.png";
 		public static final String HOURAIDOLL	= "sprites/houraidoll.png";
-		public static final String YOUMU		= "sprites/youmu.png";
+		public static final String YOUMU		= "sprites/yom.png";
 		public static final String YUKARI		= "sprites/yukari.png";
 		public static final String YOUMUNPC		= "sprites/youmunpc.png";
 		public static final String YUYUKONPC	= "sprites/yuyukonpc.png";

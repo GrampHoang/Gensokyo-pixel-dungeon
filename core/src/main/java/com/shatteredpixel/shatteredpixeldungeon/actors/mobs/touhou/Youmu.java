@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.YoumuSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.YomSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.KingSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -47,7 +47,7 @@ import com.watabou.utils.Random;
 
 public class Youmu extends Mob {
 	{
-		spriteClass = KingSprite.class;
+		spriteClass = YomSprite.class;
 
 		HP = HT = 80;
 		defenseSkill = 12;

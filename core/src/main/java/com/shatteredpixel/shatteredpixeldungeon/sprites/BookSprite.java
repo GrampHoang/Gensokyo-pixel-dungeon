@@ -27,12 +27,13 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Magicbook;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.TextureFilm;
@@ -118,7 +119,7 @@ public abstract class BookSprite extends MobSprite {
 				new Callback() {
 					@Override
 					public void call() {
-						((MagicBook)ch).onZapComplete();
+						((Magicbook)ch).onZapComplete();
 					}
 				} );
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
@@ -160,7 +161,7 @@ public abstract class BookSprite extends MobSprite {
 		@Override
 		protected Emitter createEmitter() {
 			Emitter emitter = emitter();
-			emitter.pour( MagicMissile.MagicParticle.FACTORY, 0.06f );
+			emitter.pour( SnowParticle.FACTORY, 0.06f );
 			return emitter;
 		}
 		
@@ -177,7 +178,7 @@ public abstract class BookSprite extends MobSprite {
 		public void zap( int cell ) {
 			turnTo( ch.pos , cell );
 			play( zap );
-			((MagicBook)ch).onZapComplete();
+			((Magicbook)ch).onZapComplete();
 			parent.add( new Beam.LightRay(center(), DungeonTilemap.raisedTileCenterToWorld(cell)));
 		}
 		

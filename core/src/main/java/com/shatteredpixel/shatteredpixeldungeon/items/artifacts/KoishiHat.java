@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ExpNullify;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Reality;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fury;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -56,7 +57,7 @@ public class KoishiHat extends Artifact {
 	}
 
 	public float imaginary_friend = 0;
-	public float total = 15f - imaginary_friend - level()/2;
+	public float total = 15f - imaginary_friend - level()/3;
 	public float cooldown = 15f;
     public boolean invis = false;
 
@@ -122,8 +123,8 @@ public class KoishiHat extends Artifact {
 		}
 	}
 
-	private static final String TURN_TILL_INVIS =        "turn_till_invis";
-	private static final String TURN_TO_INVIS =        "turn_to_invis";
+	private static final String TURN_TILL_INVIS =        "turnTillInvis";
+	private static final String TURN_TO_INVIS =        "turnToInvis";
 	@Override
 		public void storeInBundle( Bundle bundle ) {
 			super.storeInBundle( bundle );
@@ -132,7 +133,7 @@ public class KoishiHat extends Artifact {
 				total = passiveBuff.koishiDummyTotal();
 			} else {
 				cooldown = 15;
-				total = 15f - imaginary_friend - level();
+				total = 15f - imaginary_friend - level()/3;
 			}
 			bundle.put( TURN_TILL_INVIS, cooldown );
 			bundle.put( TURN_TO_INVIS, total );
@@ -146,39 +147,49 @@ public class KoishiHat extends Artifact {
 		}
 
     public class Koishibuff extends ArtifactBuff{
-        public float turn_to_invis = total; //total turn needed to invis
-        public float turn_till_invis = cooldown;					 //how many turn left till invis
+        public float turnToInvis = total; 						//total turn needed to invis
+        public float turnTillInvis = cooldown;					 //how many turn left till invis
+		public int earnExpCount = 0;		// For exp reduction
+		
+		public void koishiExpAct() {
+			earnExpCount++;
+			if (earnExpCount >= (2 + Dungeon.hero.pointsInTalent(Talent.LEARNING)) && Dungeon.depth != 1){
+				earnExpCount = 0;
+				Buff.affect(Dungeon.hero, ExpNullify.class);
+				//Give exp nullify buff here
+			}
+		}
 
 		public void updateTalent() {
-			turn_to_invis = 15f - level() - imaginary_friend;
+			turnToInvis = 15f - level()/3 - imaginary_friend;
 		}
 
 		@Override
 		public float koishiDummyCoolDown() {
-			return turn_till_invis;
+			return turnTillInvis;
 		}
 
 		@Override
 		public float koishiDummyTotal() {
-			return turn_to_invis;
+			return turnToInvis;
 		}
 
         @Override
         public boolean act() {
-            if (turn_till_invis > 0){
-                turn_till_invis--;
+            if (turnTillInvis > 0){
+                turnTillInvis--;
             }
 
 			if(Dungeon.hero.curAction instanceof HeroAction.Attack){
-				turn_till_invis = turn_to_invis;
+				turnTillInvis = turnToInvis;
 			}
 
 			if(invis == true && Dungeon.hero.buff(Invisibility.class) == null){
-                turn_till_invis = turn_to_invis;
+                turnTillInvis = turnToInvis;
                 invis = false;
             }
 
-            if (turn_till_invis == 0){
+            if (turnTillInvis == 0){
                 Buff.prolong(Dungeon.hero, Invisibility.class, 514f);
                 invis = true;
             }
@@ -194,8 +205,8 @@ public class KoishiHat extends Artifact {
 
 		@Override
 		public String desc() {
-			int chance = 40 + 10*Dungeon.hero.pointsInTalent(Talent.LEARNING);
-			return Messages.get(this, "effect", turn_to_invis, turn_till_invis, chance);
+			int count = 2 + Dungeon.hero.pointsInTalent(Talent.LEARNING);
+			return Messages.get(this, "effect", turnToInvis, turnTillInvis, count);
 		}
 
 		@Override
@@ -210,12 +221,12 @@ public class KoishiHat extends Artifact {
 
 		@Override
 		public float iconFadePercent() {
-			return (15f - turn_till_invis) / 15f;
+			return (15f - turnTillInvis) / 15f;
 		}
 
 		@Override
 		public String iconTextDisplay() {
-			return Integer.toString(Math.round(turn_till_invis));
+			return Integer.toString(Math.round(turnTillInvis));
 		}
 
     }

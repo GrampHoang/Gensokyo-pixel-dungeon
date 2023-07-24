@@ -25,7 +25,7 @@
  package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.MagicBook;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Magicbook;
 
 import java.util.ArrayList;
 
@@ -210,17 +210,17 @@ public class Patchouli extends Mob {
 		if (state == SLEEPING){	//Wake Patchouli up
 			state = HUNTING;
 		}
-		MagicBook patchyBook;
+		Magicbook patchyBook;
 		float roll = Random.Float();
 		if (roll < 0.4f){
 			stateSkill = STATE_FIRE;
-			patchyBook = new MagicBook.FireMagicBook();
+			patchyBook = new Magicbook.FireMagicbook();
 		} else if (roll < 0.8f){
 			stateSkill = STATE_FROST;
-			patchyBook = new MagicBook.FrostMagicBook();
+			patchyBook = new Magicbook.FrostMagicbook();
 		} else {
 			stateSkill = STATE_SHOCK;
-			patchyBook = new MagicBook.ShockMagicBook();
+			patchyBook = new Magicbook.ShockMagicbook();
 		}
 
 		patchyBook.pos = summoningPos;

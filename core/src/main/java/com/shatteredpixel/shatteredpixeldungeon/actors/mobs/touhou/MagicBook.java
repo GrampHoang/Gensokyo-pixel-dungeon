@@ -47,7 +47,7 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public abstract class MagicBook extends Mob {
+public abstract class Magicbook extends Mob {
 
 	{
 		HP = HT = 25;
@@ -167,7 +167,7 @@ public abstract class MagicBook extends Mob {
 		}
 	}
 	
-	public static class FireMagicBook extends MagicBook {
+	public static class FireMagicbook extends Magicbook {
 		
 		{
 			spriteClass = BookSprite.Fire.class;
@@ -191,7 +191,7 @@ public abstract class MagicBook extends Mob {
 		}
 	}
 	
-	public static class FrostMagicBook extends MagicBook {
+	public static class FrostMagicbook extends Magicbook {
 		
 		{
 			spriteClass = BookSprite.Frost.class;
@@ -214,7 +214,7 @@ public abstract class MagicBook extends Mob {
 		}
 	}
 	
-	public static class ShockMagicBook extends MagicBook {
+	public static class ShockMagicbook extends Magicbook {
 		
 		{
 			spriteClass = BookSprite.Shock.class;
@@ -255,7 +255,7 @@ public abstract class MagicBook extends Mob {
 		}
 	}
 	
-	public static class ChaosMagicBook extends MagicBook {
+	public static class ChaosMagicbook extends Magicbook {
 		
 		{
 			spriteClass = BookSprite.Chaos.class;
@@ -273,19 +273,19 @@ public abstract class MagicBook extends Mob {
 		}
 	}
 	
-	public static Class<? extends MagicBook> random(){
+	public static Class<? extends Magicbook> random(){
 		// No Chaos for now
 		// if (Random.Int( 50 ) == 0){
-		// 	return ChaosMagicBook.class;
+		// 	return ChaosMagicbook.class;
 		// }
 		
 		float roll = Random.Float();
 		if (roll < 0.4f){
-			return FireMagicBook.class;
+			return FireMagicbook.class;
 		} else if (roll < 0.8f){
-			return FrostMagicBook.class;
+			return FrostMagicbook.class;
 		} else {
-			return ShockMagicBook.class;
+			return ShockMagicbook.class;
 		}
 	}
 }

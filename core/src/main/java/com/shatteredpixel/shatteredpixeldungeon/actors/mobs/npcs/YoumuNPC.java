@@ -65,6 +65,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.ScaleArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.encounters.YoumuEnc;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
@@ -399,18 +402,16 @@ public class YoumuNPC extends NPC {
 			add( message );
 			
 			YoumuBlade1 item1 = new YoumuBlade1();
-			YoumuBlade1 item2 = new YoumuBlade1();
+			Armor item2;
+			item2 = new ScaleArmor();
 			Sacrificial sac = new Sacrificial();
-			Polarized pol = new Polarized();
 			item1.enchant((Weapon.Enchantment)sac);
-			item2.enchant((Weapon.Enchantment)pol);
 			if (excel) {
 				item1 = new YoumuBlade2();
 				Kinetic kinetic = new Kinetic();
 				item1.enchant((Weapon.Enchantment)kinetic);
-				item2.upgrade();
 				ScrollOfRemoveCurse.uncurse(null, item1);
-				ScrollOfRemoveCurse.uncurse(null, item2);
+				item2 = new PlateArmor();
 			}
 			item1.identify();
 			item2.identify();
@@ -531,7 +532,6 @@ public class YoumuNPC extends NPC {
 		private static String YUYUS = "yuyuspawn";
 		private static String YUYUK = "yuyukilled";
 		private static String KILLCOUNT = "killcount";
-		private static String TURNCOUNT = "turncount";
 
 		@Override
 		public void storeInBundle(Bundle bundle) {

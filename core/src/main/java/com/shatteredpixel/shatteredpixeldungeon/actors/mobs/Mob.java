@@ -48,6 +48,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -745,12 +746,24 @@ public abstract class Mob extends Char {
 				Statistics.qualifiedForNoKilling = false;
 
 				AscensionChallenge.processEnemyKill(this);
-				
-				int exp = Dungeon.hero.lvl <= maxLvl ? EXP : 0;
-				if (exp > 0) {
-					Dungeon.hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+
+				if(Dungeon.hero.buff(ExpNullify.class) != null){
+					Dungeon.hero.buff(ExpNullify.class).detach();
+					Dungeon.hero.sprite.remove(CharSprite.State.MIND);
+					return;
+				} else {
+
+					if(Dungeon.hero.heroClass == HeroClass.KOISHI && Dungeon.hero.buff(KoishiHat.Koishibuff.class) != null){
+						Dungeon.hero.buff(KoishiHat.Koishibuff.class).koishiExpAct();
+					}
+
+					int exp = Dungeon.hero.lvl <= maxLvl ? EXP : 0;
+					if (exp > 0) {
+						Dungeon.hero.sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "exp", exp));
+					}
+					Dungeon.hero.earnExp(exp, getClass());
 				}
-				Dungeon.hero.earnExp(exp, getClass());
+				
 			}
 		}
 	}

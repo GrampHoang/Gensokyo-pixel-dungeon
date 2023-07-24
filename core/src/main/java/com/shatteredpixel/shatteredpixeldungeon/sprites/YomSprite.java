@@ -1,4 +1,3 @@
-
 /*
  * Pixel Dungeon
  * Copyright (C) 2012-2015 Oleg Dolya
@@ -23,32 +22,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
- package com.shatteredpixel.shatteredpixeldungeon.sprites;
+package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.utils.Callback;
 
-public class YoumuSprite extends MobSprite {
-	
-	public YoumuSprite() {
+public class YomSprite extends MobSprite {
+
+	public YomSprite() {
 		super();
 		
-		texture( Assets.Sprites.IMP );
+		texture( Assets.Sprites.YOUMU );
 		
-		TextureFilm frames = new TextureFilm( texture, 13, 16 );
+		TextureFilm frames = new TextureFilm( texture, 12, 16 );
 		
-		idle = new Animation( 8, true );
-		idle.frames( frames, 0, 1 );
+		idle = new Animation( 10, true );
+		idle.frames( frames, 0, 0 );
 		
-		run = new Animation( 12, true );
-		run.frames( frames, 0, 1 );
+		run = new Animation( 15, true );
+		run.frames( frames, 0, 0 );
+
+		attack = new Animation( 10, false );
+		attack.frames( frames, 0, 0 );
+
+		die = new Animation( 10, false );
+		die.frames( frames, 0, 1 );
 		
-		attack = new Animation( 12, false );
-		attack.frames( frames, 0, 1 );
-		
-		die = new Animation( 12, false );
-		die.frames( frames, 0, 4 );
-		
-		play( idle );
+		play(idle);
 	}
 }

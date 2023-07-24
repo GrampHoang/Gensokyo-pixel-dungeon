@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.KoishiHat;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
@@ -50,7 +51,7 @@ public class LostBackpack extends Item {
 
 		MagicalHolster holster = hero.belongings.getItem(MagicalHolster.class);
 		for (Item i : hero.belongings){
-			if (i.keptThoughLostInvent){
+			if (i.keptThoughLostInvent && !(i instanceof KoishiHat)){
 				i.keptThoughLostInvent = false; //don't reactivate, was previously activated
 			} else {
 				if (i instanceof EquipableItem && i.isEquipped(hero)){

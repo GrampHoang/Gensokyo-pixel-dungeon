@@ -46,6 +46,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CooldownPush;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ExpNullify;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Exterminating;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
@@ -1652,12 +1653,16 @@ public class Hero extends Char {
 	}
 	
 	public void earnExp( int exp, Class source ) {
-		if(this.heroClass == HeroClass.KOISHI && this.buff(KoishiHat.Koishibuff.class) != null && Dungeon.depth != 1){
-			if(Random.IntRange(0,9) > 4 + this.pointsInTalent(Talent.LEARNING)){
-				exp *= 0.5f;
-			}
-				
-		}
+		// if(this.buff(ExpNullify.class) != null){
+		// 	sprite.showStatus(CharSprite.NEGATIVE, "???");
+		// 	this.buff(ExpNullify.class).detach();
+		// 	return;
+		// }
+
+		// if(this.heroClass == HeroClass.KOISHI && this.buff(KoishiHat.Koishibuff.class) != null){
+		// 	this.buff(KoishiHat.Koishibuff.class).koishiExpAct();
+		// }
+
 		this.exp += exp;
 		float percent = exp/(float)maxExp();
 

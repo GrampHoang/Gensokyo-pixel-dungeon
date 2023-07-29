@@ -67,6 +67,10 @@ public class WndChallenges extends Window {
 			final String challenge = Challenges.NAME_IDS[i];
 			
 			CheckBox cb = new CheckBox( Messages.titleCase(Messages.get(Challenges.class, challenge)) );
+			if (i == 10){
+				Challenges.MASKS[i] = 1;
+			}
+			
 			cb.checked( (checked & Challenges.MASKS[i]) != 0 );
 			cb.active = editable;
 

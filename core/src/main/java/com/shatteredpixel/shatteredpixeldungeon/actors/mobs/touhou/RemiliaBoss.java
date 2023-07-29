@@ -155,7 +155,8 @@ public class RemiliaBoss extends Mob {
 		// 	die(src);
 		// 	return;
 		// }
-		if (Random.IntRange(1,4) == 2) GameScene.add( Blob.seed( this.pos, 5, SmokeScreen.class ) );
+		if (Random.IntRange(1,2) == 2) GameScene.add( Blob.seed( this.pos, 10, SmokeScreen.class ) );
+
 		int dmgTaken = beforeHitHP - HP;
 		if (dmgTaken > 0) {
 			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);

@@ -49,6 +49,12 @@ public class WndStory extends Window {
 	public static final int ID_CITY     	= 3;
 	public static final int ID_HALLS		= 4;
 	
+	public static final int ID_FOREST		= 10;
+	public static final int ID_SDM			= 11;
+	public static final int ID_SHRINE		= 12;
+	public static final int ID_BAMBOO     	= 13;
+	public static final int ID_HALLS_2		= 14;
+	
 	private static final SparseArray<String> CHAPTERS = new SparseArray<>();
 	
 	static {
@@ -57,6 +63,12 @@ public class WndStory extends Window {
 		CHAPTERS.put( ID_CAVES, "caves" );
 		CHAPTERS.put( ID_CITY, "city" );
 		CHAPTERS.put( ID_HALLS, "halls" );
+
+		CHAPTERS.put( ID_FOREST, "forest" );
+		CHAPTERS.put( ID_SDM, "sdm" );
+		CHAPTERS.put( ID_SHRINE, "shrine" );
+		CHAPTERS.put( ID_BAMBOO, "bambo" );
+		CHAPTERS.put( ID_HALLS_2, "halls2" );
 	}
 
 	private IconTitle ttl;

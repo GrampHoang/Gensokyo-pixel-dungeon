@@ -412,21 +412,22 @@ public class GameScene extends PixelScene {
 				break;
 			case DESCEND:
 			case FALL:
+				int c = Dungeon.isChallenged(Challenges.TOUHOU) ? 10 : 0;
 				switch (Dungeon.depth) {
 				case 1:
-					WndStory.showChapter( WndStory.ID_SEWERS );
+					WndStory.showChapter( WndStory.ID_SEWERS + c);
 					break;
 				case 6:
-					WndStory.showChapter( WndStory.ID_PRISON );
+					WndStory.showChapter( WndStory.ID_PRISON + c);
 					break;
 				case 11:
-					WndStory.showChapter( WndStory.ID_CAVES );
+					WndStory.showChapter( WndStory.ID_CAVES + c);
 					break;
 				case 16:
-					WndStory.showChapter( WndStory.ID_CITY );
+					WndStory.showChapter( WndStory.ID_CITY + c);
 					break;
 				case 21:
-					WndStory.showChapter( WndStory.ID_HALLS );
+					WndStory.showChapter( WndStory.ID_HALLS + c);
 					break;
 				}
 				if (Dungeon.hero.isAlive()) {

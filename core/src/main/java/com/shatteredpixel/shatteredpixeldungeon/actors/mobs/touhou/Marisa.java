@@ -76,8 +76,9 @@ public class Marisa extends Mob {
 	}
 	
     private static final String ITEM = "item";
+	private static final String COUNT = "count";
     public Item item;
-	public int count = 0;	//Won't save this into bundle, drop item after count reach 10
+	public int count = 0;	//Drop item after count reach 10
 	@Override
 	public int damageRoll() {
 		return Random.NormalIntRange( 4, 12 );
@@ -134,12 +135,14 @@ public class Marisa extends Mob {
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( ITEM, item );
+		bundle.put(COUNT, count);
 	}
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle( bundle );
 		item = (Item)bundle.get( ITEM );
+		count = bundle.getInt(COUNT);
 	}
 
     @Override

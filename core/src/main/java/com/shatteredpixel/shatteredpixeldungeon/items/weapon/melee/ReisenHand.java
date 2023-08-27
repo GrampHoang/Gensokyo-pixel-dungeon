@@ -118,8 +118,7 @@ public class ReisenHand extends WeaponWithSP {
 	}
 
     public String statsInfo(){
-        int chance = Math.round((buffedLvl() + 1)*100/(buffedLvl() + 5));
-		return Messages.get(this, "stats_desc", chance) + "_%_.";
+		return Messages.get(this, "stats_desc");
 	}
 
 	public String skillInfo(){

@@ -41,7 +41,7 @@ import com.watabou.utils.Rect;
 
 public class YukariBossLevel extends Level {
 
-    private static final int SIZE_W = 35;
+    private static final int SIZE_W = 36;
     private static final int SIZE_H = 33;
 
     {
@@ -71,7 +71,7 @@ public class YukariBossLevel extends Level {
         setSize(SIZE_W, SIZE_H);
 
         for (int i = 1; i < SIZE_H-1; i++) {
-            for (int j = 1; j < SIZE_W-1; j++) {
+            for (int j = 1; j < SIZE_W; j++) {
                     map[i * width() + j] = Terrain.EMPTY;
                 }
                 

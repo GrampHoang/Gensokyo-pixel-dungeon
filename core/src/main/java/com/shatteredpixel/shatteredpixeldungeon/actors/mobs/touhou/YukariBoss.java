@@ -23,18 +23,25 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing.DKBarrior;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing.Summoning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.levels.YukariBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
@@ -42,6 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.YukariSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
@@ -81,7 +89,7 @@ public class YukariBoss extends Mob {
 	private int trinestpos2 = 3;
 	private int trinestpos3 = 3;
 
-	private int phase = 0;
+	private int phase = 1;
 
 	private int TRINEST_CD = 12; //12
 	private int trinest_cd = TRINEST_CD;
@@ -124,33 +132,28 @@ public class YukariBoss extends Mob {
 			return;
 		}
 		
-
-		int hpBracket = HT / 4;
-		
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
 
-		if(HP <= 0){
-			return;
-		}
+		if (phase == 1) {
+			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
+				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
+				// ScrollOfTeleportation.appear(this, YukariBossLevel.exit);
+				properties.add(Property.IMMOVABLE);
+				phase = 2;
+				sprite.idle();
+				KomachiBlessing.setRange(this);
+				//Summon Chen, Ran and portals here
+			}
+		} else if (phase == 2 && HP >= 50) {
 
-		// cannot be hit through multiple brackets at a time
-		if ((beforeHitHP/hpBracket - HP/hpBracket) >= 2){
-			HP = hpBracket * ((beforeHitHP/hpBracket)-1) + 1;
-		}
-
-		if (beforeHitHP / hpBracket != HP / hpBracket) {
-			GameScene.add( Blob.seed( this.pos, 1, SmokeScreen.class ) );
-			GameScene.add( Blob.seed( Dungeon.hero.pos, 1, SmokeScreen.class ) );
-			int telepos = ((YukariBossLevel)Dungeon.level).randomTeleportCell(this);
-			this.sprite.place( telepos );
-			this.move(telepos, false);
-			Dungeon.level.occupyCell(this);
-			summonGap();
-		}
-		if (HP*2 <= HT){
-			((YukariSprite)sprite).burstfx(true);
+		} else if (phase == 2 && HP < 50) {
+			KomachiBlessing.tryDetach(this);
+			properties.remove(Property.IMMOVABLE);
+			phase = 3;
+			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
+			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 		}
 	}
 	

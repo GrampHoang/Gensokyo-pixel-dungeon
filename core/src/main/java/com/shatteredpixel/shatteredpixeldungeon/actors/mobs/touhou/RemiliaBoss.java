@@ -450,7 +450,7 @@ public class RemiliaBoss extends Mob {
 		Buff.affect(this, Invisibility.class, 5f);
 		Buff.affect(this, Roots.class, 5f);
 		Sample.INSTANCE.play( Assets.Sounds.GAS );
-		int centerVolume = 25;
+		int centerVolume = 100;
 		for (int i : PathFinder.NEIGHBOURS8){
 			if (!Dungeon.level.solid[this.pos+i]){
 				GameScene.add( Blob.seed( this.pos+i, centerVolume, SmokeScreen.class ) );

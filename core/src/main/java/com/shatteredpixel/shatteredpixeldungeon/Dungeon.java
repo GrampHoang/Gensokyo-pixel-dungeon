@@ -372,7 +372,7 @@ public class Dungeon {
 					break;
 				case 15:
 					// level = new YukariBossLevel();
-					level = new CavesBossLevel();
+					level = new YukariBossLevel();
 					break;
 				case 16:
 				case 17:

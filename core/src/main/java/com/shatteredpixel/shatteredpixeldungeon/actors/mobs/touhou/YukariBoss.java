@@ -81,6 +81,8 @@ public class YukariBoss extends Mob {
 	private int trinestpos2 = 3;
 	private int trinestpos3 = 3;
 
+	private int phase = 0;
+
 	private int TRINEST_CD = 12; //12
 	private int trinest_cd = TRINEST_CD;
 	private int YAKUMONEST_CD = 18; //18
@@ -280,7 +282,6 @@ public class YukariBoss extends Mob {
 	public boolean useReady(){
 		Dungeon.hero.interrupt();
 		if(charging_skill == 2 && enemySeen){
-			yakumoNest();
 			spend(TICK);
 			return true;
 		} else if(charging_skill == 1 && enemySeen){
@@ -302,7 +303,6 @@ public class YukariBoss extends Mob {
 	public boolean useAbility(){
 		Dungeon.hero.interrupt();
 		if((charging_skill == 2 || charging_skill == 3) && enemySeen){
-			yakumoNest_shot();
 			spend(TICK);
 			return true;
 		} else if(charging_skill == 1 && enemySeen){
@@ -371,107 +371,6 @@ public class YukariBoss extends Mob {
 		charging_skill = 0;
 	}
 
-	public void yakumoNest_ready(int from, int to){
-		sprite.parent.add(new Beam.YukariRay(DungeonTilemap.raisedTileCenterToWorld(this.pos + from), DungeonTilemap.raisedTileCenterToWorld(this.pos + to)));
-	}
-
-
-
-	public void yakumoNest_damage(int from, int to){
-		Ballistica laser = new Ballistica(this.pos + from, this.pos + to, Ballistica.STOP_TARGET);
-		sprite.parent.add(new Beam.DeathRay(DungeonTilemap.raisedTileCenterToWorld(this.pos + from), DungeonTilemap.raisedTileCenterToWorld(this.pos + to)));
-		for (int p : laser.subPath(0, Dungeon.level.distance(this.pos + from, this.pos + to))){
-            Char ch = Actor.findChar(p);
-			if(ch != null && !(ch instanceof YukariBoss)){
-				ch.damage(Math.max(ch.HP/10, 5), this);
-				Buff.prolong(ch, Paralysis.class, 3f);
-				Buff.prolong(ch, Blindness.class, 5f);
-			}
-        }
-		CellEmitter.center(this.pos + from).burst(BlastParticle.FACTORY, 30);
-		CellEmitter.get(this.pos + from).burst(SmokeParticle.FACTORY, 8);
-	}
-
-
-	public void yakumoNest(){
-		yakumonest_cd = YAKUMONEST_CD;
-		// Buff.affect(this, Paralysis.class, 1f);
-		//Shoot laser forming nest, paralyze you
-		int p[];
-		charging_skill = Random.IntRange(2,3);
-		switch(charging_skill){
-			case 2:
-			//8 corners pattern
-				p = PathFinder.NEIGHBOURS_TWOTILES_EIGHTDIR;
-				yakumoNest_ready(p[0], p[4]);
-				yakumoNest_ready(p[4], p[5]);
-				yakumoNest_ready(p[5], p[1]);
-				yakumoNest_ready(p[1], p[7]);
-				yakumoNest_ready(p[7], p[3]);
-				yakumoNest_ready(p[3], p[2]);
-				yakumoNest_ready(p[2], p[6]);
-				yakumoNest_ready(p[6], p[0]);
-				break;
-			case 3:
-			//stars pattern
-				p = PathFinder.NEIGHBOURS_HORSEMOVES;
-				yakumoNest_ready(p[0], p[3]);
-				yakumoNest_ready(p[3], p[7]);
-				yakumoNest_ready(p[7], p[4]);
-				yakumoNest_ready(p[4], p[0]);
-				yakumoNest_ready(p[2], p[1]);
-				yakumoNest_ready(p[1], p[5]);
-				yakumoNest_ready(p[5], p[6]);
-				yakumoNest_ready(p[6], p[2]);
-				break;
-			default:
-				GLog.w("No skill");
-		}
-
-	}
-	
-	public void yakumoNest_shot(){
-		int p[];
-		if(this.HP*2 < this.HT){
-			for (int i : PathFinder.NEIGHBOURS8){
-				CellEmitter.get(this.pos + i).burst(SmokeParticle.FACTORY, 8);
-			}
-		} else {
-		CellEmitter.center(this.pos).burst(BlastParticle.FACTORY, 45);
-		CellEmitter.get(this.pos).burst(SmokeParticle.FACTORY, 8);
-		}
-		switch(charging_skill){
-			case 2:
-			//8 corners pattern
-				p = PathFinder.NEIGHBOURS_TWOTILES_EIGHTDIR;
-				yakumoNest_damage(p[0], p[4]);
-				yakumoNest_damage(p[4], p[5]);
-				yakumoNest_damage(p[5], p[1]);
-				yakumoNest_damage(p[1], p[7]);
-				yakumoNest_damage(p[7], p[3]);
-				yakumoNest_damage(p[3], p[2]);
-				yakumoNest_damage(p[2], p[6]);
-				yakumoNest_damage(p[6], p[0]);
-				break;
-			case 3:
-			//stars pattern
-				p = PathFinder.NEIGHBOURS_HORSEMOVES;
-				yakumoNest_damage(p[0], p[3]);
-				yakumoNest_damage(p[3], p[7]);
-				yakumoNest_damage(p[7], p[4]);
-				yakumoNest_damage(p[4], p[0]);
-				yakumoNest_damage(p[2], p[1]);
-				yakumoNest_damage(p[1], p[5]);
-				yakumoNest_damage(p[5], p[6]);
-				yakumoNest_damage(p[6], p[2]);
-				break;
-			default:
-				GLog.w("No skill");
-		}
-		charging_skill = 0;
-		Sample.INSTANCE.play( Assets.Sounds.BLAST );
-	}
-
 	public void summonChen(){
 		//Push then summon Chen
 	}
@@ -483,14 +382,6 @@ public class YukariBoss extends Mob {
 		Buff.affect(Dungeon.hero, Blindness.class, 4f);
 		charging_skill = 0;
 	}
-	// private int trinestpos1 = 1;
-	// private int trinestpos2 = 3;
-	// private int trinestpos3 = 3;
-
-	// private int trinest_cd = TRINEST_CD;
-	// private int yakumonest_cd = YAKUMONEST_CD;
-	// private int ceiling_cd = CEILING_CD;
-	// private int charging_skill = 0;
 
 	@Override
 	public void storeInBundle(Bundle bundle) {

@@ -67,7 +67,7 @@ public class WndStory extends Window {
 		CHAPTERS.put( ID_FOREST, "forest" );
 		CHAPTERS.put( ID_SDM, "sdm" );
 		CHAPTERS.put( ID_SHRINE, "shrine" );
-		CHAPTERS.put( ID_BAMBOO, "bambo" );
+		CHAPTERS.put( ID_BAMBOO, "bamboo" );
 		CHAPTERS.put( ID_HALLS_2, "halls2" );
 	}
 

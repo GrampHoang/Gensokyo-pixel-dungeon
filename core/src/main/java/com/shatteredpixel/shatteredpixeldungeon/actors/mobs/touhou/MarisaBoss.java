@@ -23,7 +23,6 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
@@ -32,11 +31,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
@@ -48,11 +47,11 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.MarisaBossSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MasterSparkBig;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.noosa.audio.Sample;
@@ -207,11 +206,12 @@ public class MarisaBoss extends Mob {
 	}
 
 	public void toSafety(){
-		int telepos = Dungeon.level.randomRespawnCell(this);
+		int telepos;
+		do {
+			telepos = Random.Int( Dungeon.level.length() );
+		} while (!Dungeon.level.passable[telepos] || !Dungeon.level.openSpace[telepos]);
 		CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 10);
-		this.sprite.place( telepos );
-		this.move(telepos, false);
-		if (masterspark_cd > 5) masterspark_cd = 5;
+		ScrollOfTeleportation.appear(this, telepos);
 		Dungeon.level.occupyCell(this);
 	}
 
@@ -502,6 +502,23 @@ public class MarisaBoss extends Mob {
                 GLog.n(Messages.get(Char.class, "kill", name()));
             }
         }
+
+		//push char
+		Char cha = Actor.findChar(stopCell);
+		int push_pos = this.pos;
+		if (cha != null && cha != this){
+			for (int i : PathFinder.NEIGHBOURS8){
+				if (Actor.findChar(stopCell + i) == null && Dungeon.level.passable[stopCell + i]){
+					push_pos = stopCell+i;
+					break;
+				}
+			}
+			Actor.addDelayed(new Pushing(cha, cha.pos, push_pos), 0);
+			// ch.moveSprite(ch.pos, push_pos);
+			cha.move(push_pos);
+			Dungeon.level.occupyCell(cha);
+		}
+		
 		stopCell = 69;
         return true;
     }

@@ -43,6 +43,11 @@ public class YukariBossLevel extends Level {
 
     private static final int SIZE_W = 36;
     private static final int SIZE_H = 33;
+	private static final int YUKARIPOS = 87;
+	private static final int PORTAL1 = SIZE_W*8+9;
+	private static final int PORTAL2 = SIZE_W*8+25;
+	private static final int PORTAL3 = SIZE_W*24+9;
+	private static final int PORTAL4 = SIZE_W*24+25;
 
     {
 		color1 = 0x534f3e;
@@ -71,7 +76,7 @@ public class YukariBossLevel extends Level {
         setSize(SIZE_W, SIZE_H);
 
         for (int i = 1; i < SIZE_H-1; i++) {
-            for (int j = 1; j < SIZE_W; j++) {
+            for (int j = 1; j < SIZE_W-2; j++) {
                     map[i * width() + j] = Terrain.EMPTY;
                 }
                 
@@ -99,6 +104,11 @@ public class YukariBossLevel extends Level {
 		entrance = 17 + 16*width();
 		exit = 17 + 8*width();
 		Painter.set(this, exit, Terrain.EMPTY);
+		// map[194] = Terrain.WALL;
+		// map[195] = Terrain.WALL;
+		// map[199] = Terrain.WALL;
+		// map[200] = Terrain.WALL;
+		map[89] = Terrain.EMPTY_SP;
         return true;
     }
 
@@ -213,12 +223,12 @@ public class YukariBossLevel extends Level {
 
 	private static short[] sideNS1 = {
 		W, W, W, W, W, W, W, W, W, W, W,
-		W, W, W, W, s, s, s, W, W, W, W,
-		W, e, e, e, s, s, s, e, e, e, W,
-		W, e, W, W, s, s, s, W, W, e, W,
-		W, e, e, W, W, W, W, W, e, e, W,
-		W, W, e, e, W, W, W, e, e, W, W,
-		n, W, W, e, e, e, e, e, W, W, n,
+		W, W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, W, W,
+		n, W, W, W, W, W, W, W, W, W, n,
 		n, n, n, n, n, n, n, n, n, n, n,
 		n, n, n, n, n, n, n, n, n, n, n,
 		n, n, n, n, n, n, n, n, n, n, n,
@@ -226,15 +236,15 @@ public class YukariBossLevel extends Level {
 
 	private static short[] sideEW1 = {
 		W, W, W, W, W, W, n, n, n, n, 
-		W, e, e, e, W, W, n, n, n, n,
-		W, e, W, e, e, e, e, n, n, n,
-		W, e, W, W, W, e, e, n, n, n,
-		s, s, s, W, W, W, e, n, n, n,
-		s, s, s, W, W, W, e, n, n, n,
-		s, s, s, W, W, W, e, n, n, n,
-		W, e, W, W, W, e, e, n, n, n,
-		W, e, W, e, e, e, e, n, n, n,
-		W, e, e, e, W, W, n, n, n, n,
+		W, W, W, W, W, W, n, n, n, n,
+		W, W, W, W, W, W, n, n, n, n,
+		W, W, W, W, W, W, W, n, n, n,
+		W, W, W, W, W, W, W, n, n, n,
+		W, W, W, W, W, W, W, n, n, n,
+		W, W, W, W, W, W, W, n, n, n,
+		W, W, W, W, W, W, W, n, n, n,
+		W, W, W, W, W, W, n, n, n, n,
+		W, W, W, W, W, W, n, n, n, n,
 		W, W, W, W, W, W, n, n, n, n, 
 	};
 
@@ -282,52 +292,52 @@ public class YukariBossLevel extends Level {
 	}
 	private static short[] corner1 = {
 		W, W, W, W, W, W, W, W, W, W,
-		W, s, s, s, e, e, e, W, W, W,
-		W, s, s, s, W, W, e, e, W, W,
-		W, s, s, s, W, W, W, e, e, W,
-		W, e, W, W, W, W, W, W, e, n,
-		W, e, W, W, W, W, W, n, n, n,
-		W, e, e, W, W, W, n, n, n, n,
-		W, W, e, e, W, n, n, n, n, n,
-		W, W, W, e, e, n, n, n, n, n,
+		W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, W,
+		W, W, W, W, W, W, W, W, W, n,
+		W, W, W, W, W, W, W, n, n, n,
+		W, W, W, W, W, W, n, n, n, n,
+		W, W, W, W, W, n, n, n, n, n,
+		W, W, W, W, W, n, n, n, n, n,
 		W, W, W, W, n, n, n, n, n, n,
 	};
 
 	private static short[] corner2 = {
 			W, W, W, W, W, W, W, W, W, W,
-			W, s, s, s, W, W, W, W, W, W,
-			W, s, s, s, e, e, e, e, e, W,
-			W, s, s, s, W, W, W, W, e, e,
-			W, W, e, W, W, W, W, W, W, e,
-			W, W, e, W, W, W, W, n, n, n,
-			W, W, e, W, W, W, n, n, n, n,
-			W, W, e, W, W, n, n, n, n, n,
-			W, W, e, e, W, n, n, n, n, n,
-			W, W, W, e, e, n, n, n, n, n,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, n, n, n,
+			W, W, W, W, W, W, n, n, n, n,
+			W, W, W, W, W, n, n, n, n, n,
+			W, W, W, W, W, n, n, n, n, n,
+			W, W, W, W, W, n, n, n, n, n,
 	};
 
 	private static short[] corner3 = {
 			W, W, W, W, W, W, W, W, W, W,
-			W, s, s, s, W, W, W, W, W, W,
-			W, s, s, s, e, e, e, e, W, W,
-			W, s, s, s, W, W, W, e, W, W,
-			W, W, e, W, W, W, W, e, W, n,
-			W, W, e, W, W, W, W, e, e, n,
-			W, W, e, W, W, W, n, n, n, n,
-			W, W, e, e, e, e, n, n, n, n,
-			W, W, W, W, W, e, n, n, n, n,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, n,
+			W, W, W, W, W, W, W, W, W, n,
+			W, W, W, W, W, W, n, n, n, n,
+			W, W, W, W, W, W, n, n, n, n,
+			W, W, W, W, W, W, n, n, n, n,
 			W, W, W, W, n, n, n, n, n, n,
 	};
 
 	private static short[] corner4 = {
 			W, W, W, W, W, W, W, W, W, W,
-			W, s, s, s, W, W, W, W, W, W,
-			W, s, s, s, e, e, e, W, W, W,
-			W, s, s, s, W, W, e, W, W, W,
-			W, W, e, W, W, W, e, W, W, n,
-			W, W, e, W, W, W, e, e, n, n,
-			W, W, e, e, e, e, e, n, n, n,
-			W, W, W, W, W, e, n, n, n, n,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, W,
+			W, W, W, W, W, W, W, W, W, n,
+			W, W, W, W, W, W, W, W, n, n,
+			W, W, W, W, W, W, W, n, n, n,
+			W, W, W, W, W, W, n, n, n, n,
 			W, W, W, W, W, n, n, n, n, n,
 			W, W, W, W, n, n, n, n, n, n,
 	};
@@ -360,47 +370,47 @@ public class YukariBossLevel extends Level {
 	}
 
 	private static short[] entrance1 = {
+		W, n, n, n, n, n, n, n,
+		n, n, n, W, n, n, W, n,
 		n, n, n, n, n, n, n, n,
-		n, n, n, n, n, n, n, n,
-		n, n, n, n, W, e, W, W,
-		n, n, n, W, W, e, W, W,
-		n, n, W, W, e, e, e, e,
-		n, n, e, e, e, W, W, e,
-		n, n, W, W, e, W, e, e,
-		n, n, W, W, e, e, e, e
+		n, W, n, n, n, n, n, n,
+		n, n, n, W, n, n, n, n,
+		n, n, n, n, n, n, n, e,
+		W, n, n, n, n, W, n, e,
+		n, n, n, n, e, e, e, e
 	};
 
 	private static short[] entrance2 = {
+		n, W, n, n, n, n, W, n,
 		n, n, n, n, n, n, n, n,
+		n, n, n, n, n, n, e, e,
+		W, n, n, W, n, n, n, n,
 		n, n, n, n, n, n, n, n,
-		n, n, n, n, n, e, e, e,
-		n, n, n, W, e, W, W, e,
-		n, n, n, e, e, e, e, e,
-		n, n, e, W, e, W, W, e,
-		n, n, e, W, e, W, e, e,
-		n, n, e, e, e, e, e, e
+		n, n, n, n, n, n, W, n,
+		W, n, n, W, n, n, e, e,
+		n, n, n, n, n, n, e, e
 	};
 
 	private static short[] entrance3 = {
+		n, W, n, n, n, n, n, n,
+		n, n, n, n, n, W, n, n,
 		n, n, n, n, n, n, n, n,
-		n, n, n, n, n, n, n, n,
-		n, n, n, n, n, n, n, n,
-		n, n, n, W, W, e, W, W,
-		n, n, n, W, W, e, W, W,
-		n, n, n, e, e, e, e, e,
-		n, n, n, W, W, e, W, e,
-		n, n, n, W, W, e, e, e
+		n, n, n, W, n, n, n, n,
+		n, n, n, n, n, n, W, n,
+		n, n, n, n, n, n, n, e,
+		W, n, n, n, W, n, n, n,
+		n, n, n, n, n, n, e, n
 	};
 
 	private static short[] entrance4 = {
+		n, n, n, n, n, W, n, n,
+		n, n, W, n, n, n, n, n,
 		n, n, n, n, n, n, n, n,
-		n, n, n, n, n, n, n, e,
-		n, n, n, n, n, n, W, e,
-		n, n, n, n, n, W, W, e,
-		n, n, n, n, W, W, W, e,
-		n, n, n, W, W, W, W, e,
-		n, n, W, W, W, W, e, e,
-		n, e, e, e, e, e, e, e
+		W, n, n, W, n, n, W, n,
+		n, n, n, n, n, n, n, n,
+		n, n, n, n, n, W, n, n,
+		n, n, W, n, n, n, e, e,
+		n, n, n, n, n, n, e, e
 	};
 
 	private static short[][] entranceVariants = {

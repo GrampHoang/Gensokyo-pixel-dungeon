@@ -79,6 +79,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MarisaStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.PatchouliBook;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WornShortsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.YoumuBlade3;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greataxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.OfudaHandheld;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingStone;
@@ -386,7 +387,7 @@ public enum HeroClass {
 	}
 
 	private static void initSakuya( Hero hero ) {
-		(hero.belongings.weapon = new Knife()).identify();
+		(hero.belongings.weapon = new Greataxe()).identify();
 
 		TimekeepersHourglass hourglass = new TimekeepersHourglass();
 		(hero.belongings.artifact = hourglass).identify();
@@ -408,15 +409,15 @@ public enum HeroClass {
 				sod.quantity(69).collect();
 				Dungeon.quickslot.setSlot(2, sod);
 				
-				DebugSword we = new DebugSword();
-				we.level(5);
-				hero.belongings.weapon = we;
+				// DebugSword we = new DebugSword();
+				// we.level(1);
+				// hero.belongings.weapon = we;
 
 				
-				Buff.affect(hero, MindVision.class, 9999f);
-				Buff.affect(hero, MagicalSight.class, 9999f);
+				// Buff.affect(hero, MindVision.class, 9999f);
+				// Buff.affect(hero, MagicalSight.class, 9999f);
 				RingOfMight ring = new RingOfMight();
-				ring.level(40);
+				ring.level(10);
 				ring.doEquip(hero);
 
 				RingOfTenacity ring2 = new RingOfTenacity();
@@ -435,6 +436,10 @@ public enum HeroClass {
 				ScrollOfMagicMapping som = new ScrollOfMagicMapping();
 				som.quantity(99).collect();
 				Dungeon.quickslot.setSlot(5, som);
+
+				PotionOfExperience poe = new PotionOfExperience();
+				poe.quantity(13).collect();
+				Dungeon.quickslot.setSlot(2, poe);
 	}
 	
 	private static void initKoishi( Hero hero ) {

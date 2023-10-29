@@ -53,8 +53,8 @@ public class Chen extends Mob {
 
 	private int ROLL_CD = 20;
 	private int roll_cd = ROLL_CD;
-	private boolean rolling = false;
-	private int enemy_pos = this.pos; //just to be safe
+	protected boolean rolling = false;
+	protected int enemy_pos = this.pos; //just to be safe
 
 	private static final String ROLL_COOLDOWN = "roll_cooldown";
 	private static final String ROLLING = "rolling";
@@ -124,7 +124,7 @@ public class Chen extends Mob {
 	// 	super.die(cause);
 	// }
 
-	private int ready(int target){
+	protected int ready(int target){
 		((ChenSprite)sprite).spinning();
 		// CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 20);
         Ballistica b = new Ballistica(this.pos, target, Ballistica.STOP_SOLID);
@@ -139,7 +139,7 @@ public class Chen extends Mob {
 		return b.collisionPos;
 	}
 
-	private boolean roll(int stopCell) {
+	protected boolean roll(int stopCell) {
 		//push char
 		Char cha = Actor.findChar(stopCell);
 		int push_pos = this.pos;
@@ -184,5 +184,6 @@ public class Chen extends Mob {
 		roll_cd = bundle.getInt( ROLL_COOLDOWN );
 		enemy_pos = bundle.getInt( ENEMY_POS );
 		rolling = bundle.getBoolean( ROLLING );
+		// if (rolling == true) ((ChenSprite)sprite).spinning();
 	}
 }

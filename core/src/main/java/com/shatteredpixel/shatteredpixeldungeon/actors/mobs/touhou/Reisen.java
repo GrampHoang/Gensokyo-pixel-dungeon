@@ -102,10 +102,10 @@ public class Reisen extends Mob {
 			if (effect > 6) {
 
 				if (effect >= 9){
-					Buff.prolong(enemy, Vertigo.class, 2f);
+					Buff.prolong(enemy, Vertigo.class, 3f);
 
 				} else
-					Buff.prolong( enemy, Charm.class, 2f);
+					Buff.prolong( enemy, Charm.class, 3f);
 
 			}
 			return damage;

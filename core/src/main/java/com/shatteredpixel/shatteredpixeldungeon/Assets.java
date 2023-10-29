@@ -358,6 +358,8 @@ public class Assets {
 		public static final String YUKARI		= "sprites/yukari.png";
 		public static final String YOUMUNPC		= "sprites/youmunpc.png";
 		public static final String YUYUKONPC	= "sprites/yuyukonpc.png";
+		public static final String YUKARIGAP	= "sprites/yukarigap.png";
+		public static final String YUKARITALISMAN= "sprites/yukaritalisman.png";
 		//Touhou 8
 		public static final String TEWI			= "sprites/tewi.png";
 		public static final String REISEN_MOB	= "sprites/reisen_mob.png";

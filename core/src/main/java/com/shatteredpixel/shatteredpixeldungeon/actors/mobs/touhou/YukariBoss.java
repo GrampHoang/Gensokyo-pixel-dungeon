@@ -23,13 +23,9 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing.DKBarrior;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing.Summoning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.YukariGap.YukariChen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.YukariGap.YukariRan;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -39,21 +35,16 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.YukariBossLevel;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.YukariSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
 import com.watabou.noosa.Camera;
 import com.watabou.utils.Bundle;
 import com.watabou.noosa.audio.Sample;
@@ -62,7 +53,7 @@ import com.watabou.utils.Random;
 import com.watabou.noosa.particles.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-
+import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -76,7 +67,7 @@ public class YukariBoss extends Mob {
 		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 400 : 300;
 
 		defenseSkill = 15;
-        flying = true;
+        flying = false;
 		EXP = 30;
 
 		viewDistance = 12;
@@ -89,7 +80,7 @@ public class YukariBoss extends Mob {
 	private int trinestpos2 = 3;
 	private int trinestpos3 = 3;
 
-	private int phase = 1;
+	public int phase = 1;
 
 	private int TRINEST_CD = 12; //12
 	private int trinest_cd = TRINEST_CD;
@@ -98,8 +89,17 @@ public class YukariBoss extends Mob {
 	private int CEILING_CD = 25;	//25
 	private int ceiling_cd = CEILING_CD;
 
+	private boolean lastStand = false;
+
 	private int charging_skill = 0;	//0: free 1:trinest, 2:yakumonest_corner, 3:yakumonest_stars, 4:chen, 5:ceiling
 
+	@Override
+	public void notice() {
+		super.notice();
+		if (!BossHealthBar.isAssigned()) {
+			BossHealthBar.assignBoss(this);
+		}
+	}
 
 	@Override
 	protected void onAdd() {
@@ -132,28 +132,55 @@ public class YukariBoss extends Mob {
 			return;
 		}
 		
+		if (src instanceof YukariGap.YukariChen || src instanceof YukariGap.YukariRan){
+			return;
+		}
+
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
 
-		if (phase == 1) {
-			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
-				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
+		if (phase == 1 && HP > 0) {
+			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 75)) {
+				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 400 : 300);
 				// ScrollOfTeleportation.appear(this, YukariBossLevel.exit);
-				properties.add(Property.IMMOVABLE);
 				phase = 2;
 				sprite.idle();
-				KomachiBlessing.setRange(this);
-				//Summon Chen, Ran and portals here
+				ScrollOfTeleportation.appear(this, 89);
+				
+				// Summon Chen, Ran and portals here
+				spawnChenRan();
+				
+				YukariGap.spawnGap();
+				YukariGap.spawnGap();
+				YukariGap.spawnGap();
+				YukariGap.spawnGap();
+
+				Buff.append(Dungeon.hero, TalismanOfForesight.HeapAwareness.class, 999).pos = this.pos;
 			}
 		} else if (phase == 2 && HP >= 50) {
-
+			
 		} else if (phase == 2 && HP < 50) {
-			KomachiBlessing.tryDetach(this);
-			properties.remove(Property.IMMOVABLE);
+			Dungeon.hero.buff(TalismanOfForesight.HeapAwareness.class).detach();
+			KomachiBlessing.setRange(this);
 			phase = 3;
 			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
+
+			for (Mob m : getSubjects()){
+				if (m != null && !(m instanceof YukariBoss)) m.die(null);
+			}
+
+			Char c =Actor.findChar(593);
+			if (c!= null){
+				c.die(this);
+				if (c instanceof Hero){
+					// TODO
+					//Give an  achievement
+				}
+			}
+
+			ScrollOfTeleportation.appear(this, 593); //Appear at the entrance
 		}
 	}
 	
@@ -174,25 +201,18 @@ public class YukariBoss extends Mob {
 		GameScene.bossSlain();
 
 		for (Mob m : getSubjects()){
-			if (m != null && (m instanceof YukariGap.YukariChen || m instanceof YukariGap.YukariRan ||m instanceof YukariGap)) m.die(null);
+			if (m != null && !(m instanceof YukariBoss)) m.die(null);
 		}
 
 		Statistics.bossScores[2] += 2000;
 		super.die( cause );
 	}
 
-	@Override
-	public int attackProc(Char hero, int damage) {
-		damage = super.attackProc(enemy, damage);
-		// if (hero instanceof Hero) {
-		// 	Buff.affect(enemy, Bleeding.class).set(2f);
-		// 	return damage;
-		// }
-		// if (this.HP < this. HT){
-		// 	this.HP++;
-		// }
-		return damage;
-	}
+	// @Override
+	// public int attackProc(Char hero, int damage) {
+	// 	damage = super.attackProc(enemy, damage);
+	// 	return damage;
+	// }
 
 	@Override
 	protected boolean getCloser( int target ) {
@@ -207,66 +227,73 @@ public class YukariBoss extends Mob {
 		}
 	}
 
-
-	public void summonGap() {
-        int tried = 0;
-        // Lunatic mode spawn 2/3/4 gap, normal spawn 1/2/3
-        int summon = (isLunatic() ? -1 : 0);
-		boolean summon_able = true;
-        while (tried < 48 && summon < (4 - this.HP*4/this.HT)){
-            tried++; //to prvent infinity loop
-            int sum_pos = YukariBossLevel.gapPositions[Random.IntRange(0, YukariBossLevel.gapPositions.length - 1)];
-            Char ch = Actor.findChar(sum_pos);
-            if(ch != null){
-                if(ch instanceof Hero && ch.HP != 1){
-                    //lose half max HP or reduce HP to 1
-                    // if already 1 HP then ignore, else it would be a watse gap
-                    Char hero = Dungeon.hero;
-                    Dungeon.hero.damage(Math.min(hero.HP - 1, hero.HT/2), this);
-					summon_able = false;
-                } else if((ch instanceof YukariGap || ch instanceof YukariBoss)){
-					 // if it's Yukari or the Gap, try again
-					summon_able = false;
-                } else{
-					//if a mob block spawning, kill it
-					ch.die(null);
-				}  
-			}
-			//If no mob, or killed blocking mob, summon a gap there
-			if(summon_able){
-				GLog.w(Messages.get(this, "summon_gap"));
-				YukariGap gap = new YukariGap();
-				gap.pos = sum_pos;
-				GameScene.add( gap, 1 );
-				Dungeon.level.occupyCell(gap);
-				summon++;
-			}
-        }
-		spend(TICK);
-	}
-
     @Override
     public boolean act() {
-		if(!enemySeen && state != WANDERING) {
-			enemy = Dungeon.hero;
-			sprite.showLost();
-			state = WANDERING;
-			return true;
+		if(phase == 1 || lastStand == true){
+			if(!enemySeen && state != WANDERING) {
+				enemy = Dungeon.hero;
+				sprite.showLost();
+				state = WANDERING;
+				return true;
+			}
+			if (canUseAbility()){
+				return useAbility();
+			}
+			if (canUseReady()){
+				return useReady();
+			}
+			yakumonest_cd--;
+			trinest_cd--;
+			ceiling_cd--;
+			if(Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 2) ceiling_cd--;
+		} else if (phase == 2){
+			//Do nothing
+		} else if (phase == 3 && HP < 300){
+			properties.add(Property.IMMOVABLE);
+			for(int i : PathFinder.NEIGHBOURS8){
+				CellEmitter.get( i + this.pos ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
+				Char ch = Actor.findChar(i + this.pos);
+				if (ch != null){
+					ch.damage(10, this);
+				}
+			}
+			YukariGap.YukariTalisman.spawnMass(9);
+			Buff.affect(this, Roots.class, 1f);
+			Buff.affect(Dungeon.hero, MindVision.class, 1f);
+		} else if (phase == 3 && HP >= 300){
+			spawnChenRan();
+			KomachiBlessing.tryDetach(this);
+			lastStand = true;
+			properties.remove(Property.IMMOVABLE);
 		}
-		if (canUseAbility()){
-			return useAbility();
-		}
-		if (canUseReady()){
-			return useReady();
-		}
-		yakumonest_cd--;
-		trinest_cd--;
-		ceiling_cd--;
-		if(Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 2) ceiling_cd--;
 		return super.act();
     }
 
 	//SKILLLLLLLLL
+
+	private void spawnChenRan(){
+		YukariGap.YukariChen cheen = new YukariChen();
+		cheen.pos = 603;
+		cheen.state = HUNTING;
+		GameScene.add( cheen, 1 );
+		Dungeon.level.occupyCell( cheen );
+
+		YukariGap.YukariRan raan = new YukariRan();
+		raan.pos = 584;
+		raan.state = HUNTING;
+		GameScene.add( raan, 2 );
+		Dungeon.level.occupyCell( raan );
+	}
+
+	public void toSafety(){
+		int telepos;
+		do {
+			telepos = Random.Int( Dungeon.level.length() );
+		} while (!Dungeon.level.passable[telepos] || !Dungeon.level.openSpace[telepos]);
+		CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 10);
+		ScrollOfTeleportation.appear(this, telepos);
+		Dungeon.level.occupyCell(this);
+	}
 
 	public boolean canUseReady(){
 		if(yakumonest_cd < 1 && enemySeen && (Dungeon.level.distance(this.pos, Dungeon.hero.pos) < 3)){
@@ -286,8 +313,11 @@ public class YukariBoss extends Mob {
 		Dungeon.hero.interrupt();
 		if(charging_skill == 2 && enemySeen){
 			spend(TICK);
+			charging_skill = 0;
+			yakumonest_cd = 999;
 			return true;
 		} else if(charging_skill == 1 && enemySeen){
+			
 			triNest(enemy);
 			spend(TICK);
 			return true;
@@ -371,6 +401,7 @@ public class YukariBoss extends Mob {
 		shootLaser(trinestpos1);
 		shootLaser(trinestpos2);
 		shootLaser(trinestpos3);
+		toSafety();
 		charging_skill = 0;
 	}
 
@@ -398,6 +429,10 @@ public class YukariBoss extends Mob {
 		bundle.put( "CEILINGCD", ceiling_cd );
 
 		bundle.put( "SKILLTYPE ", charging_skill );
+
+		bundle.put( "PHASE", phase );
+		bundle.put( "LASTSTAND", lastStand );
+		
 	}
 	
 	@Override
@@ -412,6 +447,11 @@ public class YukariBoss extends Mob {
 		ceiling_cd 		= bundle.getInt( "CEILINGCD" );
 
 		charging_skill 	= bundle.getInt( "SKILLTYPE" );
+
+		phase = bundle.getInt( "PHASE" );
+		lastStand = bundle.getBoolean("LASTSTAND");
+
+		BossHealthBar.assignBoss(this);
 	}
 
 	@Override

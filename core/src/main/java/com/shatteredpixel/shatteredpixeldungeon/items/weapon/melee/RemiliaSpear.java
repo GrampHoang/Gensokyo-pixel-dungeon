@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char.Property;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.*;
@@ -119,18 +119,19 @@ public class RemiliaSpear extends WeaponWithSP {
 
                 Char ch = Actor.findChar(i);
                 if (ch != null) {
+                    // Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos), 1);
+                    if (!Char.hasProp(ch, Property.IMMOVABLE)){
+                        Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos, new Callback() {
+                            public void call() {
+                                ch.pos = b.collisionPos;
+                                Dungeon.level.occupyCell(ch);
+                                Dungeon.observe();
+                            }
+                        }), 0);
+                    }
+                    
                     Buff.affect(ch, Paralysis.class, 1f);
                     ch.damage(skilldmg_max(), Dungeon.hero);
-
-                    // Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos), 1);
-                    Actor.addDelayed(new Pushing(ch, ch.pos, b.collisionPos, new Callback() {
-                        public void call() {
-                            ch.pos = b.collisionPos;
-                            Dungeon.level.occupyCell(ch);
-                            Dungeon.observe();
-                        }
-                    }), 0);
-
                    
                 }
             }
@@ -165,6 +166,7 @@ public class RemiliaSpear extends WeaponWithSP {
                     }
                 }
             }
+
             Dungeon.observe();
             spendSP();
             Dungeon.hero.spendAndNext(1f);

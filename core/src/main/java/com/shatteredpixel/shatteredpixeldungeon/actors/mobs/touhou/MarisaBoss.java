@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
@@ -159,35 +160,33 @@ public class MarisaBoss extends Mob {
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
-
 		//Use hero for now, it will be janky if we use allies
 		Ballistica attack = new Ballistica( pos, Dungeon.hero.pos, Ballistica.PROJECTILE);
 		if (attack.collisionPos != Dungeon.hero.pos){	
-			getCloser(Dungeon.hero.pos);
+			// getCloser(Dungeon.hero.pos);
 			count_before_tele+=6;
 		} else {
 			count_before_tele = 1;
 		}
 
-		
 		if (count_before_tele > 15){
 			toSafety();
 		}
 		int hpBracket = HT / 3;
-		
 		int beforeHitHP = HP;
 		super.damage(dmg, src);
 		dmg = beforeHitHP - HP;
-		if (phase == 1 && HP < HT*2/3){
+		if (phase == 1 && HP < HT*1/2){
 			toSafety();
 			callPachouli();
 			phase++;
 			this.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE);
+			PotionOfHealing.heal(this);
+			PotionOfHealing.cure(this);
 			GLog.w("Help meeee! Patchouliiii");
 		}
-
-		if (phase == 2 && HP < HT*1/3){
+		if (phase == 2 && HP < HT*1/2){
 			toSafety();
 			callAlice();
 			phase++;
@@ -209,7 +208,8 @@ public class MarisaBoss extends Mob {
 		int telepos;
 		do {
 			telepos = Random.Int( Dungeon.level.length() );
-		} while (!Dungeon.level.passable[telepos] || !Dungeon.level.openSpace[telepos]);
+			// GLog.w(Integer.toString(telepos));
+		} while (!Dungeon.level.passable[telepos]);
 		CellEmitter.center(this.pos).burst(RainbowParticle.BURST, 10);
 		ScrollOfTeleportation.appear(this, telepos);
 		Dungeon.level.occupyCell(this);
@@ -223,7 +223,11 @@ public class MarisaBoss extends Mob {
 	@Override
 	protected boolean canAttack( Char enemy ) {
 		Ballistica attack = new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE);
-		return attack.collisionPos == enemy.pos;
+		boolean canAtt = attack.collisionPos == enemy.pos;
+		if (canAtt && enemy instanceof Hero && Dungeon.level.distance(this.pos, enemy.pos) > 2){
+			Statistics.qualifiedForBossChallengeBadge = false;
+		}
+		return canAtt;
 	}
 
 	@Override
@@ -438,7 +442,7 @@ public class MarisaBoss extends Mob {
             // targetedCells.add(p);
         }
         stopCell = b.collisionPos;
-        GLog.w("Marisa is about to dash, get out of her way!");
+		GLog.w(Messages.get(MarisaBoss.class, "todash"));
         return true;
     }
 
@@ -447,8 +451,7 @@ public class MarisaBoss extends Mob {
         boolean terrainAffected = false;
 		if (stopCell == 69) stopCell = Dungeon.hero.pos;
         sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(stopCell)));
-        this.move( stopCell);
-        this.moveSprite(this.pos, stopCell);
+		// Dungeon.level.occupyCell(this);
 
 		Camera.main.shake( 1f, 1f );
 		Sample.INSTANCE.play( Assets.Sounds.ROCKS );
@@ -459,6 +462,7 @@ public class MarisaBoss extends Mob {
 			if(ch != null && ch != this){
 				Buff.affect(ch, Paralysis.class, 1.5f);
 				if (ch == Dungeon.hero){
+					Statistics.qualifiedForBossChallengeBadge = false;
 					Statistics.bossScores[2] -= 200;
 				}
 			}
@@ -486,6 +490,7 @@ public class MarisaBoss extends Mob {
 			Buff.affect(ch, Bleeding.class).set(5);
 			if (ch.alignment != this.alignment){
 				if (ch == Dungeon.hero){
+					Statistics.qualifiedForBossChallengeBadge = false;
 					Statistics.bossScores[2] -= 400;
 				}
             	ch.damage(Random.NormalIntRange(10, 20), new Hakkero());
@@ -518,7 +523,8 @@ public class MarisaBoss extends Mob {
 			cha.move(push_pos);
 			Dungeon.level.occupyCell(cha);
 		}
-		
+		this.move( stopCell);
+        this.moveSprite(this.pos, stopCell);
 		stopCell = 69;
         return true;
     }
@@ -552,7 +558,7 @@ public class MarisaBoss extends Mob {
 				}
 			}
 		}
-        GLog.w("Marisa is charging her Hakkero, be careful!");
+        GLog.w(Messages.get(MarisaBoss.class, "tohakkero"));
         return true;
     }
 
@@ -603,6 +609,7 @@ public class MarisaBoss extends Mob {
 			if (ch.alignment != this.alignment){
             	ch.damage(Random.NormalIntRange(20, 35), new Hakkero());
 				if (ch == Dungeon.hero){
+					Statistics.qualifiedForBossChallengeBadge = false;
 					Statistics.bossScores[2] -= 400;
 				}
 			} else {

@@ -62,12 +62,14 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfFlock;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDeepSleep;
 import com.shatteredpixel.shatteredpixeldungeon.items.TengusMask;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.EndlessAlcohol;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Hakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfHakkero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.ReisenGun;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.ReisenHand;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RemiliaSpear;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.DebugSword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -387,7 +389,9 @@ public enum HeroClass {
 	}
 
 	private static void initSakuya( Hero hero ) {
-		(hero.belongings.weapon = new Greataxe()).identify();
+		(hero.belongings.weapon = new RemiliaSpear()).identify();
+		hero.belongings.weapon.upgrade(9);
+		Dungeon.quickslot.setSlot(2, hero.belongings.weapon);
 
 		TimekeepersHourglass hourglass = new TimekeepersHourglass();
 		(hero.belongings.artifact = hourglass).identify();
@@ -407,7 +411,7 @@ public enum HeroClass {
 
 				ScrollOfDebug sod = new ScrollOfDebug();
 				sod.quantity(69).collect();
-				Dungeon.quickslot.setSlot(2, sod);
+				// Dungeon.quickslot.setSlot(2, sod);
 				
 				// DebugSword we = new DebugSword();
 				// we.level(1);
@@ -417,7 +421,7 @@ public enum HeroClass {
 				// Buff.affect(hero, MindVision.class, 9999f);
 				// Buff.affect(hero, MagicalSight.class, 9999f);
 				RingOfMight ring = new RingOfMight();
-				ring.level(10);
+				ring.level(25);
 				ring.doEquip(hero);
 
 				RingOfTenacity ring2 = new RingOfTenacity();
@@ -431,7 +435,7 @@ public enum HeroClass {
 
 				PotionOfHealing poh = new PotionOfHealing();
 				poh.quantity(99).collect();
-				Dungeon.quickslot.setSlot(3, poh);
+				Dungeon.quickslot.setSlot(4, poh);
 
 				ScrollOfMagicMapping som = new ScrollOfMagicMapping();
 				som.quantity(99).collect();
@@ -439,7 +443,11 @@ public enum HeroClass {
 
 				PotionOfExperience poe = new PotionOfExperience();
 				poe.quantity(13).collect();
-				Dungeon.quickslot.setSlot(2, poe);
+				Dungeon.quickslot.setSlot(3, poe);
+
+				EndlessAlcohol ea = new EndlessAlcohol();
+				ea.quantity(99).collect();
+				Dungeon.quickslot.setSlot(1, ea);
 	}
 	
 	private static void initKoishi( Hero hero ) {

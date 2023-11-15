@@ -37,10 +37,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -188,6 +191,10 @@ public class YukariGap extends Mob {
 		
 		@Override
 		protected boolean act() {
+			if (paralysed > 0 || buff(Frost.class) != null || buff(Roots.class) != null) {
+				spend( TICK );
+				return true;
+			}
 			if(rolling == true){
 				rolling = false;
 				spend(TICK);
@@ -246,6 +253,7 @@ public class YukariGap extends Mob {
 				Char ch = Actor.findChar(p);
 				if (ch != null && !(ch instanceof Chen)){
 					ch.damage(20 - ch.drRoll(), this);	//Affected by armor , "Physical roll"
+					if (ch instanceof Hero) Statistics.qualifiedForBossChallengeBadge = false;
 				}
 			}
 
@@ -253,7 +261,8 @@ public class YukariGap extends Mob {
 				CellEmitter.get( i + stopCell ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
 				Char ch = Actor.findChar(i + stopCell);
 				if (ch != null && !(ch instanceof Chen)){
-					ch.damage(6, this);
+					ch.damage(12 - ch.drRoll(), this);
+					if (ch instanceof Hero) Statistics.qualifiedForBossChallengeBadge = false;
 				}
 			}
 			//move
@@ -292,7 +301,7 @@ public class YukariGap extends Mob {
 				enemy_pos = ready(Dungeon.hero.pos);
 				spend(TICK);
 				rolling = true;
-				return true;
+				return super.act();
 			}
 		}
 
@@ -338,6 +347,7 @@ public class YukariGap extends Mob {
 				Char ch = Actor.findChar(p);
 				if (ch != null && !(ch instanceof Chen)){
 					ch.damage(10, this);
+					if (ch instanceof Hero) Statistics.qualifiedForBossChallengeBadge = false;
 				}
 			}
 			for(int i : PathFinder.NEIGHBOURS8){
@@ -345,6 +355,7 @@ public class YukariGap extends Mob {
 				Char ch = Actor.findChar(i+ stopCell);
 				if (ch != null && !(ch instanceof Chen)){
 					ch.damage(6, this);
+					if (ch instanceof Hero) Statistics.qualifiedForBossChallengeBadge = false;
 				}
 			}
 			//move
@@ -419,6 +430,7 @@ public class YukariGap extends Mob {
 				Char ch = Actor.findChar(p);
 				if (ch != null && !(ch instanceof YukariChen || ch instanceof YukariRan || ch instanceof YukariGap || ch instanceof YukariBoss)){
 					ch.damage(10, this);
+					if (ch instanceof Hero) Statistics.qualifiedForBossChallengeBadge = false;
 				}
 			}
 			die(null);

@@ -208,6 +208,7 @@ public class Sunny extends ThreeFairiesOfLight {
 				}
 				if (ch == Dungeon.hero){
 					Statistics.bossScores[2] -= 100;
+					Statistics.qualifiedForBossChallengeBadge = false;
 				}
                 Buff.affect(ch, Burning.class).reignite(ch, 4f);
             }

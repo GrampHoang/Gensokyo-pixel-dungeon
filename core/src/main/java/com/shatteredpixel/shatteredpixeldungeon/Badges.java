@@ -171,7 +171,28 @@ public class Badges {
 		GAMES_PLAYED_5              ( 121, true ),
 		HIGH_SCORE_5                ( 122 ),
 		CHAMPION_2                  ( 123 ),
-		CHAMPION_3                  ( 124 );
+		CHAMPION_3                  ( 124 ),
+
+		// Touhou
+
+		// 
+		WEAPON_SKILL                ( 57 ),
+		// Boss challlenges
+		TOUHOU_BOSS_1				(136),
+		TOUHOU_BOSS_2				(137),
+		TOUHOU_BOSS_3				(138),
+		TOUHOU_BOSS_4				(139),
+		// TOUHOU_BOSS_5				(140),
+
+		//NPC
+		TOUHOU_NPC_SUIKA			(144),
+		TOUHOU_NPC_SAKUYA			(145),
+		TOUHOU_NPC_KOISHI			(153),
+		TOUHOU_NPC_YOUMU			(146),
+		TOUHOU_NPC_YUYUKO			(154),
+		TOUHOU_NPC_TENSHI			(147),
+		TOUHOU_NPC_REISEN			(155),
+		TOUHOU_NPC_MARISA			(148);
 
 		public boolean meta;
 
@@ -721,63 +742,65 @@ public class Badges {
 	
 	public static void validateBossSlain() {
 		Badge badge = null;
-		switch (Dungeon.depth) {
-		case 5:
-			badge = Badge.BOSS_SLAIN_1;
-			break;
-		case 10:
-			badge = Badge.BOSS_SLAIN_2;
-			break;
-		case 15:
-			badge = Badge.BOSS_SLAIN_3;
-			break;
-		case 20:
-			badge = Badge.BOSS_SLAIN_4;
-			break;
-		}
-		
-		if (badge != null) {
-			local.add( badge );
-			displayBadge( badge );
-			
-			if (badge == Badge.BOSS_SLAIN_1) {
-				badge = firstBossClassBadges.get(Dungeon.hero.heroClass);
-				if (badge == null) return;
+		if (Dungeon.branch == 0){
+			switch (Dungeon.depth) {
+			case 5:
+				badge = Badge.BOSS_SLAIN_1;
+				break;
+			case 10:
+				badge = Badge.BOSS_SLAIN_2;
+				break;
+			case 15:
+				badge = Badge.BOSS_SLAIN_3;
+				break;
+			case 20:
+				badge = Badge.BOSS_SLAIN_4;
+				break;
+			}
+
+			if (badge != null) {
 				local.add( badge );
-				unlock(badge);
+				displayBadge( badge );
+				
+				if (badge == Badge.BOSS_SLAIN_1) {
+					badge = firstBossClassBadges.get(Dungeon.hero.heroClass);
+					if (badge == null) return;
+					local.add( badge );
+					unlock(badge);
 
-				boolean allUnlocked = true;
-				for (Badge b : firstBossClassBadges.values()){
-					if (!isUnlocked(b)){
-						allUnlocked = false;
-						break;
+					boolean allUnlocked = true;
+					for (Badge b : firstBossClassBadges.values()){
+						if (!isUnlocked(b)){
+							allUnlocked = false;
+							break;
+						}
 					}
-				}
-				if (allUnlocked) {
-					
-					badge = Badge.BOSS_SLAIN_1_ALL_CLASSES;
-					if (!isUnlocked( badge )) {
-						displayBadge( badge );
+					if (allUnlocked) {
+						
+						badge = Badge.BOSS_SLAIN_1_ALL_CLASSES;
+						if (!isUnlocked( badge )) {
+							displayBadge( badge );
+						}
 					}
-				}
-			} else if (badge == Badge.BOSS_SLAIN_3) {
+				} else if (badge == Badge.BOSS_SLAIN_3) {
 
-				badge = thirdBossSubclassBadges.get(Dungeon.hero.subClass);
-				if (badge == null) return;
-				local.add( badge );
-				unlock(badge);
+					badge = thirdBossSubclassBadges.get(Dungeon.hero.subClass);
+					if (badge == null) return;
+					local.add( badge );
+					unlock(badge);
 
-				boolean allUnlocked = true;
-				for (Badge b : thirdBossSubclassBadges.values()){
-					if (!isUnlocked(b)){
-						allUnlocked = false;
-						break;
+					boolean allUnlocked = true;
+					for (Badge b : thirdBossSubclassBadges.values()){
+						if (!isUnlocked(b)){
+							allUnlocked = false;
+							break;
+						}
 					}
-				}
-				if (allUnlocked) {
-					badge = Badge.BOSS_SLAIN_3_ALL_SUBCLASSES;
-					if (!isUnlocked( badge )) {
-						displayBadge( badge );
+					if (allUnlocked) {
+						badge = Badge.BOSS_SLAIN_3_ALL_SUBCLASSES;
+						if (!isUnlocked( badge )) {
+							displayBadge( badge );
+						}
 					}
 				}
 			}
@@ -804,8 +827,24 @@ public class Badges {
 					badge = Badge.BOSS_CHALLENGE_5;
 					break;
 			}
-		} else {
-
+		} else if (Dungeon.branch == 1){
+			switch (Dungeon.depth) {	
+				case 5:
+					badge = Badge.TOUHOU_BOSS_1;
+					break;
+				case 10:
+					badge = Badge.TOUHOU_BOSS_2;
+					break;
+				case 15:
+					badge = Badge.TOUHOU_BOSS_3;
+					break;
+				case 20:
+					badge = Badge.TOUHOU_BOSS_4;
+					break;
+				// case 25:
+				// 	badge = Badge.TOUHOU_BOSS_5;
+				// 	break;
+			}
 		}
 		
 		if (badge != null) {
@@ -1213,5 +1252,58 @@ public class Badges {
 		}
 
 		return null;
+	}
+
+
+	//Touhou stuff
+
+	public static void useWeaponSkill(){
+		Badge badge = Badge.WEAPON_SKILL;
+		if (!local.contains( Badge.WEAPON_SKILL )){
+			local.add( badge );
+			displayBadge( badge );
+		}
+	}
+
+
+	public static void useUltimateElementalWeaponSkill(){
+		// Badge badge = Badge.WEAPON_SKILL;
+		// if (!local.contains( Badge.WEAPON_SKILL )){
+		// 	local.add( badge );
+		// 	displayBadge( badge );
+		// }
+	}
+
+
+	public static void satisfyQuestTouhouNPC(String name){
+		Badge badge = null;
+		switch(name){
+			case "SUIKA":
+				badge = Badge.TOUHOU_NPC_SUIKA;
+				break;
+			case "SAKUYA":
+				badge = Badge.TOUHOU_NPC_SAKUYA;
+				break;
+			case "KOISHI":
+				badge = Badge.TOUHOU_NPC_KOISHI;
+				break;
+			case "YOUMU":
+				badge = Badge.TOUHOU_NPC_YOUMU;
+				break;
+			case "YUYUKO":
+				badge = Badge.TOUHOU_NPC_YUYUKO;
+				break;
+			case "TENSHI":
+				badge = Badge.TOUHOU_NPC_TENSHI;
+				break;
+			case "REISEN":
+				badge = Badge.TOUHOU_NPC_REISEN;
+				break;
+			case "MARISA":
+				badge = Badge.TOUHOU_NPC_MARISA;
+				break;
+		}
+		local.add( badge );
+		displayBadge( badge );	
 	}
 }

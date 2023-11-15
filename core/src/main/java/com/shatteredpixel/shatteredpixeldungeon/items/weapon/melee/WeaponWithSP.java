@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -104,10 +105,11 @@ public abstract class WeaponWithSP extends MeleeWeapon{
 
 	protected boolean spendSP(int spend){
 		if (charge > spend){
+			Badges.useWeaponSkill();
 			charge = charge - spend;
 			return true;
 		} else {
-			GLog.w("You don't have enough charge!");
+			GLog.w("Not enough charge to use this skill!");
 			return false;
 		}
 	}
@@ -116,7 +118,9 @@ public abstract class WeaponWithSP extends MeleeWeapon{
 		charge = charge + chargeNeed;
 	}
 
+	//Usually we just call this at the end of skill, I handle not enough charge in the method execute() above
 	protected void spendSP(){
+		Badges.useWeaponSkill();
 		charge = charge - chargeNeed;
 	}
 

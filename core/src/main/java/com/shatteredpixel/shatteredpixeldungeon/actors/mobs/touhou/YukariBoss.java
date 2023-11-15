@@ -261,9 +261,9 @@ public class YukariBoss extends Mob {
 			Buff.affect(this, Roots.class, 1f);
 			Buff.affect(Dungeon.hero, MindVision.class, 1f);
 		} else if (phase == 3 && HP >= 300){
-			spawnChenRan();
 			KomachiBlessing.tryDetach(this);
 			lastStand = true;
+			spawnChenRan();
 			properties.remove(Property.IMMOVABLE);
 		}
 		return super.act();
@@ -283,6 +283,10 @@ public class YukariBoss extends Mob {
 		raan.state = HUNTING;
 		GameScene.add( raan, 2 );
 		Dungeon.level.occupyCell( raan );
+		if (lastStand){
+			Buff.affect(raan, Slow.class, 690f);
+			Buff.affect(cheen, Slow.class, 420);
+		}
 	}
 
 	public void toSafety(){

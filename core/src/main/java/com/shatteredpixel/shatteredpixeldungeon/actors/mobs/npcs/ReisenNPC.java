@@ -313,10 +313,11 @@ public class ReisenNPC extends NPC {
                     Item pot = Dungeon.hero.belongings.getItem( UnknownPotion.class);
 					if (pot != null){
 						pot.detach(Dungeon.hero.belongings.backpack);
-                        sprite.showStatus(CharSprite.POSITIVE, "Thanks");
+                        sprite.showStatus(CharSprite.POSITIVE, "Thank you~");
 						if(count < 10 && !Catalog.isSeen(ReisenEnc.class)){
 							ReisenEnc enc = new ReisenEnc();
 							enc.doPickUp(Dungeon.hero, Dungeon.hero.pos);
+							flee();
 						}
                     } else {
                         sprite.showStatus(CharSprite.POSITIVE, "Where is it?");

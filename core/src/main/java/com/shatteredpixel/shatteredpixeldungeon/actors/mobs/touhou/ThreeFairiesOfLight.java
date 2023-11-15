@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.*;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -71,6 +72,7 @@ public class ThreeFairiesOfLight extends Mob {
             Cripple.affect(this, Cripple.class, 1f);
         }
 		if(Dungeon.hero != null && Dungeon.hero.buff(MoveDetect.class) != null && Dungeon.hero.justMoved){
+            Statistics.qualifiedForBossChallengeBadge = false;
 			throwRock();
         }
 

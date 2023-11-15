@@ -193,7 +193,7 @@ public class HeroSelectScene extends PixelScene {
 		optionsPane = new GameOptions();
 		optionsPane.visible = optionsPane.active = false;
 		optionsPane.layout();
-		optionsPane.setPos(heroBtnleft, 0);
+		optionsPane.setPos(heroBtnleft + 16, 0);
 		add(optionsPane);
 
 		btnOptions = new IconButton(Icons.get(Icons.PREFS)){

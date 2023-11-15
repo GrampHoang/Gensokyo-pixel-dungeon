@@ -32,7 +32,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -49,7 +48,6 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.*;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.RemiliaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
@@ -87,6 +85,7 @@ public class RemiliaBoss extends Mob {
 		immunities.add(Poison.class);
 		immunities.add(Fire.class);
 		immunities.add(Drowsy.class);
+		immunities.add( SmokeScreen.class );
 	}
 	private int middle_of_map = 8*17+8;
 	private int[] summonPos = {2*17+3, 2*17+14, 14*17+3, 14*17+14};
@@ -413,6 +412,7 @@ public class RemiliaBoss extends Mob {
 				this.spend(TICK);
                 ch.damage(Random.IntRange(8,16), this);
 				if (ch == Dungeon.hero){
+					Statistics.qualifiedForBossChallengeBadge = false;
 					Statistics.bossScores[2] -= 200;
 				}
 				Actor.addDelayed(new Pushing(ch, ch.pos, levatin_stop_pos), 0);
@@ -436,6 +436,7 @@ public class RemiliaBoss extends Mob {
 						ch.damage(8, this);
 						if (ch == Dungeon.hero){
 							Statistics.bossScores[2] -= 100;
+							Statistics.qualifiedForBossChallengeBadge = false;
 						}
 					}
 			}

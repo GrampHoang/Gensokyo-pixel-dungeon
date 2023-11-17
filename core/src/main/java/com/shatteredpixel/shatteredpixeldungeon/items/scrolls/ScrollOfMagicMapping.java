@@ -42,6 +42,8 @@ public class ScrollOfMagicMapping extends Scroll {
 	@Override
 	public void doRead() {
 		
+		//TODO: Aadd a secret thing that only spawn when read this at depth 1, ebcause who would read this at depth 1
+
 		int length = Dungeon.level.length();
 		int[] map = Dungeon.level.map;
 		boolean[] mapped = Dungeon.level.mapped;

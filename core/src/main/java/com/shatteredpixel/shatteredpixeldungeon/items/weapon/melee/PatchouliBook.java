@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import java.util.ArrayList;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -449,6 +450,7 @@ public class PatchouliBook extends WeaponWithSP {
 		} else {
 			aa_count = 0;
 			// GLog.w("Done");
+			Badges.useUltimateElementalWeaponSkill();
 			Dungeon.hero.spendAndNext(0.5f);
 		}
 		return;

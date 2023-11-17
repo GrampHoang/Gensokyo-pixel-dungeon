@@ -71,7 +71,11 @@ public class Statistics {
 	public static boolean qualifiedForNoKilling = false;
 	public static boolean completedWithNoKilling = false;
 	public static boolean qualifiedForBossChallengeBadge = false;
-	
+
+	public static boolean qualifiedForKoishiKillerBadge = false;
+	public static boolean bowAndGunUsed = false;
+	// public static boolean qualifiedForNoUpgrade = false;
+
 	public static boolean amuletObtained = false;
 	public static boolean gameWon = false;
 	public static boolean ascended = false;
@@ -158,6 +162,11 @@ public class Statistics {
 	private static final String NO_KILLING_QUALIFIED	= "qualifiedForNoKilling";
 	private static final String BOSS_CHALLENGE_QUALIFIED= "qualifiedForBossChallengeBadge";
 	
+	private static final String KOISHI_KILLER_QUALIFIED= "qualifiedForKoishiKillerBadge";
+	private static final String BOW_AND_GUN_USED = "bowAndGunUsed";
+
+	
+
 	private static final String AMULET          = "amuletObtained";
 	private static final String WON		        = "won";
 	private static final String ASCENDED		= "ascended";
@@ -206,7 +215,12 @@ public class Statistics {
 
 		bundle.put(NO_KILLING_QUALIFIED, qualifiedForNoKilling);
 		bundle.put(BOSS_CHALLENGE_QUALIFIED, qualifiedForBossChallengeBadge);
+
+
+		bundle.put(KOISHI_KILLER_QUALIFIED, qualifiedForKoishiKillerBadge);
+		bundle.put(BOW_AND_GUN_USED, bowAndGunUsed);
 		
+
 		bundle.put( AMULET,		amuletObtained );
 		bundle.put( WON,        gameWon );
 		bundle.put( ASCENDED,   ascended );
@@ -255,6 +269,9 @@ public class Statistics {
 		qualifiedForNoKilling = bundle.getBoolean( NO_KILLING_QUALIFIED );
 
 		qualifiedForBossChallengeBadge = bundle.getBoolean( BOSS_CHALLENGE_QUALIFIED );
+		
+		qualifiedForKoishiKillerBadge = bundle.getBoolean( KOISHI_KILLER_QUALIFIED );
+		bowAndGunUsed = bundle.getBoolean( BOW_AND_GUN_USED );
 		
 		amuletObtained	= bundle.getBoolean( AMULET );
 		gameWon         = bundle.getBoolean( WON );

@@ -184,6 +184,22 @@ public class Badges {
 		TOUHOU_BOSS_4				(139),
 		// TOUHOU_BOSS_5				(140),
 
+		// TODO NEED TO UPDATE LATER
+		TOUHOU_MYSTIA_WEAPON 		(144),
+		TOUHOU_ULTIMATE_SPELL 		(144),
+		MASTER_MAGE 				(144),
+		GRANDMASTER_MAGE 			(144),
+		IRON_CLOTH					(144),
+		NO_UPGRADE					(144),
+
+		KILLER_KOISHI				(144),
+		RANGELESS			 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+
 		//NPC
 		TOUHOU_NPC_SUIKA			(144),
 		TOUHOU_NPC_SAKUYA			(145),
@@ -1267,11 +1283,48 @@ public class Badges {
 
 
 	public static void useUltimateElementalWeaponSkill(){
-		// Badge badge = Badge.WEAPON_SKILL;
-		// if (!local.contains( Badge.WEAPON_SKILL )){
-		// 	local.add( badge );
-		// 	displayBadge( badge );
-		// }
+		Badge badge = Badge.TOUHOU_ULTIMATE_SPELL;
+		if (!local.contains( Badge.TOUHOU_ULTIMATE_SPELL )){
+			local.add( badge );
+			displayBadge( badge );
+		}
+	}
+
+	public static void giveMystiaVendorBadge(){
+		Badge badge = Badge.TOUHOU_MYSTIA_WEAPON;
+		if (!local.contains( Badge.TOUHOU_MYSTIA_WEAPON )){
+			local.add( badge );
+			displayBadge( badge );
+		}
+	}
+
+	public static void checkMasterMage(int chalCount ){
+		Badge badge;
+		if (chalCount >= 6){
+			badge = Badge.MASTER_MAGE;
+			if (!local.contains( Badge.MASTER_MAGE )){
+				local.add( badge );
+				displayBadge( badge );
+			}
+		}
+
+		if (chalCount >= 3){
+			badge = Badge.GRANDMASTER_MAGE;
+			if (!local.contains( Badge.GRANDMASTER_MAGE )){
+				local.add( badge );
+				displayBadge( badge );
+			}
+		}
+	}
+
+	public static void checkNoUpgrade(){
+		if (Statistics.upgradesUsed == 0){
+			Badge badge = Badge.NO_UPGRADE;
+			if (!local.contains( Badge.NO_UPGRADE )){
+				local.add( badge );
+				displayBadge( badge );
+			}
+		}
 	}
 
 

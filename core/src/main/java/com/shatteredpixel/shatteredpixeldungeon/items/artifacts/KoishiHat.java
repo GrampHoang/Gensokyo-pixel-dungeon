@@ -27,6 +27,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
@@ -100,6 +101,9 @@ public class KoishiHat extends Artifact {
 
 	@Override
 	public boolean doUnequip(Hero hero, boolean collect, boolean single) {
+		if(Statistics.deepestFloor == 1){
+			Statistics.qualifiedForKoishiKillerBadge = true;
+		}
 		if (Dungeon.hero.buff(Invisibility.class) != null){
 			Dungeon.hero.buff(Invisibility.class).detach();
 		}
@@ -110,6 +114,7 @@ public class KoishiHat extends Artifact {
 
 	@Override
 	public boolean doEquip(Hero hero) {
+		Statistics.qualifiedForKoishiKillerBadge = false;
 		if(Dungeon.hero.buff(Fury.class) != null){
 			GLog.w("Koishi hasn't calm down yet!");
 			return false;

@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -53,6 +54,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SomeonePhone;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -901,13 +904,14 @@ public class Dungeon {
 		Statistics.gameWon = true;
 		hero.belongings.identify();
 
-		KindOfWeapon curWep = hero.belongings.weapon;
-		if (curWep instanceof MystiaVendor && curWep.level() >= 15){
-			Badges.giveMystiaVendorBadge();
-		}
-
-		Badges.checkMasterMage(Challenges.activeChallenges());
+		//Maybe I should move this to Badges.java
+		Badges.checkMystiaVendorBadge();
+		Badges.checkIronClothBadge();
 		Badges.checkNoUpgrade();
+		if (Dungeon.hero.heroClass == HeroClass.MAGE) 	Badges.checkMasterMage(Challenges.activeChallenges());
+		if (Statistics.bowAndGunUsed) 					Badges.checkRangeless(Challenges.activeChallenges());
+		if (Statistics.qualifiedForKoishiKillerBadge)	Badges.checkKillerKoishiBadge();
+		
 		Rankings.INSTANCE.submit( true, cause );
 	}
 

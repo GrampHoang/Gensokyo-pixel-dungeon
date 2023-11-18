@@ -24,11 +24,15 @@ package com.shatteredpixel.shatteredpixeldungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -173,7 +177,24 @@ public class Badges {
 		CHAMPION_2                  ( 123 ),
 		CHAMPION_3                  ( 124 ),
 
-		// Touhou
+		// Gennsokyo stuff
+
+		MASTER_MAGE 				(112),
+		RANGELESS					(113),
+		IRON_CLOTH					(114),
+		TOUHOU_MYSTIA_WEAPON 		(115),
+
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+		// TOUHOU_MYSTIA_WEAPON 		(144),
+
+		KILLER_KOISHI				(128),
+		TOUHOU_ULTIMATE_SPELL 		(129),
+		GRANDMASTER_RANGELESS		(130),
+		GRANDMASTER_MAGE			(131),
+		NO_UPGRADE					(132),
 
 		// 
 		WEAPON_SKILL                ( 57 ),
@@ -183,23 +204,6 @@ public class Badges {
 		TOUHOU_BOSS_3				(138),
 		TOUHOU_BOSS_4				(139),
 		// TOUHOU_BOSS_5				(140),
-
-		// TODO NEED TO UPDATE LATER
-		TOUHOU_MYSTIA_WEAPON 		(144),
-		TOUHOU_ULTIMATE_SPELL 		(144),
-		MASTER_MAGE 				(144),
-		GRANDMASTER_MAGE 			(144),
-		IRON_CLOTH					(144),
-		NO_UPGRADE					(144),
-
-		KILLER_KOISHI				(144),
-		RANGELESS			 		(144),
-		// TOUHOU_MYSTIA_WEAPON 		(144),
-		// TOUHOU_MYSTIA_WEAPON 		(144),
-		// TOUHOU_MYSTIA_WEAPON 		(144),
-		// TOUHOU_MYSTIA_WEAPON 		(144),
-		// TOUHOU_MYSTIA_WEAPON 		(144),
-
 		//NPC
 		TOUHOU_NPC_SUIKA			(144),
 		TOUHOU_NPC_SAKUYA			(145),
@@ -1123,7 +1127,10 @@ public class Badges {
 			{Badge.BOSS_SLAIN_1, Badge.BOSS_SLAIN_2, Badge.BOSS_SLAIN_3, Badge.BOSS_SLAIN_4},
 			{Badge.HIGH_SCORE_1, Badge.HIGH_SCORE_2, Badge.HIGH_SCORE_3, Badge.HIGH_SCORE_4, Badge.HIGH_SCORE_5},
 			{Badge.GAMES_PLAYED_1, Badge.GAMES_PLAYED_2, Badge.GAMES_PLAYED_3, Badge.GAMES_PLAYED_4, Badge.GAMES_PLAYED_5},
-			{Badge.CHAMPION_1, Badge.CHAMPION_2, Badge.CHAMPION_3}
+			{Badge.CHAMPION_1, Badge.CHAMPION_2, Badge.CHAMPION_3},
+			
+			{Badge.MASTER_MAGE, Badge.GRANDMASTER_MAGE},
+			{Badge.RANGELESS, Badge.GRANDMASTER_RANGELESS}
 	};
 
 	//don't show the later badge if the earlier one isn't unlocked
@@ -1290,9 +1297,32 @@ public class Badges {
 		}
 	}
 
-	public static void giveMystiaVendorBadge(){
-		Badge badge = Badge.TOUHOU_MYSTIA_WEAPON;
-		if (!local.contains( Badge.TOUHOU_MYSTIA_WEAPON )){
+	public static void checkMystiaVendorBadge(){
+		KindOfWeapon curWep = Dungeon.hero.belongings.weapon;
+		if (curWep instanceof MystiaVendor && curWep.level() >= 15){
+			Badge badge = Badge.TOUHOU_MYSTIA_WEAPON;
+			if (!local.contains( Badge.TOUHOU_MYSTIA_WEAPON )){
+				local.add( badge );
+				displayBadge( badge );
+			}
+		}
+	}
+
+	public static void checkIronClothBadge(){
+		Armor curArmor = Dungeon.hero.belongings.armor;
+		if (curArmor instanceof ClothArmor && curArmor.level() >= 15){
+			Badge badge = Badge.IRON_CLOTH;
+			if (!local.contains( Badge.IRON_CLOTH )){
+				local.add( badge );
+				displayBadge( badge );
+			}
+		}
+		
+	}
+
+	public static void checkKillerKoishiBadge(){
+		Badge badge = Badge.KILLER_KOISHI;
+		if (!local.contains( Badge.KILLER_KOISHI )){
 			local.add( badge );
 			displayBadge( badge );
 		}
@@ -1301,19 +1331,36 @@ public class Badges {
 	public static void checkMasterMage(int chalCount ){
 		Badge badge;
 		if (chalCount >= 6){
-			badge = Badge.MASTER_MAGE;
-			if (!local.contains( Badge.MASTER_MAGE )){
+			badge = Badge.GRANDMASTER_MAGE;
+			if (!local.contains( Badge.GRANDMASTER_MAGE )){
 				local.add( badge );
 				displayBadge( badge );
 			}
 		}
 
 		if (chalCount >= 3){
-			badge = Badge.GRANDMASTER_MAGE;
-			if (!local.contains( Badge.GRANDMASTER_MAGE )){
+			badge = Badge.MASTER_MAGE;
+			if (!local.contains( Badge.MASTER_MAGE )){
 				local.add( badge );
 				displayBadge( badge );
 			}
+		}
+	}
+
+	public static void checkRangeless(int chalCount ){
+		Badge badge;
+		if (chalCount >= 5){
+			badge = Badge.GRANDMASTER_RANGELESS;
+			if (!local.contains( Badge.GRANDMASTER_RANGELESS )){
+				local.add( badge );
+				displayBadge( badge );
+			}
+			return;
+		}
+		badge = Badge.RANGELESS;
+		if (!local.contains( Badge.RANGELESS )){
+			local.add( badge );
+			displayBadge( badge );
 		}
 	}
 

@@ -5,6 +5,9 @@
  * Shattered Pixel Dungeon
  * Copyright (C) 2014-2022 Evan Debenham
  *
+ * Gensokyo Pixel Dungeon
+ * Copyright (C) 2022-2023 GrampHoang
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,33 +29,44 @@ import java.util.ArrayList;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.AyaNPC;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.ReisenNPC;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.TenshiNPC;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.YuyukoNPC;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.Yuyuko;
-import com.shatteredpixel.shatteredpixeldungeon.levels.painters.CityPainter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Ripple;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
+import com.shatteredpixel.shatteredpixeldungeon.levels.painters.SewerPainter;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.AlarmTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.BlazingTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ChillingTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ConfusionTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.CorrosionTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.CursingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.DisarmingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.DisintegrationTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.DistortionTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlashingTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlockTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FrostTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GatewayTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GuardianTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.OozeTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.PitfallTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.RockfallTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ShockingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.StormTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TeleportationTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ToxicTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WarpingTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WeakeningTrap;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WornDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.MarisaRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SuikaRoom;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.UnknownPotRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
+import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.particles.Emitter;
@@ -61,56 +75,59 @@ import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-public class BambooLevel extends RegularLevel {
+public class MountainLevel extends RegularLevel {
 
 	{
-		color1 = 0x4b6636;
-		color2 = 0xf2f2f2;
+		
+		color1 = 0xc43424;
+		color2 = 0xf4a824;
 	}
 
-	@Override
-	public void playLevelMusic() {
+	public void playLevelMusic(){
 		Music.INSTANCE.playTracks(
-				new String[]{Assets.Music.CITY_1, Assets.Music.CITY_2, Assets.Music.CITY_2},
+				new String[]{Assets.Music.SEWERS_1, Assets.Music.SEWERS_2, Assets.Music.SEWERS_2},
 				new float[]{1, 1, 0.5f},
 				false);
 	}
-
+	
 	@Override
 	protected ArrayList<Room> initRooms() {
-		return ReisenNPC.Quest.spawnRoom(super.initRooms());
+		ArrayList<Room> initRooms = super.initRooms();
+		// if(Dungeon.depth == 4) initRooms.add(new SuikaRoom());
+		// if(Dungeon.depth == 1) initRooms.add(new UnknownPotRoom()); //This is a test room for Reisen's quest, but I'm gonna keep it
+		return initRooms;
 	}
 
 	@Override
 	protected int standardRooms(boolean forceMax) {
-		if (forceMax) return 8;
-		//6 to 8, average 7
-		return 6+Random.chances(new float[]{1, 3, 1});
+		if (forceMax) return 11;
+		//9 to 11, average 10
+		return 9+Random.chances(new float[]{1, 3, 1});
 	}
 	
 	@Override
 	protected int specialRooms(boolean forceMax) {
-		if (forceMax) return 3;
-		//2 to 3, average 2.33
-		return 2 + Random.chances(new float[]{2, 1});
-	}
-	
-	@Override
-	public String tilesTex() {
-		return Assets.Environment.TILES_BAMBOO;
-	}
-	
-	@Override
-	public String waterTex() {
-		return Assets.Environment.WATER_SEWERS;
+		if (forceMax) return 4;
+		//3 to 4, average 3.5
+		return 3+Random.chances(new float[]{1, 1});
 	}
 	
 	@Override
 	protected Painter painter() {
-		return new CityPainter()
-				.setWater(feeling == Feeling.WATER ? 0.75f : 0.20f, 4)
-				.setGrass(feeling == Feeling.GRASS ? 0.90f : 0.45f, 3)
+		return new SewerPainter()
+				.setWater(feeling == Feeling.WATER ? 0.80f : 0.30f, 3)
+				.setGrass(feeling == Feeling.GRASS ? 0.95f : 0.75f, 4)
 				.setTraps(nTraps(), trapClasses(), trapChances());
+	}
+	
+	@Override
+	public String tilesTex() {
+		return Assets.Environment.TILES_MOUTAIN;
+	}
+	
+	@Override
+	public String waterTex() {
+		return Assets.Environment.WATER_CLEAR;
 	}
 	
 	@Override
@@ -118,32 +135,44 @@ public class BambooLevel extends RegularLevel {
 		return new Class[]{
 				FrostTrap.class, StormTrap.class, CorrosionTrap.class, BlazingTrap.class, DisintegrationTrap.class,
 				RockfallTrap.class, FlashingTrap.class, GuardianTrap.class, WeakeningTrap.class,
-				DisarmingTrap.class, SummoningTrap.class, WarpingTrap.class, CursingTrap.class, PitfallTrap.class, DistortionTrap.class, GatewayTrap.class, GeyserTrap.class };
-	}
+				DisarmingTrap.class, SummoningTrap.class, WarpingTrap.class, CursingTrap.class, GrimTrap.class, DistortionTrap.class, GatewayTrap.class, GeyserTrap.class };
+}
 
 	@Override
 	protected float[] trapChances() {
 		return new float[]{
-				4, 4, 4, 4, 4,
-				2, 2, 2, 2,
-				1, 1, 1, 1, 1, 1, 1, 1 };
+			4, 4, 4, 4, 4,
+			2, 2, 2, 2,
+			1, 1, 1, 1, 1, 1, 1, 1 };
 	}
 	
 	@Override
-	protected void createMobs() {
-		TenshiNPC.Quest.spawn(this);
-		AyaNPC.Quest.spawn(this);
-		ReisenNPC.Quest.spawn(this);
-		super.createMobs();
+	protected void createItems() {
+		// Ghost.Quest.spawnForest( this );
+		// AyaNPC.Quest.spawn(this);
+		super.createItems();
+	}
+	
+	@Override
+	public Group addVisuals() {
+		super.addVisuals();
+		addSewerVisuals(this, visuals);
+		return visuals;
+	}
+	
+	public static void addSewerVisuals( Level level, Group group ) {
+		for (int i=0; i < level.length(); i++) {
+			if (level.map[i] == Terrain.WALL_DECO) {
+				group.add( new Leaf( i ) );
+			}
+		}
 	}
 	
 	@Override
 	public String tileName( int tile ) {
 		switch (tile) {
 			case Terrain.WATER:
-				return Messages.get(CityLevel.class, "water_name");
-			case Terrain.HIGH_GRASS:
-				return Messages.get(CityLevel.class, "high_grass_name");
+				return Messages.get(MountainLevel.class, "water_name");
 			default:
 				return super.tileName( tile );
 		}
@@ -152,33 +181,16 @@ public class BambooLevel extends RegularLevel {
 	@Override
 	public String tileDesc(int tile) {
 		switch (tile) {
-			// case Terrain.EMPTY:
-			// 	return Messages.get(BambooLevel.class, "empty");
-			case Terrain.EMPTY_DECO:
-				return Messages.get(BambooLevel.class, "empty_deco_desc");
 			case Terrain.WALL_DECO:
-				return Messages.get(BambooLevel.class, "wall_deco_desc");
+				return Messages.get(MountainLevel.class, "wall_deco_desc");
+			case Terrain.EMPTY_DECO:
+				return Messages.get(MountainLevel.class, "empty_deco_desc");
 			default:
 				return super.tileDesc( tile );
 		}
 	}
 	
-	@Override
-	public Group addVisuals() {
-		super.addVisuals();
-		addCityVisuals( this, visuals );
-		return visuals;
-	}
-
-	public static void addCityVisuals( Level level, Group group ) {
-		for (int i=0; i < level.length(); i++) {
-			if (level.map[i] == Terrain.WALL_DECO) {
-				group.add( new Smoke( i ) );
-			}
-		}
-	}
-	
-	public static class Smoke extends Emitter {
+	public static class Leaf extends Emitter {
 		
 		private int pos;
 
@@ -186,13 +198,13 @@ public class BambooLevel extends RegularLevel {
 			
 			@Override
 			public void emit( Emitter emitter, int index, float x, float y ) {
-				BambooLeafParticle p = (BambooLeafParticle)emitter.recycle( BambooLeafParticle.class );
-				p.color( ColorMath.random( 0x229922, 0x449944 ) );
+				MapleLeaftParticle p = (MapleLeaftParticle)emitter.recycle( MapleLeaftParticle.class );
+				p.color( ColorMath.random( 0xc43424, 0xf4a824 ) );
 				p.reset( x, y );
 			}
 		};
 		
-		public Smoke( int pos ) {
+		public Leaf( int pos ) {
 			super();
 			
 			this.pos = pos;
@@ -211,12 +223,12 @@ public class BambooLevel extends RegularLevel {
 		}
 	}
 
-    public static final class BambooLeafParticle extends PixelParticle.Shrinking {
+    public static final class MapleLeaftParticle extends PixelParticle.Shrinking {
 		
-		public BambooLeafParticle() {
+		public MapleLeaftParticle() {
 			super();
 			lifespan = 1f;
-			color( 0x229922 );
+			color( 0xE9CDAB );
 			speed.set( Random.Float( -8, 8 ), Random.Float( 3, 5) );
 		}
 		

@@ -233,7 +233,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 1;
+		depth = 27;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -399,6 +399,11 @@ public class Dungeon {
 					break;
 				case 26:
 					level = new LastLevel();
+					break;
+				case 27:
+				case 28:
+				case 29:
+					level = new MountainLevel();
 					break;
 				default:
 					level = new DeadEndLevel();
@@ -911,7 +916,7 @@ public class Dungeon {
 		if (Dungeon.hero.heroClass == HeroClass.MAGE) 	Badges.checkMasterMage(Challenges.activeChallenges());
 		if (Statistics.bowAndGunUsed) 					Badges.checkRangeless(Challenges.activeChallenges());
 		if (Statistics.qualifiedForKoishiKillerBadge)	Badges.checkKillerKoishiBadge();
-		
+
 		Rankings.INSTANCE.submit( true, cause );
 	}
 

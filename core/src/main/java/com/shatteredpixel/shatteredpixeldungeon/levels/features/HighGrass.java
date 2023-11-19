@@ -36,6 +36,8 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Camouflage;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SandalsOfNature;
@@ -123,6 +125,17 @@ public class HighGrass {
 				// Dew, scales from 1/6 to 1/3
 				if (Random.Int(24 - naturalismLevel*3) <= 3) {
 					level.drop(new Dewdrop(), pos).sprite.drop();
+				}
+				
+				Waterskin flask = Dungeon.hero.belongings.getItem(Waterskin.class);
+				if (Random.Int(24 - naturalismLevel*3) <= 3) {
+					if (flask != null && !flask.isFull() && ch instanceof Hero) {
+						flask.volume += 1;
+						Item.updateQuickslot();
+						Sample.INSTANCE.play(Assets.Sounds.DEWDROP);
+					} else {
+						level.drop(new Dewdrop(), pos).sprite.drop();
+					}
 				}
 			}
 

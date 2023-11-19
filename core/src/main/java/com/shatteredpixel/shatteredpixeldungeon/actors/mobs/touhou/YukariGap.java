@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -197,12 +198,15 @@ public class YukariGap extends Mob {
 			}
 			if(rolling == true){
 				rolling = false;
+				// if (buff(Slow.class) != null) spend(TICK*2);
+				// else spend(TICK);
 				spend(TICK);
 				return roll(enemy_pos);
 			} else{
 				// if(enemy == null){
 				// 	enemy_pos = Dungeon.hero.pos;
 				// }
+				// enemy = Dungeon.hero;
 				enemy_pos = ready(Dungeon.hero.pos);
 				spend(TICK);
 				rolling = true;
@@ -290,18 +294,25 @@ public class YukariGap extends Mob {
 
 		@Override
 		protected boolean act() {
+			if (paralysed > 0 || buff(Frost.class) != null || buff(Roots.class) != null) {
+				spend( TICK );
+				return true;
+			}
 			if(rolling == true){
 				rolling = false;
+				// if (buff(Slow.class) != null) spend(TICK*2);
+				// else spend(TICK);
 				spend(TICK);
 				return roll(enemy_pos);
 			} else{
 				// if(enemy == null){
 				// 	enemy_pos = Dungeon.hero.pos;
 				// }
+				enemy = Dungeon.hero;
 				enemy_pos = ready(Dungeon.hero.pos);
 				spend(TICK);
 				rolling = true;
-				return super.act();
+				return true;
 			}
 		}
 

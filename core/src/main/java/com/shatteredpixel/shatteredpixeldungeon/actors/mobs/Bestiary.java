@@ -381,6 +381,12 @@ public class Bestiary {
 						Succubus.class,
 						Eye.class, Eye.class,
 						Scorpio.class, Scorpio.class, Scorpio.class));
+			case 27: case 28: case 29:
+				//1x succubus, 2x evil eye, 3x scorpio
+				return new ArrayList<>(Arrays.asList(
+					Minoriko.class,
+					Eye.class, Eye.class,
+					Scorpio.class, Scorpio.class, Scorpio.class));
 		}
 		
 	}

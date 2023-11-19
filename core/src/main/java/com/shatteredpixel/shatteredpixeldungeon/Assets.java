@@ -62,6 +62,8 @@ public class Assets {
 		// public static final String TILES_SKY 	= "environment/tiles_sky.png";
 		public static final String TILES_BAMBOO 	= "environment/tiles_bamboo.png";
 		public static final String TILES_SHRINE 	= "environment/tiles_shrine.png";
+		public static final String TILES_MOUTAIN 	= "environment/tiles_mountain.png";
+
 	}
 	
 	//TODO include other font assets here? Some are platform specific though...

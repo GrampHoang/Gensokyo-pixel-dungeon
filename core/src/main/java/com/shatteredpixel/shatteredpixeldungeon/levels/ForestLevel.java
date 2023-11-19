@@ -170,10 +170,10 @@ public class ForestLevel extends RegularLevel {
 	@Override
 	public String tileDesc(int tile) {
 		switch (tile) {
+			case Terrain.WALL_DECO:
+				return Messages.get(ForestLevel.class, "wall_deco_desc");
 			case Terrain.EMPTY_DECO:
 				return Messages.get(ForestLevel.class, "empty_deco_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(ForestLevel.class, "bookshelf_desc");
 			default:
 				return super.tileDesc( tile );
 		}

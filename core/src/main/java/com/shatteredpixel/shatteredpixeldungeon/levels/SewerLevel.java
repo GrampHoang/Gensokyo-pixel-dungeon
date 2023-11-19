@@ -152,6 +152,8 @@ public class SewerLevel extends RegularLevel {
 	@Override
 	public String tileDesc(int tile) {
 		switch (tile) {
+			case Terrain.WALL_DECO:
+				return Messages.get(SewerLevel.class, "wall_deco_desc");
 			case Terrain.EMPTY_DECO:
 				return Messages.get(SewerLevel.class, "empty_deco_desc");
 			case Terrain.BOOKSHELF:

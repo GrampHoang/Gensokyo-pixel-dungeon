@@ -148,10 +148,12 @@ public class SDMLevel extends RegularLevel {
 	@Override
 	public String tileDesc(int tile) {
 		switch (tile) {
+			case Terrain.WALL_DECO:
+				return Messages.get(SDMLevel.class, "wall_deco_desc");
 			case Terrain.EMPTY_DECO:
-				return Messages.get(PrisonLevel.class, "empty_deco_desc");
-			case Terrain.BOOKSHELF:
-				return Messages.get(PrisonLevel.class, "bookshelf_desc");
+				return Messages.get(SDMLevel.class, "empty_deco_desc");
+			// case Terrain.BOOKSHELF:
+			// 	return Messages.get(SDMLevel.class, "bookshelf_desc");
 			default:
 				return super.tileDesc( tile );
 		}

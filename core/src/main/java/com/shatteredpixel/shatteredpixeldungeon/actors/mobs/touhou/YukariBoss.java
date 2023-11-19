@@ -247,6 +247,7 @@ public class YukariBoss extends Mob {
 			ceiling_cd--;
 			if(Dungeon.level.distance(this.pos, Dungeon.hero.pos) > 2) ceiling_cd--;
 		} else if (phase == 2){
+			if (this.pos != 89) ScrollOfTeleportation.appear(this, 89);
 			//Do nothing
 		} else if (phase == 3 && HP < 300){
 			properties.add(Property.IMMOVABLE);

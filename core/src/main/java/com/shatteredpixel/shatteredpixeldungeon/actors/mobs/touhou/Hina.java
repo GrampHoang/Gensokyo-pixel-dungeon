@@ -105,10 +105,14 @@ import com.watabou.utils.Random;
 
 public class Hina extends Mob {
 	{	
-		spriteClass = FairySprite.Blue.class;
-		HP = HT = 6;
-		defenseSkill = 3;
-		maxLvl = 5;
+		spriteClass = FairySprite.Red.class;
+		HP = HT = 135;
+		defenseSkill = 26;
+		EXP = 14;
+		maxLvl = 30;
+
+		loot = Generator.Category.SCROLL;
+		lootChance = 0.3f;
 	}
 
 	private int curseCount = 0;
@@ -116,17 +120,17 @@ public class Hina extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(1, 3);
+		return Random.NormalIntRange(35, 45);
 	}
 
 	@Override
 	public int attackSkill(Char target) {
-		return 8;
+		return 37;
 	}
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 1);
+		return Random.NormalIntRange(4, 18);
 	}
 
 	@Override

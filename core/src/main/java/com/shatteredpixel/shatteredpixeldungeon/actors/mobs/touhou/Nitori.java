@@ -23,110 +23,56 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GoldenMimic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
-import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
-import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
-import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
-import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.quest.UnknownPotion;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WoodStick;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.CursingTrap;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FlockTrap;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ShockingTrap;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Silence;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.FairySprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.NitoriSprite;
+import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-import com.watabou.noosa.Game;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-public class Nitori extends Mob {
+public class Nitori extends Mob implements Callback {
+
+    private static final float TIME_TO_ZAP	= 1f;
+
 	{	
-		spriteClass = FairySprite.Blue.class;
-		HP = HT = 6;
-		defenseSkill = 3;
-		maxLvl = 5;
+		spriteClass = NitoriSprite.class;
+		HP = HT = 135;
+		defenseSkill = 26;
+		EXP = 14;
+		maxLvl = 30;
+
+        loot = Generator.Category.POTION;
+		lootChance = 0.3f;
 	}
 
-	private int curseCount = 0;
+	private int skill_cd = 15;
 
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange(1, 3);
+		return Random.NormalIntRange(35, 45);
 	}
 
 	@Override
 	public int attackSkill(Char target) {
-		return 8;
+		return 32;
 	}
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(0, 1);
+		return Random.NormalIntRange(6, 14);
 	}
 
 	@Override
@@ -136,49 +82,127 @@ public class Nitori extends Mob {
 
     @Override
 	public int attackProc(Char enemy, int damage) {
-		//Trigger curse efefect here
-		if (enemy instanceof Hero){
-			KindOfWeapon item = Dungeon.hero.belongings.weapon();
-			Weapon weap = (Weapon) item;
-			Armor armor = Dungeon.hero.belongings.armor();
-			if(weap != null & Random.Int(10) < 14){
-				if (weap.cursed){
-					weap.enchant(null);
-					curseCount++;
-				} else {
-					weap.enchant(Weapon.Enchantment.randomCurse());
-					EquipableItem.equipCursed(Dungeon.hero);
-				}
-			}
-			if (armor != null && Random.Int(10) < 14){
-				if (armor.cursed){
-					armor.inscribe(null);
-					curseCount++;
-				} else{
-					armor.inscribe(Armor.Glyph.randomCurse());
-					EquipableItem.equipCursed(Dungeon.hero);
-				}
-			}
-			if (curseCount > 5){
-				curseCount = 0;
-			}
-		}
 		return super.attackProc(enemy, damage);
 	}
 
+    @Override
+	protected boolean canAttack( Char enemy ) {
+		return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	}
+	
+    @Override
+	protected boolean act() {
+        if (enemy != null) GLog.w(Integer.toString(skill_cd));
+		if (skill_cd <= 0 && enemy != null){
+			spend(1f);
+            skill_cd = Random.Int(25, 32);
+			return rainOfBalls(enemy);
+		}
+        if (Dungeon.level.water[pos]) skill_cd -= 3;
+        else skill_cd -= 1;
+		return super.act();
+	}
 
-	private static final String CURSE_COUNT     = "cursecount";
+    private boolean rainOfBalls(Char enemy){
+        getSpotAndThrow(0, 7);
+        getSpotAndThrow(8, 15);
+        getSpotAndThrow(16, 23);
+        return true;
+    }
+
+    private void getSpotAndThrow(int min, int max){
+        int dropPos = 0;
+        int tryCount = 0;
+        do {
+            dropPos = PathFinder.NEIGHBOURS24[Random.IntRange(min,max)] + enemy.pos;
+            tryCount++;
+        } while (Dungeon.level.solid[dropPos] == true && tryCount < 30);
+        throwBall(dropPos);
+    }
+    private void throwBall(int pos){
+        PointF sky = this.sprite.center();
+	    sky.y -= 60;
+        PointF targetPoint = DungeonTilemap.tileToWorld( pos );
+        ((MissileSprite) this.sprite.parent.recycle(MissileSprite.class)).
+					reset(sky,
+                        targetPoint,
+                        new AquaBlast(),
+                        new Callback() {
+						@Override
+						public void call() {
+                            for(int i : PathFinder.NEIGHBOURS8){
+                                Char ch = Actor.findChar(i + pos);
+                                if (ch != null && ch.alignment != alignment){
+                                    ch.damage(20, this);
+                                }
+                            }
+                            new GeyserTrap().set(pos).activate();
+						}
+					});
+    }
+
+	protected boolean doAttack( Char enemy ) {
+
+		if (Dungeon.level.adjacent( pos, enemy.pos )) {
+			
+			return super.doAttack( enemy );
+			
+		} else {
+			
+			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
+				sprite.zap( enemy.pos );
+				return false;
+			} else {
+				zap();
+				return true;
+			}
+		}
+	}
+	
+	//used so resistances can differentiate between melee and magical attacks
+	public static class NitoriBall{}    //Yes
+	
+	protected void zap() {
+		spend( TIME_TO_ZAP );
+		
+		if (hit( this, enemy, true )) {
+			if (Random.Int(10) < 5){
+                new GeyserTrap().set(enemy.pos).activate();
+            }
+            int dmg = Random.NormalIntRange( 30,  40) - enemy.drRoll();
+			// dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
+			enemy.damage( dmg, new NitoriBall() );
+		} else {
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+            if (Random.Int(10) < 2){
+                new GeyserTrap().set(enemy.pos).activate();
+            }
+		}
+	}
+	
+	public void onZapComplete() {
+		zap();
+		next();
+	}
+	
+	@Override
+	public void call() {
+		next();
+	}
+
+
+	private static final String SKILL_CD     = "skillcd";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put( CURSE_COUNT, curseCount );
+		bundle.put( SKILL_CD, skill_cd );
 	}
 	
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		curseCount = bundle.getInt( CURSE_COUNT );
+		skill_cd = bundle.getInt( SKILL_CD );
 	}
 
 }

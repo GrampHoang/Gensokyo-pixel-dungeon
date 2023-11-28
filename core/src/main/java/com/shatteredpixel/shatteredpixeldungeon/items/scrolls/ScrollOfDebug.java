@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import sun.net.www.protocol.file.FileURLConnection;
+// import sun.net.www.protocol.file.FileURLConnection;
 
 /**
  * Scroll of Debug uses ClassLoader to get every class that can be directly created and provides a command interface with which to interact with them.
@@ -559,17 +559,17 @@ public class ScrollOfDebug extends Scroll {
                     if (connection instanceof JarURLConnection) {
                         checkJarFile((JarURLConnection) connection, pckgname, root);
                     } 
-                    else if (connection instanceof FileURLConnection) {
-                        try {
-                            checkDirectory(
-                                    new File(URLDecoder.decode(url.getPath(),
-                                            "UTF-8")), pckgname, root);
-                        } catch (final UnsupportedEncodingException ex) {
-                            throw new ClassNotFoundException(
-                                    pckgname + " does not appear to be a valid package (Unsupported encoding)",
-                                    ex);
-                        }
-                    }
+                    // else if (connection instanceof FileURLConnection) {
+                    //     try {
+                    //         checkDirectory(
+                    //                 new File(URLDecoder.decode(url.getPath(),
+                    //                         "UTF-8")), pckgname, root);
+                    //     } catch (final UnsupportedEncodingException ex) {
+                    //         throw new ClassNotFoundException(
+                    //                 pckgname + " does not appear to be a valid package (Unsupported encoding)",
+                    //                 ex);
+                    //     }
+                    // }
                     else
                         throw new ClassNotFoundException(
                                 pckgname +" ("+ url.getPath() +") does not appear to be a valid package");

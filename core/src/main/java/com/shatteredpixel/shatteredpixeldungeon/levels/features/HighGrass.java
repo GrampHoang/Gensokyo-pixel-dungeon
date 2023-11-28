@@ -122,11 +122,7 @@ public class HighGrass {
 					level.drop(Generator.random(Generator.Category.SEED), pos).sprite.drop();
 				}
 				
-				// Dew, scales from 1/6 to 1/3
-				if (Random.Int(24 - naturalismLevel*3) <= 3) {
-					level.drop(new Dewdrop(), pos).sprite.drop();
-				}
-				
+				// Dew, scales from 1/6 to 1/3				
 				Waterskin flask = Dungeon.hero.belongings.getItem(Waterskin.class);
 				if (Random.Int(24 - naturalismLevel*3) <= 3) {
 					if (flask != null && !flask.isFull() && ch instanceof Hero) {

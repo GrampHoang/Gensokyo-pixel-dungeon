@@ -24,31 +24,20 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
-import java.util.ArrayList;
-
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WoodStick;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FairySprite;
-import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
-import com.watabou.utils.PathFinder;
+
 import com.watabou.utils.Random;
 
-public class Minoriko extends Mob {
+public class Shizuha extends Mob {
 	{	
-		spriteClass = FairySprite.Red.class;
+		spriteClass = FairySprite.Blue.class;
 
 		HP = HT = 120;
 		defenseSkill = 26;
@@ -83,25 +72,5 @@ public class Minoriko extends Mob {
 	@Override
 	protected boolean act() {
 		return super.act();
-	}
-
-	@Override
-	public int attackProc(Char enemy, int damage) {
-		if (enemy instanceof Hero){
-			ArrayList<Plant.Seed> seeds = Dungeon.hero.belongings.getAllItems(Plant.Seed.class);
-			Plant.Seed randomSeed = seeds.get(Random.Int(seeds.size()+1));
-			randomSeed.detach(Dungeon.hero.belongings.backpack);
-
-			int tries = 0;
-			while (tries < 20){
-				int seedPos = this.pos + PathFinder.NEIGHBOURS8[Random.Int(8)];
-				if (Actor.findChar(seedPos) == null && Dungeon.level.passable[seedPos]){
-					Dungeon.level.plant( randomSeed, seedPos );
-					break;
-				}
-				tries++;
-			}
-		}
-		return super.attackProc(enemy, damage);
 	}
 }

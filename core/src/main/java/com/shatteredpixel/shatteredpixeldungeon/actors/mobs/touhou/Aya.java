@@ -23,13 +23,17 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+import javax.swing.text.Utilities;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -39,7 +43,10 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.AyaNPCSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ChenSprite;
@@ -106,22 +113,27 @@ public class Aya extends Mob {
 
     @Override
 	public void damage(int dmg, Object src) {
-        super.damage(dmg, src);
         if (src instanceof MissileWeapon){
-			GLog.w("MISSLEWEAPON");
+			rolling = false;
+			roll_cd = ROLL_CD;
+			ScrollOfTeleportation.teleportToLocation(this, this.pos);
+			GLog.w("Aya dodged your attack");
 		}
+		super.damage(dmg, src);
 	}
 
     //rolling cuz I copy code from Chen
     @Override
 	protected boolean act() {
-        if(rolling == true){
+        if(rolling == true && enemy != null){
             rolling = false;
             roll_cd --;
             spend(TICK);
             return roll(enemy_pos);
         } else if (roll_cd <= 1 && enemy != null && rolling == false){
             rolling = true;
+			enemy_pos = enemy.pos + PathFinder.NEIGHBOURS4[Random.Int(4)];
+			ready(enemy_pos);
             return true;
         }
         roll_cd--;
@@ -136,41 +148,51 @@ public class Aya extends Mob {
 		while(Dungeon.level.pit[b.collisionPos] && b.collisionPos != this.pos){
 			b.collisionPos = b.path.get(b.path.indexOf(b.collisionPos) - 1);
 		}
-        for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
-            sprite.parent.add(new TargetedCell(p, 0xFF0000));
-        }
-        GLog.w("Chen is spining!");
+        // for (int p : b.subPath(0, Dungeon.level.distance(this.pos, b.collisionPos))){
+        //     sprite.parent.add(new TargetedCell(p, 0xFF0000));
+        // }
+
+		// Only paint the Push cell
+		// Player will have to figure the dash direction themself
+		sprite.parent.add(new TargetedCell(target, 0xFF0000));
 		return b.collisionPos;
 	}
 
 	protected boolean roll(int stopCell) {
 		//push char
-		Char cha = Actor.findChar(stopCell);
-		int push_pos = this.pos;
-		if (cha != null && cha != this){
-			for (int i : PathFinder.NEIGHBOURS8){
-				if (Actor.findChar(stopCell + i) == null && Dungeon.level.passable[stopCell + i]){
-					push_pos = stopCell+i;
-					break;
-				}
+		WandOfBlastWave.BlastWave.blast(stopCell);
+		for (int i : PathFinder.NEIGHBOURS8){
+			Char cha = Actor.findChar(stopCell);
+			if (cha != null && cha.alignment != alignment){
+				Ballistica trajectory = new Ballistica(stopCell, stopCell + i, Ballistica.STOP_SOLID);
+				// Actor.addDelayed(new Pushing(cha, cha.pos, push_pos), 0);
+				int pushedToCell = trajectory.collisionPos;
+				cha.sprite.move(cha.pos, pushedToCell);
+				cha.move(pushedToCell);
+				Dungeon.level.occupyCell(cha);
+				Dungeon.observe();
+
+				// 3 dmg for each tiles move
+				int dmg = Dungeon.level.distance(stopCell, cha.pos) * 3;
+				cha.damage(dmg, this);
 			}
-			Actor.addDelayed(new Pushing(cha, cha.pos, push_pos), 0);
-			// ch.moveSprite(ch.pos, push_pos);
-			cha.move(push_pos);
-			Dungeon.level.occupyCell(cha);
 		}
+
 		//roll
-        sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(stopCell)));
+        sprite.parent.add(new Beam.Gust(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(stopCell)));
 		Ballistica b = new Ballistica(this.pos, stopCell, Ballistica.STOP_SOLID);
 		for (int p : b.subPath(0, Dungeon.level.distance(this.pos, stopCell))){
             Char ch = Actor.findChar(p);
-			if (ch != null && !(ch instanceof Chen)){
-				ch.damage(18, this);
+			if (ch != null && ch.alignment != alignment){
+				ch.damage(10, this);
+				Buff.affect(ch, Blindness.class, 2f);
 			}
         }
 		//move
 		this.move( stopCell);
         this.moveSprite(this.pos, stopCell);
+		enemy_pos = enemy.pos + PathFinder.NEIGHBOURS4[Random.Int(4)];
+		ready(enemy_pos);
         return true;
 	}
 	@Override

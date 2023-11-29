@@ -23,14 +23,19 @@
  */
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
+import java.util.ArrayList;
+
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.NitoriSprite;
@@ -82,6 +87,13 @@ public class Nitori extends Mob implements Callback {
 
     @Override
 	public int attackProc(Char enemy, int damage) {
+		// Pot-Drinking Forcing Machine!
+		if (enemy instanceof Hero && Random.Int(5) > 3){ // 1/5 Chance
+			ArrayList<Potion> pots = Dungeon.hero.belongings.getAllItems(Potion.class);
+			Potion randomPot = pots.get(Random.Int(pots.size()+1));
+			randomPot.detach(Dungeon.hero.belongings.backpack);
+			randomPot.apply(Dungeon.hero);
+		}
 		return super.attackProc(enemy, damage);
 	}
 
@@ -166,7 +178,16 @@ public class Nitori extends Mob implements Callback {
 		spend( TIME_TO_ZAP );
 		
 		if (hit( this, enemy, true )) {
-			if (Random.Int(10) < 5){
+			if (Random.Int(10) > 4){
+				// IF Lunatic, force drop the potion of the spot before push Hero away
+				if(isLunatic()){
+					if (enemy instanceof Hero && Random.Int(5) > 1){ // 3/5 Chance, after 1/2 chance above
+						ArrayList<Potion> pots = Dungeon.hero.belongings.getAllItems(Potion.class);
+						Potion randomPot = pots.get(Random.Int(pots.size()+1));
+						randomPot.detach(Dungeon.hero.belongings.backpack);
+						randomPot.shatter(enemy.pos);
+					}
+				}
                 new GeyserTrap().set(enemy.pos).activate();
             }
             int dmg = Random.NormalIntRange( 30,  40) - enemy.drRoll();

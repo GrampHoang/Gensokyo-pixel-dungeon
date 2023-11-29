@@ -92,6 +92,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FairySprite;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HinaSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TargetHealthIndicator;
@@ -105,7 +106,7 @@ import com.watabou.utils.Random;
 
 public class Hina extends Mob {
 	{	
-		spriteClass = FairySprite.Red.class;
+		spriteClass = HinaSprite.class;
 		HP = HT = 135;
 		defenseSkill = 26;
 		EXP = 14;
@@ -145,7 +146,9 @@ public class Hina extends Mob {
 			KindOfWeapon item = Dungeon.hero.belongings.weapon();
 			Weapon weap = (Weapon) item;
 			Armor armor = Dungeon.hero.belongings.armor();
-			if(weap != null & Random.Int(10) < 14){
+
+			// Weapon curse are rarer to proc cuz weapon enchantment are rarer
+			if(weap != null & Random.Int(12) > 10){
 				if (weap.cursed){
 					weap.enchant(null);
 					curseCount++;
@@ -154,7 +157,8 @@ public class Hina extends Mob {
 					EquipableItem.equipCursed(Dungeon.hero);
 				}
 			}
-			if (armor != null && Random.Int(10) < 14){
+
+			if (armor != null && Random.Int(12) > 4){
 				if (armor.cursed){
 					armor.inscribe(null);
 					curseCount++;
@@ -163,7 +167,8 @@ public class Hina extends Mob {
 					EquipableItem.equipCursed(Dungeon.hero);
 				}
 			}
-			if (curseCount > 5){
+
+			if (curseCount > 3){
 				curseCount = 0;
 				cursedEffect(this, enemy.pos);
 			}
@@ -187,10 +192,10 @@ public class Hina extends Mob {
 	}
 
 
-	private static float COMMON_CHANCE = 0.59f;
-	private static float UNCOMMON_CHANCE = 0.3f;
-	private static float RARE_CHANCE = 0.1f;
-	private static float VERY_RARE_CHANCE = 0.01f;
+	private static float COMMON_CHANCE 		= 0.59f;
+	private static float UNCOMMON_CHANCE 	= 0.3f;
+	private static float RARE_CHANCE 		= 0.1f;
+	private static float VERY_RARE_CHANCE 	= 0.01f;
 
 	public static boolean cursedEffect(final Char user, final int targetPos){
 		switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})){
@@ -366,9 +371,8 @@ public class Hina extends Mob {
 				GLog.w(Messages.get(CursedWand.class, "fire"));
 				return true;
 
-			//golden mimic
+			//golden mimic, drop Scroll of Remove Curse
 			case 1:
-
 				Char ch = Actor.findChar(targetPos);
 				int spawnCell = targetPos;
 				if (ch != null){
@@ -437,7 +441,7 @@ public class Hina extends Mob {
 					return cursedEffect(user, targetPos);
 				}
 
-			// HEavy debuff for everyone
+			// Heavy debuff for everyone
 			case 3:
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 					if (Dungeon.level.distance(mob.pos, user.pos) < 8) {

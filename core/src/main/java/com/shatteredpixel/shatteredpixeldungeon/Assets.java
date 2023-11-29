@@ -371,5 +371,14 @@ public class Assets {
 		public static final String KAGEROU		= "sprites/kagerou.png";
 		public static final String MOKOU		= "sprites/mokou.png";
 
+
+		//Touhou 10
+		public static final String MINORIKO			= "sprites/minoriko.png";
+		public static final String SHIZUHA			= "sprites/shizuha.png";
+		public static final String HINA				= "sprites/hina.png";
+		public static final String NITORI			= "sprites/nitori.png";
+		public static final String AYA				= "sprites/aya.png";
+		public static final String SANAE			= "sprites/sanae.png";
+		// public static final String KANAKO			= "sprites/kanako.png";
 	}
 }

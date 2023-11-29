@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -52,7 +53,7 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-public class Aya extends Mob implements Callback {
+public class Aya extends Mob {
 
 	{	
 		spriteClass = AyaNPCSprite.class;
@@ -60,6 +61,8 @@ public class Aya extends Mob implements Callback {
 		defenseSkill = 26;
 		EXP = 14;
 		maxLvl = 30;
+
+		flying = true;
 
         loot = Generator.Category.POTION;
 		lootChance = 0.3f;
@@ -103,11 +106,10 @@ public class Aya extends Mob implements Callback {
 
     @Override
 	public void damage(int dmg, Object src) {
-		if (!isAlive()){
-			die(src);
-			return;
-		}
         super.damage(dmg, src);
+        if (src instanceof MissileWeapon){
+			GLog.w("MISSLEWEAPON");
+		}
 	}
 
     //rolling cuz I copy code from Chen
@@ -171,19 +173,16 @@ public class Aya extends Mob implements Callback {
         this.moveSprite(this.pos, stopCell);
         return true;
 	}
-
-	private static final String SKILL_CD     = "skillcd";
-
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put( SKILL_CD, skill_cd );
+		bundle.put( ROLL_COOLDOWN, roll_cd );
 	}
 	
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		skill_cd = bundle.getInt( SKILL_CD );
+		roll_cd = bundle.getInt( ROLL_COOLDOWN );
 	}
 
 }

@@ -48,7 +48,7 @@ public class ChenSprite extends MobSprite {
 		attack.frames( frames, 0, 2, 3, 4);
 		
 		die = new Animation( 12, false );
-		die.frames( frames, 0, 2);
+		die.frames( frames, 0, 5, 5, 6, 6);
 		
         spin = new Animation( 15, true );
 		spin.frames( frames, 0, 2, 3, 4 );

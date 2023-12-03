@@ -352,7 +352,7 @@ public class Assets {
 		//Touhou 7
 		public static final String CHEN			= "sprites/chen.png";
 		public static final String RAN			= "sprites/ran.png";
-		public static final String LETTY		= "sprites/cirno.png";
+		public static final String LETTY		= "sprites/letty.png";
 		public static final String ALICE		= "sprites/alice.png";
 		public static final String SHANGHAIDOLL	= "sprites/shanghaidoll.png";
 		public static final String HOURAIDOLL	= "sprites/houraidoll.png";

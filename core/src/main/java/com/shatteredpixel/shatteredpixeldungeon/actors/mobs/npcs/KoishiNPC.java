@@ -24,6 +24,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -99,6 +100,7 @@ public class KoishiNPC extends NPC {
 
 		if (Quest.given){
 			Quest.complete();
+			Badges.satisfyQuestTouhouNPC("KOISHI");
 			Dungeon.level.drop( new ScrollOfUpgrade(), pos ).sprite.drop();
 			GLog.p(Messages.get(KoishiNPC.class, "farewell"));
 			die( null );

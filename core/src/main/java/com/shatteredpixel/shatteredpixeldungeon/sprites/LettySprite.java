@@ -34,7 +34,7 @@ public class LettySprite extends MobSprite {
 		
 		texture( Assets.Sprites.LETTY );
 		
-		TextureFilm frames = new TextureFilm( texture, 14, 14 );
+		TextureFilm frames = new TextureFilm( texture, 12, 15 );
 		
 		idle = new Animation( 8, true );
 		idle.frames( frames, 0, 0 );
@@ -46,7 +46,7 @@ public class LettySprite extends MobSprite {
 		attack.frames( frames, 0, 0);
 		
 		die = new Animation( 12, false );
-		die.frames( frames, 0, 0);
+		die.frames( frames, 0, 3, 3, 4, 4);
 		
 		play( idle );
 	}

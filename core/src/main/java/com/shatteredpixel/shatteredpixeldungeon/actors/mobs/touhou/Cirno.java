@@ -38,7 +38,7 @@ import com.watabou.utils.Random;
 public class Cirno extends Mob {
 	{
 		spriteClass = CirnoSprite.class;
-		HP = HT = 20;
+		HP = HT = 15;
 		defenseSkill = 5;
 		EXP = 4;
 		maxLvl = 9;
@@ -51,7 +51,7 @@ public class Cirno extends Mob {
 
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 2, 6 );
+		return Random.NormalIntRange( 2, 5 );
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class Cirno extends Mob {
 	
 	@Override
 	public int drRoll() {
-		return Random.NormalIntRange(2, 4);
+		return Random.NormalIntRange(1, 3);
 	}
 
 	@Override

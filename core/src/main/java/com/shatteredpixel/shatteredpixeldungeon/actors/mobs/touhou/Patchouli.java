@@ -247,10 +247,10 @@ public class Patchouli extends Mob {
 		int color = 0xFF0000;
 		switch(stateSkill){
 			case STATE_FROST:
-				color = 0x7EC8E3;
+				color = 0x7EC8FF;
 				break;
 			case STATE_SHOCK:
-				color = 0xFFDDFF;
+				color = 0xFFFF00;
 				break;
 			default:
 				break;

@@ -34,7 +34,7 @@ public class DaiyoseiSprite extends MobSprite {
 		
 		texture( Assets.Sprites.DAIYOSEI );
 		
-		TextureFilm frames = new TextureFilm( texture, 13, 16 );
+		TextureFilm frames = new TextureFilm( texture, 14, 16 );
 		
 		idle = new Animation( 5, true );
 		idle.frames( frames, 0, 1 );
@@ -43,10 +43,10 @@ public class DaiyoseiSprite extends MobSprite {
 		run.frames( frames, 0, 1 );
 
 		attack = new Animation( 10, false );
-		attack.frames( frames, 0, 2, 3 );
+		attack.frames( frames, 0, 1, 1 );
 
 		die = new Animation( 8, false );
-		die.frames( frames, 0, 4, 5, 6, 7 );
+		die.frames( frames, 0, 2, 3 );
 		
 		play( idle );
 	}

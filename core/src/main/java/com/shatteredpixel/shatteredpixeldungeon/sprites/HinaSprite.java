@@ -37,17 +37,17 @@ public class HinaSprite extends MobSprite {
 		TextureFilm frames = new TextureFilm( texture, 12, 15 );
 
 		idle = new Animation( 15, true );
-		idle.frames( frames, 0, 1 );
-
+		idle.frames( frames, 0, 1, 2, 0, 1, 2 );
+		
 		run = new Animation( 15, true );
-		run.frames( frames, 0, 1);
-
+		run.frames( frames, 0, 1, 2, 0, 1, 2 );
+		
 		attack = new Animation( 20, false );
-		attack.frames( frames, 0 , 1 );
+		attack.frames( frames, 0, 1, 2, 0 );
 
 		die = new Animation( 15, false );
-		die.frames( frames, 0, 1 );
-
+		die.frames( frames, 0, 3, 3, 4, 4 );
+		
 		play( idle );
 	}
 }

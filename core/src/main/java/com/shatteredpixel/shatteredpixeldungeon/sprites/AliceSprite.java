@@ -38,21 +38,21 @@ public class AliceSprite extends MobSprite {
 		
 		texture( Assets.Sprites.ALICE );
 		
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = new TextureFilm( texture, 12, 16 );
 		
 		idle = new Animation( 15, true );
-		idle.frames( frames, 0, 1, 2, 3, 4, 5 );
+		idle.frames( frames, 0, 1, 2, 0, 1, 2 );
 		
 		run = new Animation( 15, true );
-		run.frames( frames, 0, 1, 2, 3, 4, 5 );
+		run.frames( frames, 0, 1, 2, 0, 1, 2 );
 		
 		attack = new Animation( 20, false );
-		attack.frames( frames, 6, 7, 8, 9 );
+		attack.frames( frames, 0, 1, 2, 0 );
 		
 		zap = attack.clone();
 
 		die = new Animation( 15, false );
-		die.frames( frames, 10, 11, 12, 13, 14 );
+		die.frames( frames, 0, 3, 3, 4, 4 );
 		
 		play( idle );
 	}

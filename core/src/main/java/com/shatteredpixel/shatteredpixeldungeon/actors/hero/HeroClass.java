@@ -409,45 +409,45 @@ public enum HeroClass {
 		new ScrollOfTeleportation().identify();
 		new PotionOfHaste().identify();
 
-				ScrollOfDebug sod = new ScrollOfDebug();
-				sod.quantity(69).collect();
-				// Dungeon.quickslot.setSlot(2, sod);
+				// ScrollOfDebug sod = new ScrollOfDebug();
+				// sod.quantity(69).collect();
+				// // Dungeon.quickslot.setSlot(2, sod);
 				
-				// DebugSword we = new DebugSword();
-				// we.level(1);
-				// hero.belongings.weapon = we;
+				// // DebugSword we = new DebugSword();
+				// // we.level(1);
+				// // hero.belongings.weapon = we;
 
 				
 				// Buff.affect(hero, MindVision.class, 9999f);
 				// Buff.affect(hero, MagicalSight.class, 9999f);
-				RingOfMight ring = new RingOfMight();
-				ring.level(25);
-				ring.doEquip(hero);
+				// RingOfMight ring = new RingOfMight();
+				// ring.level(25);
+				// ring.doEquip(hero);
 
-				RingOfTenacity ring2 = new RingOfTenacity();
-				ring2.level(99);	
-				ring2.doEquip(hero);
+				// RingOfTenacity ring2 = new RingOfTenacity();
+				// ring2.level(99);	
+				// ring2.doEquip(hero);
 
-				PotionOfHealing.heal(hero);
+				// PotionOfHealing.heal(hero);
 
-				ReisenGun rg = new ReisenGun();
-				rg.collect();
+				// ReisenGun rg = new ReisenGun();
+				// rg.collect();
 
-				PotionOfHealing poh = new PotionOfHealing();
-				poh.quantity(99).collect();
-				Dungeon.quickslot.setSlot(4, poh);
+				// PotionOfHealing poh = new PotionOfHealing();
+				// poh.quantity(99).collect();
+				// Dungeon.quickslot.setSlot(4, poh);
 
-				ScrollOfMagicMapping som = new ScrollOfMagicMapping();
-				som.quantity(99).collect();
-				Dungeon.quickslot.setSlot(5, som);
+				// ScrollOfMagicMapping som = new ScrollOfMagicMapping();
+				// som.quantity(99).collect();
+				// Dungeon.quickslot.setSlot(5, som);
 
-				PotionOfExperience poe = new PotionOfExperience();
-				poe.quantity(13).collect();
-				Dungeon.quickslot.setSlot(3, poe);
+				// PotionOfExperience poe = new PotionOfExperience();
+				// poe.quantity(13).collect();
+				// Dungeon.quickslot.setSlot(3, poe);
 
-				EndlessAlcohol ea = new EndlessAlcohol();
-				ea.quantity(99).collect();
-				Dungeon.quickslot.setSlot(1, ea);
+				// EndlessAlcohol ea = new EndlessAlcohol();
+				// ea.quantity(99).collect();
+				// Dungeon.quickslot.setSlot(1, ea);
 	}
 	
 	private static void initKoishi( Hero hero ) {

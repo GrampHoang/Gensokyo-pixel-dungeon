@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.features;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -122,17 +123,19 @@ public class HighGrass {
 					level.drop(Generator.random(Generator.Category.SEED), pos).sprite.drop();
 				}
 				
-				// Dew, scales from 1/6 to 1/3				
-				Waterskin flask = Dungeon.hero.belongings.getItem(Waterskin.class);
-				if (Random.Int(24 - naturalismLevel*3) <= 3) {
-					if (flask != null && !flask.isFull() && ch instanceof Hero) {
-						flask.volume += 1;
-						Item.updateQuickslot();
-						Sample.INSTANCE.play(Assets.Sounds.DEWDROP);
-					} else {
-						level.drop(new Dewdrop(), pos).sprite.drop();
+				// Dew, scales from 1/6 to 1/3
+				if (!Dungeon.isChallenged(Challenges.NO_HERBALISM)){
+					Waterskin flask = Dungeon.hero.belongings.getItem(Waterskin.class);
+					if (Random.Int(24 - naturalismLevel*3) <= 3) {
+						if (flask != null && !flask.isFull() && ch instanceof Hero) {
+							flask.volume += 1;
+							Item.updateQuickslot();
+							Sample.INSTANCE.play(Assets.Sounds.DEWDROP);
+						} else {
+							level.drop(new Dewdrop(), pos).sprite.drop();
+						}
 					}
-				}
+				}				
 			}
 
 			//Camouflage

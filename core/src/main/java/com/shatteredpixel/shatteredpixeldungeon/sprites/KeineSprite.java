@@ -44,15 +44,15 @@ public class KeineSprite extends MobSprite {
 		idle.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );
 		
 		run = new Animation( 15, true );
-		run.frames( frames, 0, 2, 3, 4 );
+		run.frames( frames, 0, 0, 1, 1 );
 		
 		attack = new Animation( 12, false );
-		attack.frames( frames, 0, 5, 6 );
+		attack.frames( frames, 0, 1, 0 );
 		
 		zap = attack.clone();
 		
 		die = new Animation( 15, false );
-		die.frames( frames, 0, 7, 8, 8, 9, 10 );
+		die.frames( frames, 0, 0, 2, 2, 3, 3 );
 		
 		play( idle );
 	}

@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -35,9 +36,14 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MystiaVendor;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.AmuletScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.RankingsScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.Game;
+import com.watabou.noosa.tweeners.Delayer;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Callback;
 import com.watabou.utils.FileUtils;
 
 import java.io.IOException;
@@ -185,7 +191,7 @@ public class Badges {
 		TOUHOU_MYSTIA_WEAPON 		(115),
 
 		// TOUHOU_MYSTIA_WEAPON 		(144),
-		// TOUHOU_MYSTIA_WEAPON 		(144),
+		
 		// TOUHOU_MYSTIA_WEAPON 		(144),
 		// TOUHOU_MYSTIA_WEAPON 		(144),
 		// TOUHOU_MYSTIA_WEAPON 		(144),
@@ -195,7 +201,7 @@ public class Badges {
 		GRANDMASTER_RANGELESS		(130),
 		GRANDMASTER_MAGE			(131),
 		NO_UPGRADE					(132),
-
+		MOUNTAIN_REACH 				(133),
 		// 
 		WEAPON_SKILL                ( 57 ),
 		// Boss challlenges
@@ -925,7 +931,9 @@ public class Badges {
 	}
 	
 	public static void validateVictory() {
-
+		if (checkGoDeeper()){
+			return;
+		}
 		Badge badge = Badge.VICTORY;
 		displayBadge( badge );
 
@@ -1035,6 +1043,9 @@ public class Badges {
 	}
 
 	public static void validateChampion( int challenges ) {
+		if (checkGoDeeper()){
+			return;
+		}
 		if (challenges == 0) return;
 		Badge badge = null;
 		if (challenges >= 1) {
@@ -1405,5 +1416,20 @@ public class Badges {
 		}
 		local.add( badge );
 		displayBadge( badge );	
+	}
+
+	public static void validateMoutainReach() {
+		// if (!local.contains( Badge.MOUNTAIN_REACH)) {
+			Badge badge = Badge.MOUNTAIN_REACH;
+			local.add( badge );
+			displayBadge( badge );
+		//}
+	}
+
+
+	public static boolean checkGoDeeper() {
+		// When you teleport to the mountain, this is its location
+		//
+		return (Dungeon.depth == 26 && Dungeon.branch == 1);
 	}
 }

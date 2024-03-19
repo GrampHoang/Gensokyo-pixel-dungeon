@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.WoodStick;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
@@ -38,13 +39,17 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FairySprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MinorikoSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SanaeSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.BArray;
+import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
@@ -59,6 +64,7 @@ public class Sanae extends Mob {
 		maxLvl = 30;
 
 		baseSpeed = 1f;
+		Buff.affect(this, ChampionEnemy.AntiMagic.class);
 	}
 
 
@@ -89,21 +95,19 @@ public class Sanae extends Mob {
 
 	@Override
 	public int attackProc(Char enemy, int damage) {
-		if (enemy instanceof Hero && Random.Int(6) > 2){ //50%
-			ArrayList<Plant.Seed> seeds = Dungeon.hero.belongings.getAllItems(Plant.Seed.class);
-			Plant.Seed randomSeed = seeds.get(Random.Int(seeds.size()+1));
-			randomSeed.detach(Dungeon.hero.belongings.backpack);
-			if (!isLunatic()){	//Not lunatic
-				int tries = 0;
-				while (tries < 20){
-					int seedPos = this.pos + PathFinder.NEIGHBOURS8[Random.Int(8)];
-					if (Actor.findChar(seedPos) == null && Dungeon.level.passable[seedPos]){
-						Dungeon.level.plant( randomSeed, seedPos );
-						break;
-					}
-					tries++;
+		if (enemy instanceof Hero && 
+			Random.Int(5) > (Dungeon.hero.heroClass == HeroClass.MAGE ? 0 : 2)){
+			// 20% for Mage and Marisa because they might rely on multiple wands
+			// 60% for other
+			ArrayList<Wand> wanlist = Dungeon.hero.belongings.getAllItems(Wand.class);
+			Wand curWand = wanlist.get(Random.Int(wanlist.size()+1));
+			Ballistica shot = new Ballistica( enemy.pos, target, curWand.collisionProperties(target));
+			// int cell = shot.collisionPos;
+			curWand.fx(shot, new Callback() {
+				public void call() {
+					curWand.onZap(shot);
 				}
-			}
+			});
 		}
 		return super.attackProc(enemy, damage);
 	}

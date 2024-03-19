@@ -43,6 +43,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.Smok
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.HeroicLeap;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Shockwave;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Endure;
+import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.YinYang;
@@ -389,6 +390,10 @@ public enum HeroClass {
 	}
 
 	private static void initSakuya( Hero hero ) {
+
+		Amulet amulet = new Amulet();
+		amulet.collect();
+
 		(hero.belongings.weapon = new RemiliaSpear()).identify();
 		hero.belongings.weapon.upgrade(9);
 		Dungeon.quickslot.setSlot(2, hero.belongings.weapon);

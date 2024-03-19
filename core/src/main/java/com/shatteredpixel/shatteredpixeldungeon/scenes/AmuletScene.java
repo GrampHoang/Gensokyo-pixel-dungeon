@@ -22,19 +22,33 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BadgeBanner;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
+import com.shatteredpixel.shatteredpixeldungeon.items.FireOath;
+import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
+import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
+import com.shatteredpixel.shatteredpixeldungeon.windows.IconTitle;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndImp;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndQuest;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.tweeners.Delayer;
+import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
 public class AmuletScene extends PixelScene {
@@ -54,7 +68,8 @@ public class AmuletScene extends PixelScene {
 
 	RedButton btnExit = null;
 	RedButton btnStay = null;
-	
+	RedButton btnDeeper = null;
+
 	@Override
 	public void create() {
 		super.create();
@@ -62,6 +77,10 @@ public class AmuletScene extends PixelScene {
 		RenderedTextBlock text = null;
 		if (!noText) {
 			text = renderTextBlock( Messages.get(this, "text"), 8 );
+			if (Dungeon.isChallenged(Challenges.TOUHOU)){
+				text = renderTextBlock( Messages.get(this, "text_alt"), 8 );
+			}
+
 			text.maxWidth(WIDTH);
 			add( text );
 		}
@@ -76,6 +95,7 @@ public class AmuletScene extends PixelScene {
 				Dungeon.deleteGame( GamesInProgress.curSlot, true );
 				btnExit.enable(false);
 				btnStay.enable(false);
+				btnDeeper.enable(false);
 
 				AmuletScene.this.add(new Delayer(0.1f){
 					@Override
@@ -103,11 +123,28 @@ public class AmuletScene extends PixelScene {
 				onBackPressed();
 				btnExit.enable(false);
 				btnStay.enable(false);
+				btnDeeper.enable(false);
 			}
 		};
 		btnStay.setSize( WIDTH, BTN_HEIGHT );
 		add( btnStay );
 		
+		btnDeeper = new RedButton( Messages.get(this, "deeper") ) {
+			@Override
+			protected void onClick() {
+				onBackPressed();
+				InterlevelScene.curTransition = new LevelTransition();
+				InterlevelScene.mode = InterlevelScene.Mode.NEWTELEPORT;
+				InterlevelScene.curTransition.destDepth = Dungeon.depth+1;
+				InterlevelScene.curTransition.destBranch = 1;
+				Game.switchScene(InterlevelScene.class);
+				
+				Badges.validateMoutainReach();
+			}
+		};
+		btnDeeper.setSize( WIDTH, BTN_HEIGHT );
+		add( btnDeeper );
+
 		float height;
 		if (noText) {
 			height = amulet.height + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height();
@@ -118,6 +155,10 @@ public class AmuletScene extends PixelScene {
 
 			btnExit.setPos( (Camera.main.width - btnExit.width()) / 2, amulet.y + amulet.height + LARGE_GAP );
 			btnStay.setPos( btnExit.left(), btnExit.bottom() + SMALL_GAP );
+			if (Dungeon.isChallenged(Challenges.TOUHOU)){
+				btnDeeper.setPos( btnStay.left(), btnStay.bottom() + SMALL_GAP );
+			}
+			
 			
 		} else {
 			height = amulet.height + LARGE_GAP + text.height() + LARGE_GAP + btnExit.height() + SMALL_GAP + btnStay.height();
@@ -131,6 +172,9 @@ public class AmuletScene extends PixelScene {
 			
 			btnExit.setPos( (Camera.main.width - btnExit.width()) / 2, text.top() + text.height() + LARGE_GAP );
 			btnStay.setPos( btnExit.left(), btnExit.bottom() + SMALL_GAP );
+			if (Dungeon.isChallenged(Challenges.TOUHOU)){
+				btnDeeper.setPos( btnStay.left(), btnStay.bottom() + SMALL_GAP );
+			}
 		}
 
 		new Flare( 8, 48 ).color( 0xFFDDBB, true ).show( amulet, 0 ).angularSpeed = +30;

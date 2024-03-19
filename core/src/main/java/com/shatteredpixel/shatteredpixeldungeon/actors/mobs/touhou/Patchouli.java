@@ -33,11 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.*;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
@@ -71,6 +67,8 @@ public class Patchouli extends Mob {
 		EXP = 7;
 		maxLvl = 14;
 		
+		baseSpeed = 0.5f;
+
 		loot = new PotionOfHealing();
 		lootChance = 0.2f; //see lootChance()
 		
@@ -81,9 +79,9 @@ public class Patchouli extends Mob {
 	protected final int STATE_FROST = 2;
 	protected final int STATE_SHOCK = 3;
 	protected int stateSkill = STATE_NONE_CASTING;
-	protected int summonCD = Random.NormalIntRange( 20, 25 );
-	protected int SKILL_CD = 5;
-	protected int skill_cd = 5;
+	protected int summonCD = Random.NormalIntRange( 10, 13 );
+	protected int SKILL_CD = 3;
+	protected int skill_cd = 3;
 	private ArrayList<Integer> pacthyCells = new ArrayList<>();
 
 
@@ -100,7 +98,7 @@ public class Patchouli extends Mob {
 				return true;
 			}
 
-			if (stateSkill != STATE_NONE_CASTING){
+			if (stateSkill != STATE_NONE_CASTING && this.state != SLEEPING){
 				this.sprite.remove(CharSprite.State.CHARGING);
 				switch(stateSkill){
 					case STATE_FIRE:
@@ -146,6 +144,23 @@ public class Patchouli extends Mob {
 			}
 		}
 		return super.act();
+	}
+	
+@Override
+	protected boolean getCloser( int target ) {
+		if (state == HUNTING) {
+			return enemySeen && getFurther( target );
+		} else {
+			return super.getCloser( target );
+		}
+	}
+
+	@Override
+	public void aggro(Char ch) {
+		//cannot be aggroed to something it can't see
+		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
+			super.aggro(ch);
+		}
 	}
 	
 	@Override

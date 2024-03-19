@@ -3,6 +3,8 @@
 This is forked from Shattered PD v1.3.1. Inspired by (old) TouhouPD and Tomorrow's RougeNights. The game also borrow idea from some other forks.
 
 # Progress 
+
+
 (Base on the source code, not the released files so some of this may not be in the apk/jar you downloaded):
 - 4 new characters, their playstyle loosely based on the 4 original classes. Plus Sakuya who is a broken character. You can pick her to handicap yourself since half her kit doesn't work.
 ![Heros list](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/heros.PNG)

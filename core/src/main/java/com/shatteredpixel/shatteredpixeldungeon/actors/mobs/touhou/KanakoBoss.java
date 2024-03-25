@@ -24,12 +24,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou;
 
+import java.util.ArrayList;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.YukariGap.YukariChen;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.touhou.YukariGap.YukariRan;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -80,11 +80,14 @@ import com.watabou.utils.Random;
 
      private int abilityCooldown = 10;
      private int abilityTracker = 0; // To track various thing
+     private int abilityAimer = 0; //To track various position
+     ArrayList<Integer> abilityAimerArray = new ArrayList<Integer>(); //To track various array of position
 
      private int teleportCooldown = 10;
+     
 
-     private static final int MIN_ABILITY_CD = 5;
-     private static final int MAX_ABILITY_CD = 10;
+     private static final int MIN_ABILITY_CD = 10;
+     private static final int MAX_ABILITY_CD = 15;
 
     private void setBaseSpeed(){
         if (phase != 0) baseSpeed = 1f;
@@ -155,33 +158,40 @@ import com.watabou.utils.Random;
 				notice();
 			}
 		}
+
+
+
         if (phase == 0){
             if (abilityTracker > 0){
                 if(!Dungeon.hero.isAlive()){
                     return super.act();
                 }
-                enemy = Dungeon.hero;
+                
+                if (abilityAimerArray.size() == 8){
+                    abilityAimer = Dungeon.hero.pos;
+                }
 
                 KanakoTalisman.spawnMass(2);
                 //We want her to shoot laser before she move, but start charging after she move so the targeted cell stay consistent
-                Ballistica aimer = new Ballistica(this.pos, enemy.pos, Ballistica.STOP_CHARS);
+                Ballistica aimer = new Ballistica(this.pos, abilityAimer, Ballistica.STOP_CHARS);
                 int colliPos = aimer.path.get(aimer.path.indexOf(aimer.collisionPos) - 1);
 
-                int[] shoot = PathFinderUtils.backtrianglePosNumber(PathFinder.CIRCLE8, colliPos, enemy.pos);
-                int laser1Pos = enemy.pos;
-                int laser2Pos = enemy.pos;
+                int[] shoot = PathFinderUtils.backtrianglePosNumber(PathFinder.CIRCLE8, colliPos, abilityAimer);
+                int laser1Pos = abilityAimer;
+                int laser2Pos = abilityAimer;
                 int laser1NextPos = laser1Pos;
                 int laser2NextPos = laser2Pos;
                 for(int i = 1; i <= abilityTracker; i++){
                     laser1Pos = PathFinder.CIRCLE8[shoot[0]] + laser1Pos;
                     laser2Pos = PathFinder.CIRCLE8[shoot[1]] + laser2Pos;
                     if (i == abilityTracker - 1){
-                        laser1NextPos = laser1Pos;
-                        laser2NextPos = laser2Pos;
+                        abilityAimer = 0;
+                        abilityAimerArray.add(laser1Pos);
+                        abilityAimerArray.add(laser2Pos);
                     }
                 }
                 // Shoot
-                boisterousdance(this.pos, enemy, laser1Pos, laser2Pos);
+                boisterousdance(this.pos, abilityAimerArray);
                 //Move
                 boolean act = super.act();
                 //Aim for next laser
@@ -210,36 +220,23 @@ import com.watabou.utils.Random;
      }
      
 
-    private void boisterousdance(int from, Char enemy, int laser1Pos, int laser2Pos){
-        Ballistica laser1shoot = new Ballistica(from, laser1Pos, Ballistica.WONT_STOP);
-        laser1Pos = laser1shoot.collisionPos;
-        sprite.parent.add(new Beam.YukariRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(laser1Pos)));
-        for (int p : laser1shoot.subPath(0, Dungeon.level.distance(from, laser1Pos))){
-            Char ch = Actor.findChar(p);
-			if(ch != null && !(ch instanceof KanakoBoss)){
-				ch.damage(Math.max(ch.HP/6, 10), this);
-				Buff.prolong(ch, Vertigo.class, 5f);
-
-                if(ch instanceof KanakoTalisman){
-                    ch.die(null);
+    private void boisterousdance(int from, ArrayList<Integer> aimArray){
+        for (int aimPos : aimArray){
+            Ballistica laser1shoot = new Ballistica(from, aimPos, Ballistica.WONT_STOP);
+            aimPos = laser1shoot.collisionPos;
+            sprite.parent.add(new Beam.YukariRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(aimPos)));
+            for (int p : laser1shoot.subPath(0, Dungeon.level.distance(from, aimPos))){
+                Char ch = Actor.findChar(p);
+                if(ch != null && !(ch instanceof KanakoBoss)){
+                    ch.damage(Math.max(ch.HP/6, 10), this);
+                    Buff.prolong(ch, Vertigo.class, 5f);
+    
+                    if(ch instanceof KanakoTalisman){
+                        ch.die(null);
+                    }
                 }
-			}
+            }
         }
-
-        Ballistica laser2shoot = new Ballistica(from, laser2Pos, Ballistica.WONT_STOP);
-        laser2Pos = laser2shoot.collisionPos;
-        sprite.parent.add(new Beam.YukariRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(laser2Pos)));
-        for (int p : laser2shoot.subPath(0, Dungeon.level.distance(from, laser2Pos))){
-            Char ch = Actor.findChar(p);
-			if(ch != null && !(ch instanceof KanakoBoss)){
-				ch.damage(Math.max(ch.HP/6, 10), this);
-				Buff.prolong(ch, Vertigo.class, 5f);
-                if(ch instanceof KanakoTalisman){
-                    ch.die(null);
-                }
-			}
-        }
-
         abilityTracker--;
     }
 
@@ -288,10 +285,11 @@ import com.watabou.utils.Random;
 
 
 
-    private static final String PHASE                = "phase";
+    private static final String PHASE               = "phase";
     private static final String ABILITY_CD          = "abilityCooldown";
 	private static final String ABILITY_TRACKER     = "abilityTracker";
 	private static final String TPCD                = "TeleportCooldown";
+    private static final String ABILLITY_AIM        = "abilityAimer";
 
 	@Override
 	public void storeInBundle(Bundle bundle) {
@@ -300,6 +298,7 @@ import com.watabou.utils.Random;
 		bundle.put( ABILITY_CD, abilityCooldown );
         bundle.put( ABILITY_TRACKER, abilityTracker );
         bundle.put( TPCD, teleportCooldown );
+        bundle.put(ABILLITY_AIM, abilityAimer);
 	}
 	
 	@Override
@@ -311,6 +310,7 @@ import com.watabou.utils.Random;
 		abilityCooldown = bundle.getInt( ABILITY_CD );
         abilityTracker = bundle.getInt( ABILITY_TRACKER );
         teleportCooldown = bundle.getInt( TPCD );
+        abilityAimer = bundle.getInt( ABILLITY_AIM );
 	}
 
     public static class KanakoTalisman extends Mob {

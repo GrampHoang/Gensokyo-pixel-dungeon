@@ -41,7 +41,6 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndSettings;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndUFO;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
@@ -138,6 +137,7 @@ public class TitleScene extends PixelScene {
 		StyledButton btnSupport = new SupportButton(GREY_TR, Messages.get(this, "support"));
 		add(btnSupport);
 
+		// Feedback button, ufo is old feature
 		StyledButton btnUFO = new UFOButton(GREY_TR, Messages.get(this, "ufo"));
 		add(btnUFO);
 
@@ -373,8 +373,8 @@ public class TitleScene extends PixelScene {
 		}
 	}
 
+	// Again, this is feedback menu
 	private static class UFOButton extends StyledButton {
-
 		public UFOButton( Chrome.Type type, String label ){
 			super(type, label);
 			if (Messages.lang().status() == Languages.Status.INCOMPLETE){
@@ -392,7 +392,6 @@ public class TitleScene extends PixelScene {
 
 		@Override
 		protected void onClick() {
-			// ShatteredPixelDungeon.scene().add(new WndUFO());
 			ShatteredPixelDungeon.switchNoFade(FeedbackScene.class);
 		}
 	}

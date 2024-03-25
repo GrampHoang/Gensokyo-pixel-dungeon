@@ -58,12 +58,6 @@ public class Statistics {
 	public static int spawnersAlive;
 	
 	public static float duration;
-	
-	//These are old code, I scrap the UFO upgrade idea cuz I can't make a decent shop UI or balance the stat
-	public static int upgradeUFO_Red;
-	public static int upgradeUFO_Blue;
-	public static int upgradeUFO_Green;
-	public static int upgradeUFO_Rainbow;
 
 	//Tracking some NPC-related stuff
 	public static int ayaArea;
@@ -151,11 +145,6 @@ public class Statistics {
 
 	private static final String SPAWNERS	= "spawnersAlive";
 	private static final String AYAAREA		= "ayaarea";
-
-	private static final String UFO_RED		= "ufo_red";
-	private static final String UFO_BLUE	= "ufo_blue";
-	private static final String UFO_GREEN	= "ufo_green";
-	private static final String UFO_RAINBOW	= "ufo_rainbow";
 	
 	private static final String DURATION	= "duration";
 
@@ -203,11 +192,6 @@ public class Statistics {
 		bundle.put( THROWN,     thrownAttacks);
 
 		bundle.put( SPAWNERS,	spawnersAlive );
-
-		bundle.put( UFO_RED,	upgradeUFO_Red );
-		bundle.put( UFO_GREEN,	upgradeUFO_Green );
-		bundle.put( UFO_BLUE,	upgradeUFO_Blue );
-		bundle.put( UFO_RAINBOW,	upgradeUFO_Rainbow );
 
 		bundle.put( AYAAREA,	ayaArea );
 

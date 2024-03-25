@@ -55,6 +55,8 @@ public class WndStory extends Window {
 	public static final int ID_BAMBOO     	= 13;
 	public static final int ID_HALLS_2		= 14;
 	
+	public static final int ID_MOUNTAIN		= 15;
+	
 	private static final SparseArray<String> CHAPTERS = new SparseArray<>();
 	
 	static {
@@ -69,6 +71,7 @@ public class WndStory extends Window {
 		CHAPTERS.put( ID_SHRINE, "shrine" );
 		CHAPTERS.put( ID_BAMBOO, "bamboo" );
 		CHAPTERS.put( ID_HALLS_2, "halls2" );
+		CHAPTERS.put( ID_MOUNTAIN, "mountain" );
 	}
 
 	private IconTitle ttl;

@@ -23,7 +23,6 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -96,12 +95,12 @@ public class Hunger extends Buff implements Hero.Doom {
 
 				float newLevel = level + STEP;
 
-				if (UFOSettings.red_Hunger()){
-					newLevel = level + (STEP - STEP*0.05f);
-				}
-				if (UFOSettings.blue_Hunger()){
-					newLevel = level + (STEP - STEP*0.05f);
-				}
+				// if (UFOSettings.red_Hunger()){
+				// 	newLevel = level + (STEP - STEP*0.05f);
+				// }
+				// if (UFOSettings.blue_Hunger()){
+				// 	newLevel = level + (STEP - STEP*0.05f);
+				// }
 
 				if (Dungeon.hero.pointsInTalent(Talent.AGELESS) > 0) {
                     newLevel = level + (STEP - Dungeon.hero.pointsInTalent(Talent.AGELESS));

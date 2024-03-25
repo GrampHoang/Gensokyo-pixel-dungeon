@@ -100,14 +100,16 @@ public class Sanae extends Mob {
 			// 20% for Mage and Marisa because they might rely on multiple wands
 			// 60% for other
 			ArrayList<Wand> wanlist = Dungeon.hero.belongings.getAllItems(Wand.class);
-			Wand curWand = wanlist.get(Random.Int(wanlist.size()+1));
-			Ballistica shot = new Ballistica( enemy.pos, target, curWand.collisionProperties(target));
-			// int cell = shot.collisionPos;
-			curWand.fx(shot, new Callback() {
-				public void call() {
-					curWand.onZap(shot);
-				}
-			});
+			if (wanlist.size() > 0){
+				Wand curWand = wanlist.get(Random.Int(wanlist.size()+1));
+				Ballistica shot = new Ballistica( enemy.pos, target, curWand.collisionProperties(target));
+				// int cell = shot.collisionPos;
+				curWand.fx(shot, new Callback() {
+					public void call() {
+						curWand.onZap(shot);
+					}
+				});
+			}
 		}
 		return super.attackProc(enemy, damage);
 	}

@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSight;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MindVision;
@@ -111,77 +110,6 @@ public enum HeroClass {
 
 	public void initHero( Hero hero ) {
 
-	// {
-		// YoumuBlade3 we = new YoumuBlade3();
-		// we.level(21);
-		// we.collect();
-
-		// hero.lvl = 99;
-		// hero.HT = 99*5;
-		
-
-		// ScrollOfDebug sod = new ScrollOfDebug();
-		// sod.quantity(69).collect();
-
-		// Buff.affect(hero, MagicalSight.class, 9999f);
-		// RingOfMight ring = new RingOfMight();
-		// ring.level(99);
-		// ring.doEquip(hero);
-
-		// RingOfTenacity ring2 = new RingOfTenacity();
-		// ring2.level(99);	
-		// ring2.doEquip(hero);
-
-		// UnstableSpellbook usb = new UnstableSpellbook();
-		// usb.level(10);
-		// usb.collect();
-
-		// PatchouliBook pb = new PatchouliBook();
-		// pb.level(21);
-		// pb.collect();
-
-		// PotionOfHealing.heal(hero);
-
-		// PlateArmor plate = new PlateArmor();
-		// plate.level(200);
-		// plate.collect();
-
-		// PotionOfHealing poe = new PotionOfHealing();
-		// poe.quantity(30).collect();
-
-
-		
-	// 	TengusMask tengu = new TengusMask();
-	// 	tengu.quantity(2).collect();
-	// 	KingsCrown crown = new KingsCrown();
-	// 	crown.quantity(2).collect();
-		
-	// 	PotionOfDivineInspiration podi = new PotionOfDivineInspiration();
-	// 	podi.quantity(6).collect();
-
-	// 	ScrollOfUpgrade sou = new ScrollOfUpgrade();
-	// 	sou.quantity(15).collect();
-
-	// 	Dungeon.energy = 69;
-
-	// 	ScrollOfMagicMapping somm = new ScrollOfMagicMapping();
-	// 	somm.quantity(10).collect();
-	// 	StoneOfFlock sof = new StoneOfFlock();
-	// 	sof.quantity(30).collect();
-
-	// 	RingOfWealth row = new RingOfWealth();
-	// 	row.upgrade(15).collect();
-	// 	PotionOfLiquidFlame pol = new PotionOfLiquidFlame();
-	// 	pol.quantity(30).collect();
-	// 	PotionOfToxicGas pot = new PotionOfToxicGas();
-	// 	pot.quantity(30).collect();
-	// 	PotionOfParalyticGas popg = new PotionOfParalyticGas();
-	// 	popg.quantity(30).collect();
-	// 	PotionOfFrost pof = new PotionOfFrost();
-	// 	pof.quantity(30).collect();
-	// }
-		
-	
 		hero.heroClass = this;
 		Talent.initClassTalents(hero);
 
@@ -242,42 +170,6 @@ public enum HeroClass {
 				Dungeon.quickslot.setSlot(s, waterskin);
 				break;
 			}
-		}
-
-		if(UFOSettings.red_HP()){
-			hero.HT+=2;
-			hero.HP+=2;
-		}
-
-		if(UFOSettings.red_Gold()){
-			Dungeon.gold += 50;
-		}
-
-		if(UFOSettings.red_Item()){
-			Dungeon.energy += 3;
-		}
-
-		if(UFOSettings.blue_HP()){
-			hero.HT+=3;
-			hero.HP+=3;
-		}
-
-		if (UFOSettings.blue_Gold()){
-			Dungeon.gold += 50;
-		}
-
-		if (UFOSettings.blue_Item()){
-			i = new Food();
-			i.collect();
-		}
-
-		if (UFOSettings.green_Item()){
-			i = new StoneOfDeepSleep();
-			i.quantity(2).collect();
-		}
-
-		if (UFOSettings.green_Gold()){
-			Dungeon.gold += 100;
 		}
 	}
 
@@ -391,9 +283,6 @@ public enum HeroClass {
 
 	private static void initSakuya( Hero hero ) {
 
-		Amulet amulet = new Amulet();
-		amulet.collect();
-
 		(hero.belongings.weapon = new RemiliaSpear()).identify();
 		hero.belongings.weapon.upgrade(9);
 		Dungeon.quickslot.setSlot(2, hero.belongings.weapon);
@@ -423,28 +312,28 @@ public enum HeroClass {
 				// // hero.belongings.weapon = we;
 
 				
-				// Buff.affect(hero, MindVision.class, 9999f);
-				// Buff.affect(hero, MagicalSight.class, 9999f);
-				// RingOfMight ring = new RingOfMight();
-				// ring.level(25);
-				// ring.doEquip(hero);
+				Buff.affect(hero, MindVision.class, 9999f);
+				Buff.affect(hero, MagicalSight.class, 9999f);
+				RingOfMight ring = new RingOfMight();
+				ring.level(25);
+				ring.doEquip(hero);
 
-				// RingOfTenacity ring2 = new RingOfTenacity();
-				// ring2.level(99);	
-				// ring2.doEquip(hero);
+				RingOfTenacity ring2 = new RingOfTenacity();
+				ring2.level(99);	
+				ring2.doEquip(hero);
 
-				// PotionOfHealing.heal(hero);
+				PotionOfHealing.heal(hero);
 
 				// ReisenGun rg = new ReisenGun();
 				// rg.collect();
 
-				// PotionOfHealing poh = new PotionOfHealing();
-				// poh.quantity(99).collect();
-				// Dungeon.quickslot.setSlot(4, poh);
+				PotionOfHealing poh = new PotionOfHealing();
+				poh.quantity(99).collect();
+				Dungeon.quickslot.setSlot(4, poh);
 
-				// ScrollOfMagicMapping som = new ScrollOfMagicMapping();
-				// som.quantity(99).collect();
-				// Dungeon.quickslot.setSlot(5, som);
+				ScrollOfMagicMapping som = new ScrollOfMagicMapping();
+				som.quantity(99).collect();
+				Dungeon.quickslot.setSlot(5, som);
 
 				// PotionOfExperience poe = new PotionOfExperience();
 				// poe.quantity(13).collect();

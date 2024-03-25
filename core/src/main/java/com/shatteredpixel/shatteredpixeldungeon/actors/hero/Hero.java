@@ -28,7 +28,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SacrificialFire;
@@ -243,47 +242,13 @@ public class Hero extends Char {
 		
 		visibleEnemies = new ArrayList<>();
 
-		if(UFOSettings.red_Acc()){
-			attackSkill+=1;
-		}
-
-		if(UFOSettings.red_Eva()){
-			defenseSkill+=1;
-		}
-
-		if(UFOSettings.red_Search()){
-			TIME_TO_SEARCH -=1;
-		}
-
-		if(UFOSettings.green_Search()){
-			TIME_TO_SEARCH -=1;
-		}
-
-		if(UFOSettings.blue_Acc()){
-			attackSkill+=1;
-		}
-
-		if(UFOSettings.green_Strength()){
-			STR+=1;
-		}
-
 	}
 	
 	public void updateHT( boolean boostHP ){
-		int UFO_boost = 0;
-		if(UFOSettings.red_HP()){
-			UFO_boost += 2;
-		}
-		if(UFOSettings.blue_HP()){
-			UFO_boost += 3;
-		}
-		HT += UFO_boost;
+		
 		int curHT = HT;
 		
-		HT = 20 + 5*(lvl-1) + HTBoost + UFO_boost;
-		if (UFOSettings.green_HP()){
-			HT = 20 + 6*(lvl-1) + HTBoost + UFO_boost;
-		}
+		HT = 20 + 5*(lvl-1) + HTBoost;
 		float multiplier = RingOfMight.HTMultiplier(this);
 		HT = Math.round(multiplier * HT);
 		
@@ -616,9 +581,6 @@ public class Hero extends Char {
 			dmg *= 0.6;
 		}
 
-		if(UFOSettings.blue_Damage()){
-			dmg +=1;
-		}
 		return dmg;
 	}
 	
@@ -626,14 +588,6 @@ public class Hero extends Char {
 	public float speed() {
 
 		float speed = super.speed();
-		float UFO_mul = 1f;
-		if(UFOSettings.blue_RunSpeed()){
-			UFO_mul += 0.05f;
-		}
-		if(UFOSettings.green_RunSpeed()){
-			UFO_mul += 0.05f;
-		}
-		speed *= UFO_mul;
 		speed *= RingOfHaste.speedMultiplier(this);
 		switch (subClass) {
 			case MAID:
@@ -1713,12 +1667,6 @@ public class Hero extends Char {
 				updateHT( true );
 				attackSkill++;
 				defenseSkill++;
-				if(UFOSettings.green_Acc() && lvl%2 == 0){
-					attackSkill++;
-				}
-				if(UFOSettings.green_Eva() && lvl%2 == 0){
-					defenseSkill++;
-				}
 			} else {
 				Buff.prolong(this, Bless.class, Bless.DURATION);
 				this.exp = 0;

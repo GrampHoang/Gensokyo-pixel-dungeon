@@ -23,7 +23,6 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -110,24 +109,14 @@ public class Shopkeeper extends NPC {
 	
 	//shopkeepers are greedy!
 	public static int sellPrice(Item item){
-		float UFOmodifier = 1f;
-		if (UFOSettings.red_Shop()){
-			UFOmodifier -= 0.05f;
-		}
-
-		if (UFOSettings.green_Shop()){
-			UFOmodifier -= 0.05f;
-		}
-
 		if (Dungeon.hero.hasTalent(Talent.MAGIC_BARGAIN)
 		&& item instanceof Wand){
 			return Math.round(item.value() 
 			* 5 
 			* (Dungeon.depth / 5 + 1) 
-			* (1 - Dungeon.hero.pointsInTalent(Talent.MAGIC_BARGAIN) * 0.25f)
-			* UFOmodifier);
-			}
-		return Math.round(item.value() * 5 * (Dungeon.depth / 5 + 1) * UFOmodifier);
+			* (1 - Dungeon.hero.pointsInTalent(Talent.MAGIC_BARGAIN) * 0.25f));
+		}
+		return Math.round(item.value() * 5 * (Dungeon.depth / 5 + 1));
 	}
 	
 	public static WndBag sell() {

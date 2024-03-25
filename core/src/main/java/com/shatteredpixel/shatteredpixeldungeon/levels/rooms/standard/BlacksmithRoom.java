@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard;
 
-import com.shatteredpixel.shatteredpixeldungeon.UFOSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -55,11 +54,6 @@ public class BlacksmithRoom extends StandardRoom {
 			do {
 				pos = level.pointToCell(random());
 			} while (level.map[pos] != Terrain.EMPTY_SP);
-		
-		if (UFOSettings.red_Quest()){
-			DarkGold dg = new DarkGold();
-			level.drop(dg.quantity(5), pos);
-		}
 
 		for (int i=0; i < 2; i++) {
 			do {

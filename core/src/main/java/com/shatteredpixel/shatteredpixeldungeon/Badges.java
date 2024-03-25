@@ -1418,12 +1418,15 @@ public class Badges {
 		displayBadge( badge );	
 	}
 
-	public static void validateMoutainReach() {
-		// if (!local.contains( Badge.MOUNTAIN_REACH)) {
+
+	//This is called in GameScene, check everytime you switch to Interleveled Scene
+	public static void validateMountainReach() {
+		if (!local.contains( Badge.MOUNTAIN_REACH)) {
 			Badge badge = Badge.MOUNTAIN_REACH;
 			local.add( badge );
 			displayBadge( badge );
-		//}
+			PixelScene.showBadge( badge );
+		}
 	}
 
 

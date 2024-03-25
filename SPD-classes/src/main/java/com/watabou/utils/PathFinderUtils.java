@@ -3,17 +3,20 @@ package com.watabou.utils;
 public class PathFinderUtils {
 
     
+    // Find the order of the collison relative the the center
     public static int collision_i(int[] pathfinder, int collisionPos, int center){
         int count = -1;
         for (int i : pathfinder){
             count++;
-            System.out.println(count);
             if(center + i == collisionPos){
                 return count;
             }
         }
         return 1;
     }
+
+    // REMINDER THAT THIS USE CIRCLE8 PATHFINDER
+
 
     //return the center + two random cell around the center that are opposite to each other
     //Unlike other method in here, this use normal Pather finder
@@ -28,6 +31,7 @@ public class PathFinderUtils {
         cell[2] = center + PathFinder.NEIGHBOURS8[7-i];
         return cell;
     }
+
 
     //Return the 3 opposite tile of a CIRCLE8 8 Pathfinder, mimick piercing AoE shot
     //  0 1 2
@@ -44,6 +48,7 @@ public class PathFinderUtils {
         return opposite3Tiles;
     }
 
+
     //Neightbor 3, colPos + 2 tile next to it
     // col: 3 -> output [2,3,4]
     public static int[] neighbour3(int[] pathfinder, int collisionPos, int center){
@@ -53,6 +58,7 @@ public class PathFinderUtils {
                                   pathfinder[right(collision_i)] + center};
         return neightbour3Tiles;
     }
+
 
     //  0 1 2
     //  7   3
@@ -67,6 +73,30 @@ public class PathFinderUtils {
         return neightbour3Tiles;
     }
 
+    //  0 1 2
+    //  7   3
+    //  6 5 4
+    //Big Triangle, colPos + 2 tile next to next to it
+    // col: 3 -> output [0,3,6]
+    public static int[] backtriangle(int[] pathfinder, int collisionPos, int center){
+        int collision_i = collision_i(pathfinder, collisionPos, center);
+        int[] neightbour3Tiles = {pathfinder[redBy(collision_i, 3)] + center, 
+                                  collisionPos,
+                                  pathfinder[incBy(collision_i, 3)] + center};
+        return neightbour3Tiles;
+    }
+
+    public static int[] backtrianglePosNumber(int[] pathfinder, int collisionPos, int center){
+        int collision_i = collision_i(pathfinder, collisionPos, center);
+
+        int left = (collision_i + 5)%8;
+        int right= (collision_i + 3)%8;
+
+        int[] posBehind = {left, right};
+        return posBehind;
+    }
+
+
     // col: 3 -> output [1,center,5]
     public static int[] perpendicular(int[] pathfinder, int collisionPos, int center){
         int collision_i = collision_i(pathfinder, collisionPos, center);
@@ -74,6 +104,18 @@ public class PathFinderUtils {
                                   center,
                                   pathfinder[incBy(collision_i, 2)] + center};
         return neightbour3Tiles;
+    }
+
+    public static int[] perpendicularPosNumber(int[] pathfinder, int collisionPos, int center){
+        int collision_i = collision_i(pathfinder, collisionPos, center);
+        int left = (collision_i + 6)%8;
+        int right= (collision_i + 2)%8;
+
+        int[] posPerpen = {left, right};
+        System.out.println(collision_i);
+        System.out.println(left);
+        System.out.println(right);
+        return posPerpen;
     }
 
 
@@ -93,6 +135,7 @@ public class PathFinderUtils {
         return neightbour3Tiles;
     }
     
+
     // col: 3 -> output [0,2,6,4]
     // col: 4 -> output [7,1,3,5]
     //Cross that doesn not contain collision Pos
@@ -104,6 +147,7 @@ public class PathFinderUtils {
                                   pathfinder[right(collision_i)] + center};
         return neightbour3Tiles;
     }
+
 
     //Left and Right for circle 8
     private static int left(int direction){

@@ -59,6 +59,8 @@ public class Terrain {
 
 	public static final int WATER		    = 29;
 	
+	public static final int ALONE_TREE		= 69;
+
 	public static final int PASSABLE		= 0x01;
 	public static final int LOS_BLOCKING	= 0x02;
 	public static final int FLAMABLE		= 0x04;
@@ -104,6 +106,8 @@ public class Terrain {
 		flags[STATUE_SP]	= flags[STATUE];
 		flags[BOOKSHELF]	= flags[BARRICADE];
 		flags[ALCHEMY]		= SOLID;
+
+		flags[ALONE_TREE]	= LOS_BLOCKING | SOLID | FLAMABLE;
 
 	}
 

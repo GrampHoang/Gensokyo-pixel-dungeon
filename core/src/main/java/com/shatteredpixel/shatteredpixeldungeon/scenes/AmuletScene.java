@@ -138,8 +138,6 @@ public class AmuletScene extends PixelScene {
 				InterlevelScene.curTransition.destDepth = Dungeon.depth+1;
 				InterlevelScene.curTransition.destBranch = 1;
 				Game.switchScene(InterlevelScene.class);
-				
-				Badges.validateMoutainReach();
 			}
 		};
 		btnDeeper.setSize( WIDTH, BTN_HEIGHT );

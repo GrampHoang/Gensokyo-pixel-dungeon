@@ -29,23 +29,23 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
+import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.ToxicGasRoom.ToxicGasSeed;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.ToxicGasRoom.ToxicVent;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.ExplosiveTrap;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Sungrass;
-import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
 public class FlowerfieldRoom extends StandardRoom {
 
-	boolean isRare = Random.IntRange(0, 1) == 0;
+	boolean isRare = Random.IntRange(0, 10) == 0;
 
 	@Override
 	public float[] sizeCatProbs() {
@@ -98,7 +98,11 @@ public class FlowerfieldRoom extends StandardRoom {
 			}
         } else {
             for (int i = 0; i < mines; i++ ){
-                level.plant( randomSeed(), plantPos( level ));
+                if (Random.IntRange(0, 8) == 1){
+					level.drop( Random.Float() <= 0.3f ? Generator.random() : new Gold().random(), plantPos( level ) ).type = Heap.Type.TOMB;	
+				} else {
+					level.plant( randomSeed(), plantPos( level ));
+				}
             }
         }
 		

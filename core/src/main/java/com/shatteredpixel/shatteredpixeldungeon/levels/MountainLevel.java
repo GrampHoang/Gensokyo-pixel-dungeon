@@ -115,14 +115,14 @@ public class MountainLevel extends RegularLevel {
 	@Override
 	protected Painter painter() {
 		return new SewerPainter()
-				.setWater(feeling == Feeling.WATER ? 0.80f : 0.30f, 3)
-				.setGrass(feeling == Feeling.GRASS ? 0.95f : 0.75f, 4)
+				.setWater(feeling == Feeling.WATER ? 0.65f : 0.20f, 3)
+				.setGrass(feeling == Feeling.GRASS ? 0.90f : 0.65f, 4)
 				.setTraps(nTraps(), trapClasses(), trapChances());
 	}
 	
 	@Override
 	public String tilesTex() {
-		return Assets.Environment.TILES_MOUTAIN;
+		return Assets.Environment.TILES_MOUNTAIN;
 	}
 	
 	@Override
@@ -143,24 +143,22 @@ public class MountainLevel extends RegularLevel {
 		return new float[]{
 			4, 4, 4, 4, 4,
 			2, 2, 2, 2,
-			1, 1, 1, 1, 1, 1, 1, 1 };
+			1, 4, 4, 1, 4, 1, 1, 1 };
 	}
 	
 	@Override
 	protected void createItems() {
-		// Ghost.Quest.spawnForest( this );
-		// AyaNPC.Quest.spawn(this);
 		super.createItems();
 	}
 	
 	@Override
 	public Group addVisuals() {
 		super.addVisuals();
-		addSewerVisuals(this, visuals);
+		addMountainVisuals(this, visuals);
 		return visuals;
 	}
 	
-	public static void addSewerVisuals( Level level, Group group ) {
+	public static void addMountainVisuals( Level level, Group group ) {
 		for (int i=0; i < level.length(); i++) {
 			if (level.map[i] == Terrain.WALL_DECO) {
 				group.add( new Leaf( i ) );
@@ -171,8 +169,12 @@ public class MountainLevel extends RegularLevel {
 	@Override
 	public String tileName( int tile ) {
 		switch (tile) {
+			case Terrain.WALL:
+				return Messages.get(MountainLevel.class, "wall_name");
 			case Terrain.WATER:
 				return Messages.get(MountainLevel.class, "water_name");
+			case Terrain.ALONE_TREE:
+				return Messages.get(MountainLevel.class, "alone_tree_name");
 			default:
 				return super.tileName( tile );
 		}
@@ -181,10 +183,14 @@ public class MountainLevel extends RegularLevel {
 	@Override
 	public String tileDesc(int tile) {
 		switch (tile) {
+			case Terrain.WALL:
+				return Messages.get(MountainLevel.class, "wall_desc");
 			case Terrain.WALL_DECO:
 				return Messages.get(MountainLevel.class, "wall_deco_desc");
 			case Terrain.EMPTY_DECO:
 				return Messages.get(MountainLevel.class, "empty_deco_desc");
+			case Terrain.ALONE_TREE:
+				return Messages.get(MountainLevel.class, "alone_tree_desc");
 			default:
 				return super.tileDesc( tile );
 		}

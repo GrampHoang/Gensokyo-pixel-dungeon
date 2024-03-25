@@ -233,7 +233,7 @@ public class Dungeon {
 		QuickSlotButton.reset();
 		Toolbar.swappedQuickslots = false;
 		
-		depth = 26;
+		depth = 30;
 		branch = isChallenged(Challenges.TOUHOU) ? 1 : 0;
 
 		gold = 0;
@@ -404,6 +404,9 @@ public class Dungeon {
 				case 28:
 				case 29:
 					level = new MountainLevel();
+					break;
+				case 30:
+					level = new MountainBossLevel();
 					break;
 				default:
 					level = new DeadEndLevel();

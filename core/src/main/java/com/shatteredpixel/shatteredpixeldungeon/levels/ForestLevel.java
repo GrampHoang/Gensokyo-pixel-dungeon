@@ -145,11 +145,11 @@ public class ForestLevel extends RegularLevel {
 	@Override
 	public Group addVisuals() {
 		super.addVisuals();
-		addSewerVisuals(this, visuals);
+		addForestVisuals(this, visuals);
 		return visuals;
 	}
 	
-	public static void addSewerVisuals( Level level, Group group ) {
+	public static void addForestVisuals( Level level, Group group ) {
 		for (int i=0; i < level.length(); i++) {
 			if (level.map[i] == Terrain.WALL_DECO) {
 				group.add( new Sink( i ) );

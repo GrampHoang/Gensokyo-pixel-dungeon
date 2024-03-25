@@ -429,6 +429,9 @@ public class GameScene extends PixelScene {
 				case 21:
 					WndStory.showChapter( WndStory.ID_HALLS + c);
 					break;
+				case 27:
+					WndStory.showChapter( WndStory.ID_MOUNTAIN);
+					break;
 				}
 				if (Dungeon.hero.isAlive()) {
 					Badges.validateNoKilling();
@@ -521,6 +524,9 @@ public class GameScene extends PixelScene {
 				GLog.h(Messages.get(this, "resurrect"), Dungeon.depth);
 			} else {
 				GLog.h(Messages.get(this, "return"), Dungeon.depth);
+				if (Badges.checkGoDeeper()){
+					Badges.validateMountainReach();
+				}
 			}
 
 			if (Dungeon.hero.hasTalent(Talent.ROGUES_FORESIGHT)

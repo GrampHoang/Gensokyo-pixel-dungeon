@@ -83,7 +83,8 @@ public class DungeonTileSheet {
 			Terrain.BARRICADE, Terrain.HIGH_GRASS, Terrain.FURROWED_GRASS, Terrain.SECRET_TRAP,
 			Terrain.TRAP, Terrain.INACTIVE_TRAP, Terrain.EMPTY_DECO,
 			Terrain.SIGN, Terrain.WELL, Terrain.STATUE, Terrain.ALCHEMY,
-			Terrain.DOOR, Terrain.OPEN_DOOR, Terrain.LOCKED_DOOR, Terrain.CRYSTAL_DOOR
+			Terrain.DOOR, Terrain.OPEN_DOOR, Terrain.LOCKED_DOOR, Terrain.CRYSTAL_DOOR,
+			Terrain.ALONE_TREE
 	));
 
 	//+1 for ground above, +2 for ground right, +4 for ground below, +8 for ground left.
@@ -167,6 +168,9 @@ public class DungeonTileSheet {
 	public static final int FLAT_WALL_ALT       = FLAT_WALLS+4;
 	public static final int FLAT_WALL_DECO_ALT  = FLAT_WALLS+5;
 	public static final int FLAT_BOOKSHELF_ALT  = FLAT_WALLS+6;
+
+	public static final int ALONE_TREE          = FLAT_WALLS+7;
+	public static final int ALONE_TREE_ALT      = FLAT_WALLS+8;
 
 	private static final int FLAT_DOORS         =                           xy(1, 6);   //16 slots
 	public static final int FLAT_DOOR           = FLAT_DOORS+0;
@@ -368,7 +372,7 @@ public class DungeonTileSheet {
 		directVisuals.put(Terrain.LOCKED_EXIT,      LOCKED_EXIT);
 		directVisuals.put(Terrain.UNLOCKED_EXIT,    UNLOCKED_EXIT);
 		directVisuals.put(Terrain.WELL,             WELL);
-
+		directVisuals.put(Terrain.ALONE_TREE,       ALONE_TREE);
 	}
 
 	//These visuals directly represent game tiles (no stitching) when terrain is being shown as flat
@@ -390,6 +394,8 @@ public class DungeonTileSheet {
 		directFlatVisuals.put(Terrain.FURROWED_GRASS,   FLAT_FURROWED_GRASS);
 
 		directFlatVisuals.put(Terrain.SECRET_DOOR,      directFlatVisuals.get(Terrain.WALL));
+
+		// directFlatVisuals.put(Terrain.ALONE_TREE,       ALONE_TREE);
 	}
 
 
@@ -433,6 +439,8 @@ public class DungeonTileSheet {
 		commonAltVisuals.put(RAISED_FURROWED_GRASS, RAISED_FURROWED_ALT);
 		commonAltVisuals.put(HIGH_GRASS_OVERHANG,   HIGH_GRASS_OVERHANG_ALT);
 		commonAltVisuals.put(FURROWED_OVERHANG,     FURROWED_OVERHANG_ALT);
+		commonAltVisuals.put(ALONE_TREE,     ALONE_TREE_ALT);
+		
 	}
 
 	//These alt visuals trigger 5% of the time (and also override common alts when they show up)

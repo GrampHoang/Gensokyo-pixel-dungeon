@@ -69,7 +69,7 @@ public class AboutScene extends PixelScene {
 		CreditsBlock gpd = new CreditsBlock(true, Window.GPD_COLOR,
 				"Gensokyo Pixel Dungeon",
 				Icons.REIMU.get(),
-				"Developed by: _GrampHoang / GarryMS_\nBased on Shattered Pixel Dungeon's open source\nInspired by lots of other SPD forks",
+				"Developed by: _GrampHoang / GarryMS_\nBased on Shattered Pixel Dungeon's source\nInspired by lots of other SPD forks",
 				"GensokyoPD Github Repo",
 				genPDLink);
 		if (landscape()){
@@ -84,7 +84,7 @@ public class AboutScene extends PixelScene {
 				Icons.MARISA.get(),
 				"From Touhou Pixel Dungeon",
 				"Touhou Pixel Dungeon",
-				"https://github.com/tpd0618/touhou-pixel-dungeon");
+				"https://github.com/tpd0618/touhou-pixel-dungeon-reloaded");
 				tpd.setSize(colWidth/2f, 0);
 		if (landscape()){
 			tpd.setPos(gpd.right(), gpd.top() + (gpd.height() - tpd.height()*2)/2f);

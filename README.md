@@ -1,12 +1,12 @@
 # Gensokyo Pixel Dungeon
 
 This is forked from Shattered PD v1.3.1. Inspired by (old) TouhouPD and Tomorrow's RougeNights. The game also borrow idea from some other forks.
+![Titles](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/title.png)
 
 # Progress 
 
-
 (Base on the source code, not the released files so some of this may not be in the apk/jar you downloaded):
-- 4 new characters, their playstyle loosely based on the 4 original classes. Plus Sakuya who is a broken character. You can pick her to handicap yourself since half her kit doesn't work.
+- 4 new characters, their playstyle loosely based on the 4 original classes. (Plus Sakuya who is a broken character. You can pick her to handicap yourself since half her kit doesn't work)
 ![Heros list](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/heros.PNG)
 - All new character have their own unique subclasses, no unique armor ability as of now.
 - A bunch more weapon to spice up the gameplay. Including secret weapons!
@@ -26,10 +26,11 @@ This is forked from Shattered PD v1.3.1. Inspired by (old) TouhouPD and Tomorrow
 - Music (will compressed) and SFX
 - Making unique armor ability
 - Badges: For the new stuff
+![Badges](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/badges.png)
 
 # My goal:
 - Is to make SPD but with different approach, more option and playstyle to go for and have more replayability.
-- 
+
 If there is any issue, you can use the feedback link inside the game or find me on Pixel Dungeon Discord.
 
 # ShatteredPD

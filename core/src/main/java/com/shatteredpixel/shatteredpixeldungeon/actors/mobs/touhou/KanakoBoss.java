@@ -166,8 +166,10 @@ import com.watabou.utils.Random;
                 if(!Dungeon.hero.isAlive()){
                     return super.act();
                 }
-                
-                if (abilityAimerArray.size() == 8){
+
+                if (abilityAimerArray.size() == 10){
+                    abilityAimerArray.clear();
+                } else {
                     abilityAimer = Dungeon.hero.pos;
                 }
 

@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
@@ -128,6 +129,22 @@ public abstract class TippedDart extends Dart {
 			Dungeon.level.drop( d, enemy.pos ).sprite.drop();
 		}
 	}
+
+	public static int lostDarts = 0;
+
+	@Override
+	public Item merge(Item other) {
+		int total = quantity() + other.quantity();
+		super.merge(other);
+		int extra = total - quantity();
+
+		//need to spawn waste tipped darts as regular darts
+		if (extra > 0){
+			lostDarts += extra;
+		}
+		return this;
+	}
+
 
 	private static int targetPos = -1;
 

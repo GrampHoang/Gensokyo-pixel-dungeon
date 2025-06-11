@@ -217,7 +217,20 @@ public class Notes {
 	public static boolean remove( Landmark landmark ) {
 		return records.remove( new LandmarkRecord(landmark, Dungeon.depth) );
 	}
-	
+
+	public static ArrayList<Record> getRecords(int depth){
+		ArrayList<Record> filtered = new ArrayList<>();
+		for (Record rec : records){
+			if (rec.depth() == depth ){
+				filtered.add(rec);
+			}
+		}
+
+		Collections.sort(filtered);
+
+		return filtered;
+	}
+
 	public static boolean add( Key key ){
 		KeyRecord k = new KeyRecord(key);
 		if (!records.contains(k)){
@@ -271,5 +284,4 @@ public class Notes {
 	public static void remove( Record rec ){
 		records.remove(rec);
 	}
-	
 }

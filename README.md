@@ -3,6 +3,38 @@
 This is forked from Shattered PD v1.3.1. Inspired by (old) TouhouPD and Tomorrow's RougeNights. The game also borrow idea from some other forks.
 ![Titles](https://github.com/GrampHoang/Gensokyo-pixel-dungeon/blob/main/github-readme-img/title.png)
 
+
+# FINAL UPDATE (11/06/2025 - 11, June, 2025) - WALL OF TEXT WARNING
+To the few people who get to read this:
+I've pretty much stopped working on this repo ever since I got a real job last year. Now I' a bit free again, but I haven't kept up with SPD and lost the design document (and idea dump) for this game, so even I'm lost on where to resume. I do remember working on a 6th area, Autumn Forest/Youkai Mountain based on TH10 but I couldn't finalize and balance the enemy there.
+
+Anyway, this repo won't get more updates. The last apk build on the released site should work. If you want to fork this repo then go ahead, might want to fork a few commits before the last one in case things break.
+
+Current state of the repo:
+- Gensokyo Challenge: This is the actual game, I RECOMMEND ALWAYS TURNING THIS ON. I kept the original dungeon for balancing and testing.
+    + 4 new Area: Forest Of Magic, Scarlet Mansion, Yukari's Shrine, Bamboo Forest. With their own mobs and skill.
+    + Most enemies have skills, or certain interactions that force you to be moving around more, it's different than the usual close combat 1vs1 approach in normal SPD.
+    + I did redraw a lot of enemies, but the area art are still from TouhouPD.
+    + Each area has its own boss that, again, force you to move around a lot to dodge. They will still retaliate with normal attack when you attack them so don't ignore your armor.
+
+    + NPCs: I added a bunch of NPCs and quests. I plan for some of them to have permanent effects/knowledge that carries over all games, I don't remember how much I have made them, though.
+    + Those effect were implemented through Encounter system, basically a note about each NPCs and what they taught you, something something Youmu's sword to stage 3, something something add Fire to Tenshi's Fire rod, something something drink Hourai elixir, etc
+    + A bunch of secrets too: Drinking Hourai elixir is one of them, then try meeting NPCs when you are running back while carrying the Amulet, or try to clear their quest by doubling their initial requirement then something good might happen, get the Spellbook to 1000% with Suika's drink, etc etc.
+    + A bunch of new badges, for fun and to encourage players to interact with NPCs more.
+
+- Lunatic Challenge: For high challenge enjoyers, I think it will make the game a lot more... interactive since this buffs the enemy, not shooting yourself in the foot like most other challenges. Work with both normal SPD dungeon and Gensokyo Dungeon.
+
+- Weapon with SP: These tend to be straight up stronger than normal vanilla weapons, the stats are slightly lower to compensate but it's not enough. The skills are too burst-y so to really balance it, I wil have to lower the number more than whatever I have now, but that's not fun xP Touhou is a theme that you can be as creative as you want
+
+- Touhou character that based on the 4 based character in SPD, Reimu is Warrior but offensive, Marisa is Mage but brute force with Hakkero, Koishi is Thief but different steath mechanic (or permanent Berserk, yet another secret?), Reisen is Huntress but brew drugs or go bam bam.
+
+- Most of the enemies art and new weapon art a draw by me, feel free to use them, just a general credit like: "From GensokyoPD" and link this repo is fine.
+
+- I'll include my last working build into the releases Tag
+
+
+
+# OLD README SECTION
 # Progress 
 
 (Base on the source code, not the released files so some of this may not be in the apk/jar you downloaded):

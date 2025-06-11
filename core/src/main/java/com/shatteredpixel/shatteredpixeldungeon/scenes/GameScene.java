@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
+import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
@@ -60,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.RegularLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret.SecretRoom;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
@@ -115,6 +117,8 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndResurrect;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndStory;
 import com.watabou.glwrap.Blending;
+import com.watabou.input.ControllerHandler;
+import com.watabou.input.KeyBindings;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
@@ -128,6 +132,7 @@ import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
@@ -586,7 +591,7 @@ public class GameScene extends PixelScene {
 
 		if (Rankings.INSTANCE.totalNumber > 0 && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_DIEING)){
 			GLog.p(Messages.get(Guidebook.class, "hint"));
-			GameScene.flashForDocument(Document.GUIDE_DIEING);
+			GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_DIEING);
 		}
 
 		if (!invVisible) toggleInvPane();
@@ -1048,11 +1053,54 @@ public class GameScene extends PixelScene {
 		if (scene != null) scene.menu.pickup( item, pos );
 	}
 
-	//TODO currently only works with guidebooks
-	public static void flashForDocument( String page ){
-		if (scene != null) scene.menu.flashForPage( page );
+	public static void flashForDocument( Document doc, String page ){
+		if (scene != null) {
+			scene.menu.flashForPage( doc, page );
+		}
 	}
 	
+	public static void endIntro(){
+		if (scene != null){
+			SPDSettings.intro(false);
+			scene.add(new Tweener(scene, 2f){
+				@Override
+				protected void updateValues(float progress) {
+					if (progress <= 0.5f) {
+						scene.status.alpha(2*progress);
+						scene.status.visible = scene.status.active = true;
+						scene.toolbar.visible = scene.toolbar.active = false;
+						if (scene.inventory != null) scene.inventory.visible = scene.inventory.active = false;
+					} else {
+						scene.status.alpha(1f);
+						scene.status.visible = scene.status.active = true;
+						// scene.toolbar.alpha((progress - 0.5f)*2);
+						scene.toolbar.visible = scene.toolbar.active = true;
+						if (scene.inventory != null){
+							scene.inventory.visible = scene.inventory.active = true;
+							// scene.inventory.alpha((progress - 0.5f)*2);
+						}
+					}
+				}
+			});
+			GameLog.wipe();
+			if (SPDSettings.interfaceSize() == 0){
+				GLog.p(Messages.get(GameScene.class, "tutorial_ui_mobile"));
+			} else {
+				GLog.p(Messages.get(GameScene.class, "tutorial_ui_desktop",
+						KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.HERO_INFO, ControllerHandler.isControllerConnected())),
+						KeyBindings.getKeyName(KeyBindings.getFirstKeyForAction(SPDAction.INVENTORY, ControllerHandler.isControllerConnected()))));
+			}
+
+			//clear hidden doors, it's floor 1 so there are only the entrance ones
+			for (int i = 0; i < Dungeon.level.length(); i++){
+				if (Dungeon.level.map[i] == Terrain.SECRET_DOOR){
+					Dungeon.level.discover(i);
+					discoverTile(i, Terrain.SECRET_DOOR);
+				}
+			}
+		}
+	}
+
 	public static void updateKeyDisplay(){
 		if (scene != null) scene.menu.updateKeys();
 	}
@@ -1425,7 +1473,7 @@ public class GameScene extends PixelScene {
 			GameScene.show(new WndInfoMob((Mob) o));
 			if (o instanceof Snake && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS)){
 				GLog.p(Messages.get(Guidebook.class, "hint"));
-				GameScene.flashForDocument(Document.GUIDE_SURPRISE_ATKS);
+				GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_DIEING);
 			}
 		} else if ( o instanceof Heap ){
 			GameScene.show(new WndInfoItem((Heap)o));

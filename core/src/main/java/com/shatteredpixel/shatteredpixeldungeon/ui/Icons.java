@@ -19,105 +19,112 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.ui;
+ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
-import com.watabou.noosa.Image;
-
-public enum Icons {
-
-	//title screen icons, variable sizes, spacing for 17x16
-	ENTER,
-	GOLD,
-	RANKINGS,
-	BADGES,
-	NEWS,
-	CHANGES,
-	PREFS,
-	SHPX,
-
-	//rankings and hero select icons, spacing for 16x16
-	STAIRS,
-	WARRIOR,
-	MAGE,
-	ROGUE,
-	HUNTRESS,
-	REIMU,
-	MARISA,
-	SAKUYA,
-	REISEN,
-	//grey icons, mainly used for buttons, spacing for 16x16
-	EXIT,
-	DISPLAY, //2 separate images, changes based on orientation
-	DISPLAY_LAND,
-	DISPLAY_PORT,
-	DATA,
-	AUDIO,
-	LANGS,
-	CONTROLLER,
-	KEYBOARD,
-	STATS,
-	CHALLENGE_OFF,
-	CHALLENGE_ON,
-	RENAME_OFF,
-	RENAME_ON,
-	SEED,
-	LEFTARROW,
-	RIGHTARROW,
-	CALENDAR,
-
-	//misc icons, mainly used for buttons, spacing for 16x16 until the smaller icons at the end
-	UNCHECKED,
-	CHECKED,
-	CLOSE,
-	PLUS,
-	ARROW,
-	INFO,
-	WARNING,
-	BACKPACK_LRG,
-	TALENT,
-	MAGNIFY,
-	BUFFS,
-	ENERGY,
-	COIN_SML,
-	ENERGY_SML,
-	BACKPACK,
-	SEED_POUCH,
-	SCROLL_HOLDER,
-	WAND_HOLSTER,
-	POTION_BANDOLIER,
-
-	//icons that appear in the game itself, variable spacing
-	TARGET,
-	SKULL,
-	BUSY,
-	COMPASS,
-	SLEEP,
-	ALERT,
-	LOST,
-	DEPTH,      //depth icons have two variants, for regular and seeded runs
-	DEPTH_CHASM,
-	DEPTH_WATER,
-	DEPTH_GRASS,
-	DEPTH_DARK,
-	DEPTH_LARGE,
-	DEPTH_TRAPS,
-	DEPTH_SECRETS,
-	CHAL_COUNT,
-
-	//icons that appear in the about screen, variable spacing
-	LIBGDX,
-	ALEKS,
-	WATA,
-	CELESTI,
-	KRISTJAN,
-	CUBE_CODE,
-	PURIGRO,
-	ARCNOR;
+ import com.shatteredpixel.shatteredpixeldungeon.Assets;
+ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+ import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+ import com.watabou.noosa.Image;
+ 
+ public enum Icons {
+ 
+	 //title screen icons, variable sizes, spacing for 17x16
+	 ENTER,
+	 GOLD,
+	 RANKINGS,
+	 BADGES,
+	 NEWS,
+	 CHANGES,
+	 PREFS,
+	 SHPX,
+ 
+	 //rankings and hero select icons, spacing for 16x16
+	 STAIRS,
+	 WARRIOR,
+	 MAGE,
+	 ROGUE,
+	 HUNTRESS,
+	 REIMU,
+	 MARISA,
+	 REISEN,
+	 SAKUYA,
+	 KOISHI,
+	 YUKARI,
+ 
+	 //grey icons, mainly used for buttons, spacing for 16x16
+	 EXIT,
+	 DISPLAY, //2 separate images, changes based on orientation
+	 DISPLAY_LAND,
+	 DISPLAY_PORT,
+	 DATA,
+	 AUDIO,
+	 LANGS,
+	 CONTROLLER,
+	 KEYBOARD,
+	 STATS,
+	 CHALLENGE_OFF,
+	 CHALLENGE_ON,
+	 RENAME_OFF,
+	 RENAME_ON,
+	 SEED,
+	 LEFTARROW,
+	 RIGHTARROW,
+	 CALENDAR,
+ 
+	 //misc icons, mainly used for buttons, spacing for 16x16 until the smaller icons at the end
+	 UNCHECKED,
+	 CHECKED,
+	 CLOSE,
+	 PLUS,
+	 REPEAT,
+	 ARROW,
+	 INFO,
+	 WARNING,
+	 BACKPACK_LRG,
+	 TALENT,
+	 MAGNIFY,
+	 SNAKE,
+	 BUFFS,
+	 ENERGY,
+	 COPY,
+	 PASTE,
+	 COIN_SML,
+	 ENERGY_SML,
+	 BACKPACK,
+	 SEED_POUCH,
+	 SCROLL_HOLDER,
+	 WAND_HOLSTER,
+	 POTION_BANDOLIER,
+ 
+	 //icons that appear in the game itself, variable spacing
+	 TARGET,
+	 SKULL,
+	 BUSY,
+	 COMPASS,
+	 SLEEP,
+	 ALERT,
+	 LOST,
+	 DEPTH,      //depth icons have two variants, for regular and seeded runs
+	 DEPTH_CHASM,
+	 DEPTH_WATER,
+	 DEPTH_GRASS,
+	 DEPTH_DARK,
+	 DEPTH_LARGE,
+	 DEPTH_TRAPS,
+	 DEPTH_SECRETS,
+	 CHAL_COUNT,
+ 
+	 //icons that appear in the about screen, variable spacing
+	 LIBGDX,
+	 ALEKS,
+	 WATA,
+	 CELESTI,
+	 KRISTJAN,
+	 CUBE_CODE,
+	 PURIGRO,
+	 ARCNOR;
 
 	public Image get() {
 		return get( this );
@@ -181,6 +188,12 @@ public enum Icons {
 				icon.frame( icon.texture.uvRectBySize( 111, 16, 14, 15 ) );
 				break;
 			case SAKUYA:
+				icon.frame( icon.texture.uvRectBySize( 126, 16, 13, 12) );
+				break;
+			case KOISHI:
+				icon.frame( icon.texture.uvRectBySize( 126, 16, 13, 12) );
+				break;
+			case YUKARI:
 				icon.frame( icon.texture.uvRectBySize( 126, 16, 13, 12) );
 				break;
 
